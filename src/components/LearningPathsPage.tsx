@@ -55,7 +55,7 @@ const LearningPathsPage: React.FC<LearningPathsPageProps> = ({ onPageChange }) =
             return (
               <div key={path.id} className="bg-white rounded-2xl shadow-xl overflow-hidden">
                 {/* Path Header */}
-                <div className={`bg-gradient-to-r ${color.replace('bg-', 'from-')} to-${color.split('-')[1]}-600 text-white p-8`}>
+                <div className={`bg-gradient-to-r ${color.replace('bg-', 'from-')} to-${color.split('-')[1]}-600 p-8`}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
                       <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center">

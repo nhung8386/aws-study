@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encryption 101: A Visual Guide to Data Security</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; 
+        }
+        .bg-primary { background-color: #003F5C; }
+        .bg-secondary { background-color: #2579B2; }
+        .bg-accent { background-color: #67ABE2; }
+        .text-light { color: #91C8F0; }
+        .text-dark { color: #003F5C; }
+        .text-accent { color: #67ABE2; }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .flow-line {
+            height: 2px;
+            background-color: #67ABE2;
+            flex-grow: 1;
+        }
+        .flow-arrow::after {
+            content: '►';
+            color: #67ABE2;
+            margin-left: -8px;
+        }
+    </style>
+</head>
+<body class="text-dark">
+
+    <header class="bg-primary text-white text-center py-12 px-4">
+        <h1 class="text-4xl md:text-5xl font-black tracking-tight">Encryption 101</h1>
+        <p class="mt-4 text-lg text-light max-w-3xl mx-auto">A visual guide to understanding how your data is protected online, in transit, and at rest.</p>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8">
+
+        <section id="intro" class="text-center card">
+            <h2 class="text-3xl font-bold text-secondary mb-4">Data is Everywhere, and It's Vulnerable</h2>
+            <p class="max-w-3xl mx-auto text-gray-600 mb-6">Every day, we send, receive, and store vast amounts of data. Without protection, this information is at risk. Encryption is the fundamental technology that shields our digital lives. This guide explores the three core ways data is secured.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <div class="border-t-4 border-accent pt-4">
+                    <h3 class="text-xl font-bold text-secondary">1. In Flight</h3>
+                    <p class="text-gray-500 mt-1">Securing data as it travels across the internet.</p>
+                </div>
+                <div class="border-t-4 border-accent pt-4">
+                    <h3 class="text-xl font-bold text-secondary">2. At Rest (Server-Side)</h3>
+                    <p class="text-gray-500 mt-1">Protecting data stored on a server's hard drives.</p>
+                </div>
+                <div class="border-t-4 border-accent pt-4">
+                    <h3 class="text-xl font-bold text-secondary">3. At Rest (Client-Side)</h3>
+                    <p class="text-gray-500 mt-1">Ensuring data is encrypted before it even leaves your device.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="in-flight" class="card">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <h2 class="text-3xl font-bold text-secondary mb-3">Encryption in Flight: Protecting Data in Motion</h2>
+                    <p class="text-gray-600 mb-4">When you browse a website, send an email, or use an app, your data travels across networks. Encryption in flight, primarily using TLS/SSL, wraps your data in a protective layer, making it unreadable to anyone who might intercept it. This is why you see "HTTPS" in your browser's address bar.</p>
+                    <p class="text-gray-600">This prevents "man-in-the-middle" attacks, where an attacker on the same network could otherwise view your sensitive information, like login credentials.</p>
+                </div>
+                <div class="chart-container">
+                    <canvas id="httpsTrafficChart"></canvas>
+                </div>
+            </div>
+             <div class="mt-12">
+                <h3 class="text-2xl font-bold text-center text-secondary mb-6">How TLS Foils a Man-in-the-Middle Attack</h3>
+                <div class="relative p-6">
+                    <div class="flex items-center justify-between space-x-4">
+                        <div class="text-center w-1/4">
+                            <div class="text-5xl">👤</div>
+                            <div class="font-bold mt-2">Client</div>
+                            <div class="text-sm text-gray-500">Your Device</div>
+                        </div>
+                        <div class="flex items-center w-2/4">
+                            <div class="flow-line"></div>
+                            <div class="text-center mx-4">
+                                <div class="text-5xl">🕵️</div>
+                                <div class="font-bold mt-2 text-red-500">Attacker</div>
+                                <div class="text-sm text-gray-500">Sees only 🔒</div>
+                            </div>
+                            <div class="flow-line"></div>
+                            <div class="flow-arrow"></div>
+                        </div>
+                        <div class="text-center w-1/4">
+                            <div class="text-5xl">💻</div>
+                            <div class="font-bold mt-2">Server</div>
+                            <div class="text-sm text-gray-500">Website</div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4 text-lg font-semibold text-accent">
+                        Data Packet [Username, Password] is sent encrypted 🔒
+                    </div>
+                </div>
+                <p class="text-center text-gray-600 mt-4 max-w-2xl mx-auto">With TLS, the data packet is encrypted before leaving the client. The attacker can intercept the packet, but cannot read its contents. Only the intended server has the key to decrypt and use the information.</p>
+            </div>
+        </section>
+
+        <section id="at-rest" class="card">
+            <h2 class="text-3xl font-bold text-secondary text-center mb-4">Encryption at Rest: Protecting Stored Data</h2>
+            <p class="text-gray-600 text-center max-w-3xl mx-auto mb-10">Once your data arrives at its destination, it needs to be protected while it's stored. This is "encryption at rest." There are two primary models for how this is handled.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold text-secondary mb-3">1. Server-Side Encryption</h3>
+                    <p class="text-gray-600 mb-6">The most common approach. Your data is sent to the server (ideally over HTTPS), and the server itself handles the encryption before saving it. The server also manages the decryption key. It's convenient, but requires you to trust the service provider completely.</p>
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <span class="text-accent mr-3 text-2xl">🔑</span>
+                            <div><strong>Key Management:</strong> Handled by the Server</div>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="text-accent mr-3 text-2xl">📍</span>
+                            <div><strong>Encryption Point:</strong> On the Server</div>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="text-accent mr-3 text-2xl">✅</span>
+                            <div><strong>Benefit:</strong> Simple for the user.</div>
+                        </div>
+                         <div class="flex items-center">
+                            <span class="text-accent mr-3 text-2xl">⚠️</span>
+                            <div><strong>Trust Model:</strong> Must trust the server/provider.</div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold text-secondary mb-3">2. Client-Side Encryption</h3>
+                    <p class="text-gray-600 mb-6">For maximum security, you can encrypt data on your own device *before* sending it to the server for storage. The server only ever stores the encrypted data and never has access to the key. You hold the key, giving you full control.</p>
+                     <div class="space-y-4">
+                        <div class="flex items-center">
+                            <span class="text-accent mr-3 text-2xl">🔑</span>
+                            <div><strong>Key Management:</strong> Handled by the Client (You)</div>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="text-accent mr-3 text-2xl">📍</span>
+                            <div><strong>Encryption Point:</strong> On your Device</div>
+                        </div>
+                         <div class="flex items-center">
+                            <span class="text-accent mr-3 text-2xl">✅</span>
+                            <div><strong>Benefit:</strong> Zero-trust for the server.</div>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="text-accent mr-3 text-2xl">⚠️</span>
+                            <div><strong>Trust Model:</strong> You are responsible for the key.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <div class="mt-12">
+                <h3 class="text-2xl font-bold text-center text-secondary mb-6">Visualizing the Difference</h3>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                    <div class="text-center border p-4 rounded-lg">
+                        <h4 class="font-bold text-xl mb-4 text-secondary">Server-Side Flow</h4>
+                        <div class="flex items-center justify-between text-sm">
+                            <div class="font-bold">👤 Client</div>
+                            <div class="text-gray-500">sends 🔓 data</div>
+                            <div class="font-bold">💻 Server</div>
+                        </div>
+                        <div class="text-2xl my-2">⬇️</div>
+                        <div class="font-bold text-center bg-gray-100 p-2 rounded">Server Encrypts with its Key 🔑</div>
+                        <div class="text-2xl my-2">⬇️</div>
+                        <div class="text-center">💾 Stores 🔒 Data</div>
+                    </div>
+                    <div class="text-center border p-4 rounded-lg">
+                        <h4 class="font-bold text-xl mb-4 text-secondary">Client-Side Flow</h4>
+                        <div class="text-center font-bold bg-gray-100 p-2 rounded">Client Encrypts with its Key 🔑</div>
+                        <div class="text-2xl my-2">⬇️</div>
+                        <div class="flex items-center justify-between text-sm">
+                            <div class="font-bold">👤 Client</div>
+                            <div class="text-gray-500">sends 🔒 data</div>
+                            <div class="font-bold">💻 Server</div>
+                        </div>
+                        <div class="text-2xl my-2">⬇️</div>
+                        <div class="text-center">💾 Stores 🔒 Data</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <footer class="text-center py-8">
+            <p class="text-gray-600">Understanding these encryption methods helps you make informed decisions about the services you use and how your data is protected.</p>
+        </footer>
+
+    </main>
+
+    <script>
+        function wrapLabel(str, max_width) {
+            if (typeof str !== 'string' || str.length <= max_width) {
+                return str;
+            }
+            const words = str.split(' ');
+            let lines = [];
+            let current_line = words.shift();
+
+            for (const word of words) {
+                if ((current_line + " " + word).length > max_width) {
+                    lines.push(current_line);
+                    current_line = word;
+                } else {
+                    current_line += " " + word;
+                }
+            }
+            lines.push(current_line);
+            return lines;
+        }
+
+        const sharedTooltipOptions = {
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const item = tooltipItems[0];
+                            let label = item.chart.data.labels[item.dataIndex];
+                            if (Array.isArray(label)) {
+                                return label.join(' ');
+                            } else {
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        const httpsCtx = document.getElementById('httpsTrafficChart').getContext('2d');
+        const httpsTrafficChart = new Chart(httpsCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Encrypted (HTTPS)', 'Unencrypted (HTTP)'],
+                datasets: [{
+                    label: 'Web Traffic',
+                    data: [95, 5], 
+                    backgroundColor: [
+                        '#2579B2', 
+                        '#E0E0E0' 
+                    ],
+                    borderColor: '#FFFFFF',
+                    borderWidth: 4,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    ...sharedTooltipOptions.plugins,
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            font: {
+                                size: 14,
+                                family: 'Inter'
+                            }
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Modern Web Traffic Encryption',
+                        font: {
+                            size: 18,
+                            weight: 'bold',
+                            family: 'Inter'
+                        },
+                        padding: {
+                            bottom: 20
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
