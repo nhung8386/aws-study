@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +9,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <!-- Chosen Palette: Calm Tech Neutrals -->
     <!-- Application Structure Plan: The application is structured into four main thematic sections to guide the user from foundational knowledge to practical application and reinforcement, rather than a linear slide format. 1) 'Core Concepts': Uses interactive tabs for what WAF is, where it deploys (visual cards), and its rule types (interactive list + summary chart) to allow focused exploration. 2) 'Use Case': Presents the Fixed IP/ALB scenario with a step-by-step text explanation alongside a clear HTML/CSS flowchart for easy comprehension of the architecture. 3) 'Knowledge Check': An interactive quiz to reinforce key takeaways and increase user engagement. 4) 'Summary': A final list of key points. This structure promotes active learning and better information retention by breaking down complex topics into digestible, interactive chunks. -->
     <!-- Visualization & Content Choices: 1. Layer 7 vs 4: Goal(Compare) -> Viz(HTML/CSS diagram) -> Interaction(Static) -> Justification(Clear visual separation is faster to understand than text). 2. Deployment Targets: Goal(Organize) -> Viz(Interactive HTML cards) -> Interaction(Hover highlights) -> Justification(Engaging way to present a list and visually separate supported/unsupported services). 3. Rule Types: Goal(Organize/Inform) -> Viz(JS-powered vertical tabs and a Chart.js horizontal bar chart) -> Interaction(Click tabs to show details) -> Justification(Breaks down dense info; chart provides a high-level summary). 4. Architecture: Goal(Relationships) -> Viz(HTML/CSS flowchart) -> Interaction(Static diagram) -> Justification(Visually explains the flow of components, which is critical for architecture). 5. Quiz: Goal(Reinforce) -> Viz(Interactive HTML form) -> Interaction(Select answer, get feedback) -> Justification(Active recall improves learning). -->
@@ -16,45 +18,60 @@
     <style>
         body {
             font-family: 'Be Vietnam Pro', sans-serif;
-            background-color: #f8fafc; /* slate-50 */
-            color: #1e293b; /* slate-800 */
+            background-color: #f8fafc;
+            /* slate-50 */
+            color: #1e293b;
+            /* slate-800 */
         }
+
         .section-title {
-            color: #0f172a; /* slate-900 */
+            color: #0f172a;
+            /* slate-900 */
         }
+
         .card {
             background-color: white;
             border-radius: 0.75rem;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
             transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
         }
+
         .card:hover {
             transform: translateY(-4px);
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
         }
+
         .tab-button {
             transition: all 0.2s ease-in-out;
             border-left-width: 4px;
             border-color: transparent;
         }
+
         .tab-button.active {
-            background-color: #e0f2fe; /* sky-100 */
-            border-color: #0ea5e9; /* sky-500 */
-            color: #0c4a6e; /* sky-800 */
+            background-color: #e0f2fe;
+            /* sky-100 */
+            border-color: #0ea5e9;
+            /* sky-500 */
+            color: #0c4a6e;
+            /* sky-800 */
             font-weight: 600;
         }
+
         .flow-arrow {
             position: relative;
         }
+
         .flow-arrow::after {
             content: '▼';
             position: absolute;
             left: 50%;
             bottom: -20px;
             transform: translateX(-50%);
-            color: #64748b; /* slate-500 */
+            color: #64748b;
+            /* slate-500 */
             font-size: 1.5rem;
         }
+
         .chart-container {
             position: relative;
             width: 100%;
@@ -64,587 +81,745 @@
             height: 300px;
             max-height: 400px;
         }
+
         .btn {
             display: inline-block;
             padding: 0.75rem 1.5rem;
             border-radius: 0.5rem;
-            background-color: #0ea5e9; /* sky-500 */
+            background-color: #0ea5e9;
+            /* sky-500 */
             color: white;
             font-weight: 600;
             text-align: center;
             transition: background-color 0.2s;
         }
+
         .btn:hover {
-            background-color: #0284c7; /* sky-600 */
+            background-color: #0284c7;
+            /* sky-600 */
         }
     </style>
 </head>
-<body>
+
+<body class="text-dark">
+
+    <style>
+        .fixed-nav {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .btn-nav {
+            display: inline-block;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            transition: background-color 0.3s ease;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+        }
+
+        .btn-nav:hover {
+            background-color: #005f8c;
+            /* Darker shade for hover effect */
+        }
+
+        .bg-primary {
+            background-color: #003F5C;
+        }
+
+        .bg-secondary {
+            background-color: #2579B2;
+        }
+
+        .bg-accent {
+            background-color: #67ABE2;
+        }
+
+        .text-light {
+            color: #91C8F0;
+        }
+
+        .text-dark {
+            color: #003F5C;
+        }
+
+        .text-accent {
+            color: #67ABE2;
+        }
+    </style>
     <div class="container mx-auto p-4 md:p-8 max-w-6xl">
-        <header class="text-center mb-12 relative">
-            <h1 class="text-4xl md:text-5xl font-bold section-title mb-2" data-i18n="header.title">Tổng Quan Tương Tác về AWS WAF</h1>
-            <p class="text-lg text-slate-600" data-i18n="header.subtitle">Khám phá Tường lửa Ứng dụng Web của AWS một cách trực quan</p>
-            <div class="absolute top-0 right-0 mt-4 mr-4 flex space-x-2">
-                <button id="lang-toggle-vi" class="px-3 py-1 rounded-md bg-sky-500 text-white font-semibold text-sm">VI</button>
-                <button id="lang-toggle-en" class="px-3 py-1 rounded-md bg-slate-200 text-slate-700 font-semibold text-sm">EN</button>
-            </div>
-        </header>
+        <div class="fixed-nav">
+            <a href="296-encryption101.html" class="btn-nav bg-secondary text-white px-4 py-2 rounded mb-2">⬅ Previous</a>
+            <a href="#top" class="btn-nav bg-accent text-white px-4 py-2 rounded mb-2">⬆ Top</a>
+            <a href="#bottom" class="btn-nav bg-accent text-white px-4 py-2 rounded mb-2">⬇ Bottom</a>
+            <a href="309-shield.html" class="btn-nav bg-secondary text-white px-4 py-2 rounded">Next ➡</a>
+        </div>
+        <div class="container mx-auto p-4 md:p-8 max-w-6xl">
+            <header class="text-center mb-12 relative">
+                <h1 class="text-4xl md:text-5xl font-bold section-title mb-2" data-i18n="header.title">Tổng Quan Tương
+                    Tác về AWS WAF</h1>
+                <p class="text-lg text-slate-600" data-i18n="header.subtitle">Khám phá Tường lửa Ứng dụng Web của AWS
+                    một cách trực quan</p>
+                <div class="absolute top-0 right-0 mt-4 mr-4 flex space-x-2">
+                    <button id="lang-toggle-vi"
+                        class="px-3 py-1 rounded-md bg-sky-500 text-white font-semibold text-sm">VI</button>
+                    <button id="lang-toggle-en"
+                        class="px-3 py-1 rounded-md bg-slate-200 text-slate-700 font-semibold text-sm">EN</button>
+                </div>
+            </header>
 
-        <main>
-            <!-- Section 1: Core Concepts -->
-            <section id="concepts" class="mb-16">
-                <h2 class="text-3xl font-bold section-title mb-8 text-center" data-i18n="concepts.sectionTitle">Các Khái Niệm Cốt Lõi</h2>
-                <div class="grid md:grid-cols-2 gap-8 items-start">
+            <main>
+                <!-- Section 1: Core Concepts -->
+                <section id="concepts" class="mb-16">
+                    <h2 class="text-3xl font-bold section-title mb-8 text-center" data-i18n="concepts.sectionTitle">Các
+                        Khái Niệm Cốt Lõi</h2>
+                    <div class="grid md:grid-cols-2 gap-8 items-start">
+                        <div class="card p-6">
+                            <h3 class="text-xl font-bold mb-4 text-sky-700" data-i18n="concepts.wafWhatTitle">WAF là gì?
+                                Bảo vệ ở Lớp 7</h3>
+                            <p class="text-slate-600 mb-4" data-i18n="concepts.wafWhatText">AWS WAF (Web Application
+                                Firewall) bảo vệ ứng dụng web của bạn khỏi các cuộc tấn công phổ biến ở <strong>Lớp 7
+                                    (HTTP)</strong>. Điều này cho phép WAF kiểm tra và lọc lưu lượng truy cập HTTP,
+                                không giống như các tường lửa khác hoạt động ở các lớp thấp hơn.</p>
+                            <div class="flex justify-around text-center mt-6">
+                                <div class="p-4 bg-sky-50 border-2 border-sky-500 rounded-lg w-1/2 mr-2">
+                                    <p class="font-bold text-sky-800" data-i18n="concepts.layer7Title">Lớp 7
+                                        (Application)</p>
+                                    <p class="text-sm text-sky-600" data-i18n="concepts.layer7Protocol">HTTP/HTTPS</p>
+                                    <p class="mt-2 text-2xl">🛡️</p>
+                                    <p class="mt-1 font-semibold text-slate-700" data-i18n="concepts.layer7Component">
+                                        AWS WAF</p>
+                                </div>
+                                <div class="p-4 bg-slate-50 border-2 border-slate-300 rounded-lg w-1/2 ml-2">
+                                    <p class="font-bold text-slate-800" data-i18n="concepts.layer4Title">Lớp 4
+                                        (Transport)</p>
+                                    <p class="text-sm text-slate-600" data-i18n="concepts.layer4Protocol">TCP/UDP</p>
+                                    <p class="mt-2 text-2xl">⚙️</p>
+                                    <p class="mt-1 font-semibold text-slate-700" data-i18n="concepts.layer4Component">
+                                        Network Load Balancer</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card p-6">
+                            <h3 class="text-xl font-bold mb-4 text-sky-700" data-i18n="concepts.deploymentTitle">Triển
+                                khai WAF ở đâu?</h3>
+                            <p class="text-slate-600 mb-4" data-i18n="concepts.deploymentText">WAF có thể được tích hợp
+                                với các dịch vụ AWS cụ thể. Việc biết các mục tiêu này là rất quan trọng.</p>
+                            <p class="font-semibold mb-2 text-slate-700" data-i18n="concepts.supportedServices">Dịch vụ
+                                hỗ trợ:</p>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-center">
+                                <div class="p-2 bg-green-100 text-green-800 rounded-md text-sm"
+                                    data-i18n="concepts.alb">Application Load Balancer</div>
+                                <div class="p-2 bg-green-100 text-green-800 rounded-md text-sm"
+                                    data-i18n="concepts.apiGateway">API Gateway</div>
+                                <div class="p-2 bg-green-100 text-green-800 rounded-md text-sm"
+                                    data-i18n="concepts.cloudFront">CloudFront</div>
+                                <div class="p-2 bg-green-100 text-green-800 rounded-md text-sm"
+                                    data-i18n="concepts.appSync">AppSync GraphQL</div>
+                                <div class="p-2 bg-green-100 text-green-800 rounded-md text-sm"
+                                    data-i18n="concepts.cognito">Cognito User Pool</div>
+                                <div class="p-2 bg-red-100 text-red-800 rounded-md text-sm font-semibold"
+                                    data-i18n="concepts.nlbUnsupported">❌ Network Load Balancer</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 2: Rules -->
+                <section id="rules" class="mb-16">
+                    <h2 class="text-3xl font-bold section-title mb-8 text-center" data-i18n="rules.sectionTitle">Web
+                        ACLs & Các Loại Quy Tắc</h2>
+                    <p class="text-center text-slate-600 max-w-3xl mx-auto mb-8" data-i18n="rules.introText">Web Access
+                        Control Lists (Web ACLs) là tập hợp các quy tắc bạn áp dụng để bảo vệ tài nguyên AWS của mình.
+                        Khám phá các loại quy tắc khác nhau bạn có thể định cấu hình.</p>
+
                     <div class="card p-6">
-                        <h3 class="text-xl font-bold mb-4 text-sky-700" data-i18n="concepts.wafWhatTitle">WAF là gì? Bảo vệ ở Lớp 7</h3>
-                        <p class="text-slate-600 mb-4" data-i18n="concepts.wafWhatText">AWS WAF (Web Application Firewall) bảo vệ ứng dụng web của bạn khỏi các cuộc tấn công phổ biến ở <strong>Lớp 7 (HTTP)</strong>. Điều này cho phép WAF kiểm tra và lọc lưu lượng truy cập HTTP, không giống như các tường lửa khác hoạt động ở các lớp thấp hơn.</p>
-                        <div class="flex justify-around text-center mt-6">
-                            <div class="p-4 bg-sky-50 border-2 border-sky-500 rounded-lg w-1/2 mr-2">
-                                <p class="font-bold text-sky-800" data-i18n="concepts.layer7Title">Lớp 7 (Application)</p>
-                                <p class="text-sm text-sky-600" data-i18n="concepts.layer7Protocol">HTTP/HTTPS</p>
-                                <p class="mt-2 text-2xl">🛡️</p>
-                                <p class="mt-1 font-semibold text-slate-700" data-i18n="concepts.layer7Component">AWS WAF</p>
-                            </div>
-                            <div class="p-4 bg-slate-50 border-2 border-slate-300 rounded-lg w-1/2 ml-2">
-                                <p class="font-bold text-slate-800" data-i18n="concepts.layer4Title">Lớp 4 (Transport)</p>
-                                <p class="text-sm text-slate-600" data-i18n="concepts.layer4Protocol">TCP/UDP</p>
-                                <p class="mt-2 text-2xl">⚙️</p>
-                                <p class="mt-1 font-semibold text-slate-700" data-i18n="concepts.layer4Component">Network Load Balancer</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card p-6">
-                        <h3 class="text-xl font-bold mb-4 text-sky-700" data-i18n="concepts.deploymentTitle">Triển khai WAF ở đâu?</h3>
-                        <p class="text-slate-600 mb-4" data-i18n="concepts.deploymentText">WAF có thể được tích hợp với các dịch vụ AWS cụ thể. Việc biết các mục tiêu này là rất quan trọng.</p>
-                        <p class="font-semibold mb-2 text-slate-700" data-i18n="concepts.supportedServices">Dịch vụ hỗ trợ:</p>
-                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-center">
-                            <div class="p-2 bg-green-100 text-green-800 rounded-md text-sm" data-i18n="concepts.alb">Application Load Balancer</div>
-                            <div class="p-2 bg-green-100 text-green-800 rounded-md text-sm" data-i18n="concepts.apiGateway">API Gateway</div>
-                            <div class="p-2 bg-green-100 text-green-800 rounded-md text-sm" data-i18n="concepts.cloudFront">CloudFront</div>
-                            <div class="p-2 bg-green-100 text-green-800 rounded-md text-sm" data-i18n="concepts.appSync">AppSync GraphQL</div>
-                            <div class="p-2 bg-green-100 text-green-800 rounded-md text-sm" data-i18n="concepts.cognito">Cognito User Pool</div>
-                            <div class="p-2 bg-red-100 text-red-800 rounded-md text-sm font-semibold" data-i18n="concepts.nlbUnsupported">❌ Network Load Balancer</div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Section 2: Rules -->
-            <section id="rules" class="mb-16">
-                <h2 class="text-3xl font-bold section-title mb-8 text-center" data-i18n="rules.sectionTitle">Web ACLs & Các Loại Quy Tắc</h2>
-                <p class="text-center text-slate-600 max-w-3xl mx-auto mb-8" data-i18n="rules.introText">Web Access Control Lists (Web ACLs) là tập hợp các quy tắc bạn áp dụng để bảo vệ tài nguyên AWS của mình. Khám phá các loại quy tắc khác nhau bạn có thể định cấu hình.</p>
-                
-                <div class="card p-6">
-                    <div class="flex flex-col md:flex-row gap-8">
-                        <!-- Rule Tabs -->
-                        <div class="w-full md:w-1/3">
-                            <h3 class="font-bold mb-4 text-lg text-slate-700" data-i18n="rules.selectRuleType">Chọn loại quy tắc:</h3>
-                            <div id="rule-tabs" class="space-y-1">
-                                <button data-target="ip-set" class="tab-button w-full text-left p-3 active" data-i18n="rules.ipSetTab">Lọc theo IP (IP Sets)</button>
-                                <button data-target="http" class="tab-button w-full text-left p-3" data-i18n="rules.httpTab">Lọc theo HTTP</button>
-                                <button data-target="attacks" class="tab-button w-full text-left p-3" data-i18n="rules.attacksTab">Chống tấn công phổ biến</button>
-                                <button data-target="geo" class="tab-button w-full text-left p-3" data-i18n="rules.geoTab">Lọc theo vị trí (Geo Match)</button>
-                                <button data-target="rate" class="tab-button w-full text-left p-3" data-i18n="rules.rateTab">Chống DDoS (Rate-based)</button>
-                                <button data-target="scope" class="tab-button w-full text-left p-3" data-i18n="rules.scopeTab">Phạm vi (Regional/Global)</button>
-                            </div>
-                            <div class="mt-8">
-                                <h3 class="font-bold mb-4 text-lg text-slate-700" data-i18n="rules.chart.title">Phân loại Quy tắc WAF</h3>
-                                <div class="chart-container">
-                                    <canvas id="ruleChart"></canvas>
+                        <div class="flex flex-col md:flex-row gap-8">
+                            <!-- Rule Tabs -->
+                            <div class="w-full md:w-1/3">
+                                <h3 class="font-bold mb-4 text-lg text-slate-700" data-i18n="rules.selectRuleType">Chọn
+                                    loại quy tắc:</h3>
+                                <div id="rule-tabs" class="space-y-1">
+                                    <button data-target="ip-set" class="tab-button w-full text-left p-3 active"
+                                        data-i18n="rules.ipSetTab">Lọc theo IP (IP Sets)</button>
+                                    <button data-target="http" class="tab-button w-full text-left p-3"
+                                        data-i18n="rules.httpTab">Lọc theo HTTP</button>
+                                    <button data-target="attacks" class="tab-button w-full text-left p-3"
+                                        data-i18n="rules.attacksTab">Chống tấn công phổ biến</button>
+                                    <button data-target="geo" class="tab-button w-full text-left p-3"
+                                        data-i18n="rules.geoTab">Lọc theo vị trí (Geo Match)</button>
+                                    <button data-target="rate" class="tab-button w-full text-left p-3"
+                                        data-i18n="rules.rateTab">Chống DDoS (Rate-based)</button>
+                                    <button data-target="scope" class="tab-button w-full text-left p-3"
+                                        data-i18n="rules.scopeTab">Phạm vi (Regional/Global)</button>
+                                </div>
+                                <div class="mt-8">
+                                    <h3 class="font-bold mb-4 text-lg text-slate-700" data-i18n="rules.chart.title">Phân
+                                        loại Quy tắc WAF</h3>
+                                    <div class="chart-container">
+                                        <canvas id="ruleChart"></canvas>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Rule Content -->
-                        <div class="w-full md:w-2/3 bg-slate-50 p-6 rounded-lg">
-                            <div id="rule-content">
-                                <div id="ip-set-content" class="rule-pane">
-                                    <h4 class="text-xl font-bold text-sky-700 mb-2" data-i18n="rules.ipSetContentTitle">Lọc theo Tập hợp IP (IP Sets)</h4>
-                                    <p class="text-slate-600" data-i18n="rules.ipSetContentText">Cho phép hoặc chặn các yêu cầu dựa trên địa chỉ IP nguồn. Rất hữu ích để chặn lưu lượng truy cập độc hại đã biết hoặc chỉ cho phép truy cập từ các địa chỉ IP cụ thể.</p>
-                                    <div class="mt-4 p-4 bg-sky-100 text-sky-800 rounded-lg" data-i18n="rules.ipSetContentNote">Mỗi IP set có thể chứa tới <strong>10.000 địa chỉ IP</strong> hoặc dải IP. Bạn có thể sử dụng nhiều quy tắc nếu cần nhiều hơn.</div>
-                                </div>
-                                <div id="http-content" class="rule-pane hidden">
-                                    <h4 class="text-xl font-bold text-sky-700 mb-2" data-i18n="rules.httpContentTitle">Lọc theo Tiêu đề & Nội dung HTTP</h4>
-                                    <p class="text-slate-600" data-i18n="rules.httpContentText">Kiểm tra các phần khác nhau của yêu cầu web, chẳng hạn như tiêu đề (ví dụ: User-Agent, Referer), phương thức HTTP (GET, POST), hoặc nội dung của yêu cầu (body) để tìm các mẫu cụ thể.</p>
-                                </div>
-                                <div id="attacks-content" class="rule-pane hidden">
-                                    <h4 class="text-xl font-bold text-sky-700 mb-2" data-i18n="rules.attacksContentTitle">Bảo vệ khỏi các cuộc tấn công phổ biến</h4>
-                                    <p class="text-slate-600" data-i18n="rules.attacksContentText">Sử dụng các quy tắc để khớp các chuỗi URI độc hại nhằm ngăn chặn các cuộc tấn công như:</p>
-                                    <ul class="list-disc list-inside mt-2 text-slate-600">
-                                        <li data-i18n="rules.sqlInjection"><strong>SQL Injection (SQLi):</strong> Ngăn chặn các nỗ lực chèn mã SQL độc hại.</li>
-                                        <li data-i18n="rules.xss"><strong>Cross-Site Scripting (XSS):</strong> Ngăn chặn việc chèn các tập lệnh độc hại vào các trang web.</li>
-                                    </ul>
-                                </div>
-                                <div id="geo-content" class="rule-pane hidden">
-                                    <h4 class="text-xl font-bold text-sky-700 mb-2" data-i18n="rules.geoContentTitle">Đối sánh địa lý (Geo Match)</h4>
-                                    <p class="text-slate-600" data-i18n="rules.geoContentText">Cho phép hoặc chặn lưu lượng truy cập từ các quốc gia cụ thể. Hữu ích cho việc tuân thủ các quy định về dữ liệu hoặc hạn chế truy cập đến các khu vực địa lý mục tiêu của bạn.</p>
-                                </div>
-                                <div id="rate-content" class="rule-pane hidden">
-                                    <h4 class="text-xl font-bold text-sky-700 mb-2" data-i18n="rules.rateContentTitle">Quy tắc dựa trên tỷ lệ (Rate-based)</h4>
-                                    <p class="text-slate-600" data-i18n="rules.rateContentText">Bảo vệ khỏi các cuộc tấn công DDoS và web scraping bằng cách theo dõi số lượng yêu cầu từ một địa chỉ IP duy nhất trong một khoảng thời gian 5 phút. Nếu số lượng yêu cầu vượt quá ngưỡng bạn đặt, quy tắc sẽ kích hoạt một hành động (ví dụ: chặn).</p>
-                                    <div class="mt-4 p-4 bg-sky-100 text-sky-800 rounded-lg" data-i18n="rules.rateContentNote">Ví dụ: Chặn một IP nếu nó gửi nhiều hơn <strong>2.000 yêu cầu</strong> trong 5 phút.</div>
-                                </div>
-                                 <div id="scope-content" class="rule-pane hidden">
-                                    <h4 class="text-xl font-bold text-sky-700 mb-2" data-i18n="rules.scopeContentTitle">Phạm vi của Web ACL</h4>
-                                    <p class="text-slate-600" data-i18n="rules.scopeContentText">Web ACLs được tạo cho một khu vực AWS cụ thể và có thể được sử dụng với bất kỳ tài nguyên được hỗ trợ nào trong khu vực đó.</p>
-                                     <div class="mt-4 p-4 bg-yellow-100 text-yellow-800 rounded-lg" data-i18n="rules.scopeContentNote"><strong>Ngoại lệ:</strong> Khi sử dụng với <strong>Amazon CloudFront</strong>, Web ACL phải được tạo ở khu vực <strong>US East (N. Virginia)</strong>, nhưng nó sẽ được triển khai toàn cầu đến tất cả các Edge Location của CloudFront.</div>
+                            <!-- Rule Content -->
+                            <div class="w-full md:w-2/3 bg-slate-50 p-6 rounded-lg">
+                                <div id="rule-content">
+                                    <div id="ip-set-content" class="rule-pane">
+                                        <h4 class="text-xl font-bold text-sky-700 mb-2"
+                                            data-i18n="rules.ipSetContentTitle">Lọc theo Tập hợp IP (IP Sets)</h4>
+                                        <p class="text-slate-600" data-i18n="rules.ipSetContentText">Cho phép hoặc chặn
+                                            các yêu cầu dựa trên địa chỉ IP nguồn. Rất hữu ích để chặn lưu lượng truy
+                                            cập độc hại đã biết hoặc chỉ cho phép truy cập từ các địa chỉ IP cụ thể.</p>
+                                        <div class="mt-4 p-4 bg-sky-100 text-sky-800 rounded-lg"
+                                            data-i18n="rules.ipSetContentNote">Mỗi IP set có thể chứa tới <strong>10.000
+                                                địa chỉ IP</strong> hoặc dải IP. Bạn có thể sử dụng nhiều quy tắc nếu
+                                            cần nhiều hơn.</div>
+                                    </div>
+                                    <div id="http-content" class="rule-pane hidden">
+                                        <h4 class="text-xl font-bold text-sky-700 mb-2"
+                                            data-i18n="rules.httpContentTitle">Lọc theo Tiêu đề & Nội dung HTTP</h4>
+                                        <p class="text-slate-600" data-i18n="rules.httpContentText">Kiểm tra các phần
+                                            khác nhau của yêu cầu web, chẳng hạn như tiêu đề (ví dụ: User-Agent,
+                                            Referer), phương thức HTTP (GET, POST), hoặc nội dung của yêu cầu (body) để
+                                            tìm các mẫu cụ thể.</p>
+                                    </div>
+                                    <div id="attacks-content" class="rule-pane hidden">
+                                        <h4 class="text-xl font-bold text-sky-700 mb-2"
+                                            data-i18n="rules.attacksContentTitle">Bảo vệ khỏi các cuộc tấn công phổ biến
+                                        </h4>
+                                        <p class="text-slate-600" data-i18n="rules.attacksContentText">Sử dụng các quy
+                                            tắc để khớp các chuỗi URI độc hại nhằm ngăn chặn các cuộc tấn công như:</p>
+                                        <ul class="list-disc list-inside mt-2 text-slate-600">
+                                            <li data-i18n="rules.sqlInjection"><strong>SQL Injection (SQLi):</strong>
+                                                Ngăn chặn các nỗ lực chèn mã SQL độc hại.</li>
+                                            <li data-i18n="rules.xss"><strong>Cross-Site Scripting (XSS):</strong> Ngăn
+                                                chặn việc chèn các tập lệnh độc hại vào các trang web.</li>
+                                        </ul>
+                                    </div>
+                                    <div id="geo-content" class="rule-pane hidden">
+                                        <h4 class="text-xl font-bold text-sky-700 mb-2"
+                                            data-i18n="rules.geoContentTitle">Đối sánh địa lý (Geo Match)</h4>
+                                        <p class="text-slate-600" data-i18n="rules.geoContentText">Cho phép hoặc chặn
+                                            lưu lượng truy cập từ các quốc gia cụ thể. Hữu ích cho việc tuân thủ các quy
+                                            định về dữ liệu hoặc hạn chế truy cập đến các khu vực địa lý mục tiêu của
+                                            bạn.</p>
+                                    </div>
+                                    <div id="rate-content" class="rule-pane hidden">
+                                        <h4 class="text-xl font-bold text-sky-700 mb-2"
+                                            data-i18n="rules.rateContentTitle">Quy tắc dựa trên tỷ lệ (Rate-based)</h4>
+                                        <p class="text-slate-600" data-i18n="rules.rateContentText">Bảo vệ khỏi các cuộc
+                                            tấn công DDoS và web scraping bằng cách theo dõi số lượng yêu cầu từ một địa
+                                            chỉ IP duy nhất trong một khoảng thời gian 5 phút. Nếu số lượng yêu cầu vượt
+                                            quá ngưỡng bạn đặt, quy tắc sẽ kích hoạt một hành động (ví dụ: chặn).</p>
+                                        <div class="mt-4 p-4 bg-sky-100 text-sky-800 rounded-lg"
+                                            data-i18n="rules.rateContentNote">Ví dụ: Chặn một IP nếu nó gửi nhiều hơn
+                                            <strong>2.000 yêu cầu</strong> trong 5 phút.</div>
+                                    </div>
+                                    <div id="scope-content" class="rule-pane hidden">
+                                        <h4 class="text-xl font-bold text-sky-700 mb-2"
+                                            data-i18n="rules.scopeContentTitle">Phạm vi của Web ACL</h4>
+                                        <p class="text-slate-600" data-i18n="rules.scopeContentText">Web ACLs được tạo
+                                            cho một khu vực AWS cụ thể và có thể được sử dụng với bất kỳ tài nguyên được
+                                            hỗ trợ nào trong khu vực đó.</p>
+                                        <div class="mt-4 p-4 bg-yellow-100 text-yellow-800 rounded-lg"
+                                            data-i18n="rules.scopeContentNote"><strong>Ngoại lệ:</strong> Khi sử dụng
+                                            với <strong>Amazon CloudFront</strong>, Web ACL phải được tạo ở khu vực
+                                            <strong>US East (N. Virginia)</strong>, nhưng nó sẽ được triển khai toàn cầu
+                                            đến tất cả các Edge Location của CloudFront.</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <!-- Section 3: Use Case -->
-            <section id="use-case" class="mb-16">
-                <h2 class="text-3xl font-bold section-title mb-2 text-center" data-i18n="useCase.sectionTitle">Trường Hợp Sử Dụng Điển Hình</h2>
-                <p class="text-center text-slate-600 max-w-3xl mx-auto mb-8" data-i18n="useCase.introText">Làm thế nào để có một địa chỉ IP tĩnh cho ứng dụng của bạn trong khi vẫn được bảo vệ bởi WAF trên Application Load Balancer?</p>
+                <!-- Section 3: Use Case -->
+                <section id="use-case" class="mb-16">
+                    <h2 class="text-3xl font-bold section-title mb-2 text-center" data-i18n="useCase.sectionTitle">
+                        Trường Hợp Sử Dụng Điển Hình</h2>
+                    <p class="text-center text-slate-600 max-w-3xl mx-auto mb-8" data-i18n="useCase.introText">Làm thế
+                        nào để có một địa chỉ IP tĩnh cho ứng dụng của bạn trong khi vẫn được bảo vệ bởi WAF trên
+                        Application Load Balancer?</p>
 
-                <div class="card p-8">
-                    <div class="grid md:grid-cols-2 gap-8 items-center">
-                        <div>
-                            <h3 class="text-2xl font-bold text-sky-700 mb-4" data-i18n="useCase.problemTitle">Vấn đề: ALB không có IP tĩnh</h3>
-                            <p class="text-slate-600 mb-2" data-i18n="useCase.problemText1">Application Load Balancers (ALB) cung cấp một DNS name, nhưng địa chỉ IP cơ bản của chúng có thể thay đổi. Điều này gây khó khăn nếu bạn cần một địa chỉ IP tĩnh đáng tin cậy.</p>
-                            <p class="text-slate-600 mb-4" data-i18n="useCase.problemText2">Đồng thời, bạn không thể đặt WAF trên Network Load Balancer (hoạt động ở Lớp 4) để có IP tĩnh.</p>
-                            
-                            <h3 class="text-2xl font-bold text-green-700 mb-4 mt-6" data-i18n="useCase.solutionTitle">Giải pháp: AWS Global Accelerator</h3>
-                             <p class="text-slate-600" data-i18n="useCase.solutionText">Bằng cách đặt AWS Global Accelerator ở phía trước Application Load Balancer, bạn có thể nhận được hai địa chỉ IP tĩnh. Global Accelerator sẽ định tuyến lưu lượng truy cập đến ALB của bạn, nơi AWS WAF có thể kiểm tra và bảo vệ ứng dụng của bạn.</p>
+                    <div class="card p-8">
+                        <div class="grid md:grid-cols-2 gap-8 items-center">
+                            <div>
+                                <h3 class="text-2xl font-bold text-sky-700 mb-4" data-i18n="useCase.problemTitle">Vấn
+                                    đề: ALB không có IP tĩnh</h3>
+                                <p class="text-slate-600 mb-2" data-i18n="useCase.problemText1">Application Load
+                                    Balancers (ALB) cung cấp một DNS name, nhưng địa chỉ IP cơ bản của chúng có thể thay
+                                    đổi. Điều này gây khó khăn nếu bạn cần một địa chỉ IP tĩnh đáng tin cậy.</p>
+                                <p class="text-slate-600 mb-4" data-i18n="useCase.problemText2">Đồng thời, bạn không thể
+                                    đặt WAF trên Network Load Balancer (hoạt động ở Lớp 4) để có IP tĩnh.</p>
+
+                                <h3 class="text-2xl font-bold text-green-700 mb-4 mt-6"
+                                    data-i18n="useCase.solutionTitle">Giải pháp: AWS Global Accelerator</h3>
+                                <p class="text-slate-600" data-i18n="useCase.solutionText">Bằng cách đặt AWS Global
+                                    Accelerator ở phía trước Application Load Balancer, bạn có thể nhận được hai địa chỉ
+                                    IP tĩnh. Global Accelerator sẽ định tuyến lưu lượng truy cập đến ALB của bạn, nơi
+                                    AWS WAF có thể kiểm tra và bảo vệ ứng dụng của bạn.</p>
+                            </div>
+                            <div class="text-center">
+                                <h4 class="font-bold mb-4 text-slate-700" data-i18n="useCase.architectureDiagramTitle">
+                                    Sơ đồ kiến trúc giải pháp</h4>
+                                <div class="space-y-8">
+                                    <div class="p-4 bg-slate-200 rounded-lg card flow-arrow">
+                                        <p class="font-bold" data-i18n="useCase.user">Người dùng</p>
+                                        <p class="text-sm text-slate-600" data-i18n="useCase.userDetail">Truy cập qua IP
+                                            tĩnh</p>
+                                    </div>
+                                    <div class="p-4 bg-blue-200 rounded-lg card flow-arrow">
+                                        <p class="font-bold" data-i18n="useCase.globalAccelerator">AWS Global
+                                            Accelerator</p>
+                                        <p class="text-sm text-blue-600" data-i18n="useCase.globalAcceleratorDetail">
+                                            Cung cấp 2 IP tĩnh</p>
+                                    </div>
+                                    <div class="p-4 bg-sky-200 rounded-lg card flow-arrow">
+                                        <p class="font-bold" data-i18n="useCase.albDiagram">Application Load Balancer
+                                        </p>
+                                        <p class="text-sm text-sky-600" data-i18n="useCase.albDiagramDetail">Gắn kèm WAF
+                                            để bảo vệ</p>
+                                    </div>
+                                    <div class="p-4 bg-green-200 rounded-lg card">
+                                        <p class="font-bold" data-i18n="useCase.ec2Instances">EC2 Instances</p>
+                                        <p class="text-sm text-green-600" data-i18n="useCase.ec2InstancesDetail">Ứng
+                                            dụng của bạn</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="text-center">
-                             <h4 class="font-bold mb-4 text-slate-700" data-i18n="useCase.architectureDiagramTitle">Sơ đồ kiến trúc giải pháp</h4>
-                             <div class="space-y-8">
-                                <div class="p-4 bg-slate-200 rounded-lg card flow-arrow">
-                                    <p class="font-bold" data-i18n="useCase.user">Người dùng</p>
-                                    <p class="text-sm text-slate-600" data-i18n="useCase.userDetail">Truy cập qua IP tĩnh</p>
-                                </div>
-                                 <div class="p-4 bg-blue-200 rounded-lg card flow-arrow">
-                                    <p class="font-bold" data-i18n="useCase.globalAccelerator">AWS Global Accelerator</p>
-                                    <p class="text-sm text-blue-600" data-i18n="useCase.globalAcceleratorDetail">Cung cấp 2 IP tĩnh</p>
-                                </div>
-                                <div class="p-4 bg-sky-200 rounded-lg card flow-arrow">
-                                    <p class="font-bold" data-i18n="useCase.albDiagram">Application Load Balancer</p>
-                                    <p class="text-sm text-sky-600" data-i18n="useCase.albDiagramDetail">Gắn kèm WAF để bảo vệ</p>
-                                </div>
-                                <div class="p-4 bg-green-200 rounded-lg card">
-                                    <p class="font-bold" data-i18n="useCase.ec2Instances">EC2 Instances</p>
-                                    <p class="text-sm text-green-600" data-i18n="useCase.ec2InstancesDetail">Ứng dụng của bạn</p>
-                                </div>
-                             </div>
+                    </div>
+                </section>
+
+                <!-- Section 4: Key Takeaways -->
+                <section id="summary" class="mb-16">
+                    <h2 class="text-3xl font-bold section-title mb-8 text-center" data-i18n="summary.sectionTitle">Điểm
+                        Chính Cần Ghi Nhớ</h2>
+                    <div class="max-w-3xl mx-auto space-y-4">
+                        <div class="card p-4 flex items-start space-x-4">
+                            <div class="text-2xl pt-1">1️⃣</div>
+                            <p class="text-slate-700" data-i18n="summary.point1">AWS WAF bảo vệ các ứng dụng web ở
+                                <strong>Lớp 7 (HTTP)</strong> chống lại các cuộc tấn công web phổ biến.</p>
+                        </div>
+                        <div class="card p-4 flex items-start space-x-4">
+                            <div class="text-2xl pt-1">2️⃣</div>
+                            <p class="text-slate-700" data-i18n="summary.point2">WAF có thể được triển khai trên
+                                <strong>ALB, API Gateway, CloudFront, AppSync, và Cognito</strong>, nhưng <span
+                                    class="font-bold text-red-600">không</span> thể trên Network Load Balancer.</p>
+                        </div>
+                        <div class="card p-4 flex items-start space-x-4">
+                            <div class="text-2xl pt-1">3️⃣</div>
+                            <p class="text-slate-700" data-i18n="summary.point3">Web ACLs cho phép lọc theo nhiều tiêu
+                                chí: <strong>IP sets, HTTP headers/body, URI, kích thước, vị trí địa lý, và tỷ lệ yêu
+                                    cầu</strong>.</p>
+                        </div>
+                        <div class="card p-4 flex items-start space-x-4">
+                            <div class="text-2xl pt-1">4️⃣</div>
+                            <p class="text-slate-700" data-i18n="summary.point4">Để có IP tĩnh với WAF trên ALB, hãy sử
+                                dụng <strong>AWS Global Accelerator</strong> ở phía trước ALB.</p>
                         </div>
                     </div>
-                </div>
-            </section>
-            
-            <!-- Section 4: Key Takeaways -->
-            <section id="summary" class="mb-16">
-                 <h2 class="text-3xl font-bold section-title mb-8 text-center" data-i18n="summary.sectionTitle">Điểm Chính Cần Ghi Nhớ</h2>
-                 <div class="max-w-3xl mx-auto space-y-4">
-                    <div class="card p-4 flex items-start space-x-4">
-                        <div class="text-2xl pt-1">1️⃣</div>
-                        <p class="text-slate-700" data-i18n="summary.point1">AWS WAF bảo vệ các ứng dụng web ở <strong>Lớp 7 (HTTP)</strong> chống lại các cuộc tấn công web phổ biến.</p>
-                    </div>
-                    <div class="card p-4 flex items-start space-x-4">
-                        <div class="text-2xl pt-1">2️⃣</div>
-                        <p class="text-slate-700" data-i18n="summary.point2">WAF có thể được triển khai trên <strong>ALB, API Gateway, CloudFront, AppSync, và Cognito</strong>, nhưng <span class="font-bold text-red-600">không</span> thể trên Network Load Balancer.</p>
-                    </div>
-                    <div class="card p-4 flex items-start space-x-4">
-                        <div class="text-2xl pt-1">3️⃣</div>
-                        <p class="text-slate-700" data-i18n="summary.point3">Web ACLs cho phép lọc theo nhiều tiêu chí: <strong>IP sets, HTTP headers/body, URI, kích thước, vị trí địa lý, và tỷ lệ yêu cầu</strong>.</p>
-                    </div>
-                    <div class="card p-4 flex items-start space-x-4">
-                        <div class="text-2xl pt-1">4️⃣</div>
-                        <p class="text-slate-700" data-i18n="summary.point4">Để có IP tĩnh với WAF trên ALB, hãy sử dụng <strong>AWS Global Accelerator</strong> ở phía trước ALB.</p>
-                    </div>
-                 </div>
-            </section>
+                </section>
 
-        </main>
-    </div>
+            </main>
+        </div>
 
-    <script>
-        const translations = {
-            vi: {
-                header: {
-                    title: "Tổng Quan Tương Tác về AWS WAF",
-                    subtitle: "Khám phá Tường lửa Ứng dụng Web của AWS một cách trực quan"
-                },
-                concepts: {
-                    sectionTitle: "Các Khái Niệm Cốt Lõi",
-                    wafWhatTitle: "WAF là gì? Bảo vệ ở Lớp 7",
-                    wafWhatText: "AWS WAF (Web Application Firewall) bảo vệ ứng dụng web của bạn khỏi các cuộc tấn công phổ biến ở <strong>Lớp 7 (HTTP)</strong>. Điều này cho phép WAF kiểm tra và lọc lưu lượng truy cập HTTP, không giống như các tường lửa khác hoạt động ở các lớp thấp hơn.",
-                    layer7Title: "Lớp 7 (Application)",
-                    layer7Protocol: "HTTP/HTTPS",
-                    layer7Component: "AWS WAF",
-                    layer4Title: "Lớp 4 (Transport)",
-                    layer4Protocol: "TCP/UDP",
-                    layer4Component: "Network Load Balancer",
-                    deploymentTitle: "Triển khai WAF ở đâu?",
-                    deploymentText: "WAF có thể được tích hợp với các dịch vụ AWS cụ thể. Việc biết các mục tiêu này là rất quan trọng.",
-                    supportedServices: "Dịch vụ hỗ trợ:",
-                    alb: "Application Load Balancer",
-                    apiGateway: "API Gateway",
-                    cloudFront: "CloudFront",
-                    appSync: "AppSync GraphQL",
-                    cognito: "Cognito User Pool",
-                    nlbUnsupported: "❌ Network Load Balancer"
-                },
-                rules: {
-                    sectionTitle: "Web ACLs & Các Loại Quy Tắc",
-                    introText: "Web Access Control Lists (Web ACLs) là tập hợp các quy tắc bạn áp dụng để bảo vệ tài nguyên AWS của mình. Khám phá các loại quy tắc khác nhau bạn có thể định cấu hình.",
-                    selectRuleType: "Chọn loại quy tắc:",
-                    ipSetTab: "Lọc theo IP (IP Sets)",
-                    httpTab: "Lọc theo HTTP",
-                    attacksTab: "Chống tấn công phổ biến",
-                    geoTab: "Lọc theo vị trí (Geo Match)",
-                    rateTab: "Chống DDoS (Rate-based)",
-                    scopeTab: "Phạm vi (Regional/Global)",
-                    ipSetContentTitle: "Lọc theo Tập hợp IP (IP Sets)",
-                    ipSetContentText: "Cho phép hoặc chặn các yêu cầu dựa trên địa chỉ IP nguồn. Rất hữu ích để chặn lưu lượng truy cập độc hại đã biết hoặc chỉ cho phép truy cập từ các địa chỉ IP cụ thể.",
-                    ipSetContentNote: "Mỗi IP set có thể chứa tới <strong>10.000 địa chỉ IP</strong> hoặc dải IP. Bạn có thể sử dụng nhiều quy tắc nếu cần nhiều hơn.",
-                    httpContentTitle: "Lọc theo Tiêu đề & Nội dung HTTP",
-                    httpContentText: "Kiểm tra các phần khác nhau của yêu cầu web, chẳng hạn như tiêu đề (ví dụ: User-Agent, Referer), phương thức HTTP (GET, POST), hoặc nội dung của yêu cầu (body) để tìm các mẫu cụ thể.",
-                    attacksContentTitle: "Bảo vệ khỏi các cuộc tấn công phổ biến",
-                    attacksContentText: "Sử dụng các quy tắc để khớp các chuỗi URI độc hại nhằm ngăn chặn các cuộc tấn công như:",
-                    sqlInjection: "<strong>SQL Injection (SQLi):</strong> Ngăn chặn các nỗ lực chèn mã SQL độc hại.",
-                    xss: "<strong>Cross-Site Scripting (XSS):</strong> Ngăn chặn việc chèn các tập lệnh độc hại vào các trang web.",
-                    geoContentTitle: "Đối sánh địa lý (Geo Match)",
-                    geoContentText: "Cho phép hoặc chặn lưu lượng truy cập từ các quốc gia cụ thể. Hữu ích cho việc tuân thủ các quy định về dữ liệu hoặc hạn chế truy cập đến các khu vực địa lý mục tiêu của bạn.",
-                    rateContentTitle: "Quy tắc dựa trên tỷ lệ (Rate-based)",
-                    rateContentText: "Bảo vệ khỏi các cuộc tấn công DDoS và web scraping bằng cách theo dõi số lượng yêu cầu từ một địa chỉ IP duy nhất trong một khoảng thời gian 5 phút. Nếu số lượng yêu cầu vượt quá ngưỡng bạn đặt, quy tắc sẽ kích hoạt một hành động (ví dụ: chặn).",
-                    rateContentNote: "Ví dụ: Chặn một IP nếu nó gửi nhiều hơn <strong>2.000 yêu cầu</strong> trong 5 phút.",
-                    scopeContentTitle: "Phạm vi của Web ACL",
-                    scopeContentText: "Web ACLs được tạo cho một khu vực AWS cụ thể và có thể được sử dụng với bất kỳ tài nguyên được hỗ trợ nào trong khu vực đó.",
-                    scopeContentNote: "<strong>Ngoại lệ:</strong> Khi sử dụng với <strong>Amazon CloudFront</strong>, Web ACL phải được tạo ở khu vực <strong>US East (N. Virginia)</strong>, nhưng nó sẽ được triển khai toàn cầu đến tất cả các Edge Location của CloudFront.",
-                    chart: {
-                        labels: ["Tập hợp IP", "HTTP/Body/URI", "Bảo vệ Tấn công", "Đối sánh Vị trí", "Dựa trên Tỷ lệ", "Phạm vi"],
-                        title: "Phân loại Quy tắc WAF"
-                    }
-                },
-                useCase: {
-                    sectionTitle: "Trường Hợp Sử Dụng Điển Hình",
-                    introText: "Làm thế nào để có một địa chỉ IP tĩnh cho ứng dụng của bạn trong khi vẫn được bảo vệ bởi WAF trên Application Load Balancer?",
-                    problemTitle: "Vấn đề: ALB không có IP tĩnh",
-                    problemText1: "Application Load Balancers (ALB) cung cấp một DNS name, nhưng địa chỉ IP cơ bản của chúng có thể thay đổi. Điều này gây khó khăn nếu bạn cần một địa chỉ IP tĩnh đáng tin cậy.",
-                    problemText2: "Đồng thời, bạn không thể đặt WAF trên Network Load Balancer (hoạt động ở Lớp 4) để có IP tĩnh.",
-                    solutionTitle: "Giải pháp: AWS Global Accelerator",
-                    solutionText: "Bằng cách đặt AWS Global Accelerator ở phía trước Application Load Balancer, bạn có thể nhận được hai địa chỉ IP tĩnh. Global Accelerator sẽ định tuyến lưu lượng truy cập đến ALB của bạn, nơi AWS WAF có thể kiểm tra và bảo vệ ứng dụng của bạn.",
-                    architectureDiagramTitle: "Sơ đồ kiến trúc giải pháp",
-                    user: "Người dùng",
-                    userDetail: "Truy cập qua IP tĩnh",
-                    globalAccelerator: "AWS Global Accelerator",
-                    globalAcceleratorDetail: "Cung cấp 2 IP tĩnh",
-                    albDiagram: "Application Load Balancer",
-                    albDiagramDetail: "Gắn kèm WAF để bảo vệ",
-                    ec2Instances: "EC2 Instances",
-                    ec2InstancesDetail: "Ứng dụng của bạn"
-                },
-                summary: {
-                    sectionTitle: "Điểm Chính Cần Ghi Nhớ",
-                    point1: "AWS WAF bảo vệ các ứng dụng web ở <strong>Lớp 7 (HTTP)</strong> chống lại các cuộc tấn công web phổ biến.",
-                    point2: "WAF có thể được triển khai trên <strong>ALB, API Gateway, CloudFront, AppSync, và Cognito</strong>, nhưng <span class=\"font-bold text-red-600\">không</span> thể trên Network Load Balancer.",
-                    point3: "Web ACLs cho phép lọc theo nhiều tiêu chí: <strong>IP sets, HTTP headers/body, URI, kích thước, vị trí địa lý, và tỷ lệ yêu cầu</strong>.",
-                    point4: "Để có IP tĩnh với WAF trên ALB, hãy sử dụng <strong>AWS Global Accelerator</strong> ở phía trước ALB."
-                }
-            },
-            en: {
-                header: {
-                    title: "Interactive Overview of AWS WAF",
-                    subtitle: "Explore AWS Web Application Firewall Visually"
-                },
-                concepts: {
-                    sectionTitle: "Core Concepts",
-                    wafWhatTitle: "What is WAF? Layer 7 Protection",
-                    wafWhatText: "AWS WAF (Web Application Firewall) protects your web application from common web exploits at <strong>Layer 7 (HTTP)</strong>. This allows WAF to inspect and filter HTTP traffic, unlike other firewalls operating at lower layers.",
-                    layer7Title: "Layer 7 (Application)",
-                    layer7Protocol: "HTTP/HTTPS",
-                    layer7Component: "AWS WAF",
-                    layer4Title: "Layer 4 (Transport)",
-                    layer4Protocol: "TCP/UDP",
-                    layer4Component: "Network Load Balancer",
-                    deploymentTitle: "Where to Deploy WAF?",
-                    deploymentText: "WAF can be integrated with specific AWS services. Knowing these targets is crucial.",
-                    supportedServices: "Supported Services:",
-                    alb: "Application Load Balancer",
-                    apiGateway: "API Gateway",
-                    cloudFront: "CloudFront",
-                    appSync: "AppSync GraphQL",
-                    cognito: "Cognito User Pool",
-                    nlbUnsupported: "❌ Network Load Balancer"
-                },
-                rules: {
-                    sectionTitle: "Web ACLs & Rule Types",
-                    introText: "Web Access Control Lists (Web ACLs) are collections of rules you apply to protect your AWS resources. Explore the different types of rules you can configure.",
-                    selectRuleType: "Select rule type:",
-                    ipSetTab: "IP Filtering (IP Sets)",
-                    httpTab: "HTTP Filtering",
-                    attacksTab: "Common Attack Protection",
-                    geoTab: "Geo Match Filtering",
-                    rateTab: "DDoS Protection (Rate-based)",
-                    scopeTab: "Scope (Regional/Global)",
-                    ipSetContentTitle: "IP Set Filtering",
-                    ipSetContentText: "Allows or blocks requests based on source IP addresses. Useful for blocking known malicious traffic or only allowing access from specific IP addresses.",
-                    ipSetContentNote: "Each IP set can contain up to <strong>10,000 IP addresses</strong> or IP ranges. You can use multiple rules if you need more.",
-                    httpContentTitle: "HTTP Header & Body Filtering",
-                    httpContentText: "Inspects different parts of the web request, such as headers (e.g., User-Agent, Referer), HTTP methods (GET, POST), or the request body for specific patterns.",
-                    attacksContentTitle: "Protection from Common Attacks",
-                    attacksContentText: "Uses rules to match malicious URI strings to prevent attacks such as:",
-                    sqlInjection: "<strong>SQL Injection (SQLi):</strong> Prevents attempts to inject malicious SQL code.",
-                    xss: "<strong>Cross-Site Scripting (XSS):</strong> Prevents the injection of malicious scripts into web pages.",
-                    geoContentTitle: "Geo Match",
-                    geoContentText: "Allows or blocks traffic from specific countries. Useful for data compliance or restricting access to your target geographical regions.",
-                    rateContentTitle: "Rate-based Rules",
-                    rateContentText: "Protects against DDoS attacks and web scraping by counting the number of requests from a single IP address within a 5-minute period. If the request count exceeds your set threshold, the rule triggers an action (e.g., block).",
-                    rateContentNote: "Example: Block an IP if it sends more than <strong>2,000 requests</strong> in 5 minutes.",
-                    scopeContentTitle: "Web ACL Scope",
-                    scopeContentText: "Web ACLs are created for a specific AWS region and can be used with any supported resource in that region.",
-                    scopeContentNote: "<strong>Exception:</strong> When used with <strong>Amazon CloudFront</strong>, the Web ACL must be created in the <strong>US East (N. Virginia)</strong> region, but it will be deployed globally to all CloudFront Edge Locations.",
-                    chart: {
-                        labels: ["IP Sets", "HTTP/Body/URI", "Attack Protection", "Geo Match", "Rate-based", "Scope"],
-                        title: "WAF Rule Categories"
-                    }
-                },
-                useCase: {
-                    sectionTitle: "Typical Use Case",
-                    introText: "How to get a fixed IP address for your application while still being protected by WAF on an Application Load Balancer?",
-                    problemTitle: "Problem: ALB does not have Fixed IPs",
-                    problemText1: "Application Load Balancers (ALBs) provide a DNS name, but their underlying IP addresses can change. This makes it challenging if you need a reliable static IP address.",
-                    problemText2: "Additionally, you cannot place WAF on a Network Load Balancer (which operates at Layer 4) to get a static IP.",
-                    solutionTitle: "Solution: AWS Global Accelerator",
-                    solutionText: "By placing AWS Global Accelerator in front of your Application Load Balancer, you can obtain two static IP addresses. Global Accelerator will route traffic to your ALB, where AWS WAF can inspect and protect your application.",
-                    architectureDiagramTitle: "Solution Architecture Diagram",
-                    user: "User",
-                    userDetail: "Accesses via Fixed IP",
-                    globalAccelerator: "AWS Global Accelerator",
-                    globalAcceleratorDetail: "Provides 2 Fixed IPs",
-                    albDiagram: "Application Load Balancer",
-                    albDiagramDetail: "WAF attached for protection",
-                    ec2Instances: "EC2 Instances",
-                    ec2InstancesDetail: "Your Application"
-                },
-                summary: {
-                    sectionTitle: "Key Takeaways",
-                    point1: "AWS WAF protects web applications at <strong>Layer 7 (HTTP)</strong> against common web exploits.",
-                    point2: "WAF can be deployed on <strong>ALB, API Gateway, CloudFront, AppSync, and Cognito</strong>, but <span class=\"font-bold text-red-600\">not</span> on Network Load Balancer.",
-                    point3: "Web ACLs allow filtering based on various criteria: <strong>IP sets, HTTP headers/body, URI, size, geo-match, and rate-based rules</strong>.",
-                    point4: "To get fixed IPs with WAF on an ALB, use <strong>AWS Global Accelerator</strong> in front of the ALB."
-                }
-            }
-        };
-
-        let currentLanguage = 'vi'; // Default language
-
-        const langToggleVi = document.getElementById('lang-toggle-vi');
-        const langToggleEn = document.getElementById('lang-toggle-en');
-
-        function updateLanguageButtons() {
-            if (currentLanguage === 'vi') {
-                langToggleVi.classList.remove('bg-slate-200', 'text-slate-700');
-                langToggleVi.classList.add('bg-sky-500', 'text-white');
-                langToggleEn.classList.remove('bg-sky-500', 'text-white');
-                langToggleEn.classList.add('bg-slate-200', 'text-slate-700');
-            } else {
-                langToggleEn.classList.remove('bg-slate-200', 'text-slate-700');
-                langToggleEn.classList.add('bg-sky-500', 'text-white');
-                langToggleVi.classList.remove('bg-sky-500', 'text-white');
-                langToggleVi.classList.add('bg-slate-200', 'text-slate-700');
-            }
-        }
-
-        function getNestedTranslation(obj, path) {
-            return path.split('.').reduce((acc, part) => acc && acc[part], obj);
-        }
-
-        function updateContent() {
-            const elements = document.querySelectorAll('[data-i18n]');
-            elements.forEach(element => {
-                const key = element.getAttribute('data-i18n');
-                const translatedText = getNestedTranslation(translations[currentLanguage], key);
-                if (translatedText) {
-                    element.innerHTML = translatedText; // Use innerHTML to preserve bold tags etc.
-                }
-            });
-            updateLanguageButtons();
-            updateChartLanguage();
-        }
-
-        let ruleChartInstance = null;
-
-        function initializeRuleChart() {
-            const ctx = document.getElementById('ruleChart').getContext('2d');
-            const chartLabels = translations[currentLanguage].rules.chart.labels;
-
-            ruleChartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: chartLabels,
-                    datasets: [{
-                        label: 'Số lượng (Ước tính)', // This label is generic, not tied to specific data
-                        data: [5, 4, 5, 3, 4, 2], // Illustrative data, remains constant
-                        backgroundColor: [
-                            'rgba(14, 165, 233, 0.6)', // sky-500
-                            'rgba(6, 182, 212, 0.6)', // cyan-500
-                            'rgba(34, 197, 94, 0.6)', // green-500
-                            'rgba(251, 191, 36, 0.6)', // amber-400
-                            'rgba(249, 115, 22, 0.6)', // orange-500
-                            'rgba(148, 163, 184, 0.6)' // slate-400
-                        ],
-                        borderColor: [
-                            'rgba(14, 165, 233, 1)',
-                            'rgba(6, 182, 212, 1)',
-                            'rgba(34, 197, 94, 1)',
-                            'rgba(251, 191, 36, 1)',
-                            'rgba(249, 115, 22, 1)',
-                            'rgba(148, 163, 184, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    indexAxis: 'y', // Horizontal bar chart
-                    plugins: {
-                        legend: {
-                            display: false // No need for legend as there's only one dataset
-                        },
-                        title: {
-                            display: true,
-                            text: translations[currentLanguage].rules.chart.title,
-                            font: {
-                                size: 16,
-                                weight: 'bold'
-                            },
-                            color: '#1e293b' // slate-800
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    if (context.parsed.x !== null) {
-                                        label += context.parsed.x;
-                                    }
-                                    return label;
-                                },
-                                title: function(context) {
-                                    const label = context[0].label;
-                                    const maxChars = 16;
-                                    if (label.length > maxChars) {
-                                        let wrappedLabel = '';
-                                        let currentLine = '';
-                                        label.split(' ').forEach(word => {
-                                            if ((currentLine + word).length > maxChars && currentLine.length > 0) {
-                                                wrappedLabel += currentLine.trim() + '\n';
-                                                currentLine = word + ' ';
-                                            } else {
-                                                currentLine += word + ' ';
-                                            }
-                                        });
-                                        wrappedLabel += currentLine.trim();
-                                        return wrappedLabel;
-                                    }
-                                    return label;
-                                }
-                            }
+        <script>
+            const translations = {
+                vi: {
+                    header: {
+                        title: "Tổng Quan Tương Tác về AWS WAF",
+                        subtitle: "Khám phá Tường lửa Ứng dụng Web của AWS một cách trực quan"
+                    },
+                    concepts: {
+                        sectionTitle: "Các Khái Niệm Cốt Lõi",
+                        wafWhatTitle: "WAF là gì? Bảo vệ ở Lớp 7",
+                        wafWhatText: "AWS WAF (Web Application Firewall) bảo vệ ứng dụng web của bạn khỏi các cuộc tấn công phổ biến ở <strong>Lớp 7 (HTTP)</strong>. Điều này cho phép WAF kiểm tra và lọc lưu lượng truy cập HTTP, không giống như các tường lửa khác hoạt động ở các lớp thấp hơn.",
+                        layer7Title: "Lớp 7 (Application)",
+                        layer7Protocol: "HTTP/HTTPS",
+                        layer7Component: "AWS WAF",
+                        layer4Title: "Lớp 4 (Transport)",
+                        layer4Protocol: "TCP/UDP",
+                        layer4Component: "Network Load Balancer",
+                        deploymentTitle: "Triển khai WAF ở đâu?",
+                        deploymentText: "WAF có thể được tích hợp với các dịch vụ AWS cụ thể. Việc biết các mục tiêu này là rất quan trọng.",
+                        supportedServices: "Dịch vụ hỗ trợ:",
+                        alb: "Application Load Balancer",
+                        apiGateway: "API Gateway",
+                        cloudFront: "CloudFront",
+                        appSync: "AppSync GraphQL",
+                        cognito: "Cognito User Pool",
+                        nlbUnsupported: "❌ Network Load Balancer"
+                    },
+                    rules: {
+                        sectionTitle: "Web ACLs & Các Loại Quy Tắc",
+                        introText: "Web Access Control Lists (Web ACLs) là tập hợp các quy tắc bạn áp dụng để bảo vệ tài nguyên AWS của mình. Khám phá các loại quy tắc khác nhau bạn có thể định cấu hình.",
+                        selectRuleType: "Chọn loại quy tắc:",
+                        ipSetTab: "Lọc theo IP (IP Sets)",
+                        httpTab: "Lọc theo HTTP",
+                        attacksTab: "Chống tấn công phổ biến",
+                        geoTab: "Lọc theo vị trí (Geo Match)",
+                        rateTab: "Chống DDoS (Rate-based)",
+                        scopeTab: "Phạm vi (Regional/Global)",
+                        ipSetContentTitle: "Lọc theo Tập hợp IP (IP Sets)",
+                        ipSetContentText: "Cho phép hoặc chặn các yêu cầu dựa trên địa chỉ IP nguồn. Rất hữu ích để chặn lưu lượng truy cập độc hại đã biết hoặc chỉ cho phép truy cập từ các địa chỉ IP cụ thể.",
+                        ipSetContentNote: "Mỗi IP set có thể chứa tới <strong>10.000 địa chỉ IP</strong> hoặc dải IP. Bạn có thể sử dụng nhiều quy tắc nếu cần nhiều hơn.",
+                        httpContentTitle: "Lọc theo Tiêu đề & Nội dung HTTP",
+                        httpContentText: "Kiểm tra các phần khác nhau của yêu cầu web, chẳng hạn như tiêu đề (ví dụ: User-Agent, Referer), phương thức HTTP (GET, POST), hoặc nội dung của yêu cầu (body) để tìm các mẫu cụ thể.",
+                        attacksContentTitle: "Bảo vệ khỏi các cuộc tấn công phổ biến",
+                        attacksContentText: "Sử dụng các quy tắc để khớp các chuỗi URI độc hại nhằm ngăn chặn các cuộc tấn công như:",
+                        sqlInjection: "<strong>SQL Injection (SQLi):</strong> Ngăn chặn các nỗ lực chèn mã SQL độc hại.",
+                        xss: "<strong>Cross-Site Scripting (XSS):</strong> Ngăn chặn việc chèn các tập lệnh độc hại vào các trang web.",
+                        geoContentTitle: "Đối sánh địa lý (Geo Match)",
+                        geoContentText: "Cho phép hoặc chặn lưu lượng truy cập từ các quốc gia cụ thể. Hữu ích cho việc tuân thủ các quy định về dữ liệu hoặc hạn chế truy cập đến các khu vực địa lý mục tiêu của bạn.",
+                        rateContentTitle: "Quy tắc dựa trên tỷ lệ (Rate-based)",
+                        rateContentText: "Bảo vệ khỏi các cuộc tấn công DDoS và web scraping bằng cách theo dõi số lượng yêu cầu từ một địa chỉ IP duy nhất trong một khoảng thời gian 5 phút. Nếu số lượng yêu cầu vượt quá ngưỡng bạn đặt, quy tắc sẽ kích hoạt một hành động (ví dụ: chặn).",
+                        rateContentNote: "Ví dụ: Chặn một IP nếu nó gửi nhiều hơn <strong>2.000 yêu cầu</strong> trong 5 phút.",
+                        scopeContentTitle: "Phạm vi của Web ACL",
+                        scopeContentText: "Web ACLs được tạo cho một khu vực AWS cụ thể và có thể được sử dụng với bất kỳ tài nguyên được hỗ trợ nào trong khu vực đó.",
+                        scopeContentNote: "<strong>Ngoại lệ:</strong> Khi sử dụng với <strong>Amazon CloudFront</strong>, Web ACL phải được tạo ở khu vực <strong>US East (N. Virginia)</strong>, nhưng nó sẽ được triển khai toàn cầu đến tất cả các Edge Location của CloudFront.",
+                        chart: {
+                            labels: ["Tập hợp IP", "HTTP/Body/URI", "Bảo vệ Tấn công", "Đối sánh Vị trí", "Dựa trên Tỷ lệ", "Phạm vi"],
+                            title: "Phân loại Quy tắc WAF"
                         }
                     },
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            ticks: {
-                                color: '#475569' // slate-600
+                    useCase: {
+                        sectionTitle: "Trường Hợp Sử Dụng Điển Hình",
+                        introText: "Làm thế nào để có một địa chỉ IP tĩnh cho ứng dụng của bạn trong khi vẫn được bảo vệ bởi WAF trên Application Load Balancer?",
+                        problemTitle: "Vấn đề: ALB không có IP tĩnh",
+                        problemText1: "Application Load Balancers (ALB) cung cấp một DNS name, nhưng địa chỉ IP cơ bản của chúng có thể thay đổi. Điều này gây khó khăn nếu bạn cần một địa chỉ IP tĩnh đáng tin cậy.",
+                        problemText2: "Đồng thời, bạn không thể đặt WAF trên Network Load Balancer (hoạt động ở Lớp 4) để có IP tĩnh.",
+                        solutionTitle: "Giải pháp: AWS Global Accelerator",
+                        solutionText: "Bằng cách đặt AWS Global Accelerator ở phía trước Application Load Balancer, bạn có thể nhận được hai địa chỉ IP tĩnh. Global Accelerator sẽ định tuyến lưu lượng truy cập đến ALB của bạn, nơi AWS WAF có thể kiểm tra và bảo vệ ứng dụng của bạn.",
+                        architectureDiagramTitle: "Sơ đồ kiến trúc giải pháp",
+                        user: "Người dùng",
+                        userDetail: "Truy cập qua IP tĩnh",
+                        globalAccelerator: "AWS Global Accelerator",
+                        globalAcceleratorDetail: "Cung cấp 2 IP tĩnh",
+                        albDiagram: "Application Load Balancer",
+                        albDiagramDetail: "Gắn kèm WAF để bảo vệ",
+                        ec2Instances: "EC2 Instances",
+                        ec2InstancesDetail: "Ứng dụng của bạn"
+                    },
+                    summary: {
+                        sectionTitle: "Điểm Chính Cần Ghi Nhớ",
+                        point1: "AWS WAF bảo vệ các ứng dụng web ở <strong>Lớp 7 (HTTP)</strong> chống lại các cuộc tấn công web phổ biến.",
+                        point2: "WAF có thể được triển khai trên <strong>ALB, API Gateway, CloudFront, AppSync, và Cognito</strong>, nhưng <span class=\"font-bold text-red-600\">không</span> thể trên Network Load Balancer.",
+                        point3: "Web ACLs cho phép lọc theo nhiều tiêu chí: <strong>IP sets, HTTP headers/body, URI, kích thước, vị trí địa lý, và tỷ lệ yêu cầu</strong>.",
+                        point4: "Để có IP tĩnh với WAF trên ALB, hãy sử dụng <strong>AWS Global Accelerator</strong> ở phía trước ALB."
+                    }
+                },
+                en: {
+                    header: {
+                        title: "Interactive Overview of AWS WAF",
+                        subtitle: "Explore AWS Web Application Firewall Visually"
+                    },
+                    concepts: {
+                        sectionTitle: "Core Concepts",
+                        wafWhatTitle: "What is WAF? Layer 7 Protection",
+                        wafWhatText: "AWS WAF (Web Application Firewall) protects your web application from common web exploits at <strong>Layer 7 (HTTP)</strong>. This allows WAF to inspect and filter HTTP traffic, unlike other firewalls operating at lower layers.",
+                        layer7Title: "Layer 7 (Application)",
+                        layer7Protocol: "HTTP/HTTPS",
+                        layer7Component: "AWS WAF",
+                        layer4Title: "Layer 4 (Transport)",
+                        layer4Protocol: "TCP/UDP",
+                        layer4Component: "Network Load Balancer",
+                        deploymentTitle: "Where to Deploy WAF?",
+                        deploymentText: "WAF can be integrated with specific AWS services. Knowing these targets is crucial.",
+                        supportedServices: "Supported Services:",
+                        alb: "Application Load Balancer",
+                        apiGateway: "API Gateway",
+                        cloudFront: "CloudFront",
+                        appSync: "AppSync GraphQL",
+                        cognito: "Cognito User Pool",
+                        nlbUnsupported: "❌ Network Load Balancer"
+                    },
+                    rules: {
+                        sectionTitle: "Web ACLs & Rule Types",
+                        introText: "Web Access Control Lists (Web ACLs) are collections of rules you apply to protect your AWS resources. Explore the different types of rules you can configure.",
+                        selectRuleType: "Select rule type:",
+                        ipSetTab: "IP Filtering (IP Sets)",
+                        httpTab: "HTTP Filtering",
+                        attacksTab: "Common Attack Protection",
+                        geoTab: "Geo Match Filtering",
+                        rateTab: "DDoS Protection (Rate-based)",
+                        scopeTab: "Scope (Regional/Global)",
+                        ipSetContentTitle: "IP Set Filtering",
+                        ipSetContentText: "Allows or blocks requests based on source IP addresses. Useful for blocking known malicious traffic or only allowing access from specific IP addresses.",
+                        ipSetContentNote: "Each IP set can contain up to <strong>10,000 IP addresses</strong> or IP ranges. You can use multiple rules if you need more.",
+                        httpContentTitle: "HTTP Header & Body Filtering",
+                        httpContentText: "Inspects different parts of the web request, such as headers (e.g., User-Agent, Referer), HTTP methods (GET, POST), or the request body for specific patterns.",
+                        attacksContentTitle: "Protection from Common Attacks",
+                        attacksContentText: "Uses rules to match malicious URI strings to prevent attacks such as:",
+                        sqlInjection: "<strong>SQL Injection (SQLi):</strong> Prevents attempts to inject malicious SQL code.",
+                        xss: "<strong>Cross-Site Scripting (XSS):</strong> Prevents the injection of malicious scripts into web pages.",
+                        geoContentTitle: "Geo Match",
+                        geoContentText: "Allows or blocks traffic from specific countries. Useful for data compliance or restricting access to your target geographical regions.",
+                        rateContentTitle: "Rate-based Rules",
+                        rateContentText: "Protects against DDoS attacks and web scraping by counting the number of requests from a single IP address within a 5-minute period. If the request count exceeds your set threshold, the rule triggers an action (e.g., block).",
+                        rateContentNote: "Example: Block an IP if it sends more than <strong>2,000 requests</strong> in 5 minutes.",
+                        scopeContentTitle: "Web ACL Scope",
+                        scopeContentText: "Web ACLs are created for a specific AWS region and can be used with any supported resource in that region.",
+                        scopeContentNote: "<strong>Exception:</strong> When used with <strong>Amazon CloudFront</strong>, the Web ACL must be created in the <strong>US East (N. Virginia)</strong> region, but it will be deployed globally to all CloudFront Edge Locations.",
+                        chart: {
+                            labels: ["IP Sets", "HTTP/Body/URI", "Attack Protection", "Geo Match", "Rate-based", "Scope"],
+                            title: "WAF Rule Categories"
+                        }
+                    },
+                    useCase: {
+                        sectionTitle: "Typical Use Case",
+                        introText: "How to get a fixed IP address for your application while still being protected by WAF on an Application Load Balancer?",
+                        problemTitle: "Problem: ALB does not have Fixed IPs",
+                        problemText1: "Application Load Balancers (ALBs) provide a DNS name, but their underlying IP addresses can change. This makes it challenging if you need a reliable static IP address.",
+                        problemText2: "Additionally, you cannot place WAF on a Network Load Balancer (which operates at Layer 4) to get a static IP.",
+                        solutionTitle: "Solution: AWS Global Accelerator",
+                        solutionText: "By placing AWS Global Accelerator in front of your Application Load Balancer, you can obtain two static IP addresses. Global Accelerator will route traffic to your ALB, where AWS WAF can inspect and protect your application.",
+                        architectureDiagramTitle: "Solution Architecture Diagram",
+                        user: "User",
+                        userDetail: "Accesses via Fixed IP",
+                        globalAccelerator: "AWS Global Accelerator",
+                        globalAcceleratorDetail: "Provides 2 Fixed IPs",
+                        albDiagram: "Application Load Balancer",
+                        albDiagramDetail: "WAF attached for protection",
+                        ec2Instances: "EC2 Instances",
+                        ec2InstancesDetail: "Your Application"
+                    },
+                    summary: {
+                        sectionTitle: "Key Takeaways",
+                        point1: "AWS WAF protects web applications at <strong>Layer 7 (HTTP)</strong> against common web exploits.",
+                        point2: "WAF can be deployed on <strong>ALB, API Gateway, CloudFront, AppSync, and Cognito</strong>, but <span class=\"font-bold text-red-600\">not</span> on Network Load Balancer.",
+                        point3: "Web ACLs allow filtering based on various criteria: <strong>IP sets, HTTP headers/body, URI, size, geo-match, and rate-based rules</strong>.",
+                        point4: "To get fixed IPs with WAF on an ALB, use <strong>AWS Global Accelerator</strong> in front of the ALB."
+                    }
+                }
+            };
+
+            let currentLanguage = 'vi'; // Default language
+
+            const langToggleVi = document.getElementById('lang-toggle-vi');
+            const langToggleEn = document.getElementById('lang-toggle-en');
+
+            function updateLanguageButtons() {
+                if (currentLanguage === 'vi') {
+                    langToggleVi.classList.remove('bg-slate-200', 'text-slate-700');
+                    langToggleVi.classList.add('bg-sky-500', 'text-white');
+                    langToggleEn.classList.remove('bg-sky-500', 'text-white');
+                    langToggleEn.classList.add('bg-slate-200', 'text-slate-700');
+                } else {
+                    langToggleEn.classList.remove('bg-slate-200', 'text-slate-700');
+                    langToggleEn.classList.add('bg-sky-500', 'text-white');
+                    langToggleVi.classList.remove('bg-sky-500', 'text-white');
+                    langToggleVi.classList.add('bg-slate-200', 'text-slate-700');
+                }
+            }
+
+            function getNestedTranslation(obj, path) {
+                return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+            }
+
+            function updateContent() {
+                const elements = document.querySelectorAll('[data-i18n]');
+                elements.forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    const translatedText = getNestedTranslation(translations[currentLanguage], key);
+                    if (translatedText) {
+                        element.innerHTML = translatedText; // Use innerHTML to preserve bold tags etc.
+                    }
+                });
+                updateLanguageButtons();
+                updateChartLanguage();
+            }
+
+            let ruleChartInstance = null;
+
+            function initializeRuleChart() {
+                const ctx = document.getElementById('ruleChart').getContext('2d');
+                const chartLabels = translations[currentLanguage].rules.chart.labels;
+
+                ruleChartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: chartLabels,
+                        datasets: [{
+                            label: 'Số lượng (Ước tính)', // This label is generic, not tied to specific data
+                            data: [5, 4, 5, 3, 4, 2], // Illustrative data, remains constant
+                            backgroundColor: [
+                                'rgba(14, 165, 233, 0.6)', // sky-500
+                                'rgba(6, 182, 212, 0.6)', // cyan-500
+                                'rgba(34, 197, 94, 0.6)', // green-500
+                                'rgba(251, 191, 36, 0.6)', // amber-400
+                                'rgba(249, 115, 22, 0.6)', // orange-500
+                                'rgba(148, 163, 184, 0.6)' // slate-400
+                            ],
+                            borderColor: [
+                                'rgba(14, 165, 233, 1)',
+                                'rgba(6, 182, 212, 1)',
+                                'rgba(34, 197, 94, 1)',
+                                'rgba(251, 191, 36, 1)',
+                                'rgba(249, 115, 22, 1)',
+                                'rgba(148, 163, 184, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y', // Horizontal bar chart
+                        plugins: {
+                            legend: {
+                                display: false // No need for legend as there's only one dataset
                             },
-                            grid: {
-                                color: 'rgba(203, 213, 225, 0.3)' // slate-300 with transparency
+                            title: {
+                                display: true,
+                                text: translations[currentLanguage].rules.chart.title,
+                                font: {
+                                    size: 16,
+                                    weight: 'bold'
+                                },
+                                color: '#1e293b' // slate-800
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function (context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.x !== null) {
+                                            label += context.parsed.x;
+                                        }
+                                        return label;
+                                    },
+                                    title: function (context) {
+                                        const label = context[0].label;
+                                        const maxChars = 16;
+                                        if (label.length > maxChars) {
+                                            let wrappedLabel = '';
+                                            let currentLine = '';
+                                            label.split(' ').forEach(word => {
+                                                if ((currentLine + word).length > maxChars && currentLine.length > 0) {
+                                                    wrappedLabel += currentLine.trim() + '\n';
+                                                    currentLine = word + ' ';
+                                                } else {
+                                                    currentLine += word + ' ';
+                                                }
+                                            });
+                                            wrappedLabel += currentLine.trim();
+                                            return wrappedLabel;
+                                        }
+                                        return label;
+                                    }
+                                }
                             }
                         },
-                        y: {
-                            ticks: {
-                                color: '#475569', // slate-600
-                                callback: function(value, index, ticks) {
-                                    const label = this.getLabelForValue(value);
-                                    const maxChars = 16; // Max characters per line before wrapping
-                                    if (label.length > maxChars) {
-                                        let wrappedLabel = '';
-                                        let currentLine = '';
-                                        label.split(' ').forEach(word => {
-                                            if ((currentLine + word).length > maxChars && currentLine.length > 0) {
-                                                wrappedLabel += currentLine.trim() + '\n';
-                                                currentLine = word + ' ';
-                                            } else {
-                                                currentLine += word + ' ';
-                                            }
-                                        });
-                                        wrappedLabel += currentLine.trim();
-                                        return wrappedLabel;
-                                    }
-                                    return label;
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                ticks: {
+                                    color: '#475569' // slate-600
+                                },
+                                grid: {
+                                    color: 'rgba(203, 213, 225, 0.3)' // slate-300 with transparency
                                 }
                             },
-                            grid: {
-                                color: 'rgba(203, 213, 225, 0.3)' // slate-300 with transparency
+                            y: {
+                                ticks: {
+                                    color: '#475569', // slate-600
+                                    callback: function (value, index, ticks) {
+                                        const label = this.getLabelForValue(value);
+                                        const maxChars = 16; // Max characters per line before wrapping
+                                        if (label.length > maxChars) {
+                                            let wrappedLabel = '';
+                                            let currentLine = '';
+                                            label.split(' ').forEach(word => {
+                                                if ((currentLine + word).length > maxChars && currentLine.length > 0) {
+                                                    wrappedLabel += currentLine.trim() + '\n';
+                                                    currentLine = word + ' ';
+                                                } else {
+                                                    currentLine += word + ' ';
+                                                }
+                                            });
+                                            wrappedLabel += currentLine.trim();
+                                            return wrappedLabel;
+                                        }
+                                        return label;
+                                    }
+                                },
+                                grid: {
+                                    color: 'rgba(203, 213, 225, 0.3)' // slate-300 with transparency
+                                }
                             }
                         }
                     }
-                }
-            });
-        }
-
-        function updateChartLanguage() {
-            if (ruleChartInstance) {
-                ruleChartInstance.options.plugins.title.text = translations[currentLanguage].rules.chart.title;
-                ruleChartInstance.data.labels = translations[currentLanguage].rules.chart.labels;
-                ruleChartInstance.update();
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize content with default language
-            updateContent();
-
-            // Language toggle event listeners
-            langToggleVi.addEventListener('click', () => {
-                currentLanguage = 'vi';
-                updateContent();
-            });
-
-            langToggleEn.addEventListener('click', () => {
-                currentLanguage = 'en';
-                updateContent();
-            });
-
-            // Tab functionality
-            const tabsContainer = document.getElementById('rule-tabs');
-            const contentContainer = document.getElementById('rule-content');
-            
-            if (tabsContainer) {
-                const tabs = tabsContainer.querySelectorAll('.tab-button');
-                const panes = contentContainer.querySelectorAll('.rule-pane');
-
-                tabsContainer.addEventListener('click', function(event) {
-                    const clickedTab = event.target.closest('.tab-button');
-                    if (!clickedTab) return;
-
-                    tabs.forEach(tab => tab.classList.remove('active'));
-                    clickedTab.classList.add('active');
-
-                    const targetId = clickedTab.dataset.target + '-content';
-
-                    panes.forEach(pane => {
-                        if (pane.id === targetId) {
-                            pane.classList.remove('hidden');
-                        } else {
-                            pane.classList.add('hidden');
-                        }
-                    });
                 });
             }
 
-            // Initialize the chart after content is loaded
-            initializeRuleChart();
-        });
-    </script>
+            function updateChartLanguage() {
+                if (ruleChartInstance) {
+                    ruleChartInstance.options.plugins.title.text = translations[currentLanguage].rules.chart.title;
+                    ruleChartInstance.data.labels = translations[currentLanguage].rules.chart.labels;
+                    ruleChartInstance.update();
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                // Initialize content with default language
+                updateContent();
+
+                // Language toggle event listeners
+                langToggleVi.addEventListener('click', () => {
+                    currentLanguage = 'vi';
+                    updateContent();
+                });
+
+                langToggleEn.addEventListener('click', () => {
+                    currentLanguage = 'en';
+                    updateContent();
+                });
+
+                // Tab functionality
+                const tabsContainer = document.getElementById('rule-tabs');
+                const contentContainer = document.getElementById('rule-content');
+
+                if (tabsContainer) {
+                    const tabs = tabsContainer.querySelectorAll('.tab-button');
+                    const panes = contentContainer.querySelectorAll('.rule-pane');
+
+                    tabsContainer.addEventListener('click', function (event) {
+                        const clickedTab = event.target.closest('.tab-button');
+                        if (!clickedTab) return;
+
+                        tabs.forEach(tab => tab.classList.remove('active'));
+                        clickedTab.classList.add('active');
+
+                        const targetId = clickedTab.dataset.target + '-content';
+
+                        panes.forEach(pane => {
+                            if (pane.id === targetId) {
+                                pane.classList.remove('hidden');
+                            } else {
+                                pane.classList.add('hidden');
+                            }
+                        });
+                    });
+                }
+
+                // Initialize the chart after content is loaded
+                initializeRuleChart();
+            });
+        </script>
+
+        <div id="bottom" class="text-center py-8">
+        </div>
+    </div>
 </body>
+
 </html>
