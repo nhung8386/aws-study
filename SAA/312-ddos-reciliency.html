@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">Các Phương Pháp Hay Nhất Bảo Vệ DDoS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Tech Neutrals -->
+    <!-- Application Structure Plan: The application is structured into five thematic sections, each focusing on a key aspect of DDoS protection best practices, designed for intuitive exploration. 1) 'Introduction to DDoS Protection Architecture': Sets the stage by outlining common architectural components. 2) 'Edge Location Mitigation': Explains the role of AWS Edge services in filtering attacks early. 3) 'Infrastructure Layer Defense': Details strategies at the compute layer. 4) 'Application Layer Defense': Covers protection mechanisms closer to the application logic. 5) 'Reducing Attack Surface': Focuses on minimizing exposure of backend resources. A final 'Key Takeaways' section summarizes the main points. This structure guides the user through the layers of defense, making complex concepts digestible and memorable through visual cues and clear categorization. -->
+    <!-- Visualization & Content Choices: 1. Introduction: Goal(Inform) -> Viz(Text with service icons) -> Interaction(None) -> Justification(Clear textual overview with visual service recognition). 2. Edge Location Mitigation: Goal(Inform) -> Viz(Text with service icons) -> Interaction(None) -> Justification(Emphasizes the "Edge" concept with relevant services). 3. Infrastructure Layer Defense: Goal(Inform) -> Viz(Text with service icons) -> Interaction(None) -> Justification(Explains how core infrastructure components contribute). 4. Application Layer Defense: Goal(Inform) -> Viz(Text with service icons) -> Interaction(None) -> Justification(Details application-specific protection). 5. Reducing Attack Surface: Goal(Inform) -> Viz(Text with service icons) -> Interaction(None) -> Justification(Highlights methods to obscure backend). 6. Overall DDoS Defense Layers: Goal(Inform, Summarize) -> Viz(Chart.js Horizontal Bar Chart) -> Interaction(Tooltips) -> Justification(Visually reinforces the multi-layered defense strategy, making it easy to remember the different defense categories. Arbitrary data used for illustrative purposes). -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+            color: #1e293b; /* slate-800 */
+        }
+        .section-title {
+            color: #0f172a; /* slate-900 */
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px; /* Increased max-width for better readability */
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px; /* Adjusted height */
+            max-height: 450px; /* Adjusted max-height */
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            background-color: #0ea5e9; /* sky-500 */
+            color: white;
+            font-weight: 600;
+            text-align: center;
+            transition: background-color 0.2s;
+        }
+        .btn:hover {
+            background-color: #0284c7; /* sky-600 */
+        }
+        .icon-text {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .icon-text .icon {
+            font-size: 1.5rem;
+            color: #0ea5e9; /* sky-500 */
+            flex-shrink: 0; /* Prevent icon from shrinking */
+        }
+        /* Flowchart specific styles */
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            background-color: #f1f5f9; /* slate-100 */
+            box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+        }
+        .flow-node {
+            background-color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            text-align: center;
+            font-weight: 500;
+            color: #334155; /* slate-700 */
+            min-width: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        .flow-arrow-down {
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 15px solid #cbd5e1; /* slate-300 */
+            margin: -0.5rem 0; /* Adjust to reduce gap */
+        }
+        .flow-arrow-horizontal {
+            width: 40px;
+            height: 2px;
+            background-color: #cbd5e1; /* slate-300 */
+            position: relative;
+        }
+        .flow-arrow-horizontal::after {
+            content: '▶';
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #cbd5e1;
+            font-size: 0.8rem;
+        }
+        .flow-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .flow-icon {
+            font-size: 1.8rem;
+            color: #0ea5e9;
+        }
+        .flow-label {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+        .layer-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background-color: #f1f5f9;
+            border-radius: 0.75rem;
+            box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .layer-box {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            width: 100%;
+            text-align: center;
+            font-weight: 600;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .layer-arrow {
+            font-size: 1.8rem;
+            color: #94a3b8; /* slate-400 */
+        }
+        .traffic-flow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background-color: #f1f5f9;
+            border-radius: 0.75rem;
+            box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .traffic-component {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            width: 100%;
+            text-align: center;
+            font-weight: 600;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .traffic-arrow {
+            font-size: 1.8rem;
+            color: #94a3b8;
+        }
+        .shield-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background-color: #f1f5f9;
+            border-radius: 0.75rem;
+            box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .shield-box {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            width: 100%;
+            text-align: center;
+            font-weight: 600;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .shield-icon {
+            font-size: 2rem;
+            color: #0ea5e9;
+        }
+        .shield-arrow {
+            font-size: 1.8rem;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+
+<body class="text-dark">
+    <style>
+        .fixed-nav {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .btn-nav {
+            display: inline-block;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            transition: background-color 0.3s ease;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+        }
+
+        .btn-nav:hover {
+            background-color: #005f8c;
+            /* Darker shade for hover effect */
+        }
+
+        .bg-primary {
+            background-color: #003F5C;
+        }
+
+        .bg-secondary {
+            background-color: #2579B2;
+        }
+
+        .bg-accent {
+            background-color: #67ABE2;
+        }
+
+        .text-light {
+            color: #91C8F0;
+        }
+
+        .text-dark {
+            color: #003F5C;
+        }
+
+        .text-accent {
+            color: #67ABE2;
+        }
+    </style>
+    <div class="container mx-auto p-4 md:p-8 max-w-6xl">
+        <div class="fixed-nav">
+            <a href="309-shield.html" class="btn-nav bg-secondary text-white px-4 py-2 rounded mb-2">⬅ Previous</a>
+            <a href="#top" class="btn-nav bg-accent text-white px-4 py-2 rounded mb-2">⬆ Top</a>
+            <a href="#bottom" class="btn-nav bg-accent text-white px-4 py-2 rounded mb-2">⬇ Bottom</a>
+            <a href="#" class="btn-nav bg-secondary text-white px-4 py-2 rounded">Next ➡</a>
+        </div>
+        <header class="text-center mb-12 relative">
+            <h1 class="text-4xl md:text-5xl font-bold section-title mb-2" data-i18n="header.title">Các Phương Pháp Hay Nhất Bảo Vệ DDoS</h1>
+            <p class="text-lg text-slate-600" data-i18n="header.subtitle">Xây dựng hạ tầng chống DDoS mạnh mẽ trên AWS</p>
+            <div class="absolute top-0 right-0 mt-4 mr-4 flex space-x-2">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-md bg-sky-500 text-white font-semibold text-sm">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-md bg-slate-200 text-slate-700 font-semibold text-sm">EN</button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Section 1: Introduction to DDoS Protection Architecture -->
+            <section id="intro-architecture" class="mb-16">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center" data-i18n="introArchitecture.sectionTitle">Giới Thiệu Kiến Trúc Bảo Vệ DDoS</h2>
+                <p class="text-center text-slate-600 max-w-3xl mx-auto mb-8" data-i18n="introArchitecture.introText">Khám phá các thành phần kiến trúc cơ bản để xây dựng hệ thống chống DDoS trên AWS.</p>
+                <div class="card p-6 max-w-4xl mx-auto">
+                    <div class="flow-container">
+                        <div class="flow-node">
+                            <span class="flow-icon">🌍</span>
+                            <span data-i18n="introArchitecture.user">Người dùng</span>
+                        </div>
+                        <div class="flow-arrow-down"></div>
+                        <div class="flow-group">
+                            <div class="flow-node">
+                                <span class="flow-icon">📡</span>
+                                <span data-i18n="introArchitecture.route53">Route 53</span>
+                            </div>
+                            <div class="flow-arrow-horizontal"></div>
+                            <div class="flow-node">
+                                <span class="flow-icon">🌐</span>
+                                <span data-i18n="introArchitecture.cloudFront">CloudFront</span>
+                                <span class="flow-label" data-i18n="introArchitecture.or">hoặc</span>
+                                <span class="flow-icon">🚀</span>
+                                <span data-i18n="introArchitecture.globalAccelerator">Global Accelerator</span>
+                            </div>
+                            <div class="flow-arrow-horizontal"></div>
+                            <div class="flow-node">
+                                <span class="flow-icon">🛡️</span>
+                                <span data-i18n="introArchitecture.waf">WAF</span>
+                            </div>
+                        </div>
+                        <div class="flow-arrow-down"></div>
+                        <div class="flow-node">
+                            <span class="flow-icon">⚖️</span>
+                            <span data-i18n="introArchitecture.elb">Elastic Load Balancer</span>
+                        </div>
+                        <div class="flow-arrow-down"></div>
+                        <div class="flow-node">
+                            <span class="flow-icon">💻</span>
+                            <span data-i18n="introArchitecture.ec2Asg">EC2 Auto Scaling Group</span>
+                        </div>
+                        <div class="flow-arrow-down"></div>
+                        <div class="flow-node">
+                            <span class="flow-icon">📦</span>
+                            <span data-i18n="introArchitecture.backend">Backend (Lambda/ECS)</span>
+                        </div>
+                    </div>
+                    <p class="text-slate-600 mt-6 text-center" data-i18n="introArchitecture.textSummary">Kiến trúc điển hình để bảo vệ ứng dụng web khỏi các cuộc tấn công DDoS, sử dụng nhiều lớp dịch vụ AWS.</p>
+                </div>
+            </section>
+
+            <!-- Section 2: Edge Location Mitigation -->
+            <section id="edge-mitigation" class="mb-16">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center" data-i18n="edgeMitigation.sectionTitle">Giảm Thiểu Tấn Công tại Vị Trí Biên (Edge Location)</h2>
+                <p class="text-center text-slate-600 max-w-3xl mx-auto mb-8" data-i18n="edgeMitigation.introText">Bảo vệ ứng dụng của bạn ngay từ điểm truy cập đầu tiên trên toàn cầu.</p>
+                <div class="card p-6 max-w-4xl mx-auto">
+                    <div class="layer-diagram">
+                        <div class="layer-box">
+                            <span class="flow-icon">🌍</span>
+                            <span data-i18n="edgeMitigation.userTraffic">Lưu lượng người dùng</span>
+                        </div>
+                        <span class="layer-arrow">⬇️</span>
+                        <div class="layer-box bg-blue-100 text-blue-800">
+                            <span class="flow-icon">🌐</span>
+                            <span data-i18n="edgeMitigation.cloudFront">CloudFront</span>
+                            <span class="flow-icon">🚀</span>
+                            <span data-i18n="edgeMitigation.globalAccelerator">Global Accelerator</span>
+                        </div>
+                        <span class="layer-arrow">⬇️</span>
+                        <div class="layer-box bg-green-100 text-green-800">
+                            <span class="flow-icon">⚡</span>
+                            <span data-i18n="edgeMitigation.shield">AWS Shield</span>
+                            <span class="flow-icon">🛡️</span>
+                            <span data-i18n="edgeMitigation.waf">WAF</span>
+                        </div>
+                        <span class="layer-arrow">⬇️</span>
+                        <div class="layer-box">
+                            <span class="flow-icon">🏢</span>
+                            <span data-i18n="edgeMitigation.awsRegion">Khu vực AWS của bạn</span>
+                        </div>
+                    </div>
+                    <p class="text-slate-600 mt-6 text-center" data-i18n="edgeMitigation.textSummary">Các dịch vụ Edge như CloudFront và Global Accelerator, cùng với Shield và WAF, lọc bỏ các cuộc tấn công DDoS trước khi chúng đến hạ tầng cốt lõi của bạn.</p>
+                </div>
+            </section>
+
+            <!-- Section 3: Infrastructure Layer Defense -->
+            <section id="infra-defense" class="mb-16">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center" data-i18n="infraDefense.sectionTitle">Phòng Thủ Lớp Hạ Tầng</h2>
+                <p class="text-center text-slate-600 max-w-3xl mx-auto mb-8" data-i18n="infraDefense.introText">Đảm bảo hạ tầng của bạn có thể xử lý lưu lượng truy cập lớn và phân phối tải hiệu quả.</p>
+                <div class="card p-6 max-w-4xl mx-auto">
+                    <div class="traffic-flow">
+                        <div class="traffic-component">
+                            <span class="flow-icon">📈</span>
+                            <span data-i18n="infraDefense.highTraffic">Lưu lượng truy cập cao</span>
+                        </div>
+                        <span class="traffic-arrow">⬇️</span>
+                        <div class="traffic-component bg-sky-100 text-sky-800">
+                            <span class="flow-icon">⚖️</span>
+                            <span data-i18n="infraDefense.elb">Elastic Load Balancing</span>
+                        </div>
+                        <span class="traffic-arrow">⬇️</span>
+                        <div class="traffic-component bg-green-100 text-green-800">
+                            <span class="flow-icon">💻</span>
+                            <span data-i18n="infraDefense.ec2AutoScaling">EC2 Auto Scaling Group</span>
+                            <span class="flow-icon">↔️</span>
+                            <span data-i18n="infraDefense.scaling">Tự động mở rộng</span>
+                        </div>
+                        <span class="traffic-arrow">⬇️</span>
+                        <div class="traffic-component">
+                            <span class="flow-icon">✅</span>
+                            <span data-i18n="infraDefense.resilientApp">Ứng dụng chống chịu</span>
+                        </div>
+                    </div>
+                    <p class="text-slate-600 mt-6 text-center" data-i18n="infraDefense.textSummary">ELB và Auto Scaling Group phối hợp để quản lý và phân phối lưu lượng truy cập, bảo vệ các phiên bản EC2 khỏi bị quá tải.</p>
+                </div>
+            </section>
+
+            <!-- Section 4: Application Layer Defense -->
+            <section id="app-defense" class="mb-16">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center" data-i18n="appDefense.sectionTitle">Phòng Thủ Lớp Ứng Dụng</h2>
+                <p class="text-center text-slate-600 max-w-3xl mx-auto mb-8" data-i18n="appDefense.introText">Lọc và chặn các yêu cầu độc hại trước khi chúng đến ứng dụng của bạn.</p>
+                <div class="card p-6 max-w-4xl mx-auto">
+                    <div class="shield-diagram">
+                        <div class="shield-box">
+                            <span class="shield-icon">😈</span>
+                            <span data-i18n="appDefense.maliciousRequest">Yêu cầu độc hại</span>
+                        </div>
+                        <span class="shield-arrow">⬇️</span>
+                        <div class="shield-box bg-sky-100 text-sky-800">
+                            <span class="shield-icon">🛡️</span>
+                            <span data-i18n="appDefense.wafFiltering">WAF (Lọc quy tắc, Rate-based)</span>
+                        </div>
+                        <span class="shield-arrow">⬇️</span>
+                        <div class="shield-box bg-green-100 text-green-800">
+                            <span class="shield-icon">⚡</span>
+                            <span data-i18n="appDefense.shieldAdvanced">Shield Advanced (Tự động tạo quy tắc WAF)</span>
+                        </div>
+                        <span class="shield-arrow">⬇️</span>
+                        <div class="shield-box">
+                            <span class="shield-icon">✅</span>
+                            <span data-i18n="appDefense.cleanTraffic">Lưu lượng sạch đến ứng dụng</span>
+                        </div>
+                    </div>
+                    <p class="text-slate-600 mt-6 text-center" data-i18n="appDefense.textSummary">WAF và Shield Advanced hoạt động cùng nhau để kiểm tra và chặn các yêu cầu độc hại ở Lớp 7, bảo vệ ứng dụng của bạn.</p>
+                </div>
+            </section>
+
+            <!-- Section 5: Reducing Attack Surface -->
+            <section id="attack-surface" class="mb-16">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center" data-i18n="attackSurface.sectionTitle">Giảm Bề Mặt Tấn Công</h2>
+                <p class="text-center text-slate-600 max-w-3xl mx-auto mb-8" data-i18n="attackSurface.introText">Ẩn các tài nguyên backend và hạn chế quyền truy cập để giảm thiểu rủi ro.</p>
+                <div class="card p-6 max-w-4xl mx-auto">
+                    <div class="flow-container">
+                        <div class="flow-node">
+                            <span class="flow-icon">🕵️</span>
+                            <span data-i18n="attackSurface.attacker">Kẻ tấn công</span>
+                        </div>
+                        <div class="flow-arrow-down"></div>
+                        <div class="flow-node bg-blue-100 text-blue-800">
+                            <span class="flow-icon">🌐</span>
+                            <span data-i18n="attackSurface.cloudFront">CloudFront</span>
+                            <span class="flow-icon">🚪</span>
+                            <span data-i18n="attackSurface.apiGateway">API Gateway</span>
+                            <span class="flow-icon">⚖️</span>
+                            <span data-i18n="attackSurface.elb">ELB</span>
+                        </div>
+                        <div class="flow-arrow-down"></div>
+                        <div class="flow-node bg-green-100 text-green-800">
+                            <span class="flow-icon">🔒</span>
+                            <span data-i18n="attackSurface.securityGroups">Security Groups / Network ACLs</span>
+                        </div>
+                        <div class="flow-arrow-down"></div>
+                        <div class="flow-node">
+                            <span class="flow-icon">🎭</span>
+                            <span data-i18n="attackSurface.hiddenBackend">Backend bị ẩn (EC2, Lambda, ECS)</span>
+                        </div>
+                    </div>
+                    <p class="text-slate-600 mt-6 text-center" data-i18n="attackSurface.textSummary">Che giấu các tài nguyên backend và sử dụng các lớp bảo mật mạng để hạn chế khả năng tiếp cận của kẻ tấn công.</p>
+                </div>
+            </section>
+            
+            <!-- Section 6: DDoS Defense Layers Chart & Key Takeaways -->
+            <section id="conclusion" class="mb-16">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center" data-i18n="conclusion.sectionTitle">Các Lớp Phòng Thủ DDoS & Điểm Chính</h2>
+                <p class="text-center text-slate-600 max-w-3xl mx-auto mb-8" data-i18n="conclusion.introText">Kiến trúc này minh họa các cách khác nhau để bảo vệ chống lại các cuộc tấn công DDoS bằng cách sử dụng các dịch vụ AWS. Hiểu các phương pháp hay nhất này là điều cần thiết để thiết kế các ứng dụng có khả năng chống chịu cao.</p>
+
+                <h3 class="font-bold mb-4 text-lg text-slate-700 text-center mt-12" data-i18n="conclusion.chartTitle">Mức độ Bảo vệ DDoS theo Lớp</h3>
+                <div class="chart-container">
+                    <canvas id="ddosDefenseChart"></canvas>
+                </div>
+
+                <h3 class="text-3xl font-bold section-title mb-8 text-center mt-16" data-i18n="conclusion.keyTakeawaysTitle">Điểm Chính Cần Ghi Nhớ</h3>
+                 <div class="max-w-3xl mx-auto space-y-4">
+                    <div class="card p-4 flex items-start space-x-4">
+                        <div class="text-2xl pt-1">1️⃣</div>
+                        <p class="text-slate-700" data-i18n="conclusion.point1">Sử dụng các dịch vụ Edge của AWS như <span class="icon-text inline-flex"><span class="icon">🌐</span>CloudFront</span>, <span class="icon-text inline-flex"><span class="icon">🚀</span>Global Accelerator</span> và <span class="icon-text inline-flex"><span class="icon">📡</span>Route 53</span> giúp tăng cường bảo vệ DDoS bằng cách phân phối lưu lượng và lọc tấn công tại biên mạng.</p>
+                    </div>
+                    <div class="card p-4 flex items-start space-x-4">
+                        <div class="text-2xl pt-1">2️⃣</div>
+                        <p class="text-slate-700" data-i18n="conclusion.point2">Phòng thủ lớp hạ tầng bao gồm tự động mở rộng các phiên bản <span class="icon-text inline-flex"><span class="icon">💻</span>EC2</span> và <span class="icon-text inline-flex"><span class="icon">⚖️</span>Elastic Load Balancing</span> để quản lý lưu lượng truy cập cao và phân phối tải hiệu quả.</p>
+                    </div>
+                    <div class="card p-4 flex items-start space-x-4">
+                        <div class="text-2xl pt-1">3️⃣</div>
+                        <p class="text-slate-700" data-i18n="conclusion.point3">Phòng thủ lớp ứng dụng tận dụng <span class="icon-text inline-flex"><span class="icon">🌐</span>CloudFront</span>, <span class="icon-text inline-flex"><span class="icon">🛡️</span>WAF</span> và <span class="icon-text inline-flex"><span class="icon">⚡</span>Shield Advanced</span> để phát hiện, lọc và chặn các yêu cầu độc hại, bao gồm chặn dựa trên tỷ lệ và hạn chế địa lý.</p>
+                    </div>
+                    <div class="card p-4 flex items-start space-x-4">
+                        <div class="text-2xl pt-1">4️⃣</div>
+                        <p class="text-slate-700" data-i18n="conclusion.point4">Giảm bề mặt tấn công bằng cách ẩn các tài nguyên backend sau các dịch vụ như <span class="icon-text inline-flex"><span class="icon">🚪</span>API Gateway</span>, <span class="icon-text inline-flex"><span class="icon">🌐</span>CloudFront</span> và <span class="icon-text inline-flex"><span class="icon">⚖️</span>ELB</span>, kết hợp với nhóm bảo mật và ACL mạng, tăng cường khả năng chống chịu DDoS tổng thể.</p>
+                    </div>
+                 </div>
+            </section>
+
+        </main>
+        <script>
+            const translations = {
+                vi: {
+                    header: {
+                        title: "Các Phương Pháp Hay Nhất Bảo Vệ DDoS",
+                        subtitle: "Xây dựng hạ tầng chống DDoS mạnh mẽ trên AWS"
+                    },
+                    introArchitecture: {
+                        sectionTitle: "Giới Thiệu Kiến Trúc Bảo Vệ DDoS",
+                        introText: "Khám phá các thành phần kiến trúc cơ bản để xây dựng hệ thống chống DDoS trên AWS.",
+                        user: "Người dùng",
+                        route53: "Route 53",
+                        cloudFront: "CloudFront",
+                        or: "hoặc",
+                        globalAccelerator: "Global Accelerator",
+                        waf: "WAF",
+                        elb: "Elastic Load Balancer",
+                        ec2Asg: "EC2 Auto Scaling Group",
+                        backend: "Backend (Lambda/ECS)",
+                        textSummary: "Kiến trúc điển hình để bảo vệ ứng dụng web khỏi các cuộc tấn công DDoS, sử dụng nhiều lớp dịch vụ AWS."
+                    },
+                    edgeMitigation: {
+                        sectionTitle: "Giảm Thiểu Tấn Công tại Vị Trí Biên (Edge Location)",
+                        introText: "Bảo vệ ứng dụng của bạn ngay từ điểm truy cập đầu tiên trên toàn cầu.",
+                        userTraffic: "Lưu lượng người dùng",
+                        cloudFront: "CloudFront",
+                        globalAccelerator: "Global Accelerator",
+                        shield: "AWS Shield",
+                        waf: "WAF",
+                        awsRegion: "Khu vực AWS của bạn",
+                        textSummary: "Các dịch vụ Edge như CloudFront và Global Accelerator, cùng với Shield và WAF, lọc bỏ các cuộc tấn công DDoS trước khi chúng đến hạ tầng cốt lõi của bạn."
+                    },
+                    infraDefense: {
+                        sectionTitle: "Phòng Thủ Lớp Hạ Tầng",
+                        introText: "Đảm bảo hạ tầng của bạn có thể xử lý lưu lượng truy cập lớn và phân phối tải hiệu quả.",
+                        highTraffic: "Lưu lượng truy cập cao",
+                        elb: "Elastic Load Balancing",
+                        ec2AutoScaling: "EC2 Auto Scaling Group",
+                        scaling: "Tự động mở rộng",
+                        resilientApp: "Ứng dụng chống chịu",
+                        textSummary: "ELB và Auto Scaling Group phối hợp để quản lý và phân phối lưu lượng truy cập, bảo vệ các phiên bản EC2 khỏi bị quá tải."
+                    },
+                    appDefense: {
+                        sectionTitle: "Phòng Thủ Lớp Ứng Dụng",
+                        introText: "Lọc và chặn các yêu cầu độc hại trước khi chúng đến ứng dụng của bạn.",
+                        maliciousRequest: "Yêu cầu độc hại",
+                        wafFiltering: "WAF (Lọc quy tắc, Rate-based)",
+                        shieldAdvanced: "Shield Advanced (Tự động tạo quy tắc WAF)",
+                        cleanTraffic: "Lưu lượng sạch đến ứng dụng",
+                        textSummary: "WAF và Shield Advanced hoạt động cùng nhau để kiểm tra và chặn các yêu cầu độc hại ở Lớp 7, bảo vệ ứng dụng của bạn."
+                    },
+                    attackSurface: {
+                        sectionTitle: "Giảm Bề Mặt Tấn Công",
+                        introText: "Ẩn các tài nguyên backend và hạn chế quyền truy cập để giảm thiểu rủi ro.",
+                        attacker: "Kẻ tấn công",
+                        cloudFront: "CloudFront",
+                        apiGateway: "API Gateway",
+                        elb: "ELB",
+                        securityGroups: "Security Groups / Network ACLs",
+                        hiddenBackend: "Backend bị ẩn (EC2, Lambda, ECS)",
+                        textSummary: "Che giấu các tài nguyên backend và sử dụng các lớp bảo mật mạng để hạn chế khả năng tiếp cận của kẻ tấn công."
+                    },
+                    conclusion: {
+                        sectionTitle: "Các Lớp Phòng Thủ DDoS & Điểm Chính",
+                        introText: "Kiến trúc này minh họa các cách khác nhau để bảo vệ chống lại các cuộc tấn công DDoS bằng cách sử dụng các dịch vụ AWS. Hiểu các phương pháp hay nhất này là điều cần thiết để thiết kế các ứng dụng có khả năng chống chịu cao.",
+                        chartTitle: "Mức độ Bảo vệ DDoS theo Lớp",
+                        chartLabels: ["Giảm thiểu tại Edge", "Phòng thủ Hạ tầng", "Phòng thủ Ứng dụng", "Giảm bề mặt tấn công"],
+                        chartTooltipEdge: "Lọc tấn công sớm nhất tại các vị trí biên toàn cầu.",
+                        chartTooltipInfrastructure: "Quản lý lưu lượng lớn và phân phối tải trên các tài nguyên tính toán.",
+                        chartTooltipApplication: "Phát hiện và chặn các yêu cầu độc hại ở lớp ứng dụng.",
+                        chartTooltipAttackSurface: "Ẩn các tài nguyên backend và hạn chế quyền truy cập.",
+                        keyTakeawaysTitle: "Điểm Chính Cần Ghi Nhớ",
+                        point1: "Sử dụng các dịch vụ Edge của AWS như <span class='icon-text inline-flex'><span class='icon'>🌐</span>CloudFront</span>, <span class='icon-text inline-flex'><span class='icon'>🚀</span>Global Accelerator</span> và <span class='icon-text inline-flex'><span class='icon'>📡</span>Route 53</span> giúp tăng cường bảo vệ DDoS bằng cách phân phối lưu lượng và lọc tấn công tại biên mạng.",
+                        point2: "Phòng thủ lớp hạ tầng bao gồm tự động mở rộng các phiên bản <span class='icon-text inline-flex'><span class='icon'>💻</span>EC2</span> và <span class='icon-text inline-flex'><span class='icon'>⚖️</span>Elastic Load Balancing</span> để quản lý lưu lượng truy cập cao và phân phối tải hiệu quả.",
+                        point3: "Phòng thủ lớp ứng dụng tận dụng <span class='icon-text inline-flex'><span class='icon'>🌐</span>CloudFront</span>, <span class='icon-text inline-flex'><span class='icon'>🛡️</span>WAF</span> và <span class='icon-text inline-flex'><span class='icon'>⚡</span>Shield Advanced</span> để phát hiện, lọc và chặn các yêu cầu độc hại, bao gồm chặn dựa trên tỷ lệ và hạn chế địa lý.",
+                        point4: "Giảm bề mặt tấn công bằng cách ẩn các tài nguyên backend sau các dịch vụ như <span class='icon-text inline-flex'><span class='icon'>🚪</span>API Gateway</span>, <span class='icon-text inline-flex'><span class='icon'>🌐</span>CloudFront</span> và <span class='icon-text inline-flex'><span class='icon'>⚖️</span>ELB</span>, kết hợp với nhóm bảo mật và ACL mạng, tăng cường khả năng chống chịu DDoS tổng thể."
+                    }
+                },
+                en: {
+                    header: {
+                        title: "DDoS Protection Best Practices",
+                        subtitle: "Building Robust DDoS Resilient Architectures on AWS"
+                    },
+                    introArchitecture: {
+                        sectionTitle: "Introduction to DDoS Protection Architecture",
+                        introText: "Explore the fundamental architectural components for building DDoS-resilient systems on AWS.",
+                        user: "User",
+                        route53: "Route 53",
+                        cloudFront: "CloudFront",
+                        or: "or",
+                        globalAccelerator: "Global Accelerator",
+                        waf: "WAF",
+                        elb: "Elastic Load Balancer",
+                        ec2Asg: "EC2 Auto Scaling Group",
+                        backend: "Backend (Lambda/ECS)",
+                        textSummary: "A typical architecture for protecting web applications from DDoS attacks, utilizing multiple layers of AWS services."
+                    },
+                    edgeMitigation: {
+                        sectionTitle: "Edge Location Mitigation",
+                        introText: "Protect your application right at the first point of global access.",
+                        userTraffic: "User Traffic",
+                        cloudFront: "CloudFront",
+                        globalAccelerator: "Global Accelerator",
+                        shield: "AWS Shield",
+                        waf: "WAF",
+                        awsRegion: "Your AWS Region",
+                        textSummary: "Edge services like CloudFront and Global Accelerator, combined with Shield and WAF, filter out DDoS attacks before they reach your core infrastructure."
+                    },
+                    infraDefense: {
+                        sectionTitle: "Infrastructure Layer Defense",
+                        introText: "Ensure your infrastructure can handle high traffic volumes and distribute load effectively.",
+                        highTraffic: "High Traffic",
+                        elb: "Elastic Load Balancing",
+                        ec2AutoScaling: "EC2 Auto Scaling Group",
+                        scaling: "Auto Scaling",
+                        resilientApp: "Resilient Application",
+                        textSummary: "ELB and Auto Scaling Group work together to manage and distribute traffic, protecting EC2 instances from overload."
+                    },
+                    appDefense: {
+                        sectionTitle: "Application Layer Defense",
+                        introText: "Filter and block malicious requests before they reach your application.",
+                        maliciousRequest: "Malicious Request",
+                        wafFiltering: "WAF (Rule Filtering, Rate-based)",
+                        shieldAdvanced: "Shield Advanced (Auto WAF rule creation)",
+                        cleanTraffic: "Clean Traffic to App",
+                        textSummary: "WAF and Shield Advanced work together to inspect and block malicious Layer 7 requests, protecting your application."
+                    },
+                    attackSurface: {
+                        sectionTitle: "Reducing Attack Surface",
+                        introText: "Hide backend resources and restrict access to minimize risk.",
+                        attacker: "Attacker",
+                        cloudFront: "CloudFront",
+                        apiGateway: "API Gateway",
+                        elb: "ELB",
+                        securityGroups: "Security Groups / Network ACLs",
+                        hiddenBackend: "Hidden Backend (EC2, Lambda, ECS)",
+                        textSummary: "Obscure backend resources and use network security layers to limit attacker reach."
+                    },
+                    conclusion: {
+                        sectionTitle: "DDoS Defense Layers & Key Takeaways",
+                        introText: "This architecture demonstrates various ways to protect against DDoS attacks using AWS services. Understanding these best practices is essential for designing resilient applications and preparing for related exam questions.",
+                        chartTitle: "DDoS Defense Effectiveness by Layer",
+                        chartLabels: ["Edge Mitigation", "Infrastructure Layer", "Application Layer", "Attack Surface Reduction"],
+                        chartTooltipEdge: "Filters attacks earliest at global edge locations.",
+                        chartTooltipInfrastructure: "Manages high traffic volumes and distributes load across compute resources.",
+                        chartTooltipApplication: "Detects and blocks malicious requests at the application layer.",
+                        chartTooltipAttackSurface: "Hides backend resources and restricts access.",
+                        keyTakeawaysTitle: "Key Takeaways",
+                        point1: "Utilizing AWS Edge services like <span class='icon-text inline-flex'><span class='icon'>🌐</span>CloudFront</span>, <span class='icon-text inline-flex'><span class='icon'>🚀</span>Global Accelerator</span>, and <span class='icon-text inline-flex'><span class='icon'>📡</span>Route 53</span> enhances DDoS protection by distributing traffic and filtering attacks at the network edge.",
+                        point2: "Infrastructure layer defenses include auto-scaling <span class='icon-text inline-flex'><span class='icon'>💻</span>EC2</span> instances and <span class='icon-text inline-flex'><span class='icon'>⚖️</span>Elastic Load Balancing</span> to manage high traffic and distribute load effectively.",
+                        point3: "Application layer defenses leverage <span class='icon-text inline-flex'><span class='icon'>🌐</span>CloudFront</span>, <span class='icon-text inline-flex'><span class='icon'>🛡️</span>WAF</span>, and <span class='icon-text inline-flex'><span class='icon'>⚡</span>Shield Advanced</span> to detect, filter, and block malicious requests, including rate-based blocking and geographic restrictions.",
+                        point4: "Reducing the attack surface by hiding backend resources behind services like <span class='icon-text inline-flex'><span class='icon'>🚪</span>API Gateway</span>, <span class='icon-text inline-flex'><span class='icon'>🌐</span>CloudFront</span>, and <span class='icon-text inline-flex'><span class='icon'>⚖️</span>ELB</span>, combined with security groups and network ACLs, strengthens overall DDoS resiliency."
+                    }
+                }
+            };
+    
+            let currentLanguage = 'vi'; // Default language
+    
+            const langToggleVi = document.getElementById('lang-toggle-vi');
+            const langToggleEn = document.getElementById('lang-toggle-en');
+    
+            function updateLanguageButtons() {
+                if (currentLanguage === 'vi') {
+                    langToggleVi.classList.remove('bg-slate-200', 'text-slate-700');
+                    langToggleVi.classList.add('bg-sky-500', 'text-white');
+                    langToggleEn.classList.remove('bg-sky-500', 'text-white');
+                    langToggleEn.classList.add('bg-slate-200', 'text-slate-700');
+                } else {
+                    langToggleEn.classList.remove('bg-slate-200', 'text-slate-700');
+                    langToggleEn.classList.add('bg-sky-500', 'text-white');
+                    langToggleVi.classList.remove('bg-sky-500', 'text-white');
+                    langToggleVi.classList.add('bg-slate-200', 'text-slate-700');
+                }
+            }
+    
+            function getNestedTranslation(obj, path) {
+                return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+            }
+    
+            function updateContent() {
+                const elements = document.querySelectorAll('[data-i18n]');
+                elements.forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    const translatedText = getNestedTranslation(translations[currentLanguage], key);
+                    if (translatedText) {
+                        element.innerHTML = translatedText;
+                    }
+                });
+                updateLanguageButtons();
+                updateChartLanguage();
+            }
+    
+            let ddosDefenseChartInstance = null;
+    
+            function initializeDdosDefenseChart() {
+                const ctx = document.getElementById('ddosDefenseChart').getContext('2d');
+                const chartLabels = translations[currentLanguage].conclusion.chartLabels;
+    
+                ddosDefenseChartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: chartLabels,
+                        datasets: [{
+                            label: translations[currentLanguage].conclusion.chartTitle,
+                            data: [5, 4, 3, 2], // Arbitrary values representing relative effectiveness/importance
+                            backgroundColor: [
+                                'rgba(14, 165, 233, 0.6)', // sky-500
+                                'rgba(34, 197, 94, 0.6)',  // green-500
+                                'rgba(251, 191, 36, 0.6)', // amber-400
+                                'rgba(148, 163, 184, 0.6)' // slate-400
+                            ],
+                            borderColor: [
+                                'rgba(14, 165, 233, 1)',
+                                'rgba(34, 197, 94, 1)',
+                                'rgba(251, 191, 36, 1)',
+                                'rgba(148, 163, 184, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y', // Horizontal bar chart
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            title: {
+                                display: true,
+                                text: translations[currentLanguage].conclusion.chartTitle,
+                                font: {
+                                    size: 16,
+                                    weight: 'bold'
+                                },
+                                color: '#1e293b'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        const layer = context.label;
+                                        let description = '';
+                                        if (currentLanguage === 'vi') {
+                                            if (layer === 'Giảm thiểu tại Edge') description = translations.vi.conclusion.chartTooltipEdge;
+                                            else if (layer === 'Phòng thủ Hạ tầng') description = translations.vi.conclusion.chartTooltipInfrastructure;
+                                            else if (layer === 'Phòng thủ Ứng dụng') description = translations.vi.conclusion.chartTooltipApplication;
+                                            else if (layer === 'Giảm bề mặt tấn công') description = translations.vi.conclusion.chartTooltipAttackSurface;
+                                        } else {
+                                            if (layer === 'Edge Mitigation') description = translations.en.conclusion.chartTooltipEdge;
+                                            else if (layer === 'Infrastructure Layer') description = translations.en.conclusion.chartTooltipInfrastructure;
+                                            else if (layer === 'Application Layer') description = translations.en.conclusion.chartTooltipApplication;
+                                            else if (layer === 'Attack Surface Reduction') description = translations.en.conclusion.chartTooltipAttackSurface;
+                                        }
+                                        return description;
+                                    },
+                                    title: function(context) {
+                                        const label = context[0].label;
+                                        const maxChars = 20; // Increased for longer Vietnamese labels
+                                        if (label.length > maxChars) {
+                                            let wrappedLabel = '';
+                                            let currentLine = '';
+                                            label.split(' ').forEach(word => {
+                                                if ((currentLine + word).length > maxChars && currentLine.length > 0) {
+                                                    wrappedLabel += currentLine.trim() + '\n';
+                                                    currentLine = word + ' ';
+                                                } else {
+                                                    currentLine += word + ' ';
+                                                }
+                                            });
+                                            wrappedLabel += currentLine.trim();
+                                            return wrappedLabel;
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                ticks: {
+                                    color: '#475569',
+                                    display: false // Hide x-axis ticks as values are arbitrary
+                                },
+                                grid: {
+                                    color: 'rgba(203, 213, 225, 0.3)'
+                                }
+                            },
+                            y: {
+                                ticks: {
+                                    color: '#475569',
+                                    callback: function(value, index, ticks) {
+                                        const label = this.getLabelForValue(value);
+                                        const maxChars = 20; // Increased for longer Vietnamese labels
+                                        if (label.length > maxChars) {
+                                            let wrappedLabel = '';
+                                            let currentLine = '';
+                                            label.split(' ').forEach(word => {
+                                                if ((currentLine + word).length > maxChars && currentLine.length > 0) {
+                                                    wrappedLabel += currentLine.trim() + '\n';
+                                                    currentLine = word + ' ';
+                                                } else {
+                                                    currentLine += word + ' ';
+                                                }
+                                            });
+                                            wrappedLabel += currentLine.trim();
+                                            return wrappedLabel;
+                                        }
+                                        return label;
+                                    }
+                                },
+                                grid: {
+                                    color: 'rgba(203, 213, 225, 0.3)'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+    
+            function updateChartLanguage() {
+                if (ddosDefenseChartInstance) {
+                    ddosDefenseChartInstance.options.plugins.title.text = translations[currentLanguage].conclusion.chartTitle;
+                    ddosDefenseChartInstance.data.labels = translations[currentLanguage].conclusion.chartLabels;
+                    ddosDefenseChartInstance.update();
+                }
+            }
+    
+            document.addEventListener('DOMContentLoaded', function() {
+                // Initialize content with default language
+                updateContent();
+    
+                // Language toggle event listeners
+                langToggleVi.addEventListener('click', () => {
+                    currentLanguage = 'vi';
+                    updateContent();
+                });
+    
+                langToggleEn.addEventListener('click', () => {
+                    currentLanguage = 'en';
+                    updateContent();
+                });
+    
+                // Initialize the chart after content is loaded
+                initializeDdosDefenseChart();
+            });
+        </script>
+
+        <div id="bottom" class="text-center py-8">
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -56,8 +57,65 @@
         }
     </style>
 </head>
-<body>
+
+<body class="text-dark">
+    <style>
+        .fixed-nav {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .btn-nav {
+            display: inline-block;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            transition: background-color 0.3s ease;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+        }
+
+        .btn-nav:hover {
+            background-color: #005f8c;
+            /* Darker shade for hover effect */
+        }
+
+        .bg-primary {
+            background-color: #003F5C;
+        }
+
+        .bg-secondary {
+            background-color: #2579B2;
+        }
+
+        .bg-accent {
+            background-color: #67ABE2;
+        }
+
+        .text-light {
+            color: #91C8F0;
+        }
+
+        .text-dark {
+            color: #003F5C;
+        }
+
+        .text-accent {
+            color: #67ABE2;
+        }
+    </style>
     <div class="container mx-auto p-4 md:p-8 max-w-6xl">
+        <div class="fixed-nav">
+            <a href="308-waf.html" class="btn-nav bg-secondary text-white px-4 py-2 rounded mb-2">⬅ Previous</a>
+            <a href="#top" class="btn-nav bg-accent text-white px-4 py-2 rounded mb-2">⬆ Top</a>
+            <a href="#bottom" class="btn-nav bg-accent text-white px-4 py-2 rounded mb-2">⬇ Bottom</a>
+            <a href="312-ddos-reciliency.html" class="btn-nav bg-secondary text-white px-4 py-2 rounded">Next ➡</a>
+        </div>
         <header class="text-center mb-12 relative">
             <h1 class="text-4xl md:text-5xl font-bold section-title mb-2" data-i18n="header.title">Tổng Quan Tương Tác về AWS Shield</h1>
             <p class="text-lg text-slate-600" data-i18n="header.subtitle">Bảo vệ hạ tầng khỏi tấn công DDoS với AWS Shield</p>
@@ -144,272 +202,274 @@
             </section>
 
         </main>
-    </div>
-
-    <script>
-        const translations = {
-            vi: {
-                header: {
-                    title: "Tổng Quan Tương Tác về AWS Shield",
-                    subtitle: "Bảo vệ hạ tầng khỏi tấn công DDoS với AWS Shield"
-                },
-                introduction: {
-                    sectionTitle: "Giới Thiệu về AWS Shield",
-                    text1: "AWS Shield là một dịch vụ được thiết kế để bảo vệ hạ tầng của bạn khỏi các cuộc tấn công Từ chối Dịch vụ Phân tán (DDoS).",
-                    text2: "Một cuộc tấn công DDoS xảy ra khi hạ tầng của bạn đột ngột nhận được một lượng lớn yêu cầu đồng thời từ nhiều máy tính trên khắp thế giới. Mục tiêu của một cuộc tấn công như vậy là làm quá tải hạ tầng của bạn, ngăn không cho nó phục vụ người dùng hợp pháp."
-                },
-                comparison: {
-                    sectionTitle: "AWS Shield Standard vs. Advanced",
-                    introText: "AWS Shield cung cấp hai cấp độ bảo vệ DDoS: Standard (miễn phí) và Advanced (có phí).",
-                    standardTitle: "AWS Shield Standard",
-                    standardText1: "AWS Shield Standard là một dịch vụ <strong>miễn phí</strong> được tự động kích hoạt cho mọi khách hàng AWS.",
-                    standardText2: "Nó cung cấp bảo vệ chống lại các cuộc tấn công phổ biến ở lớp mạng (Lớp 3) và lớp vận chuyển (Lớp 4) như SYN floods, UDP floods và các cuộc tấn công phản hồi (reflection attacks).",
-                    advancedTitle: "AWS Shield Advanced",
-                    advancedText1: "Để có khả năng bảo vệ tinh vi hơn, AWS cung cấp dịch vụ Shield Advanced. Đây là một dịch vụ giảm thiểu DDoS tùy chọn có chi phí khoảng <strong>3.000 USD mỗi tháng</strong> cho mỗi tổ chức.",
-                    advancedText2: "Shield Advanced bảo vệ chống lại các cuộc tấn công DDoS phức tạp hơn nhắm mục tiêu vào Amazon EC2, Elastic Load Balancing, Amazon CloudFront, Global Accelerator và Route 53.",
-                    chartTitle: "So sánh Chi phí (Ước tính hàng tháng)",
-                    chartLabels: ["Standard", "Advanced"]
-                },
-                advancedFeatures: {
-                    sectionTitle: "Các Tính Năng Nâng Cao của Shield Advanced",
-                    ddosResponseTeamTitle: "Truy cập Đội ngũ Ứng phó DDoS 24/7",
-                    ddosResponseTeamText: "Trong trường hợp bị tấn công, bạn sẽ có quyền truy cập 24/7 vào Đội ngũ Ứng phó DDoS của AWS để được hỗ trợ chuyên môn nhằm giảm thiểu tác động.",
-                    costProtectionTitle: "Bảo vệ chi phí",
-                    costProtectionText: "Nếu bạn phải chịu phí cao hơn do tăng mức sử dụng trong một cuộc tấn công, Shield Advanced sẽ bảo vệ bạn khỏi các khoản phí bổ sung này.",
-                    autoWafTitle: "Giảm thiểu DDoS Lớp Ứng dụng Tự động",
-                    autoWafText: "Shield Advanced tự động tạo, đánh giá và triển khai các quy tắc Tường lửa Ứng dụng Web (WAF) để giảm thiểu các cuộc tấn công Lớp 7, tăng cường khả năng bảo mật của bạn."
-                },
-                summary: {
-                    sectionTitle: "Điểm Chính Cần Ghi Nhớ",
-                    point1: "AWS Shield là một dịch vụ được thiết kế để bảo vệ hạ tầng khỏi các cuộc tấn công Từ chối Dịch vụ Phân tán (DDoS).",
-                    point2: "AWS Shield Standard là dịch vụ miễn phí bảo vệ chống lại các cuộc tấn công lớp mạng và vận chuyển phổ biến (SYN floods, UDP floods, reflection attacks).",
-                    point3: "AWS Shield Advanced là dịch vụ trả phí cung cấp bảo vệ nâng cao chống lại các cuộc tấn công DDoS tinh vi, truy cập 24/7 vào đội ngũ ứng phó DDoS của AWS, và bảo vệ khỏi các khoản phí tăng thêm do tấn công.",
-                    point4: "Shield Advanced bao gồm tính năng giảm thiểu DDoS lớp ứng dụng tự động bằng cách triển khai các quy tắc WAF để phòng thủ chống lại các cuộc tấn công lớp 7."
-                }
-            },
-            en: {
-                header: {
-                    title: "Interactive Overview of AWS Shield",
-                    subtitle: "Protecting Infrastructure from DDoS Attacks with AWS Shield"
-                },
-                introduction: {
-                    sectionTitle: "Introduction to AWS Shield",
-                    text1: "AWS Shield is a service designed to protect your infrastructure from Distributed Denial of Service (DDoS) attacks.",
-                    text2: "A DDoS attack occurs when your infrastructure suddenly receives a large number of requests simultaneously from many computers around the world. The goal of such an attack is to overwhelm and overload your infrastructure, preventing it from serving your legitimate users."
-                },
-                comparison: {
-                    sectionTitle: "AWS Shield Standard vs. Advanced",
-                    introText: "AWS Shield offers two tiers of DDoS protection: Standard (free) and Advanced (paid).",
-                    standardTitle: "AWS Shield Standard",
-                    standardText1: "AWS Shield Standard is a <strong>free service</strong> that is automatically activated for every AWS customer.",
-                    standardText2: "It provides protection against attacks such as SYN floods, UDP floods, reflection attacks, and other layer 3 or layer 4 attacks.",
-                    advancedTitle: "AWS Shield Advanced",
-                    advancedText1: "For more sophisticated protection, AWS offers the Shield Advanced service. This is an optional DDoS mitigation service that costs approximately <strong>$3,000 per month</strong> per organization.",
-                    advancedText2: "Shield Advanced protects against more complex DDoS attacks targeting Amazon EC2, Elastic Load Balancing, Amazon CloudFront, the Global Accelerator, and Route 53.",
-                    chartTitle: "Cost Comparison (Estimated Monthly)",
-                    chartLabels: ["Standard", "Advanced"]
-                },
-                advancedFeatures: {
-                    sectionTitle: "Advanced Features of Shield Advanced",
-                    ddosResponseTeamTitle: "24/7 DDoS Response Team Access",
-                    ddosResponseTeamText: "In the event of an attack, you will have 24/7 access to the AWS DDoS Response Team for expert assistance to help mitigate the impact.",
-                    costProtectionTitle: "Cost Protection",
-                    costProtectionText: "Additionally, if you incur higher fees due to increased usage during an attack, Shield Advanced protects you from these additional charges.",
-                    autoWafTitle: "Automatic Application Layer DDoS Mitigation",
-                    autoWafText: "Shield Advanced includes automatic application layer DDoS mitigation. This means it automatically creates, evaluates, and deploys Web Application Firewall (WAF) rules to mitigate layer 7 attacks, enhancing your security posture."
-                },
-                summary: {
-                    sectionTitle: "Key Takeaways",
-                    point1: "AWS Shield is a service designed to protect infrastructure from Distributed Denial of Service (DDoS) attacks.",
-                    point2: "AWS Shield Standard is a free service that protects against common network and transport layer attacks such as SYN floods, UDP floods, and reflection attacks.",
-                    point3: "AWS Shield Advanced is a paid service offering enhanced protection against sophisticated DDoS attacks, 24/7 access to the AWS DDoS response team, and safeguards against increased fees due to attacks.",
-                    point4: "Shield Advanced includes automatic application layer DDoS mitigation by deploying Web Application Firewall (WAF) rules to defend against layer 7 attacks."
-                }
-            }
-        };
-
-        let currentLanguage = 'vi'; // Default language
-
-        const langToggleVi = document.getElementById('lang-toggle-vi');
-        const langToggleEn = document.getElementById('lang-toggle-en');
-
-        function updateLanguageButtons() {
-            if (currentLanguage === 'vi') {
-                langToggleVi.classList.remove('bg-slate-200', 'text-slate-700');
-                langToggleVi.classList.add('bg-sky-500', 'text-white');
-                langToggleEn.classList.remove('bg-sky-500', 'text-white');
-                langToggleEn.classList.add('bg-slate-200', 'text-slate-700');
-            } else {
-                langToggleEn.classList.remove('bg-slate-200', 'text-slate-700');
-                langToggleEn.classList.add('bg-sky-500', 'text-white');
-                langToggleVi.classList.remove('bg-sky-500', 'text-white');
-                langToggleVi.classList.add('bg-slate-200', 'text-slate-700');
-            }
-        }
-
-        function getNestedTranslation(obj, path) {
-            return path.split('.').reduce((acc, part) => acc && acc[part], obj);
-        }
-
-        function updateContent() {
-            const elements = document.querySelectorAll('[data-i18n]');
-            elements.forEach(element => {
-                const key = element.getAttribute('data-i18n');
-                const translatedText = getNestedTranslation(translations[currentLanguage], key);
-                if (translatedText) {
-                    element.innerHTML = translatedText; // Use innerHTML to preserve bold tags etc.
-                }
-            });
-            updateLanguageButtons();
-            updateChartLanguage();
-        }
-
-        let shieldCostChartInstance = null;
-
-        function initializeShieldCostChart() {
-            const ctx = document.getElementById('shieldCostChart').getContext('2d');
-            const chartLabels = translations[currentLanguage].comparison.chartLabels;
-
-            shieldCostChartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: chartLabels,
-                    datasets: [{
-                        label: translations[currentLanguage].comparison.chartTitle,
-                        data: [0, 3000], // Standard: $0, Advanced: $3000
-                        backgroundColor: [
-                            'rgba(14, 165, 233, 0.6)', // sky-500
-                            'rgba(34, 197, 94, 0.6)'  // green-500
-                        ],
-                        borderColor: [
-                            'rgba(14, 165, 233, 1)',
-                            'rgba(34, 197, 94, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    indexAxis: 'y', // Horizontal bar chart
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        title: {
-                            display: true,
-                            text: translations[currentLanguage].comparison.chartTitle,
-                            font: {
-                                size: 16,
-                                weight: 'bold'
-                            },
-                            color: '#1e293b'
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    if (context.parsed.x !== null) {
-                                        label += '$' + context.parsed.x.toLocaleString();
-                                    }
-                                    return label;
-                                },
-                                title: function(context) {
-                                    const label = context[0].label;
-                                    const maxChars = 16;
-                                    if (label.length > maxChars) {
-                                        let wrappedLabel = '';
-                                        let currentLine = '';
-                                        label.split(' ').forEach(word => {
-                                            if ((currentLine + word).length > maxChars && currentLine.length > 0) {
-                                                wrappedLabel += currentLine.trim() + '\n';
-                                                currentLine = word + ' ';
-                                            } else {
-                                                currentLine += word + ' ';
-                                            }
-                                        });
-                                        wrappedLabel += currentLine.trim();
-                                        return wrappedLabel;
-                                    }
-                                    return label;
-                                }
-                            }
-                        }
+        <script>
+            const translations = {
+                vi: {
+                    header: {
+                        title: "Tổng Quan Tương Tác về AWS Shield",
+                        subtitle: "Bảo vệ hạ tầng khỏi tấn công DDoS với AWS Shield"
                     },
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            ticks: {
-                                color: '#475569',
-                                callback: function(value) {
-                                    return '$' + value.toLocaleString();
-                                }
+                    introduction: {
+                        sectionTitle: "Giới Thiệu về AWS Shield",
+                        text1: "AWS Shield là một dịch vụ được thiết kế để bảo vệ hạ tầng của bạn khỏi các cuộc tấn công Từ chối Dịch vụ Phân tán (DDoS).",
+                        text2: "Một cuộc tấn công DDoS xảy ra khi hạ tầng của bạn đột ngột nhận được một lượng lớn yêu cầu đồng thời từ nhiều máy tính trên khắp thế giới. Mục tiêu của một cuộc tấn công như vậy là làm quá tải hạ tầng của bạn, ngăn không cho nó phục vụ người dùng hợp pháp."
+                    },
+                    comparison: {
+                        sectionTitle: "AWS Shield Standard vs. Advanced",
+                        introText: "AWS Shield cung cấp hai cấp độ bảo vệ DDoS: Standard (miễn phí) và Advanced (có phí).",
+                        standardTitle: "AWS Shield Standard",
+                        standardText1: "AWS Shield Standard là một dịch vụ <strong>miễn phí</strong> được tự động kích hoạt cho mọi khách hàng AWS.",
+                        standardText2: "Nó cung cấp bảo vệ chống lại các cuộc tấn công phổ biến ở lớp mạng (Lớp 3) và lớp vận chuyển (Lớp 4) như SYN floods, UDP floods và các cuộc tấn công phản hồi (reflection attacks).",
+                        advancedTitle: "AWS Shield Advanced",
+                        advancedText1: "Để có khả năng bảo vệ tinh vi hơn, AWS cung cấp dịch vụ Shield Advanced. Đây là một dịch vụ giảm thiểu DDoS tùy chọn có chi phí khoảng <strong>3.000 USD mỗi tháng</strong> cho mỗi tổ chức.",
+                        advancedText2: "Shield Advanced bảo vệ chống lại các cuộc tấn công DDoS phức tạp hơn nhắm mục tiêu vào Amazon EC2, Elastic Load Balancing, Amazon CloudFront, Global Accelerator và Route 53.",
+                        chartTitle: "So sánh Chi phí (Ước tính hàng tháng)",
+                        chartLabels: ["Standard", "Advanced"]
+                    },
+                    advancedFeatures: {
+                        sectionTitle: "Các Tính Năng Nâng Cao của Shield Advanced",
+                        ddosResponseTeamTitle: "Truy cập Đội ngũ Ứng phó DDoS 24/7",
+                        ddosResponseTeamText: "Trong trường hợp bị tấn công, bạn sẽ có quyền truy cập 24/7 vào Đội ngũ Ứng phó DDoS của AWS để được hỗ trợ chuyên môn nhằm giảm thiểu tác động.",
+                        costProtectionTitle: "Bảo vệ chi phí",
+                        costProtectionText: "Nếu bạn phải chịu phí cao hơn do tăng mức sử dụng trong một cuộc tấn công, Shield Advanced sẽ bảo vệ bạn khỏi các khoản phí bổ sung này.",
+                        autoWafTitle: "Giảm thiểu DDoS Lớp Ứng dụng Tự động",
+                        autoWafText: "Shield Advanced tự động tạo, đánh giá và triển khai các quy tắc Tường lửa Ứng dụng Web (WAF) để giảm thiểu các cuộc tấn công Lớp 7, tăng cường khả năng bảo mật của bạn."
+                    },
+                    summary: {
+                        sectionTitle: "Điểm Chính Cần Ghi Nhớ",
+                        point1: "AWS Shield là một dịch vụ được thiết kế để bảo vệ hạ tầng khỏi các cuộc tấn công Từ chối Dịch vụ Phân tán (DDoS).",
+                        point2: "AWS Shield Standard là dịch vụ miễn phí bảo vệ chống lại các cuộc tấn công lớp mạng và vận chuyển phổ biến (SYN floods, UDP floods, reflection attacks).",
+                        point3: "AWS Shield Advanced là dịch vụ trả phí cung cấp bảo vệ nâng cao chống lại các cuộc tấn công DDoS tinh vi, truy cập 24/7 vào đội ngũ ứng phó DDoS của AWS, và bảo vệ khỏi các khoản phí tăng thêm do tấn công.",
+                        point4: "Shield Advanced bao gồm tính năng giảm thiểu DDoS lớp ứng dụng tự động bằng cách triển khai các quy tắc WAF để phòng thủ chống lại các cuộc tấn công lớp 7."
+                    }
+                },
+                en: {
+                    header: {
+                        title: "Interactive Overview of AWS Shield",
+                        subtitle: "Protecting Infrastructure from DDoS Attacks with AWS Shield"
+                    },
+                    introduction: {
+                        sectionTitle: "Introduction to AWS Shield",
+                        text1: "AWS Shield is a service designed to protect your infrastructure from Distributed Denial of Service (DDoS) attacks.",
+                        text2: "A DDoS attack occurs when your infrastructure suddenly receives a large number of requests simultaneously from many computers around the world. The goal of such an attack is to overwhelm and overload your infrastructure, preventing it from serving your legitimate users."
+                    },
+                    comparison: {
+                        sectionTitle: "AWS Shield Standard vs. Advanced",
+                        introText: "AWS Shield offers two tiers of DDoS protection: Standard (free) and Advanced (paid).",
+                        standardTitle: "AWS Shield Standard",
+                        standardText1: "AWS Shield Standard is a <strong>free service</strong> that is automatically activated for every AWS customer.",
+                        standardText2: "It provides protection against attacks such as SYN floods, UDP floods, reflection attacks, and other layer 3 or layer 4 attacks.",
+                        advancedTitle: "AWS Shield Advanced",
+                        advancedText1: "For more sophisticated protection, AWS offers the Shield Advanced service. This is an optional DDoS mitigation service that costs approximately <strong>$3,000 per month</strong> per organization.",
+                        advancedText2: "Shield Advanced protects against more complex DDoS attacks targeting Amazon EC2, Elastic Load Balancing, Amazon CloudFront, the Global Accelerator, and Route 53.",
+                        chartTitle: "Cost Comparison (Estimated Monthly)",
+                        chartLabels: ["Standard", "Advanced"]
+                    },
+                    advancedFeatures: {
+                        sectionTitle: "Advanced Features of Shield Advanced",
+                        ddosResponseTeamTitle: "24/7 DDoS Response Team Access",
+                        ddosResponseTeamText: "In the event of an attack, you will have 24/7 access to the AWS DDoS Response Team for expert assistance to help mitigate the impact.",
+                        costProtectionTitle: "Cost Protection",
+                        costProtectionText: "Additionally, if you incur higher fees due to increased usage during an attack, Shield Advanced protects you from these additional charges.",
+                        autoWafTitle: "Automatic Application Layer DDoS Mitigation",
+                        autoWafText: "Shield Advanced includes automatic application layer DDoS mitigation. This means it automatically creates, evaluates, and deploys Web Application Firewall (WAF) rules to mitigate layer 7 attacks, enhancing your security posture."
+                    },
+                    summary: {
+                        sectionTitle: "Key Takeaways",
+                        point1: "AWS Shield is a service designed to protect infrastructure from Distributed Denial of Service (DDoS) attacks.",
+                        point2: "AWS Shield Standard is a free service that protects against common network and transport layer attacks such as SYN floods, UDP floods, and reflection attacks.",
+                        point3: "AWS Shield Advanced is a paid service offering enhanced protection against sophisticated DDoS attacks, 24/7 access to the AWS DDoS response team, and safeguards against increased fees due to attacks.",
+                        point4: "Shield Advanced includes automatic application layer DDoS mitigation by deploying Web Application Firewall (WAF) rules to defend against layer 7 attacks."
+                    }
+                }
+            };
+    
+            let currentLanguage = 'vi'; // Default language
+    
+            const langToggleVi = document.getElementById('lang-toggle-vi');
+            const langToggleEn = document.getElementById('lang-toggle-en');
+    
+            function updateLanguageButtons() {
+                if (currentLanguage === 'vi') {
+                    langToggleVi.classList.remove('bg-slate-200', 'text-slate-700');
+                    langToggleVi.classList.add('bg-sky-500', 'text-white');
+                    langToggleEn.classList.remove('bg-sky-500', 'text-white');
+                    langToggleEn.classList.add('bg-slate-200', 'text-slate-700');
+                } else {
+                    langToggleEn.classList.remove('bg-slate-200', 'text-slate-700');
+                    langToggleEn.classList.add('bg-sky-500', 'text-white');
+                    langToggleVi.classList.remove('bg-sky-500', 'text-white');
+                    langToggleVi.classList.add('bg-slate-200', 'text-slate-700');
+                }
+            }
+    
+            function getNestedTranslation(obj, path) {
+                return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+            }
+    
+            function updateContent() {
+                const elements = document.querySelectorAll('[data-i18n]');
+                elements.forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    const translatedText = getNestedTranslation(translations[currentLanguage], key);
+                    if (translatedText) {
+                        element.innerHTML = translatedText; // Use innerHTML to preserve bold tags etc.
+                    }
+                });
+                updateLanguageButtons();
+                updateChartLanguage();
+            }
+    
+            let shieldCostChartInstance = null;
+    
+            function initializeShieldCostChart() {
+                const ctx = document.getElementById('shieldCostChart').getContext('2d');
+                const chartLabels = translations[currentLanguage].comparison.chartLabels;
+    
+                shieldCostChartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: chartLabels,
+                        datasets: [{
+                            label: translations[currentLanguage].comparison.chartTitle,
+                            data: [0, 3000], // Standard: $0, Advanced: $3000
+                            backgroundColor: [
+                                'rgba(14, 165, 233, 0.6)', // sky-500
+                                'rgba(34, 197, 94, 0.6)'  // green-500
+                            ],
+                            borderColor: [
+                                'rgba(14, 165, 233, 1)',
+                                'rgba(34, 197, 94, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y', // Horizontal bar chart
+                        plugins: {
+                            legend: {
+                                display: false
                             },
-                            grid: {
-                                color: 'rgba(203, 213, 225, 0.3)'
+                            title: {
+                                display: true,
+                                text: translations[currentLanguage].comparison.chartTitle,
+                                font: {
+                                    size: 16,
+                                    weight: 'bold'
+                                },
+                                color: '#1e293b'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.x !== null) {
+                                            label += '$' + context.parsed.x.toLocaleString();
+                                        }
+                                        return label;
+                                    },
+                                    title: function(context) {
+                                        const label = context[0].label;
+                                        const maxChars = 16;
+                                        if (label.length > maxChars) {
+                                            let wrappedLabel = '';
+                                            let currentLine = '';
+                                            label.split(' ').forEach(word => {
+                                                if ((currentLine + word).length > maxChars && currentLine.length > 0) {
+                                                    wrappedLabel += currentLine.trim() + '\n';
+                                                    currentLine = word + ' ';
+                                                } else {
+                                                    currentLine += word + ' ';
+                                                }
+                                            });
+                                            wrappedLabel += currentLine.trim();
+                                            return wrappedLabel;
+                                        }
+                                        return label;
+                                    }
+                                }
                             }
                         },
-                        y: {
-                            ticks: {
-                                color: '#475569',
-                                callback: function(value, index, ticks) {
-                                    const label = this.getLabelForValue(value);
-                                    const maxChars = 16;
-                                    if (label.length > maxChars) {
-                                        let wrappedLabel = '';
-                                        let currentLine = '';
-                                        label.split(' ').forEach(word => {
-                                            if ((currentLine + word).length > maxChars && currentLine.length > 0) {
-                                                wrappedLabel += currentLine.trim() + '\n';
-                                                currentLine = word + ' ';
-                                            } else {
-                                                currentLine += word + ' ';
-                                            }
-                                        });
-                                        wrappedLabel += currentLine.trim();
-                                        return wrappedLabel;
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                ticks: {
+                                    color: '#475569',
+                                    callback: function(value) {
+                                        return '$' + value.toLocaleString();
                                     }
-                                    return label;
+                                },
+                                grid: {
+                                    color: 'rgba(203, 213, 225, 0.3)'
                                 }
                             },
-                            grid: {
-                                color: 'rgba(203, 213, 225, 0.3)'
+                            y: {
+                                ticks: {
+                                    color: '#475569',
+                                    callback: function(value, index, ticks) {
+                                        const label = this.getLabelForValue(value);
+                                        const maxChars = 16;
+                                        if (label.length > maxChars) {
+                                            let wrappedLabel = '';
+                                            let currentLine = '';
+                                            label.split(' ').forEach(word => {
+                                                if ((currentLine + word).length > maxChars && currentLine.length > 0) {
+                                                    wrappedLabel += currentLine.trim() + '\n';
+                                                    currentLine = word + ' ';
+                                                } else {
+                                                    currentLine += word + ' ';
+                                                }
+                                            });
+                                            wrappedLabel += currentLine.trim();
+                                            return wrappedLabel;
+                                        }
+                                        return label;
+                                    }
+                                },
+                                grid: {
+                                    color: 'rgba(203, 213, 225, 0.3)'
+                                }
                             }
                         }
                     }
-                }
-            });
-        }
-
-        function updateChartLanguage() {
-            if (shieldCostChartInstance) {
-                shieldCostChartInstance.options.plugins.title.text = translations[currentLanguage].comparison.chartTitle;
-                shieldCostChartInstance.data.labels = translations[currentLanguage].comparison.chartLabels;
-                shieldCostChartInstance.update();
+                });
             }
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize content with default language
-            updateContent();
-
-            // Language toggle event listeners
-            langToggleVi.addEventListener('click', () => {
-                currentLanguage = 'vi';
+    
+            function updateChartLanguage() {
+                if (shieldCostChartInstance) {
+                    shieldCostChartInstance.options.plugins.title.text = translations[currentLanguage].comparison.chartTitle;
+                    shieldCostChartInstance.data.labels = translations[currentLanguage].comparison.chartLabels;
+                    shieldCostChartInstance.update();
+                }
+            }
+    
+            document.addEventListener('DOMContentLoaded', function() {
+                // Initialize content with default language
                 updateContent();
+    
+                // Language toggle event listeners
+                langToggleVi.addEventListener('click', () => {
+                    currentLanguage = 'vi';
+                    updateContent();
+                });
+    
+                langToggleEn.addEventListener('click', () => {
+                    currentLanguage = 'en';
+                    updateContent();
+                });
+    
+                // Initialize the chart after content is loaded
+                initializeShieldCostChart();
             });
-
-            langToggleEn.addEventListener('click', () => {
-                currentLanguage = 'en';
-                updateContent();
-            });
-
-            // Initialize the chart after content is loaded
-            initializeShieldCostChart();
-        });
-    </script>
+        </script>
+        <div id="bottom" class="text-center py-8">
+        </div>
+    </div>
 </body>
+
 </html>
