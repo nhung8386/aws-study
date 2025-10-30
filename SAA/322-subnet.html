@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">Tổng Quan về Subnet AWS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #f0f9ff; /* Sky 50 (Light Blue/Cloud Theme) */
+            color: #1e293b; /* Slate 800 */
+        }
+        .section-title {
+            color: #0284c7; /* Sky 600 (Main Accent) */
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+        }
+        .reserved-ip-box {
+            background-color: #f0f9ff; /* Sky 50 */
+            border-left: 4px solid #0ea5e9; /* Sky 500 */
+        }
+        .exam-tip-box {
+            background-color: #fffbeb; /* Amber 50 */
+            border: 1px solid #fcd34d; /* Amber 300 */
+        }
+        .list-item-icon {
+            color: #0ea5e9; /* Sky 500 */
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-4 md:p-10 max-w-5xl">
+        <header class="text-center mb-12 relative">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-2 section-title" data-i18n="header.title">
+                Tổng Quan về Subnet
+            </h1>
+            <p class="text-lg text-gray-500" data-i18n="header.subtitle">Phân chia mạng lưới VPC</p>
+            <div class="absolute top-0 right-0 mt-4 mr-4 flex space-x-2">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-md bg-sky-600 text-white font-semibold text-sm">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-md bg-gray-200 text-gray-700 font-semibold text-sm">EN</button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Section 1: Introduction and Definition -->
+            <section id="subnet-intro" class="mb-12">
+                <h2 class="text-3xl font-bold section-title mb-4" data-i18n="intro.title">1. Giới thiệu Subnet trong VPC</h2>
+                <div class="card p-6 space-y-4">
+                    <p class="text-gray-700" data-i18n="intro.desc">
+                        Bước tiếp theo là thêm Subnet vào Virtual Private Cloud (VPC) của chúng ta. Chúng ta sẽ tạo hai loại Subnet: một **Subnet Public (Công cộng)** và một **Subnet Private (Riêng tư)**. Cả hai Subnet sẽ nằm trong một Availability Zone (Vùng Sẵn có) duy nhất. Chúng ta cũng sẽ tìm hiểu điều gì khiến một Subnet trở thành Public hay Private.
+                    </p>
+                    
+                    <h3 class="font-bold text-xl text-gray-800 pt-3" data-i18n="intro.what.title">Subnet là gì?</h3>
+                    <p class="text-gray-700" data-i18n="intro.what.desc">
+                        Subnet là một <span class="font-bold">phân đoạn dải địa chỉ IPv4</span> trong VPC của bạn.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Section 2: Reserved IP Addresses (CRITICAL) -->
+            <section id="reserved-ips" class="mb-12">
+                <h2 class="text-3xl font-bold section-title mb-4" data-i18n="reserved.title">2. Quy Tắc: 5 IP dành riêng (Reserved IPs)</h2>
+                <div class="card p-6 reserved-ip-box space-y-4">
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-exclamation-circle text-3xl list-item-icon flex-shrink-0"></i>
+                        <p class="text-gray-800 font-medium" data-i18n="reserved.core">
+                            AWS dành riêng <strong>năm địa chỉ IP</strong> trong mỗi Subnet. Cụ thể, đó là <strong>bốn địa chỉ IP đầu tiên và địa chỉ IP cuối cùng</strong> (The first four and the last one). Những địa chỉ IP dành riêng này không khả dụng để sử dụng và <strong>không thể gán</strong> cho EC2 Instance.
+                        </p>
+                    </div>
+
+                    <h3 class="font-bold text-lg text-gray-700 pt-3" data-i18n="reserved.example.title">Ví dụ: Với CIDR 10.0.0.0/24</h3>
+                    <ul class="space-y-2 pl-6">
+                        <li class="flex items-start space-x-2 text-sm" data-i18n="reserved.example.item1">
+                            <i class="fas fa-circle list-item-icon text-xs mt-1"></i>
+                            <span>Địa chỉ IP đầu tiên (<strong>10.0.0.0</strong>), là <strong>Địa chỉ Mạng (Network Address)</strong>.</span>
+                        </li>
+                        <li class="flex items-start space-x-2 text-sm" data-i18n="reserved.example.item2">
+                            <i class="fas fa-circle list-item-icon text-xs mt-1"></i>
+                            <span>Địa chỉ IP thứ hai (<strong>10.0.0.1</strong>), được AWS dành riêng cho <strong>VPC Router</strong>.</span>
+                        </li>
+                        <li class="flex items-start space-x-2 text-sm" data-i18n="reserved.example.item3">
+                            <i class="fas fa-circle list-item-icon text-xs mt-1"></i>
+                            <span>Địa chỉ IP thứ ba (<strong>10.0.0.2</strong>), được AWS dành riêng để ánh xạ tới <strong>Amazon provided DNS</strong>.</span>
+                        </li>
+                        <li class="flex items-start space-x-2 text-sm" data-i18n="reserved.example.item4">
+                            <i class="fas fa-circle list-item-icon text-xs mt-1"></i>
+                            <span>Địa chỉ IP thứ tư (<strong>10.0.0.3</strong>), hiện tại không sử dụng nhưng được dành riêng cho mục đích <strong>sử dụng trong tương lai</strong>.</span>
+                        </li>
+                        <li class="flex items-start space-x-2 text-sm text-red-600 font-semibold" data-i18n="reserved.example.item5">
+                            <i class="fas fa-circle list-item-icon text-xs mt-1"></i>
+                            <span>Địa chỉ IP cuối cùng (<strong>10.0.0.255</strong>), là <strong>Địa chỉ Broadcast (Network Broadcast Address)</strong>.</span>
+                        </li>
+                    </ul>
+                    <p class="text-sm text-gray-600 pt-2" data-i18n="reserved.note">
+                        Vì AWS không hỗ trợ broadcast trong VPC, địa chỉ cuối cùng này được dành riêng và không thể sử dụng.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Section 3: Subnet Sizing (Exam Tip) -->
+            <section id="sizing-tip" class="mb-12">
+                <h2 class="text-3xl font-bold section-title mb-4" data-i18n="sizing.title">3. Mẹo Quan trọng: Chọn Kích thước Subnet</h2>
+                <div class="card p-6 exam-tip-box space-y-4">
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-lightbulb text-3xl text-amber-600 flex-shrink-0"></i>
+                        <p class="text-gray-800 font-medium" data-i18n="sizing.tip1">
+                            Nếu bạn cần <strong>29 địa chỉ IP</strong> trong một Subnet cho các EC2 instance, bạn <strong>không thể</strong> chọn một Subnet với mask <strong>/27</strong>.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                        <!-- /27 Analysis -->
+                        <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+                            <p class="font-bold text-lg text-red-700 mb-1">Subnet /27</p>
+                            <p class="text-sm text-gray-700">Tổng IP: <span class="font-bold">32</span></p>
+                            <p class="text-sm text-gray-700">IP dành riêng: <span class="font-bold">- 5</span></p>
+                            <p class="text-sm text-gray-700 font-semibold text-red-600">IP khả dụng: <span class="font-bold">27</span></p>
+                            <p class="text-xs mt-2 italic" data-i18n="sizing.result1">
+                                27 IP <span class="font-bold">< 29 IP cần thiết</span> (Không đủ).
+                            </p>
+                        </div>
+
+                        <!-- /26 Analysis -->
+                        <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                            <p class="font-bold text-lg text-green-700 mb-1">Subnet /26</p>
+                            <p class="text-sm text-gray-700">Tổng IP: <span class="font-bold">64</span></p>
+                            <p class="text-sm text-gray-700">IP dành riêng: <span class="font-bold">- 5</span></p>
+                            <p class="text-sm text-gray-700 font-semibold text-green-600">IP khả dụng: <span class="font-bold">59</span></p>
+                            <p class="text-xs mt-2 italic" data-i18n="sizing.result2">
+                                59 IP <span class="font-bold">> 29 IP cần thiết</span> (Đủ).
+                            </p>
+                        </div>
+                    </div>
+                    <p class="text-base text-gray-700 pt-3" data-i18n="sizing.conclusion">
+                        Thay vào đó, bạn nên chọn kích thước Subnet là <strong>/26</strong>, cung cấp 59 IP khả dụng, đủ cho 29 instance của bạn.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Section 4: Key Takeaways -->
+            <section id="key-takeaways" class="mb-12">
+                <h2 class="text-3xl font-bold section-title mb-4" data-i18n="takeaways.title">4. Những Điểm Cốt Lõi</h2>
+                <div class="card p-6 space-y-3 bg-blue-50 border-2 border-blue-200">
+                    <ul class="space-y-2">
+                        <li class="flex items-start space-x-2 text-gray-700" data-i18n="takeaways.item1">
+                            <i class="fas fa-check-circle text-lg text-sky-600 flex-shrink-0 mt-0.5"></i>
+                            <span>Subnet là một <strong>phân đoạn dải địa chỉ IPv4</strong> trong VPC.</span>
+                        </li>
+                        <li class="flex items-start space-x-2 text-gray-700" data-i18n="takeaways.item2">
+                            <i class="fas fa-check-circle text-lg text-sky-600 flex-shrink-0 mt-0.5"></i>
+                            <span>AWS dành riêng <strong>năm địa chỉ IP</strong> trong mỗi Subnet: bốn địa chỉ đầu tiên và địa chỉ cuối cùng.</span>
+                        </li>
+                        <li class="flex items-start space-x-2 text-gray-700" data-i18n="takeaways.item3">
+                            <i class="fas fa-check-circle text-lg text-sky-600 flex-shrink-0 mt-0.5"></i>
+                            <span>Các IP dành riêng bao gồm: Địa chỉ Mạng, VPC Router, Amazon DNS, sử dụng tương lai và địa chỉ Broadcast.</span>
+                        </li>
+                        <li class="flex items-start space-x-2 text-gray-700" data-i18n="takeaways.item4">
+                            <i class="fas fa-check-circle text-lg text-sky-600 flex-shrink-0 mt-0.5"></i>
+                            <span>Khi chọn kích thước Subnet, hãy tính đến <strong>IP dành riêng</strong> để đảm bảo đủ địa chỉ khả dụng cho các EC2 instance.</span>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        const translations = {
+            vi: {
+                header: {
+                    title: "Tổng Quan về Subnet AWS",
+                    subtitle: "Phân chia mạng lưới VPC"
+                },
+                intro: {
+                    title: "1. Giới thiệu Subnet trong VPC",
+                    desc: "Bước tiếp theo là thêm Subnet vào Virtual Private Cloud (VPC) của chúng ta. Chúng ta sẽ tạo hai loại Subnet: một <strong>Subnet Public (Công cộng)</strong> và một <strong>Subnet Private (Riêng tư)</strong>. Cả hai Subnet sẽ nằm trong một Availability Zone (Vùng Sẵn có) duy nhất. Chúng ta cũng sẽ tìm hiểu điều gì khiến một Subnet trở thành Public hay Private.",
+                    what: {
+                        title: "Subnet là gì?",
+                        desc: "Subnet là một <strong>phân đoạn dải địa chỉ IPv4</strong> trong VPC của bạn."
+                    }
+                },
+                reserved: {
+                    title: "2. Quy Tắc: 5 IP dành riêng (Reserved IPs)",
+                    core: "AWS dành riêng <strong>năm địa chỉ IP</strong> trong mỗi Subnet. Cụ thể, đó là <strong>bốn địa chỉ IP đầu tiên và địa chỉ IP cuối cùng</strong> (The first four and the last one). Những địa chỉ IP dành riêng này không khả dụng để sử dụng và <strong>không thể gán</strong> cho EC2 Instance.",
+                    example: {
+                        title: "Ví dụ: Với CIDR 10.0.0.0/24",
+                        item1: "Địa chỉ IP đầu tiên (<strong>10.0.0.0</strong>), là <strong>Địa chỉ Mạng (Network Address)</strong>.",
+                        item2: "Địa chỉ IP thứ hai (<strong>10.0.0.1</strong>), được AWS dành riêng cho <strong>VPC Router</strong>.",
+                        item3: "Địa chỉ IP thứ ba (<strong>10.0.0.2</strong>), được AWS dành riêng để ánh xạ tới <strong>Amazon provided DNS</strong>.",
+                        item4: "Địa chỉ IP thứ tư (<strong>10.0.0.3</strong>), hiện tại không sử dụng nhưng được dành riêng cho mục đích <strong>sử dụng trong tương lai</strong>.",
+                        item5: "Địa chỉ IP cuối cùng (<strong>10.0.0.255</strong>), là <strong>Địa chỉ Broadcast (Network Broadcast Address)</strong>.",
+                    },
+                    note: "Vì AWS không hỗ trợ broadcast trong VPC, địa chỉ cuối cùng này được dành riêng và không thể sử dụng."
+                },
+                sizing: {
+                    title: "3. Mẹo Quan trọng: Chọn Kích thước Subnet",
+                    tip1: "Nếu bạn cần <strong>29 địa chỉ IP</strong> trong một Subnet cho các EC2 instance, bạn <strong>không thể</strong> chọn một Subnet với mask <strong>/27</strong>.",
+                    result1: "27 IP <strong>< 29 IP cần thiết</strong> (Không đủ).",
+                    result2: "59 IP <strong>> 29 IP cần thiết</strong> (Đủ).",
+                    conclusion: "Thay vào đó, bạn nên chọn kích thước Subnet là <strong>/26</strong>, cung cấp 59 IP khả dụng, đủ cho 29 instance của bạn."
+                },
+                takeaways: {
+                    title: "4. Những Điểm Cốt Lõi",
+                    item1: "Subnet là một <strong>phân đoạn dải địa chỉ IPv4</strong> trong VPC.",
+                    item2: "AWS dành riêng <strong>năm địa chỉ IP</strong> trong mỗi Subnet: bốn địa chỉ đầu tiên và địa chỉ cuối cùng.",
+                    item3: "Các IP dành riêng bao gồm: Địa chỉ Mạng, VPC Router, Amazon DNS, sử dụng tương lai và địa chỉ Broadcast.",
+                    item4: "Khi chọn kích thước Subnet, hãy tính đến <strong>IP dành riêng</strong> để đảm bảo đủ địa chỉ khả dụng cho các EC2 instance."
+                }
+            },
+            en: {
+                header: {
+                    title: "AWS Subnet Overview",
+                    subtitle: "Partitioning Your VPC Network"
+                },
+                intro: {
+                    title: "1. Introduction to Subnets in a VPC",
+                    desc: "The next step is to add subnets into our Virtual Private Cloud (VPC). We will create two subnets: one <strong>public subnet</strong> and one <strong>private subnet</strong>. Both subnets will be within a single Availability Zone. We will also explore what makes a subnet public or private.",
+                    what: {
+                        title: "What is a Subnet?",
+                        desc: "A subnet is a <strong>sub-range of IPv4 addresses</strong> within your VPC."
+                    }
+                },
+                reserved: {
+                    title: "2. The Rule: 5 Reserved IP Addresses",
+                    core: "AWS reserves <strong>five IP addresses</strong> in each subnet. Specifically, the <strong>first four IP addresses and the last one</strong> are reserved. These reserved IP addresses are not available for use and <strong>cannot be assigned</strong> to an EC2 instance.",
+                    example: {
+                        title: "Example: With CIDR 10.0.0.0/24",
+                        item1: "The first IP address (<strong>10.0.0.0</strong>), which is the <strong>Network Address</strong>.",
+                        item2: "The second IP address (<strong>10.0.0.1</strong>), reserved by AWS for the <strong>VPC Router</strong>.",
+                        item3: "The third IP address (<strong>10.0.0.2</strong>), reserved by AWS for mapping to <strong>Amazon provided DNS</strong>.",
+                        item4: "The fourth IP address (<strong>10.0.0.3</strong>), which is currently not used but reserved for <strong>future use</strong>.",
+                        item5: "The last IP address (<strong>10.0.0.255</strong>), which is the <strong>Network Broadcast Address</strong>.",
+                    },
+                    note: "Since AWS does not support broadcast in a VPC, this last address is reserved and cannot be used."
+                },
+                sizing: {
+                    title: "3. Important Tip: Choosing Subnet Size",
+                    tip1: "If you need <strong>29 IP addresses</strong> in a subnet for EC2 instances, you <strong>cannot</strong> choose a subnet with a <strong>/27</strong> mask.",
+                    result1: "27 Usable IPs <strong>< 29 Required IPs</strong> (Not enough).",
+                    result2: "59 Usable IPs <strong>> 29 Required IPs</strong> (Sufficient).",
+                    conclusion: "Instead, you should choose a subnet size of <strong>/26</strong>, which provides 59 usable IP addresses, sufficient for your 29 instances."
+                },
+                takeaways: {
+                    title: "4. Key Takeaways",
+                    item1: "A subnet is a <strong>sub-range of IPv4 addresses</strong> within a VPC.",
+                    item2: "AWS reserves <strong>five IP addresses</strong> in each subnet: the first four and the last one.",
+                    item3: "Reserved IPs include: Network Address, VPC Router, Amazon DNS, future use, and Broadcast Address.",
+                    item4: "When selecting subnet size, account for <strong>reserved IPs</strong> to ensure enough usable addresses for EC2 instances."
+                }
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default language
+
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+
+        function getNestedTranslation(obj, path) {
+            return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+        }
+
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const translatedText = getNestedTranslation(translations[currentLanguage], key);
+                if (translatedText) {
+                    // Using innerHTML to correctly render the strong/b tag
+                    element.innerHTML = translatedText;
+                }
+            });
+            // Update the document language
+            document.querySelector('html').setAttribute('lang', currentLanguage);
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            const activeClass = 'bg-sky-600 text-white';
+            const inactiveClass = 'bg-gray-200 text-gray-700';
+
+            if (currentLanguage === 'vi') {
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm ${activeClass}`;
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm ${inactiveClass}`;
+            } else {
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm ${activeClass}`;
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm ${inactiveClass}`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize content with default language
+            updateContent();
+
+            // Language toggle event listeners
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+            // Load Font Awesome explicitly if not done by browser
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css';
+            document.head.appendChild(link);
+        });
+    </script>
+</body>
+</html>

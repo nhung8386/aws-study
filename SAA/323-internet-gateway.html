@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">Internet Gateways & Route Tables</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #f0f9ff; /* Sky 50 (Light Blue/Cloud Theme) */
+            color: #1e293b; /* Slate 800 */
+        }
+        .section-title {
+            color: #0284c7; /* Sky 600 (Main Accent) */
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+        }
+        .info-box {
+            background-color: #e0f2fe; /* Sky 100 */
+            border-left: 4px solid #0ea5e9; /* Sky 500 */
+        }
+        .critical-box {
+            background-color: #fef2f2; /* Red 50 */
+            border: 1px solid #ef4444; /* Red 500 */
+        }
+        .list-item-icon {
+            color: #0ea5e9; /* Sky 500 */
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-4 md:p-10 max-w-5xl">
+        <header class="text-center mb-12 relative">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-2 section-title" data-i18n="header.title">
+                Internet Gateways & Route Tables
+            </h1>
+            <p class="text-lg text-gray-500" data-i18n="header.subtitle">Kết nối VPC của bạn với Internet</p>
+            <div class="absolute top-0 right-0 mt-4 mr-4 flex space-x-2">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-md bg-sky-600 text-white font-semibold text-sm">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-md bg-gray-200 text-gray-700 font-semibold text-sm">EN</button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Section 1: Introduction to Internet Access in Subnets -->
+            <section id="intro-access" class="mb-12">
+                <h2 class="text-3xl font-bold section-title mb-4" data-i18n="intro.title">1. Giới thiệu về Truy cập Internet trong Subnet</h2>
+                <div class="card p-6 space-y-4">
+                    <p class="text-gray-700" data-i18n="intro.desc">
+                        Hiện tại, các subnet của chúng ta chưa có truy cập internet, và chúng ta vẫn chưa định nghĩa điều gì tạo nên một <strong>Subnet Public (Công cộng)</strong> so với một <strong>Subnet Private (Riêng tư)</strong>. Để kích hoạt kết nối internet cho các tài nguyên bên trong Virtual Private Cloud (VPC), chẳng hạn như EC2 instances và Lambda functions, chúng ta sử dụng một <strong>Internet Gateway</strong>.
+                    </p>
+                    
+                </div>
+            </section>
+
+            <!-- Section 2: Internet Gateway Overview -->
+            <section id="igw-overview" class="mb-12">
+                <h2 class="text-3xl font-bold section-title mb-4" data-i18n="igw.title">2. Tổng quan về Internet Gateway</h2>
+                <div class="card p-6 info-box space-y-4">
+                    <p class="text-gray-800" data-i18n="igw.desc">
+                        Một <strong>Internet Gateway</strong> là tài nguyên được quản lý với khả năng <strong>mở rộng theo chiều ngang, tính sẵn có cao và dự phòng</strong>. Nó phải được tạo riêng biệt với bản thân VPC. Điều quan trọng là, <strong>một VPC chỉ có thể được đính kèm vào một Internet Gateway duy nhất</strong>, và mỗi Internet Gateway chỉ có thể được đính kèm vào một VPC.
+                    </p>
+                    <p class="text-sm text-gray-600 mt-2" data-i18n="igw.note">
+                        VPC sẽ được kết nối với Internet Gateway để cho phép lưu lượng truy cập ra vào.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Section 3: The Route Table Requirement (CRITICAL) -->
+            <section id="route-table-req" class="mb-12">
+                <h2 class="text-3xl font-bold section-title mb-4" data-i18n="route_req.title">3. Yêu cầu quan trọng: Cần có Route Tables</h2>
+                <div class="card p-6 critical-box space-y-4">
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-exclamation-triangle text-3xl text-red-600 flex-shrink-0"></i>
+                        <p class="text-gray-800 font-medium" data-i18n="route_req.core">
+                            <strong>Internet Gateway một mình không cung cấp quyền truy cập internet.</strong> Để kích hoạt kết nối, cần thiết phải sửa đổi **Bảng Định Tuyến (Route Tables)** được liên kết với các subnet. Cấu hình này đảm bảo rằng lưu lượng truy cập được định tuyến chính xác thông qua Internet Gateway ra internet.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 4: Configuring Internet Access -->
+            <section id="config-access" class="mb-12">
+                <h2 class="text-3xl font-bold section-title mb-4" data-i18n="config.title">4. Cấu hình Truy cập Internet cho Subnet</h2>
+                <div class="card p-6 space-y-4">
+                    <p class="text-gray-700" data-i18n="config.step1">
+                        Hãy xem xét một VPC với hai subnet và một EC2 instance (các subnet khác được giản lược). Chúng ta sẽ tạo một **Internet Gateway** trong VPC này. Tuy nhiên, chỉ riêng điều này sẽ không cung cấp quyền truy cập internet cho các subnet.
+                    </p>
+                    <p class="text-gray-700 font-semibold" data-i18n="config.step2">
+                        Để kích hoạt kết nối internet, chúng ta cũng phải chỉnh sửa **Bảng Định Tuyến**. Cụ thể, chúng ta sẽ tạo một Public EC2 instance trong **Public Subnet** và cấu hình **Bảng Định Tuyến** để EC2 instance có thể định tuyến lưu lượng truy cập qua router đến Internet Gateway, sau đó kết nối với internet.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Section 5: Key Takeaways -->
+            <section id="key-takeaways" class="mb-12">
+                <h2 class="text-3xl font-bold section-title mb-4" data-i18n="takeaways.title">5. Những Điểm Cốt Lõi</h2>
+                <div class="card p-6 space-y-3 bg-blue-50 border-2 border-blue-200">
+                    <ul class="space-y-2">
+                        <li class="flex items-start space-x-2 text-gray-700" data-i18n="takeaways.item1">
+                            <i class="fas fa-check-circle text-lg text-sky-600 flex-shrink-0 mt-0.5"></i>
+                            <span>Một <strong>Internet Gateway</strong> cho phép các tài nguyên bên trong VPC kết nối với internet.</span>
+                        </li>
+                        <li class="flex items-start space-x-2 text-gray-700" data-i18n="takeaways.item2">
+                            <i class="fas fa-check-circle text-lg text-sky-600 flex-shrink-0 mt-0.5"></i>
+                            <span>Internet Gateways là <strong>tài nguyên được quản lý với khả năng mở rộng theo chiều ngang, tính sẵn có cao và dự phòng.</strong></span>
+                        </li>
+                        <li class="flex items-start space-x-2 text-gray-700" data-i18n="takeaways.item3">
+                            <i class="fas fa-check-circle text-lg text-sky-600 flex-shrink-0 mt-0.5"></i>
+                            <span>Mỗi VPC có thể được đính kèm vào <strong>chỉ một Internet Gateway</strong>, và ngược lại.</span>
+                        </li>
+                        <li class="flex items-start space-x-2 text-gray-700" data-i18n="takeaways.item4">
+                            <i class="fas fa-check-circle text-lg text-sky-600 flex-shrink-0 mt-0.5"></i>
+                            <span>Truy cập internet đòi hỏi cả <strong>Internet Gateway</strong> và cấu hình <strong>Bảng Định Tuyến</strong> phù hợp.</span>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        const translations = {
+            vi: {
+                header: {
+                    title: "Internet Gateways & Route Tables",
+                    subtitle: "Kết nối VPC của bạn với Internet"
+                },
+                intro: {
+                    title: "1. Giới thiệu về Truy cập Internet trong Subnet",
+                    desc: "Hiện tại, các subnet của chúng ta chưa có truy cập internet, và chúng ta vẫn chưa định nghĩa điều gì tạo nên một <strong>Subnet Public (Công cộng)</strong> so với một <strong>Subnet Private (Riêng tư)</strong>. Để kích hoạt kết nối internet cho các tài nguyên bên trong Virtual Private Cloud (VPC), chẳng hạn như EC2 instances và Lambda functions, chúng ta sử dụng một <strong>Internet Gateway</strong>."
+                },
+                igw: {
+                    title: "2. Tổng quan về Internet Gateway",
+                    desc: "Một <strong>Internet Gateway</strong> là tài nguyên được quản lý với khả năng <strong>mở rộng theo chiều ngang, tính sẵn có cao và dự phòng</strong>. Nó phải được tạo riêng biệt với bản thân VPC. Điều quan trọng là, <strong>một VPC chỉ có thể được đính kèm vào một Internet Gateway duy nhất</strong>, và mỗi Internet Gateway chỉ có thể được đính kèm vào một VPC.",
+                    note: "VPC sẽ được kết nối với Internet Gateway để cho phép lưu lượng truy cập ra vào."
+                },
+                route_req: {
+                    title: "3. Yêu cầu quan trọng: Cần có Route Tables",
+                    core: "<strong>Internet Gateway một mình không cung cấp quyền truy cập internet.</strong> Để kích hoạt kết nối, cần thiết phải sửa đổi <strong>Bảng Định Tuyến (Route Tables)</strong> được liên kết với các subnet. Cấu hình này đảm bảo rằng lưu lượng truy cập được định tuyến chính xác thông qua Internet Gateway ra internet."
+                },
+                config: {
+                    title: "4. Cấu hình Truy cập Internet cho Subnet",
+                    step1: "Hãy xem xét một VPC với hai subnet và một EC2 instance (các subnet khác được giản lược). Chúng ta sẽ tạo một <strong>Internet Gateway</strong> trong VPC này. Tuy nhiên, chỉ riêng điều này sẽ không cung cấp quyền truy cập internet cho các subnet.",
+                    step2: "Để kích hoạt kết nối internet, chúng ta cũng phải chỉnh sửa <strong>Bảng Định Tuyến</strong>. Cụ thể, chúng ta sẽ tạo một Public EC2 instance trong <strong>Public Subnet</strong> và cấu hình <strong>Bảng Định Tuyến</strong> để EC2 instance có thể định tuyến lưu lượng truy cập qua router đến Internet Gateway, sau đó kết nối với internet."
+                },
+                takeaways: {
+                    title: "5. Những Điểm Cốt Lõi",
+                    item1: "Một <strong>Internet Gateway</strong> cho phép các tài nguyên bên trong VPC kết nối với internet.",
+                    item2: "Internet Gateways là <strong>tài nguyên được quản lý với khả năng mở rộng theo chiều ngang, tính sẵn có cao và dự phòng.</strong>",
+                    item3: "Mỗi VPC có thể được đính kèm vào <strong>chỉ một Internet Gateway</strong>, và ngược lại.",
+                    item4: "Truy cập internet đòi hỏi cả <strong>Internet Gateway</strong> và cấu hình <strong>Bảng Định Tuyến</strong> phù hợp."
+                }
+            },
+            en: {
+                header: {
+                    title: "Internet Gateways & Route Tables",
+                    subtitle: "Connecting Your VPC to the Internet"
+                },
+                intro: {
+                    title: "1. Introduction to Internet Access in Subnets",
+                    desc: "Currently, our subnets lack internet access, and we have yet to define what constitutes a <strong>Public Subnet</strong> versus a <strong>Private Subnet</strong>. To enable internet connectivity for resources within a Virtual Private Cloud (VPC), such as EC2 instances and Lambda functions, we utilize an <strong>Internet Gateway</strong>."
+                },
+                igw: {
+                    title: "2. Internet Gateway Overview",
+                    desc: "An <strong>Internet Gateway</strong> is a <strong>horizontally scalable, highly available, and redundant managed resource</strong>. It must be created separately from the VPC itself. Importantly, <strong>one VPC can only be attached to a single Internet Gateway</strong>, and each Internet Gateway can only be attached to one VPC.",
+                    note: "The VPC will be connected to the Internet Gateway to allow inbound and outbound traffic."
+                },
+                route_req: {
+                    title: "3. The Critical Requirement: Route Tables",
+                    core: "<strong>Internet Gateways on their own do not grant internet access.</strong> To enable connectivity, it is necessary to modify the <strong>Route Tables</strong> associated with the subnets. This configuration ensures that traffic is properly routed through the Internet Gateway to the internet."
+                },
+                config: {
+                    title: "4. Configuring Internet Access for Subnets",
+                    step1: "Consider a VPC with two subnets and one EC2 instance (other subnets are not shown). We will create an <strong>Internet Gateway</strong> within this VPC; however, this alone will not provide internet access to the subnets.",
+                    step2: "To enable internet connectivity, we must also edit the <strong>Route Tables</strong>. Specifically, we will create a Public EC2 instance in the <strong>Public Subnet</strong> and configure the <strong>Route Table</strong> so that the EC2 instance can route traffic through the router to the Internet Gateway, which then connects to the internet."
+                },
+                takeaways: {
+                    title: "5. Key Takeaways",
+                    item1: "An <strong>Internet Gateway</strong> enables resources within a VPC to connect to the internet.",
+                    item2: "Internet Gateways are <strong>horizontally scalable, highly available, and redundant managed resources.</strong>",
+                    item3: "Each VPC can be attached to <strong>only one Internet Gateway</strong>, and vice versa.",
+                    item4: "Internet access requires both an <strong>Internet Gateway</strong> and appropriate <strong>Route Table</strong> configurations."
+                }
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default language
+
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+
+        function getNestedTranslation(obj, path) {
+            return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+        }
+
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const translatedText = getNestedTranslation(translations[currentLanguage], key);
+                if (translatedText) {
+                    // Using innerHTML to correctly render the strong/b tag
+                    element.innerHTML = translatedText;
+                }
+            });
+            // Update the document language
+            document.querySelector('html').setAttribute('lang', currentLanguage);
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            const activeClass = 'bg-sky-600 text-white';
+            const inactiveClass = 'bg-gray-200 text-gray-700';
+
+            if (currentLanguage === 'vi') {
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm ${activeClass}`;
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm ${inactiveClass}`;
+            } else {
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm ${activeClass}`;
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm ${inactiveClass}`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize content with default language
+            updateContent();
+
+            // Language toggle event listeners
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+            // Load Font Awesome explicitly if not done by browser
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css';
+            document.head.appendChild(link);
+        });
+    </script>
+</body>
+</html>

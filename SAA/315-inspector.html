@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">Tổng Quan Amazon Inspector</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/a7a7b97314.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #f7f7f7; /* Light gray background */
+            color: #1f2937; /* Gray 800 */
+        }
+        .section-title {
+            color: #10b981; /* Emerald 500 (Inspector color) */
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+            transition: transform 0.3s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .icon-lg {
+            font-size: 3rem;
+            color: #10b981; /* Emerald 500 */
+        }
+        .resource-card {
+            border: 2px solid #a7f3d0; /* Emerald 200 */
+            background-color: #ecfdf5; /* Emerald 50 */
+            transition: border-color 0.3s;
+        }
+        .resource-card:hover {
+            border-color: #059669; /* Emerald 600 */
+        }
+        .flow-step {
+            background-color: #d1fae5; /* Emerald 100 */
+            color: #065f46; /* Emerald 800 */
+            font-weight: 600;
+        }
+        .integration-node {
+            background-color: #bae6fd; /* Light blue */
+            border: 2px solid #0ea5e9; /* Blue */
+            color: #0369a1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-4 md:p-10 max-w-6xl">
+        <header class="text-center mb-12 relative">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-2 flex items-center justify-center gap-3">
+                <i class="fas fa-search-dollar icon-lg"></i>
+                <span class="section-title" data-i18n="header.title">Tổng Quan Amazon Inspector</span>
+            </h1>
+            <p class="text-lg text-gray-500" data-i18n="header.subtitle">Dịch vụ Đánh giá Bảo mật Tự động và Liên tục</p>
+            <div class="absolute top-0 right-0 mt-4 mr-4 flex space-x-2">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-md bg-emerald-500 text-white font-semibold text-sm">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-md bg-gray-200 text-gray-700 font-semibold text-sm">EN</button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Section 1: Introduction and Core Function -->
+            <section id="introduction" class="mb-16">
+                <div class="card p-8 text-center bg-white border-b-4 border-emerald-500">
+                    <h2 class="text-3xl font-bold section-title mb-4" data-i18n="intro.sectionTitle">Kiểm tra an ninh tự động cho hạ tầng AWS</h2>
+                    <p class="text-xl text-gray-700 max-w-4xl mx-auto mb-4" data-i18n="intro.description">
+                        **Amazon Inspector** là dịch vụ cho phép bạn chạy các đánh giá bảo mật **tự động và liên tục** trên nhiều tài nguyên AWS của mình.
+                    </p>
+                    <div class="flex justify-center items-center space-x-6 text-gray-600">
+                        <span class="flex items-center"><i class="fas fa-sync-alt text-emerald-500 mr-2"></i> <span data-i18n="intro.feature1">Quét Liên tục</span></span>
+                        <span class="flex items-center"><i class="fas fa-database text-emerald-500 mr-2"></i> <span data-i18n="intro.feature2">Dựa trên CVE Database</span></span>
+                        <span class="flex items-center"><i class="fas fa-sort-numeric-up-alt text-emerald-500 mr-2"></i> <span data-i18n="intro.feature3">Gán Điểm Rủi ro</span></span>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Section 2: Resources Evaluated -->
+            <section id="resources" class="mb-16">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center" data-i18n="resources.sectionTitle">Các Tài Nguyên Được Amazon Inspector Đánh Giá</h2>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <!-- EC2 Instances -->
+                    <div class="card p-6 resource-card">
+                        <div class="text-2xl mb-3 text-emerald-600"><i class="fas fa-server"></i></div>
+                        <h3 class="font-bold text-xl mb-2" data-i18n="resource.ec2.title">EC2 Instances (Đang chạy)</h3>
+                        <p class="text-sm text-gray-600" data-i18n="resource.ec2.desc1">Sử dụng **Systems Manager Agent** để quét liên tục.</p>
+                        <p class="text-sm text-gray-600 font-semibold mt-1" data-i18n="resource.ec2.desc2">Kiểm tra lỗ hổng OS đã biết & Khả năng truy cập mạng ngoài ý muốn.</p>
+                    </div>
+                    <!-- Container Images (ECR) -->
+                    <div class="card p-6 resource-card">
+                        <div class="text-2xl mb-3 text-emerald-600"><i class="fab fa-docker"></i></div>
+                        <h3 class="font-bold text-xl mb-2" data-i18n="resource.ecr.title">Container Images (ECR)</h3>
+                        <p class="text-sm text-gray-600" data-i18n="resource.ecr.desc1">Đánh giá các image được đẩy vào **Amazon ECR**.</p>
+                        <p class="text-sm text-gray-600 font-semibold mt-1" data-i18n="resource.ecr.desc2">Phân tích chống lại các lỗ hổng đã biết ngay khi push.</p>
+                    </div>
+                    <!-- Lambda Functions -->
+                    <div class="card p-6 resource-card">
+                        <div class="text-2xl mb-3 text-emerald-600"><i class="fas fa-code-branch"></i></div>
+                        <h3 class="font-bold text-xl mb-2" data-i18n="resource.lambda.title">Lambda Functions</h3>
+                        <p class="text-sm text-gray-600" data-i18n="resource.lambda.desc1">Đánh giá khi **triển khai** (Deployment).</p>
+                        <p class="text-sm text-gray-600 font-semibold mt-1" data-i18n="resource.lambda.desc2">Phân tích mã hàm và các gói phụ thuộc (package dependencies) cho các lỗ hổng phần mềm.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 3: The Assessment Cycle -->
+            <section id="cycle" class="mb-16">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center" data-i18n="cycle.sectionTitle">Chu Trình Đánh Giá và Cập Nhật Liên Tục</h2>
+                <div class="card p-8 bg-gray-50">
+                    <div class="flex flex-col md:flex-row justify-center items-center md:space-x-8 space-y-6 md:space-y-0 text-center">
+                        
+                        <div class="flex flex-col items-center max-w-xs">
+                            <div class="flow-step p-4 rounded-full mb-3"><i class="fas fa-search"></i></div>
+                            <p class="font-semibold text-sm" data-i18n="cycle.step1Title">1. Quét ban đầu và Liên tục</p>
+                            <p class="text-xs text-gray-500" data-i18n="cycle.step1Desc">Đánh giá các tài nguyên ngay khi chúng chạy hoặc được triển khai.</p>
+                        </div>
+                        
+                        <div class="text-2xl text-gray-400 hidden md:block"><i class="fas fa-arrow-right"></i></div>
+
+                        <div class="flex flex-col items-center max-w-xs">
+                            <div class="flow-step p-4 rounded-full mb-3"><i class="fas fa-book"></i></div>
+                            <p class="font-semibold text-sm" data-i18n="cycle.step2Title">2. Tham chiếu CVE Database</p>
+                            <p class="text-xs text-gray-500" data-i18n="cycle.step2Desc">Sử dụng database **CVE** (Common Vulnerabilities and Exposures) để đối chiếu lỗ hổng.</p>
+                        </div>
+
+                        <div class="text-2xl text-gray-400 hidden md:block"><i class="fas fa-arrow-right"></i></div>
+                        
+                        <div class="flex flex-col items-center max-w-xs">
+                            <div class="flow-step p-4 rounded-full mb-3"><i class="fas fa-redo-alt"></i></div>
+                            <p class="font-semibold text-sm" data-i18n="cycle.step3Title">3. Tự động Quét lại</p>
+                            <p class="text-xs text-gray-500" data-i18n="cycle.step3Desc">Tự động chạy lại đánh giá mỗi khi database **CVE** có cập nhật mới.</p>
+                        </div>
+                    </div>
+                    <p class="text-center mt-6 text-sm text-gray-600 font-bold" data-i18n="cycle.scoring">
+                        Mỗi lỗ hổng được xác định sẽ được gán **Điểm Rủi ro** để hỗ trợ ưu tiên khắc phục.
+                    </p>
+                </div>
+            </section>
+            
+            <!-- Section 4: Reporting and Integration -->
+            <section id="integration" class="mb-16">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center" data-i18n="integration.sectionTitle">Báo Cáo và Tích Hợp (Visibility & Automation)</h2>
+                <div class="card p-8 bg-white border-2 border-sky-200">
+                    <div class="flex flex-col md:flex-row justify-center items-center space-x-0 md:space-x-12 space-y-6 md:space-y-0">
+                        <!-- Inspector Source -->
+                        <div class="flex flex-col items-center max-w-xs p-4 rounded-lg flow-step">
+                            <i class="fas fa-microscope text-2xl mb-2"></i>
+                            <p class="font-bold" data-i18n="integration.source">Amazon Inspector (Findings)</p>
+                        </div>
+                        
+                        <div class="text-3xl text-gray-400 hidden md:block"><i class="fas fa-long-arrow-alt-right"></i></div>
+                        <div class="text-3xl text-gray-400 block md:hidden"><i class="fas fa-long-arrow-alt-down"></i></div>
+
+                        <!-- Security Hub -->
+                        <div class="flex flex-col items-center max-w-xs p-4 rounded-lg integration-node">
+                            <i class="fas fa-chart-bar text-2xl mb-2"></i>
+                            <p class="font-bold" data-i18n="integration.hub.title">AWS Security Hub</p>
+                            <p class="text-sm text-center" data-i18n="integration.hub.desc">Chế độ xem tập trung (Centralized Visibility) các lỗ hổng.</p>
+                        </div>
+
+                        <div class="text-3xl text-gray-400 hidden md:block"><i class="fas fa-plus"></i></div>
+                        <div class="text-3xl text-gray-400 block md:hidden"><i class="fas fa-plus"></i></div>
+                        
+                        <!-- EventBridge -->
+                        <div class="flex flex-col items-center max-w-xs p-4 rounded-lg integration-node">
+                            <i class="fas fa-bolt text-2xl mb-2"></i>
+                            <p class="font-bold" data-i18n="integration.eventbridge.title">Amazon EventBridge</p>
+                            <p class="text-sm text-center" data-i18n="integration.eventbridge.desc">Kích hoạt các quy tắc tự động hóa (ví dụ: vá lỗi, thông báo).</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Section 5: Summary -->
+            <section id="summary" class="text-center">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4" data-i18n="summary.title">Kết Luận</h2>
+                <p class="text-lg text-gray-600 max-w-4xl mx-auto" data-i18n="summary.conclusion">
+                    Amazon Inspector là công cụ đánh giá bảo mật toàn diện, liên tục kiểm tra **EC2**, **Container Images**, và **Lambda Functions** của bạn, cung cấp khả năng hiển thị tập trung và tự động hóa phản ứng thông qua tích hợp với **AWS Security Hub** và **Amazon EventBridge**.
+                </p>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        const translations = {
+            vi: {
+                header: {
+                    title: "Tổng Quan Amazon Inspector",
+                    subtitle: "Dịch vụ Đánh giá Bảo mật Tự động và Liên tục"
+                },
+                intro: {
+                    sectionTitle: "Kiểm tra an ninh tự động cho hạ tầng AWS",
+                    description: "Amazon Inspector là dịch vụ cho phép bạn chạy các đánh giá bảo mật **tự động và liên tục** trên nhiều tài nguyên AWS của mình.",
+                    feature1: "Quét Liên tục",
+                    feature2: "Dựa trên CVE Database",
+                    feature3: "Gán Điểm Rủi ro"
+                },
+                resources: {
+                    sectionTitle: "Các Tài Nguyên Được Amazon Inspector Đánh Giá"
+                },
+                resource: {
+                    ec2: {
+                        title: "EC2 Instances (Đang chạy)",
+                        desc1: "Sử dụng **Systems Manager Agent** để quét liên tục.",
+                        desc2: "Kiểm tra lỗ hổng OS đã biết & Khả năng truy cập mạng ngoài ý muốn."
+                    },
+                    ecr: {
+                        title: "Container Images (ECR)",
+                        desc1: "Đánh giá các image được đẩy vào **Amazon ECR**.",
+                        desc2: "Phân tích chống lại các lỗ hổng đã biết ngay khi push."
+                    },
+                    lambda: {
+                        title: "Lambda Functions",
+                        desc1: "Đánh giá khi **triển khai** (Deployment).",
+                        desc2: "Phân tích mã hàm và các gói phụ thuộc (package dependencies) cho các lỗ hổng phần mềm."
+                    }
+                },
+                cycle: {
+                    sectionTitle: "Chu Trình Đánh Giá và Cập Nhật Liên Tục",
+                    step1Title: "1. Quét ban đầu và Liên tục",
+                    step1Desc: "Đánh giá các tài nguyên ngay khi chúng chạy hoặc được triển khai.",
+                    step2Title: "2. Tham chiếu CVE Database",
+                    step2Desc: "Sử dụng database **CVE** (Common Vulnerabilities and Exposures) để đối chiếu lỗ hổng.",
+                    step3Title: "3. Tự động Quét lại",
+                    step3Desc: "Tự động chạy lại đánh giá mỗi khi database **CVE** có cập nhật mới.",
+                    scoring: "Mỗi lỗ hổng được xác định sẽ được gán **Điểm Rủi ro** để hỗ trợ ưu tiên khắc phục."
+                },
+                integration: {
+                    sectionTitle: "Báo Cáo và Tích Hợp (Visibility & Automation)",
+                    source: "Amazon Inspector (Findings)",
+                    hub: {
+                        title: "AWS Security Hub",
+                        desc: "Chế độ xem tập trung (Centralized Visibility) các lỗ hổng."
+                    },
+                    eventbridge: {
+                        title: "Amazon EventBridge",
+                        desc: "Kích hoạt các quy tắc tự động hóa (ví dụ: vá lỗi, thông báo)."
+                    }
+                },
+                summary: {
+                    title: "Kết Luận",
+                    conclusion: "Amazon Inspector là công cụ đánh giá bảo mật toàn diện, liên tục kiểm tra **EC2**, **Container Images**, và **Lambda Functions** của bạn, cung cấp khả năng hiển thị tập trung và tự động hóa phản ứng thông qua tích hợp với **AWS Security Hub** và **Amazon EventBridge**."
+                }
+            },
+            en: {
+                header: {
+                    title: "Amazon Inspector Overview",
+                    subtitle: "Automated and Continuous Security Assessment Service"
+                },
+                intro: {
+                    sectionTitle: "Automated Security Assessment for AWS Infrastructure",
+                    description: "Amazon Inspector is a service that enables you to run **automated and continuous** security assessments on several of your AWS resources.",
+                    feature1: "Continuous Scanning",
+                    feature2: "CVE Database Reference",
+                    feature3: "Risk Scoring"
+                },
+                resources: {
+                    sectionTitle: "Resources Evaluated by Amazon Inspector"
+                },
+                resource: {
+                    ec2: {
+                        title: "EC2 Instances (Running)",
+                        desc1: "Leverages **Systems Manager Agent** for continuous assessment.",
+                        desc2: "Checks for known OS vulnerabilities & Unintended network accessibility."
+                    },
+                    ecr: {
+                        title: "Container Images (ECR)",
+                        desc1: "Evaluates images pushed to **Amazon ECR**.",
+                        desc2: "Analyzes against known vulnerabilities during the push process."
+                    },
+                    lambda: {
+                        title: "Lambda Functions",
+                        desc1: "Assessed upon **deployment**.",
+                        desc2: "Analyzes function code and package dependencies for software vulnerabilities."
+                    }
+                },
+                cycle: {
+                    sectionTitle: "Continuous Assessment and Update Cycle",
+                    step1Title: "1. Initial and Continuous Scanning",
+                    step1Desc: "Assesses resources as they run or are deployed.",
+                    step2Title: "2. CVE Database Reference",
+                    step2Desc: "Uses the **CVE** (Common Vulnerabilities and Exposures) database for vulnerability matching.",
+                    step3Title: "3. Automatic Rescans",
+                    step3Desc: "Automatically reruns assessments whenever the **CVE** database is updated.",
+                    scoring: "Each identified vulnerability is associated with a **Risk Score** to assist in prioritization."
+                },
+                integration: {
+                    sectionTitle: "Reporting and Integration (Visibility & Automation)",
+                    source: "Amazon Inspector (Findings)",
+                    hub: {
+                        title: "AWS Security Hub",
+                        desc: "Centralized Visibility of vulnerabilities."
+                    },
+                    eventbridge: {
+                        title: "Amazon EventBridge",
+                        desc: "Triggers automation rules (e.g., patching, notifications)."
+                    }
+                },
+                summary: {
+                    title: "Conclusion",
+                    conclusion: "Amazon Inspector is a comprehensive security assessment tool that continuously evaluates your **EC2 instances**, **container images**, and **Lambda functions**, providing centralized visibility and automation of response through integration with **AWS Security Hub** and **Amazon EventBridge**."
+                }
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default language
+
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+
+        function getNestedTranslation(obj, path) {
+            return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+        }
+
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const translatedText = getNestedTranslation(translations[currentLanguage], key);
+                if (translatedText) {
+                    element.innerHTML = translatedText;
+                }
+            });
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            if (currentLanguage === 'vi') {
+                langToggleVi.classList.remove('bg-gray-200', 'text-gray-700');
+                langToggleVi.classList.add('bg-emerald-500', 'text-white');
+                langToggleEn.classList.remove('bg-emerald-500', 'text-white');
+                langToggleEn.classList.add('bg-gray-200', 'text-gray-700');
+            } else {
+                langToggleEn.classList.remove('bg-gray-200', 'text-gray-700');
+                langToggleEn.classList.add('bg-emerald-500', 'text-white');
+                langToggleVi.classList.remove('bg-emerald-500', 'text-white');
+                langToggleVi.classList.add('bg-gray-200', 'text-gray-700');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize content with default language
+            updateContent();
+
+            // Language toggle event listeners
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

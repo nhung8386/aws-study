@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">Tổng Quan VPC Mặc Định AWS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #f0f9ff; /* Blue 50 */
+            color: #1e293b; /* Slate 800 */
+        }
+        .section-title {
+            color: #0c4a6e; /* Cyan 800 (Deep Blue for Cloud/Network) */
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+        }
+        .component-box {
+            background-color: #e0f7fa; /* Cyan 50 */
+            border-left: 4px solid #06b6d4; /* Cyan 500 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+        .key-feature {
+            background-color: #fefce8; /* Yellow 50 */
+            border: 1px solid #fde047; /* Yellow 300 */
+            color: #854d0e; /* Yellow 900 */
+        }
+        .availability-text {
+            color: #15803d; /* Green 700 */
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-4 md:p-10 max-w-6xl">
+        <header class="text-center mb-12 relative">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-2 section-title" data-i18n="header.title">
+                Tổng Quan VPC Mặc Định AWS
+            </h1>
+            <p class="text-lg text-gray-500" data-i18n="header.subtitle">Mạng Lưới Ảo Sẵn Sàng Cho Bạn</p>
+            <div class="absolute top-0 right-0 mt-4 mr-4 flex space-x-2">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-md bg-sky-600 text-white font-semibold text-sm">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-md bg-gray-200 text-gray-700 font-semibold text-sm">EN</button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Section 1: Introduction and Purpose -->
+            <section id="introduction" class="mb-12">
+                <h2 class="text-3xl font-bold section-title mb-4" data-i18n="intro.title">1. Giới thiệu và Mục đích</h2>
+                <div class="card p-6 key-feature">
+                    <p class="text-gray-800 font-semibold mb-3" data-i18n="intro.purpose1">
+                        **VPC Mặc Định (Default VPC)** được tạo tự động cho mọi tài khoản AWS mới.
+                    </p>
+                    <p class="text-gray-700" data-i18n="intro.purpose2">
+                        Mục đích chính là **đơn giản hóa trải nghiệm ban đầu** cho người dùng mới. Bạn có thể khởi chạy các **EC2 instance** ngay lập tức mà không cần cấu hình mạng.
+                    </p>
+                    <p class="text-sm text-gray-600 italic mt-3" data-i18n="intro.bestPractice">
+                        **Thực hành tốt nhất:** Đối với tài khoản sản xuất (Production), nên tạo VPC tùy chỉnh thay vì sử dụng VPC mặc định.
+                    </p>
+                </div>
+            </section>
+            
+            <!-- Section 2: Core Connectivity Features -->
+            <section id="connectivity" class="mb-12">
+                <h2 class="text-3xl font-bold section-title mb-4" data-i18n="connectivity.title">2. Khả năng Kết nối Mặc định</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Feature 1: Internet Access -->
+                    <div class="card p-5 component-box">
+                        <h3 class="font-bold text-xl text-cyan-700 mb-2" data-i18n="connectivity.feature1.title">Kết nối Internet Tức thì</h3>
+                        <p class="text-gray-700 text-sm" data-i18n="connectivity.feature1.desc">
+                            VPC mặc định **có kết nối internet theo mặc định** thông qua Internet Gateway được đính kèm.
+                        </p>
+                    </div>
+                    <!-- Feature 2: Public IP -->
+                    <div class="card p-5 component-box">
+                        <h3 class="font-bold text-xl text-cyan-700 mb-2" data-i18n="connectivity.feature2.title">Địa chỉ IPv4 Công cộng</h3>
+                        <p class="text-gray-700 text-sm" data-i18n="connectivity.feature2.desc">
+                            Mỗi EC2 instance được khởi chạy trong VPC mặc định **tự động nhận một địa chỉ IPv4 công cộng**, cho phép kết nối ngay lập tức.
+                        </p>
+                    </div>
+                    <!-- Feature 3: DNS Names -->
+                    <div class="card p-5 component-box col-span-1 md:col-span-2">
+                        <h3 class="font-bold text-xl text-cyan-700 mb-2" data-i18n="connectivity.feature3.title">Tên DNS Công cộng và Riêng tư</h3>
+                        <p class="text-gray-700 text-sm" data-i18n="connectivity.feature3.desc">
+                            Mỗi instance cũng nhận được cả **tên DNS IPv4 công cộng** và **riêng tư** để dễ dàng truy cập và quản lý trong và ngoài VPC.
+                        </p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Section 3: Default CIDR and Subnets -->
+            <section id="cidr-subnets" class="mb-12">
+                <h2 class="text-3xl font-bold section-title mb-4" data-i18n="cidr.title">3. CIDR và Cấu trúc Subnet Mặc định</h2>
+                <div class="card p-6 space-y-4">
+                    <!-- VPC CIDR -->
+                    <div class="border-b pb-4">
+                        <h3 class="font-bold text-xl text-gray-800 mb-2" data-i18n="cidr.vpc.title">VPC IPv4 CIDR Block</h3>
+                        <div class="flex items-center space-x-4">
+                            <span class="text-2xl font-mono px-3 py-1 bg-gray-100 rounded-md shadow-inner">
+                                <i class="fas fa-network-wired text-cyan-500 mr-2"></i> 172.31.0.0/16 (Ví dụ)
+                            </span>
+                            <p class="text-sm text-gray-600" data-i18n="cidr.vpc.desc">
+                                Dải `/16` cho phép tổng cộng **65,536** địa chỉ IP.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Subnets for HA -->
+                    <div>
+                        <h3 class="font-bold text-xl text-gray-800 mb-2" data-i18n="cidr.subnet.title">Subnets và Tính Sẵn sàng Cao (High Availability - HA)</h3>
+                        <div class="flex items-center space-x-4 availability-text mb-2">
+                            <i class="fas fa-layer-group text-2xl"></i>
+                            <span data-i18n="cidr.subnet.count">3 Subnets đã được tạo tự động</span>
+                        </div>
+                        <ul class="list-disc ml-6 text-gray-700 text-sm space-y-1">
+                            <li data-i18n="cidr.subnet.design1">Mỗi Subnet nằm trong một **Availability Zone (AZ)** khác nhau.</li>
+                            <li data-i18n="cidr.subnet.design2">Thiết kế này đảm bảo kiến trúc **sẵn sàng cao** ngay từ đầu.</li>
+                            <li data-i18n="cidr.subnet.design3">Mỗi subnet có CIDR block riêng (ví dụ: `/20` với 4,096 hosts).</li>
+                            <li class="font-semibold text-red-600" data-i18n="cidr.subnet.reserved">Lưu ý: 5 địa chỉ IP đầu tiên trong mỗi subnet được AWS bảo lưu.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Section 4: Routing and Security Defaults -->
+            <section id="routing-security" class="mb-12">
+                <h2 class="text-3xl font-bold section-title mb-4" data-i18n="routing.title">4. Định tuyến và Bảo mật Mặc định</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Route Table -->
+                    <div class="card p-5 component-box">
+                        <h3 class="font-bold text-xl text-cyan-700 mb-2" data-i18n="routing.routeTable.title">Bảng Định tuyến Chính (Main Route Table)</h3>
+                        <p class="text-sm text-gray-700 mb-2" data-i18n="routing.routeTable.desc1">
+                            **Route Table** mặc định chịu trách nhiệm định tuyến lưu lượng truy cập ra khỏi VPC.
+                        </p>
+                        <ul class="list-disc ml-4 text-xs text-gray-600">
+                            <li data-i18n="routing.routeTable.rule1">Một quy tắc định tuyến lưu lượng VPC (Local).</li>
+                            <li data-i18n="routing.routeTable.rule2">Một quy tắc định tuyến **0.0.0.0/0** (tất cả lưu lượng bên ngoài) tới **Internet Gateway (IGW)**.</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Network ACL -->
+                    <div class="card p-5 component-box">
+                        <h3 class="font-bold text-xl text-cyan-700 mb-2" data-i18n="routing.nacl.title">Network ACL Mặc định</h3>
+                        <p class="text-sm text-gray-700 mb-2" data-i18n="routing.nacl.desc">
+                            Network ACLs mặc định được cấu hình để cho phép kết nối ngay lập tức:
+                        </p>
+                        <ul class="list-disc ml-4 text-xs text-red-600 font-semibold">
+                            <li data-i18n="routing.nacl.rule1">Lưu lượng **Inbound (vào)**: Cho phép TẤT CẢ.</li>
+                            <li data-i18n="routing.nacl.rule2">Lưu lượng **Outbound (ra)**: Cho phép TẤT CẢ.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 5: Key Takeaways -->
+            <section id="key-takeaways" class="mb-8">
+                <h2 class="text-3xl font-bold section-title mb-4 text-center" data-i18n="keyTakeaways.title">Điểm Chính Cần Ghi Nhớ</h2>
+                 <div class="max-w-4xl mx-auto space-y-3">
+                    <div class="card p-4 flex items-start space-x-3 bg-blue-50 border-blue-200">
+                        <div class="text-2xl pt-1 text-cyan-600"><i class="fas fa-plug"></i></div>
+                        <p class="text-gray-700 font-semibold" data-i18n="keyTakeaways.point1">
+                            VPC Mặc định được tạo tự động để **đơn giản hóa việc sử dụng đám mây ban đầu**.
+                        </p>
+                    </div>
+                    <div class="card p-4 flex items-start space-x-3 bg-blue-50 border-blue-200">
+                        <div class="text-2xl pt-1 text-cyan-600"><i class="fas fa-globe-americas"></i></div>
+                        <p class="text-gray-700" data-i18n="keyTakeaways.point2">
+                            Mọi EC2 instance trong đó nhận **IP công cộng** và **kết nối internet** ngay lập tức.
+                        </p>
+                    </div>
+                    <div class="card p-4 flex items-start space-x-3 bg-blue-50 border-blue-200">
+                        <div class="text-2xl pt-1 text-cyan-600"><i class="fas fa-sitemap"></i></div>
+                        <p class="text-gray-700" data-i18n="keyTakeaways.point3">
+                            Nó bao gồm **ba subnets** (mỗi AZ một subnet) và **Main Route Table** chỉ tới **Internet Gateway (IGW)**.
+                        </p>
+                    </div>
+                 </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // Use Font Awesome (fas) for icons
+        // Example: <i class="fas fa-network-wired"></i>
+
+        const translations = {
+            vi: {
+                header: {
+                    title: "Tổng Quan VPC Mặc Định AWS",
+                    subtitle: "Mạng Lưới Ảo Sẵn Sàng Cho Bạn"
+                },
+                intro: {
+                    title: "1. Giới thiệu và Mục đích",
+                    purpose1: "**VPC Mặc Định (Default VPC)** được tạo tự động cho mọi tài khoản AWS mới.",
+                    purpose2: "Mục đích chính là **đơn giản hóa trải nghiệm ban đầu** cho người dùng mới. Bạn có thể khởi chạy các **EC2 instance** ngay lập tức mà không cần cấu hình mạng.",
+                    bestPractice: "**Thực hành tốt nhất:** Đối với tài khoản sản xuất (Production), nên tạo VPC tùy chỉnh thay vì sử dụng VPC mặc định."
+                },
+                connectivity: {
+                    title: "2. Khả năng Kết nối Mặc định",
+                    feature1: {
+                        title: "Kết nối Internet Tức thì",
+                        desc: "VPC mặc định **có kết nối internet theo mặc định** thông qua Internet Gateway được đính kèm."
+                    },
+                    feature2: {
+                        title: "Địa chỉ IPv4 Công cộng",
+                        desc: "Mỗi EC2 instance được khởi chạy trong VPC mặc định **tự động nhận một địa chỉ IPv4 công cộng**, cho phép kết nối ngay lập tức."
+                    },
+                    feature3: {
+                        title: "Tên DNS Công cộng và Riêng tư",
+                        desc: "Mỗi instance cũng nhận được cả **tên DNS IPv4 công cộng** và **riêng tư** để dễ dàng truy cập và quản lý trong và ngoài VPC."
+                    }
+                },
+                cidr: {
+                    title: "3. CIDR và Cấu trúc Subnet Mặc định",
+                    vpc: {
+                        title: "VPC IPv4 CIDR Block",
+                        desc: "Dải `/16` cho phép tổng cộng **65,536** địa chỉ IP."
+                    },
+                    subnet: {
+                        title: "Subnets và Tính Sẵn sàng Cao (High Availability - HA)",
+                        count: "3 Subnets đã được tạo tự động",
+                        design1: "Mỗi Subnet nằm trong một **Availability Zone (AZ)** khác nhau.",
+                        design2: "Thiết kế này đảm bảo kiến trúc **sẵn sàng cao** ngay từ đầu.",
+                        design3: "Mỗi subnet có CIDR block riêng (ví dụ: `/20` với 4,096 hosts).",
+                        reserved: "Lưu ý: 5 địa chỉ IP đầu tiên trong mỗi subnet được AWS bảo lưu."
+                    }
+                },
+                routing: {
+                    title: "4. Định tuyến và Bảo mật Mặc định",
+                    routeTable: {
+                        title: "Bảng Định tuyến Chính (Main Route Table)",
+                        desc1: "Route Table mặc định chịu trách nhiệm định tuyến lưu lượng truy cập ra khỏi VPC.",
+                        rule1: "Một quy tắc định tuyến lưu lượng VPC (Local).",
+                        rule2: "Một quy tắc định tuyến **0.0.0.0/0** (tất cả lưu lượng bên ngoài) tới **Internet Gateway (IGW)**."
+                    },
+                    nacl: {
+                        title: "Network ACL Mặc định",
+                        desc: "Network ACLs mặc định được cấu hình để cho phép kết nối ngay lập tức:",
+                        rule1: "Lưu lượng **Inbound (vào)**: Cho phép TẤT CẢ.",
+                        rule2: "Lưu lượng **Outbound (ra)**: Cho phép TẤT CẢ."
+                    }
+                },
+                keyTakeaways: {
+                    title: "Điểm Chính Cần Ghi Nhớ",
+                    point1: "VPC Mặc định được tạo tự động để **đơn giản hóa việc sử dụng đám mây ban đầu**.",
+                    point2: "Mọi EC2 instance trong đó nhận **IP công cộng** và **kết nối internet** ngay lập tức.",
+                    point3: "Nó bao gồm **ba subnets** (mỗi AZ một subnet) và **Main Route Table** chỉ tới **Internet Gateway (IGW)**."
+                }
+            },
+            en: {
+                header: {
+                    title: "AWS Default VPC Overview",
+                    subtitle: "Your Ready-Made Virtual Network"
+                },
+                intro: {
+                    title: "1. Introduction and Purpose",
+                    purpose1: "The **Default VPC (Virtual Private Cloud)** is automatically created in every new AWS account.",
+                    purpose2: "Its main purpose is to **simplify the initial experience** for new users. You can launch **EC2 instances** immediately without network configuration.",
+                    bestPractice: "**Best Practice:** For production accounts, it is best to create custom VPCs instead of using the default."
+                },
+                connectivity: {
+                    title: "2. Default Connectivity Features",
+                    feature1: {
+                        title: "Instant Internet Connectivity",
+                        desc: "The default VPC **has internet connectivity by default** via the attached Internet Gateway."
+                    },
+                    feature2: {
+                        title: "Public IPv4 Address",
+                        desc: "Each EC2 instance launched into the default VPC **automatically receives a public IPv4 address**, enabling immediate connection."
+                    },
+                    feature3: {
+                        title: "Public and Private DNS Names",
+                        desc: "Each instance also receives both a **public and a private IPv4 DNS name** for easy internal and external access."
+                    }
+                },
+                cidr: {
+                    title: "3. Default CIDR and Subnet Structure",
+                    vpc: {
+                        title: "VPC IPv4 CIDR Block",
+                        desc: "The `/16` range allows for a total of **65,536** IP addresses."
+                    },
+                    subnet: {
+                        title: "Subnets for High Availability (HA)",
+                        count: "3 Subnets are automatically created",
+                        design1: "Each Subnet is in a different **Availability Zone (AZ)**.",
+                        design2: "This design ensures a **highly available** architecture by default.",
+                        design3: "Each subnet has its own CIDR block (e.g., `/20` with 4,096 hosts).",
+                        reserved: "Note: The first 5 IP addresses in each subnet are reserved by AWS."
+                    }
+                },
+                routing: {
+                    title: "4. Default Routing and Security",
+                    routeTable: {
+                        title: "Main Route Table",
+                        desc1: "The default Route Table is responsible for directing traffic out of the VPC.",
+                        rule1: "One rule routes traffic within the VPC (Local).",
+                        rule2: "One rule routes **0.0.0.0/0** (all external traffic) to the **Internet Gateway (IGW)**."
+                    },
+                    nacl: {
+                        title: "Default Network ACL",
+                        desc: "The default Network ACLs are configured to allow immediate connectivity:",
+                        rule1: "**Inbound** traffic: Allows ALL.",
+                        rule2: "**Outbound** traffic: Allows ALL."
+                    }
+                },
+                keyTakeaways: {
+                    title: "Key Takeaways",
+                    point1: "The Default VPC is automatically created to **simplify initial cloud usage**.",
+                    point2: "Every EC2 instance in it receives a **public IP** and **internet connectivity** immediately.",
+                    point3: "It includes **three subnets** (one per AZ) and the **Main Route Table** points to the **Internet Gateway (IGW)**."
+                }
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default language
+
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+
+        function getNestedTranslation(obj, path) {
+            return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+        }
+
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const translatedText = getNestedTranslation(translations[currentLanguage], key);
+                if (translatedText) {
+                    element.innerHTML = translatedText;
+                }
+            });
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            if (currentLanguage === 'vi') {
+                langToggleVi.classList.remove('bg-gray-200', 'text-gray-700');
+                langToggleVi.classList.add('bg-sky-600', 'text-white');
+                langToggleEn.classList.remove('bg-sky-600', 'text-white');
+                langToggleEn.classList.add('bg-gray-200', 'text-gray-700');
+            } else {
+                langToggleEn.classList.remove('bg-gray-200', 'text-gray-700');
+                langToggleEn.classList.add('bg-sky-600', 'text-white');
+                langToggleVi.classList.remove('bg-sky-600', 'text-white');
+                langToggleVi.classList.add('bg-gray-200', 'text-gray-700');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize content with default language
+            updateContent();
+
+            // Language toggle event listeners
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

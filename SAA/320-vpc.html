@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">Quy Tắc Cơ Bản về VPC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #f7fee7; /* Lime 50 (Light Green/Security Theme) */
+            color: #1e293b; /* Slate 800 */
+        }
+        .section-title {
+            color: #4d7c0f; /* Lime 700 (Secure Green) */
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+        }
+        .limit-box {
+            background-color: #ecfdf5; /* Emerald 50 */
+            border-left: 4px solid #059669; /* Emerald 600 */
+        }
+        .cidr-rule {
+            background-color: #f0fdf4; /* Green 50 */
+            border: 1px solid #d9f99d; /* Lime 200 */
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-4 md:p-10 max-w-5xl">
+        <header class="text-center mb-12 relative">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-2 section-title" data-i18n="header.title">
+                Tổng Quan VPC
+            </h1>
+            <p class="text-lg text-gray-500" data-i18n="header.subtitle">Thiết lập Mạng Riêng Ảo của Bạn</p>
+            <div class="absolute top-0 right-0 mt-4 mr-4 flex space-x-2">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-md bg-lime-600 text-white font-semibold text-sm">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-md bg-gray-200 text-gray-700 font-semibold text-sm">EN</button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Section 1: What is a VPC and Limits -->
+            <section id="vpc-intro" class="mb-12">
+                <h2 class="text-3xl font-bold section-title mb-4" data-i18n="intro.title">1. Giới thiệu về VPC</h2>
+                <div class="card p-6 limit-box space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-cloud text-3xl text-emerald-600"></i>
+                        <p class="text-xl font-semibold text-gray-800" data-i18n="intro.definition">
+                            VPC (Virtual Private Cloud) là một tài nguyên mạng riêng tư trong AWS.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                        <div class="border-b md:border-r md:border-b-0 pr-4 pb-4 md:pb-0">
+                            <p class="font-bold text-lg text-gray-700" data-i18n="intro.limit1.title">Số lượng VPC/Region</p>
+                            <p class="text-sm text-gray-600" data-i18n="intro.limit1.desc">
+                                Mặc định: Tối đa 5 VPC trên mỗi Region. (Là giới hạn mềm, có thể tăng).
+                            </p>
+                        </div>
+                        <div>
+                            <p class="font-bold text-lg text-gray-700" data-i18n="intro.limit2.title">Chỉ cho phép IP Riêng tư</p>
+                            <p class="text-sm text-gray-600" data-i18n="intro.limit2.desc">
+                                Do VPC là tài nguyên riêng tư, chỉ cho phép sử dụng dải địa chỉ IPv4 riêng tư.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: CIDR Block Rules -->
+            <section id="cidr-rules" class="mb-12">
+                <h2 class="text-3xl font-bold section-title mb-4" data-i18n="cidr.title">2. Quy Tắc Khối CIDR</h2>
+                <div class="card p-6 space-y-6">
+                    <!-- CIDR Count and Size -->
+                    <div class="cidr-rule p-4 rounded-lg">
+                        <h3 class="font-bold text-xl text-lime-700 mb-2" data-i18n="cidr.size.title">Kích thước và Số lượng Khối CIDR</h3>
+                        <p class="text-sm text-gray-700 mb-2" data-i18n="cidr.size.desc1">
+                            Mỗi VPC có thể được gán tối đa 5 khối CIDR (IPv4).
+                        </p>
+                        <p class="text-sm text-gray-700" data-i18n="cidr.size.desc2">
+                            Kích thước phải nằm giữa tối thiểu /28 (16 IP) và tối đa /16 (65.536 IP).
+                        </p>
+                    </div>
+
+                    <!-- Private IP Ranges List -->
+                    <div>
+                        <h3 class="font-bold text-xl text-gray-800 mb-3" data-i18n="cidr.private.title">Các Dải IP Riêng tư Được Phép</h3>
+                        <div class="flex flex-wrap gap-3">
+                            <span class="px-4 py-2 bg-yellow-100 text-yellow-800 font-mono rounded-full text-sm">10.0.0.0/8</span>
+                            <span class="px-4 py-2 bg-yellow-100 text-yellow-800 font-mono rounded-full text-sm">172.16.0.0/12</span>
+                            <span class="px-4 py-2 bg-yellow-100 text-yellow-800 font-mono rounded-full text-sm">192.168.0.0/16</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 3: The Overlap Rule (CRITICAL) -->
+            <section id="overlap-rule" class="mb-12">
+                <h2 class="text-3xl font-bold section-title mb-4" data-i18n="overlap.title">3. Quy Tắc Quan trọng: Tránh Trùng lặp CIDR</h2>
+                <div class="card p-6 bg-red-50 border-2 border-red-300">
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-exclamation-triangle text-3xl text-red-600 flex-shrink-0"></i>
+                        <div>
+                            <h3 class="font-bold text-xl text-red-800 mb-2" data-i18n="overlap.rule.title">Yêu cầu KHÔNG TRÙNG LẶP (Non-overlapping)</h3>
+                            <p class="text-gray-700 text-base" data-i18n="overlap.rule.desc1">
+                                CIDR block của VPC bạn phải không được trùng lặp với bất kỳ VPC nào khác hoặc bất kỳ mạng công ty nào (On-premise network) mà bạn dự định kết nối.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 p-3 bg-red-100 rounded-lg">
+                        <p class="font-semibold text-red-700 text-sm" data-i18n="overlap.reason.title">Lý do:</p>
+                        <p class="text-sm text-red-600" data-i18n="overlap.reason.desc">
+                            Trùng lặp dải IP gây ra xung đột định tuyến (routing conflicts) và làm hỏng khả năng kết nối liền mạch giữa các mạng (ví dụ: qua VPN hoặc Peering).
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 4: Summary -->
+            <section id="summary" class="text-center">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4" data-i18n="summary.title">Tóm Tắt</h2>
+                <p class="text-lg text-gray-600 max-w-4xl mx-auto mb-4" data-i18n="summary.conclusion">
+                    Việc tạo VPC là bước đầu tiên để xây dựng kiến trúc đám mây an toàn và có thể mở rộng. Luôn tuân thủ các quy tắc về CIDR và đảm bảo không có sự chồng chéo.
+                </p>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        const translations = {
+            vi: {
+                header: {
+                    title: "Quy Tắc Cơ Bản về VPC",
+                    subtitle: "Thiết lập Mạng Riêng Ảo của Bạn"
+                },
+                intro: {
+                    title: "1. Giới thiệu về VPC",
+                    definition: "VPC (Virtual Private Cloud) là một tài nguyên mạng riêng tư trong AWS.",
+                    limit1: {
+                        title: "Số lượng VPC/Region",
+                        desc: "Mặc định: <strong>Tối đa 5 VPC trên mỗi Region</strong>. (Là giới hạn mềm, có thể tăng)."
+                    },
+                    limit2: {
+                        title: "Chỉ cho phép IP Riêng tư",
+                        desc: "Do VPC là tài nguyên riêng tư, chỉ cho phép sử dụng dải địa chỉ <strong>IPv4 riêng tư</strong>."
+                    }
+                },
+                cidr: {
+                    title: "2. Quy Tắc Khối CIDR",
+                    size: {
+                        title: "Kích thước và Số lượng Khối CIDR",
+                        desc1: "Mỗi VPC có thể được gán tối đa <strong>5 khối CIDR (IPv4)</strong>.",
+                        desc2: "Kích thước phải nằm giữa tối thiểu <strong>/28 (16 IP)</strong> và tối đa <strong>/16 (65.536 IP)</strong>."
+                    },
+                    private: {
+                        title: "Các Dải IP Riêng tư Được Phép"
+                    }
+                },
+                overlap: {
+                    title: "3. Quy Tắc Quan trọng: Tránh Trùng lặp CIDR",
+                    rule: {
+                        title: "Yêu cầu <strong>KHÔNG TRÙNG LẶP (Non-overlapping)</strong>",
+                        desc1: "<strong>CIDR block của VPC bạn phải không được trùng lặp</strong> với bất kỳ VPC nào khác hoặc bất kỳ mạng công ty nào (On-premise network) mà bạn dự định kết nối."
+                    },
+                    reason: {
+                        title: "Lý do:",
+                        desc: "Trùng lặp dải IP gây ra <strong>xung đột định tuyến (routing conflicts)</strong> và làm hỏng khả năng kết nối liền mạch giữa các mạng (ví dụ: qua VPN hoặc Peering)."
+                    }
+                },
+                summary: {
+                    title: "Tóm Tắt",
+                    conclusion: "Việc tạo VPC là bước đầu tiên để xây dựng kiến trúc đám mây an toàn và có thể mở rộng. Luôn tuân thủ các quy tắc về CIDR và đảm bảo <strong>không có sự chồng chéo</strong>."
+                }
+            },
+            en: {
+                header: {
+                    title: "VPC Core Rules",
+                    subtitle: "Setting Up Your Virtual Private Cloud"
+                },
+                intro: {
+                    title: "1. Introduction to VPC",
+                    definition: "A VPC (Virtual Private Cloud) is a private network resource within AWS.",
+                    limit1: {
+                        title: "VPC Limit per Region",
+                        desc: "Default: <strong>Maximum of 5 VPCs per Region</strong>. (This is a soft limit and can be increased)."
+                    },
+                    limit2: {
+                        title: "Only Private IPs Allowed",
+                        desc: "Since a VPC is a private resource, only <strong>private IPv4 address ranges</strong> are allowed."
+                    }
+                },
+                cidr: {
+                    title: "2. CIDR Block Rules",
+                    size: {
+                        title: "CIDR Block Count and Size",
+                        desc1: "Each VPC can be assigned up to <strong>5 CIDR blocks (IPv4)</strong>.",
+                        desc2: "The size must be between a minimum of <strong>/28 (16 IPs)</strong> and a maximum of <strong>/16 (65,536 IPs)</strong>."
+                    },
+                    private: {
+                        title: "Allowed Private IP Ranges"
+                    }
+                },
+                overlap: {
+                    title: "3. The Critical Rule: Avoid CIDR Overlap",
+                    rule: {
+                        title: "<strong>NON-OVERLAPPING</strong> Requirement",
+                        desc1: "Your VPC's <strong>CIDR block must not overlap</strong> with other VPCs or any corporate (On-premise) networks you plan to connect to."
+                    },
+                    reason: {
+                        title: "Reason:",
+                        desc: "Overlapping IP ranges cause <strong>routing conflicts</strong> and prevent seamless connectivity between networks (e.g., via VPN or Peering)."
+                    }
+                },
+                summary: {
+                    title: "Summary",
+                    conclusion: "Creating a VPC is the foundational step for building a secure and scalable cloud architecture. Always adhere to CIDR rules and ensure <strong>non-overlapping ranges</strong>."
+                }
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default language
+
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+
+        function getNestedTranslation(obj, path) {
+            return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+        }
+
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const translatedText = getNestedTranslation(translations[currentLanguage], key);
+                if (translatedText) {
+                    // Using innerHTML to correctly render the strong tag
+                    element.innerHTML = translatedText;
+                }
+            });
+            // Update the document language
+            document.querySelector('html').setAttribute('lang', currentLanguage);
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            const activeClass = 'bg-lime-600 text-white';
+            const inactiveClass = 'bg-gray-200 text-gray-700';
+
+            if (currentLanguage === 'vi') {
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm ${activeClass}`;
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm ${inactiveClass}`;
+            } else {
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm ${activeClass}`;
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm ${inactiveClass}`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize content with default language
+            updateContent();
+
+            // Language toggle event listeners
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+            // Load Font Awesome explicitly if not done by browser
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css';
+            document.head.appendChild(link);
+        });
+    </script>
+</body>
+</html>

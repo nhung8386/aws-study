@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">Tổng Quan Amazon GuardDuty</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/a7a7b97314.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #f0f4f8; /* Pale blue background */
+            color: #1e293b; /* Slate 800 */
+        }
+        .section-title {
+            color: #0f172a; /* Slate 900 */
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .icon-lg {
+            font-size: 2.5rem;
+            color: #f97316; /* Orange 500 (GuardDuty color) */
+        }
+        .feature-icon {
+            font-size: 1.25rem;
+            color: #0ea5e9; /* Sky 500 */
+        }
+        .data-source-icon {
+            font-size: 1.8rem;
+            color: #f97316; /* Orange 500 */
+        }
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            background-color: #e2e8f0; /* Slate 200 */
+        }
+        .flow-step {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px; /* Pill shape */
+            background-color: white;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            font-weight: 600;
+            color: #334155;
+            text-align: center;
+            min-width: 200px;
+        }
+        .arrow-down {
+            color: #64748b; /* Slate 500 */
+            font-size: 1.5rem;
+        }
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        .data-card {
+            border: 2px solid #fed7aa; /* Orange 200 */
+            padding: 1.5rem;
+            background-color: #fff7ed; /* Orange 50 */
+        }
+        .automation-node {
+            background-color: #e0f2fe; /* Light blue */
+            border: 2px solid #38bdf8; /* Blue */
+            color: #0c4a6e;
+        }
+        .crypto-card {
+            background-color: #d1fae5; /* Green 100 */
+            border: 2px solid #34d399; /* Green 400 */
+            color: #065f46;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-4 md:p-8 max-w-6xl">
+        <header class="text-center mb-12 relative">
+            <h1 class="text-4xl md:text-5xl font-extrabold section-title mb-2 flex items-center justify-center gap-3">
+                <i class="fas fa-shield-alt icon-lg"></i>
+                <span data-i18n="header.title">Tổng Quan Amazon GuardDuty</span>
+            </h1>
+            <p class="text-lg text-slate-600" data-i18n="header.subtitle">Dịch vụ Phát hiện mối đe dọa thông minh, không cần agent</p>
+            <div class="absolute top-0 right-0 mt-4 mr-4 flex space-x-2">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-md bg-sky-500 text-white font-semibold text-sm">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-md bg-slate-200 text-slate-700 font-semibold text-sm">EN</button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Section 1: Introduction -->
+            <section id="introduction" class="mb-16">
+                <div class="card p-8 text-center bg-orange-50 border-4 border-orange-200">
+                    <h2 class="text-3xl font-bold section-title mb-4" data-i18n="intro.sectionTitle">GuardDuty: Phát hiện mối đe dọa thông minh</h2>
+                    <p class="text-lg text-slate-700 max-w-4xl mx-auto mb-4" data-i18n="intro.description">
+                        **Amazon GuardDuty** giúp bạn thực hiện khám phá mối đe dọa thông minh để bảo vệ các tài khoản AWS của mình.
+                        Nó sử dụng các thuật toán **học máy (Machine Learning)**, thực hiện **phát hiện bất thường (Anomaly Detection)**, và sử dụng dữ liệu bên thứ ba.
+                    </p>
+                    <p class="text-md font-semibold text-orange-600" data-i18n="intro.activation">
+                        Kích hoạt GuardDuty chỉ với **một cú nhấp chuột** và bắt đầu ngay với thời gian dùng thử **30 ngày** miễn phí.
+                    </p>
+                </div>
+            </section>
+            
+            <!-- Section 2: Input Data Sources Diagram -->
+            <section id="data-sources" class="mb-16">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center" data-i18n="dataSources.sectionTitle">Nguồn Dữ Liệu Đầu Vào Được Phân Tích</h2>
+                <div class="card p-8">
+                    <h3 class="text-xl font-semibold mb-4 text-orange-600" data-i18n="dataSources.mandatoryTitle">MANDATORY: Nguồn dữ liệu bắt buộc (Luôn được phân tích)</h3>
+                    <div class="data-grid mb-8">
+                        <!-- CloudTrail -->
+                        <div class="data-card p-4 rounded-lg">
+                            <i class="fas fa-cloud data-source-icon mb-2"></i>
+                            <h4 class="font-bold text-lg" data-i18n="dataSources.cloudTrailTitle">CloudTrail Event Logs</h4>
+                            <p class="text-sm text-slate-600" data-i18n="dataSources.cloudTrailDesc">
+                                Giám sát các lệnh gọi API bất thường hoặc triển khai trái phép (Sự kiện quản lý và dữ liệu S3).
+                            </p>
+                        </div>
+                        <!-- VPC Flow Logs -->
+                        <div class="data-card p-4 rounded-lg">
+                            <i class="fas fa-network-wired data-source-icon mb-2"></i>
+                            <h4 class="font-bold text-lg" data-i18n="dataSources.vpcFlowTitle">VPC Flow Logs</h4>
+                            <p class="text-sm text-slate-600" data-i18n="dataSources.vpcFlowDesc">
+                                Phân tích lưu lượng truy cập internet bất thường và xác định các địa chỉ IP đáng ngờ.
+                            </p>
+                        </div>
+                        <!-- DNS Logs -->
+                        <div class="data-card p-4 rounded-lg">
+                            <i class="fas fa-globe data-source-icon mb-2"></i>
+                            <h4 class="font-bold text-lg" data-i18n="dataSources.dnsLogsTitle">DNS Logs</h4>
+                            <p class="text-sm text-slate-600" data-i18n="dataSources.dnsLogsDesc">
+                                Phát hiện các phiên bản EC2 gửi dữ liệu được mã hóa trong các truy vấn DNS (nguy cơ bị xâm nhập).
+                            </p>
+                        </div>
+                    </div>
+
+                    <h3 class="text-xl font-semibold mb-4 text-sky-600" data-i18n="dataSources.optionalTitle">OPTIONAL: Nguồn dữ liệu tùy chọn (Có thể bật thêm)</h3>
+                    <div class="data-grid">
+                        <!-- EKS, RDS/Aurora, EBS, Lambda, S3 -->
+                        <div class="data-card p-4 rounded-lg bg-sky-50 border-sky-200">
+                            <i class="fas fa-cogs feature-icon mb-2"></i>
+                            <h4 class="font-bold text-lg" data-i18n="dataSources.optionalEKS">EKS Audit Logs</h4>
+                        </div>
+                        <div class="data-card p-4 rounded-lg bg-sky-50 border-sky-200">
+                            <i class="fas fa-database feature-icon mb-2"></i>
+                            <h4 class="font-bold text-lg" data-i18n="dataSources.optionalRDS">RDS/Aurora Login Events</h4>
+                        </div>
+                        <div class="data-card p-4 rounded-lg bg-sky-50 border-sky-200">
+                            <i class="fas fa-hdd feature-icon mb-2"></i>
+                            <h4 class="font-bold text-lg" data-i18n="dataSources.optionalEBS">EBS Volumes</h4>
+                        </div>
+                        <div class="data-card p-4 rounded-lg bg-sky-50 border-sky-200">
+                            <i class="fas fa-server feature-icon mb-2"></i>
+                            <h4 class="font-bold text-lg" data-i18n="dataSources.optionalLambda">Lambda Network Activity</h4>
+                        </div>
+                        <div class="data-card p-4 rounded-lg bg-sky-50 border-sky-200">
+                            <i class="fas fa-archive feature-icon mb-2"></i>
+                            <h4 class="font-bold text-lg" data-i18n="dataSources.optionalS3">S3 Data Events</h4>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 3: EventBridge Integration (Flow Diagram) -->
+            <section id="event-bridge" class="mb-16">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center" data-i18n="eventBridge.sectionTitle">Tự Động Hóa Phản Ứng với Amazon EventBridge</h2>
+                <div class="card p-8">
+                    <div class="flow-container max-w-3xl mx-auto">
+                        <div class="flow-step bg-orange-100 border-orange-400">
+                            <i class="fas fa-shield-alt mr-3 text-orange-600"></i>
+                            <span data-i18n="eventBridge.step1">1. GuardDuty Phát hiện Findings (Phát hiện mối đe dọa)</span>
+                        </div>
+                        <div class="arrow-down"><i class="fas fa-arrow-down"></i></div>
+                        <div class="flow-step automation-node">
+                            <i class="fas fa-exchange-alt mr-3 text-sky-800"></i>
+                            <span data-i18n="eventBridge.step2">2. Tạo Event trong Amazon EventBridge</span>
+                        </div>
+                        <div class="arrow-down"><i class="fas fa-arrow-down"></i></div>
+                        <div class="flow-step bg-white border-slate-300">
+                            <i class="fas fa-clipboard-list mr-3 text-slate-600"></i>
+                            <span data-i18n="eventBridge.step3">3. EventBridge Rules Kích hoạt Hành động Tự động</span>
+                        </div>
+                        <div class="arrow-down"><i class="fas fa-arrow-down"></i></div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                            <div class="flow-step bg-green-100 border-green-400">
+                                <i class="fas fa-bell mr-3 text-green-600"></i>
+                                <span data-i18n="eventBridge.target1">Target 1: SNS Topic (Thông báo)</span>
+                            </div>
+                            <div class="flow-step bg-purple-100 border-purple-400">
+                                <i class="fas fa-robot mr-3 text-purple-600"></i>
+                                <span data-i18n="eventBridge.target2">Target 2: Lambda Function (Phản ứng tự động: cách ly, chặn...)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-slate-600 mt-6 text-center" data-i18n="eventBridge.summary">
+                        Khả năng tự động hóa này là chìa khóa cho phản ứng bảo mật theo thời gian thực (Real-time Security Response).
+                    </p>
+                </div>
+            </section>
+
+            <!-- Section 4: Key Takeaways -->
+            <section id="key-takeaways" class="mb-16">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center" data-i18n="keyTakeaways.sectionTitle">Điểm Chính Cần Ghi Nhớ</h2>
+                 <div class="max-w-4xl mx-auto space-y-4">
+                    <div class="card p-5 flex items-start space-x-4 bg-yellow-50 border-yellow-200">
+                        <div class="text-2xl pt-1 text-orange-600"><i class="fas fa-check-circle"></i></div>
+                        <p class="text-slate-700" data-i18n="keyTakeaways.point1">
+                            **GuardDuty** cung cấp khám phá mối đe dọa thông minh bằng cách sử dụng **ML** và **phát hiện bất thường**.
+                        </p>
+                    </div>
+                    <div class="card p-5 flex items-start space-x-4 bg-yellow-50 border-yellow-200">
+                        <div class="text-2xl pt-1 text-orange-600"><i class="fas fa-check-circle"></i></div>
+                        <p class="text-slate-700" data-i18n="keyTakeaways.point2">
+                            Phân tích các nguồn dữ liệu chính: **VPC Flow Logs**, **CloudTrail Logs**, và **DNS Logs**.
+                            Các nguồn khác (**EKS, S3, RDS, EBS, Lambda**) là tùy chọn.
+                        </p>
+                    </div>
+                    <div class="card p-5 flex items-start space-x-4 crypto-card">
+                        <div class="text-2xl pt-1 text-green-800"><i class="fas fa-bitcoin"></i></div>
+                        <p class="text-slate-700 font-semibold" data-i18n="keyTakeaways.point3">
+                            Bao gồm các tính năng phát hiện chuyên biệt cho các cuộc tấn công **Tiền điện tử (Cryptocurrency Attacks)**.
+                        </p>
+                    </div>
+                    <div class="card p-5 flex items-start space-x-4 bg-yellow-50 border-yellow-200">
+                        <div class="text-2xl pt-1 text-orange-600"><i class="fas fa-check-circle"></i></div>
+                        <p class="text-slate-700" data-i18n="keyTakeaways.point4">
+                            Findings tự động tạo **Amazon EventBridge** Events, cho phép các phản ứng tự động thông qua **Lambda** hoặc **SNS**.
+                        </p>
+                    </div>
+                 </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        const translations = {
+            vi: {
+                header: {
+                    title: "Tổng Quan Amazon GuardDuty",
+                    subtitle: "Dịch vụ Phát hiện mối đe dọa thông minh, không cần agent"
+                },
+                intro: {
+                    sectionTitle: "GuardDuty: Phát hiện mối đe dọa thông minh",
+                    description: "Amazon GuardDuty giúp bạn thực hiện khám phá mối đe dọa thông minh để bảo vệ các tài khoản AWS của mình. Nó sử dụng các thuật toán **học máy (Machine Learning)**, thực hiện **phát hiện bất thường (Anomaly Detection)**, và sử dụng dữ liệu bên thứ ba.",
+                    activation: "Kích hoạt GuardDuty chỉ với **một cú nhấp chuột** và bắt đầu ngay với thời gian dùng thử **30 ngày** miễn phí."
+                },
+                dataSources: {
+                    sectionTitle: "Nguồn Dữ Liệu Đầu Vào Được Phân Tích",
+                    mandatoryTitle: "MANDATORY: Nguồn dữ liệu bắt buộc (Luôn được phân tích)",
+                    cloudTrailTitle: "CloudTrail Event Logs",
+                    cloudTrailDesc: "Giám sát các lệnh gọi API bất thường hoặc triển khai trái phép (Sự kiện quản lý và dữ liệu S3).",
+                    vpcFlowTitle: "VPC Flow Logs",
+                    vpcFlowDesc: "Phân tích lưu lượng truy cập internet bất thường và xác định các địa chỉ IP đáng ngờ.",
+                    dnsLogsTitle: "DNS Logs",
+                    dnsLogsDesc: "Phát hiện các phiên bản EC2 gửi dữ liệu được mã hóa trong các truy vấn DNS (nguy cơ bị xâm nhập).",
+                    optionalTitle: "OPTIONAL: Nguồn dữ liệu tùy chọn (Có thể bật thêm)",
+                    optionalEKS: "EKS Audit Logs",
+                    optionalRDS: "RDS/Aurora Login Events",
+                    optionalEBS: "EBS Volumes",
+                    optionalLambda: "Lambda Network Activity",
+                    optionalS3: "S3 Data Events"
+                },
+                eventBridge: {
+                    sectionTitle: "Tự Động Hóa Phản Ứng với Amazon EventBridge",
+                    step1: "1. GuardDuty Phát hiện Findings (Phát hiện mối đe dọa)",
+                    step2: "2. Tạo Event trong Amazon EventBridge",
+                    step3: "3. EventBridge Rules Kích hoạt Hành động Tự động",
+                    target1: "Target 1: SNS Topic (Thông báo)",
+                    target2: "Target 2: Lambda Function (Phản ứng tự động: cách ly, chặn...)",
+                    summary: "Khả năng tự động hóa này là chìa khóa cho phản ứng bảo mật theo thời gian thực (Real-time Security Response)."
+                },
+                keyTakeaways: {
+                    sectionTitle: "Điểm Chính Cần Ghi Nhớ",
+                    point1: "**GuardDuty** cung cấp khám phá mối đe dọa thông minh bằng cách sử dụng **ML** và **phát hiện bất thường**.",
+                    point2: "Phân tích các nguồn dữ liệu chính: **VPC Flow Logs**, **CloudTrail Logs**, và **DNS Logs**. Các nguồn khác (**EKS, S3, RDS, EBS, Lambda**) là tùy chọn.",
+                    point3: "Bao gồm các tính năng phát hiện chuyên biệt cho các cuộc tấn công **Tiền điện tử (Cryptocurrency Attacks)**.",
+                    point4: "Findings tự động tạo **Amazon EventBridge** Events, cho phép các phản ứng tự động thông qua **Lambda** hoặc **SNS**."
+                }
+            },
+            en: {
+                header: {
+                    title: "Amazon GuardDuty Overview",
+                    subtitle: "Intelligent, Agentless Threat Detection Service"
+                },
+                intro: {
+                    sectionTitle: "GuardDuty: Intelligent Threat Discovery",
+                    description: "Amazon GuardDuty helps you perform intelligent threat discovery to protect your AWS accounts. It employs **Machine Learning** algorithms, performs **Anomaly Detection**, and utilizes third-party data to identify threats.",
+                    activation: "Enabling GuardDuty is a **one-click** process, starting with a free **30-day** trial period."
+                },
+                dataSources: {
+                    sectionTitle: "Analyzed Input Data Sources",
+                    mandatoryTitle: "MANDATORY: Required Data Sources (Always Analyzed)",
+                    cloudTrailTitle: "CloudTrail Event Logs",
+                    cloudTrailDesc: "Monitors for unusual API calls or unauthorized deployments (Management and S3 data events).",
+                    vpcFlowTitle: "VPC Flow Logs",
+                    vpcFlowDesc: "Analyzes unusual internet traffic and identifies suspicious IP addresses.",
+                    dnsLogsTitle: "DNS Logs",
+                    dnsLogsDesc: "Detects EC2 instances sending encoded data within DNS queries (potential compromise risk).",
+                    optionalTitle: "OPTIONAL: Optional Data Sources (Can be additionally enabled)",
+                    optionalEKS: "EKS Audit Logs",
+                    optionalRDS: "RDS/Aurora Login Events",
+                    optionalEBS: "EBS Volumes",
+                    optionalLambda: "Lambda Network Activity",
+                    optionalS3: "S3 Data Events"
+                },
+                eventBridge: {
+                    sectionTitle: "Automating Response with Amazon EventBridge",
+                    step1: "1. GuardDuty Generates Findings (Threat Detection)",
+                    step2: "2. Event is Created in Amazon EventBridge",
+                    step3: "3. EventBridge Rules Trigger Automated Actions",
+                    target1: "Target 1: SNS Topic (Notification)",
+                    target2: "Target 2: Lambda Function (Automated response: isolate, block...)",
+                    summary: "This automation capability is key to real-time security response."
+                },
+                keyTakeaways: {
+                    sectionTitle: "Key Takeaways",
+                    point1: "**GuardDuty** provides intelligent threat discovery using **ML** and **anomaly detection**.",
+                    point2: "Analyzes core data sources: **VPC Flow Logs**, **CloudTrail Logs**, and **DNS Logs**. Other sources (**EKS, S3, RDS, EBS, Lambda**) are optional.",
+                    point3: "Includes specialized detection features for **Cryptocurrency Attacks**.",
+                    point4: "Findings automatically generate **Amazon EventBridge** Events, enabling automated responses via **Lambda** or **SNS**."
+                }
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default language
+
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+
+        function getNestedTranslation(obj, path) {
+            return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+        }
+
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const translatedText = getNestedTranslation(translations[currentLanguage], key);
+                if (translatedText) {
+                    element.innerHTML = translatedText;
+                }
+            });
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            if (currentLanguage === 'vi') {
+                langToggleVi.classList.remove('bg-slate-200', 'text-slate-700');
+                langToggleVi.classList.add('bg-sky-500', 'text-white');
+                langToggleEn.classList.remove('bg-sky-500', 'text-white');
+                langToggleEn.classList.add('bg-slate-200', 'text-slate-700');
+            } else {
+                langToggleEn.classList.remove('bg-slate-200', 'text-slate-700');
+                langToggleEn.classList.add('bg-sky-500', 'text-white');
+                langToggleVi.classList.remove('bg-sky-500', 'text-white');
+                langToggleVi.classList.add('bg-slate-200', 'text-slate-700');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize content with default language
+            updateContent();
+
+            // Language toggle event listeners
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">Tổng Quan Amazon Macie</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/a7a7b97314.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #f0fdf4; /* Pale green background (Macie color) */
+            color: #1e293b; /* Slate 800 */
+        }
+        .section-title {
+            color: #16a34a; /* Green 600 (Macie primary) */
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+            transition: transform 0.3s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .icon-lg {
+            font-size: 3rem;
+            color: #16a34a; /* Green 600 */
+        }
+        .feature-box {
+            background-color: #dcfce7; /* Green 100 */
+            border: 2px solid #4ade80; /* Green 300 */
+            color: #065f46;
+        }
+        .s3-box {
+            background-color: #fef3c7; /* Amber 100 */
+            border: 2px solid #fbbf24; /* Amber 400 */
+            color: #b45309;
+        }
+        .flow-step {
+            background-color: #d1fae5; /* Emerald 100 */
+            color: #065f46; /* Emerald 800 */
+            font-weight: 600;
+        }
+        .automation-node {
+            background-color: #e0f2fe; /* Light blue */
+            border: 2px solid #38bdf8; /* Blue */
+            color: #0369a1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-4 md:p-10 max-w-6xl">
+        <header class="text-center mb-12 relative">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-2 flex items-center justify-center gap-3">
+                <i class="fas fa-eye icon-lg"></i>
+                <span class="section-title" data-i18n="header.title">Tổng Quan Amazon Macie</span>
+            </h1>
+            <p class="text-lg text-gray-500" data-i18n="header.subtitle">Bảo mật và Quyền riêng tư Dữ liệu được Quản lý Hoàn toàn</p>
+            <div class="absolute top-0 right-0 mt-4 mr-4 flex space-x-2">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-md bg-green-600 text-white font-semibold text-sm">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-md bg-gray-200 text-gray-700 font-semibold text-sm">EN</button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Section 1: Introduction and Core Function -->
+            <section id="introduction" class="mb-16">
+                <div class="card p-8 text-center feature-box">
+                    <h2 class="text-3xl font-bold section-title mb-4" data-i18n="intro.sectionTitle">Khám phá và Bảo vệ Dữ liệu Nhạy cảm (Sensitive Data)</h2>
+                    <p class="text-xl text-gray-800 max-w-4xl mx-auto mb-6" data-i18n="intro.description">
+                        **Amazon Macie** là dịch vụ bảo mật và quyền riêng tư dữ liệu được quản lý hoàn toàn. Nó sử dụng **học máy (Machine Learning)** và **khớp mẫu (Pattern Matching)** để tìm kiếm và bảo vệ dữ liệu nhạy cảm trong AWS.
+                    </p>
+                    <div class="flex justify-center items-center space-x-6 text-gray-600">
+                        <span class="flex items-center font-bold text-lg"><i class="fas fa-lock text-green-600 mr-2"></i> <span data-i18n="intro.feature1">An ninh Dữ liệu</span></span>
+                        <span class="flex items-center font-bold text-lg"><i class="fas fa-id-card text-green-600 mr-2"></i> <span data-i18n="intro.feature2">Phát hiện PII</span></span>
+                        <span class="flex items-center font-bold text-lg"><i class="fas fa-brain text-green-600 mr-2"></i> <span data-i18n="intro.feature3">Dựa trên ML</span></span>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Section 2: Data Source and Focus -->
+            <section id="data-focus" class="mb-16">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center" data-i18n="dataFocus.sectionTitle">Đối tượng trọng tâm: Dữ liệu PII trong S3</h2>
+                <div class="card p-8 s3-box max-w-4xl mx-auto">
+                    <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0 md:space-x-8">
+                        
+                        <div class="text-6xl text-amber-600"><i class="fas fa-sitemap"></i></div>
+                        
+                        <div class="text-left flex-1">
+                            <h3 class="font-bold text-2xl mb-2" data-i18n="dataFocus.bucketTitle">Vị trí Dữ liệu: Amazon S3 Buckets</h3>
+                            <p class="text-gray-700" data-i18n="dataFocus.bucketDesc">
+                                Dữ liệu **PII (Personally Identifiable Information)** của bạn thường nằm trong các **S3 buckets**.
+                                Macie được sử dụng **chủ yếu** để phân tích các bucket này và phân loại dữ liệu là PII.
+                            </p>
+                        </div>
+                        
+                        <div class="flex flex-col items-center">
+                            <div class="text-2xl font-bold text-green-700 mb-2" data-i18n="dataFocus.activationTitle">Kích hoạt Đơn giản</div>
+                            <div class="bg-white p-3 rounded-lg shadow-md border-2 border-green-500 text-center">
+                                <p class="text-xl font-extrabold text-green-600" data-i18n="dataFocus.click">1 Click</p>
+                                <p class="text-sm text-gray-600" data-i18n="dataFocus.monitor">Chỉ định S3 Buckets</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 3: Notification and Automation Flow -->
+            <section id="automation" class="mb-16">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center" data-i18n="automation.sectionTitle">Quy trình Thông báo và Tự động hóa</h2>
+                <div class="card p-8">
+                    <div class="flex flex-col items-center max-w-4xl mx-auto space-y-4">
+                        
+                        <div class="flow-step p-4 rounded-full min-w-80 text-center"><i class="fas fa-search-plus mr-2"></i> <span data-i18n="automation.step1">1. Macie Phát hiện Dữ liệu Nhạy cảm (Findings)</span></div>
+                        
+                        <div class="text-2xl text-gray-400"><i class="fas fa-arrow-down"></i></div>
+
+                        <div class="flow-step p-4 rounded-full min-w-80 text-center"><i class="fas fa-exchange-alt mr-2"></i> <span data-i18n="automation.step2">2. Thông báo qua Amazon EventBridge</span></div>
+
+                        <div class="text-2xl text-gray-400"><i class="fas fa-arrow-down"></i></div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                            <!-- SNS Target -->
+                            <div class="p-4 rounded-lg automation-node text-center">
+                                <i class="fas fa-envelope-open-text text-2xl mb-2"></i>
+                                <p class="font-bold" data-i18n="automation.target1Title">SNS Topic</p>
+                                <p class="text-sm" data-i18n="automation.target1Desc">Gửi thông báo ngay lập tức cho đội ngũ bảo mật.</p>
+                            </div>
+                            <!-- Lambda Target -->
+                            <div class="p-4 rounded-lg automation-node text-center">
+                                <i class="fas fa-robot text-2xl mb-2"></i>
+                                <p class="font-bold" data-i18n="automation.target2Title">Lambda Function</p>
+                                <p class="text-sm" data-i18n="automation.target2Desc">Kích hoạt phản ứng tự động (ví dụ: thay đổi quyền S3, mã hóa).</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Section 4: Key Takeaways -->
+            <section id="key-takeaways" class="mb-8">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center" data-i18n="keyTakeaways.sectionTitle">Điểm Chính Cần Ghi Nhớ</h2>
+                 <div class="max-w-4xl mx-auto space-y-4">
+                    <div class="card p-5 flex items-start space-x-4 bg-lime-50 border-lime-200">
+                        <div class="text-2xl pt-1 text-green-600"><i class="fas fa-check-circle"></i></div>
+                        <p class="text-gray-700 font-semibold" data-i18n="keyTakeaways.point1">
+                            **Macie** là dịch vụ bảo mật dữ liệu được quản lý hoàn toàn, sử dụng **học máy** để tìm **PII**.
+                        </p>
+                    </div>
+                    <div class="card p-5 flex items-start space-x-4 bg-lime-50 border-lime-200">
+                        <div class="text-2xl pt-1 text-green-600"><i class="fas fa-check-circle"></i></div>
+                        <p class="text-gray-700" data-i18n="keyTakeaways.point2">
+                            Nó tập trung vào việc phân tích và phân loại dữ liệu nhạy cảm trong các **S3 buckets**.
+                        </p>
+                    </div>
+                    <div class="card p-5 flex items-start space-x-4 bg-lime-50 border-lime-200">
+                        <div class="text-2xl pt-1 text-green-600"><i class="fas fa-check-circle"></i></div>
+                        <p class="text-gray-700" data-i18n="keyTakeaways.point3">
+                            Khi phát hiện, nó thông báo qua **EventBridge**, cho phép tích hợp tự động với **SNS** và **Lambda**.
+                        </p>
+                    </div>
+                 </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        const translations = {
+            vi: {
+                header: {
+                    title: "Tổng Quan Amazon Macie",
+                    subtitle: "Bảo mật và Quyền riêng tư Dữ liệu được Quản lý Hoàn toàn"
+                },
+                intro: {
+                    sectionTitle: "Khám phá và Bảo vệ Dữ liệu Nhạy cảm (Sensitive Data)",
+                    description: "Amazon Macie là dịch vụ bảo mật và quyền riêng tư dữ liệu được quản lý hoàn toàn. Nó sử dụng **học máy (Machine Learning)** và **khớp mẫu (Pattern Matching)** để tìm kiếm và bảo vệ dữ liệu nhạy cảm trong AWS.",
+                    feature1: "An ninh Dữ liệu",
+                    feature2: "Phát hiện PII",
+                    feature3: "Dựa trên ML"
+                },
+                dataFocus: {
+                    sectionTitle: "Đối tượng trọng tâm: Dữ liệu PII trong S3",
+                    bucketTitle: "Vị trí Dữ liệu: Amazon S3 Buckets",
+                    bucketDesc: "Dữ liệu **PII (Personally Identifiable Information)** của bạn thường nằm trong các **S3 buckets**. Macie được sử dụng **chủ yếu** để phân tích các bucket này và phân loại dữ liệu là PII.",
+                    activationTitle: "Kích hoạt Đơn giản",
+                    click: "1 Click",
+                    monitor: "Chỉ định S3 Buckets"
+                },
+                automation: {
+                    sectionTitle: "Quy trình Thông báo và Tự động hóa",
+                    step1: "1. Macie Phát hiện Dữ liệu Nhạy cảm (Findings)",
+                    step2: "2. Thông báo qua Amazon EventBridge",
+                    target1Title: "SNS Topic",
+                    target1Desc: "Gửi thông báo ngay lập tức cho đội ngũ bảo mật.",
+                    target2Title: "Lambda Function",
+                    target2Desc: "Kích hoạt phản ứng tự động (ví dụ: thay đổi quyền S3, mã hóa)."
+                },
+                keyTakeaways: {
+                    sectionTitle: "Điểm Chính Cần Ghi Nhớ",
+                    point1: "**Macie** là dịch vụ bảo mật dữ liệu được quản lý hoàn toàn, sử dụng **học máy** để tìm **PII**.",
+                    point2: "Nó tập trung vào việc phân tích và phân loại dữ liệu nhạy cảm trong các **S3 buckets**.",
+                    point3: "Khi phát hiện, nó thông báo qua **EventBridge**, cho phép tích hợp tự động với **SNS** và **Lambda**."
+                }
+            },
+            en: {
+                header: {
+                    title: "Amazon Macie Overview",
+                    subtitle: "Fully Managed Data Security and Privacy Service"
+                },
+                intro: {
+                    sectionTitle: "Discover and Protect Sensitive Data",
+                    description: "Amazon Macie is a fully managed data security and privacy service. It uses **Machine Learning** and **Pattern Matching** to discover and protect your sensitive data in AWS.",
+                    feature1: "Data Security",
+                    feature2: "PII Detection",
+                    feature3: "ML-Powered"
+                },
+                dataFocus: {
+                    sectionTitle: "Primary Focus: PII Data in S3",
+                    bucketTitle: "Data Location: Amazon S3 Buckets",
+                    bucketDesc: "Your **PII (Personally Identifiable Information)** typically resides in your **S3 buckets**. Macie is used **solely** to analyze these buckets to discover data classified as PII.",
+                    activationTitle: "Simple Enabling",
+                    click: "1 Click",
+                    monitor: "Specify S3 Buckets"
+                },
+                automation: {
+                    sectionTitle: "Notification and Automation Flow",
+                    step1: "1. Macie Discovers Sensitive Data (Findings)",
+                    step2: "2. Notifies via Amazon EventBridge",
+                    target1Title: "SNS Topic",
+                    target1Desc: "Sends immediate notifications to the security team.",
+                    target2Title: "Lambda Function",
+                    target2Desc: "Triggers automated responses (e.g., changing S3 permissions, encryption)."
+                },
+                keyTakeaways: {
+                    sectionTitle: "Key Takeaways",
+                    point1: "**Macie** is a fully managed data security service, using **machine learning** to find **PII**.",
+                    point2: "It focuses on analyzing and classifying sensitive data in **S3 buckets**.",
+                    point3: "Upon discovery, it notifies via **EventBridge**, allowing automated integration with **SNS** and **Lambda**."
+                }
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default language
+
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+
+        function getNestedTranslation(obj, path) {
+            return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+        }
+
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const translatedText = getNestedTranslation(translations[currentLanguage], key);
+                if (translatedText) {
+                    element.innerHTML = translatedText;
+                }
+            });
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            if (currentLanguage === 'vi') {
+                langToggleVi.classList.remove('bg-gray-200', 'text-gray-700');
+                langToggleVi.classList.add('bg-green-600', 'text-white');
+                langToggleEn.classList.remove('bg-green-600', 'text-white');
+                langToggleEn.classList.add('bg-gray-200', 'text-gray-700');
+            } else {
+                langToggleEn.classList.remove('bg-gray-200', 'text-gray-700');
+                langToggleEn.classList.add('bg-green-600', 'text-white');
+                langToggleVi.classList.remove('bg-green-600', 'text-white');
+                langToggleVi.classList.add('bg-gray-200', 'text-gray-700');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize content with default language
+            updateContent();
+
+            // Language toggle event listeners
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>
