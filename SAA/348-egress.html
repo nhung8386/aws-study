@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">Egress-Only Internet Gateway (EOIGW) | Bảo Mật IPv6</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Be+Vietnam+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', 'Inter', sans-serif;
+            background-color: #f0f9ff; /* Blue 50 - Theme Network/Secure */
+            color: #1f2937; /* Gray 800 */
+        }
+        .container {
+            max-width: 1100px;
+        }
+        .header-title {
+            color: #0284c7; /* Sky 600 */
+            border-bottom: 4px solid #38bdf8; /* Sky 400 */
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+            border: 1px solid #e0f2fe; /* Light blue border */
+        }
+        .section-header {
+            color: #075985; /* Sky 800 */
+            font-weight: 700;
+        }
+
+        /* Styling cho <strong> */
+        .card strong {
+            font-weight: 700;
+            color: #0369a1; /* Darker Sky */
+        }
+        
+        /* Highlight boxes for comparison */
+        .ipv4-nat {
+            background-color: #f0fdfa; /* Teal 50 */
+            border-left: 5px solid #14b8a6; /* Teal 500 */
+        }
+        .ipv6-egress {
+            background-color: #eff6ff; /* Blue 50 */
+            border-left: 5px solid #3b82f6; /* Blue 500 */
+        }
+
+        /* Routing Diagram */
+        .routing-diagram {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+        .diagram-section {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-4 md:p-10">
+        <header class="text-center mb-12 relative">
+            <h1 class="text-4xl md:text-5xl font-extrabold header-title inline-block pb-1" data-i18n="header.title">
+                <i class="fas fa-route mr-3"></i> Egress-Only Internet Gateway (EOIGW)
+            </h1>
+            <p class="text-lg text-gray-500 mt-2" data-i18n="header.subtitle">Giải Pháp Cho Kết Nối IPv6 Ra Bên Ngoài An Toàn</p>
+
+            <!-- Nút chuyển đổi ngôn ngữ -->
+            <div class="absolute top-0 right-0 mt-4 mr-4 flex space-x-2">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-md bg-sky-600 text-white font-semibold text-sm lang-button">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-md bg-gray-200 text-gray-700 font-semibold text-sm lang-button">EN</button>
+            </div>
+
+        </header>
+
+        <main>
+            <!-- 1. Introduction and Core Purpose -->
+            <section id="introduction" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="intro.title">1. Giới Thiệu về Egress-Only Internet Gateway</h2>
+                <div class="card bg-blue-50 border-blue-200">
+                    <p data-i18n="intro.p1" class="mb-4">
+                        <strong>Egress-Only Internet Gateways</strong> được sử dụng <strong>ĐỘC QUYỀN cho lưu lượng IPv6</strong>.
+                    </p>
+                    <p data-i18n="intro.p2" class="mb-4">
+                        Chúng tương tự như <strong>NAT Gateways</strong>, nhưng trong khi NAT Gateways dành cho <strong>IPv4</strong> thì EOIGW được thiết kế riêng cho <strong>IPv6</strong>.
+                    </p>
+                    <h3 class="font-bold text-xl text-blue-700 mt-4" data-i18n="intro.purpose_title">Mục Đích Cốt Lõi</h3>
+                    <ul class="list-disc ml-6 mt-2 space-y-2">
+                        <li data-i18n="intro.outbound"><i class="fas fa-sign-out-alt mr-2 text-green-500"></i> Cho phép Instance <strong>thiết lập kết nối ra bên ngoài (outbound)</strong> qua IPv6.</li>
+                        <li data-i18n="intro.inbound"><i class="fas fa-ban mr-2 text-red-500"></i> <strong>NGĂN CẢN Internet</strong> khởi tạo bất kỳ kết nối IPv6 nào <strong>vào</strong> Instance của bạn.</li>
+                    </ul>
+                    <p class="text-sm italic mt-4" data-i18n="intro.routing_note">
+                        <strong>Lưu ý:</strong> Để kích hoạt chức năng này, bạn <strong>phải cập nhật Route Tables</strong> (Bảng định tuyến) tương ứng.
+                    </p>
+                </div>
+            </section>
+
+            <!-- 2. Comparison Scenario -->
+            <section id="comparison" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="scenario.title">2. Kịch Bản So Sánh Subnet Công Cộng & Riêng Tư</h2>
+
+                <div class="routing-diagram">
+                    <!-- Public Subnet -->
+                    <div class="diagram-section ipv4-nat bg-white border-2 border-teal-300">
+                        <h3 class="text-xl font-bold text-teal-700 mb-2" data-i18n="scenario.public_title"><i class="fas fa-server mr-2"></i> Subnet Công Cộng</h3>
+                        <p class="text-sm mb-3" data-i18n="scenario.public_p1">
+                            EC2 Instance có thể truy cập Internet qua <strong>IPv4</strong> và <strong>IPv6</strong> thông qua <strong>Internet Gateway (IGW)</strong>.
+                        </p>
+                        <p class="text-sm font-semibold text-red-600" data-i18n="scenario.public_p2">
+                            <i class="fas fa-exchange-alt mr-1"></i> Internet <strong>CÓ THỂ</strong> khởi tạo kết nối vào Instance (Inbound & Outbound).
+                        </p>
+                        <div class="mt-4 p-2 bg-teal-50 rounded-lg">
+                            <i class="fas fa-route text-teal-500 mr-2"></i> <strong>Route Table:</strong> <code>::/0</code> -> <strong>IGW</strong>
+                        </div>
+                    </div>
+
+                    <!-- Private Subnet with Egress-Only IGW -->
+                    <div class="diagram-section ipv6-egress bg-white border-2 border-blue-300">
+                        <h3 class="text-xl font-bold text-blue-700 mb-2" data-i18n="scenario.private_title"><i class="fas fa-shield-alt mr-2"></i> Subnet Riêng Tư (An Toàn)</h3>
+                        <p class="text-sm mb-3" data-i18n="scenario.private_p1">
+                            EC2 Instance cần truy cập Internet (ví dụ: cập nhật) mà vẫn <strong>ngăn chặn</strong> truy cập từ bên ngoài.
+                        </p>
+                        <p class="text-sm font-semibold text-green-600" data-i18n="scenario.private_p2">
+                            <i class="fas fa-arrow-up mr-1"></i> Internet <strong>KHÔNG THỂ</strong> khởi tạo kết nối vào (Chỉ Outbound).
+                        </p>
+                         <div class="mt-4 p-2 bg-blue-100 rounded-lg">
+                            <i class="fas fa-route text-blue-500 mr-2"></i> <strong>Route Table:</strong> <code>::/0</code> -> <strong>Egress-Only IGW</strong>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Comprehensive Routing Overview -->
+            <section id="routing" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="routing.title">3. Tổng Quan Định Tuyến (Routing) Chi Tiết</h2>
+                
+                <div class="card">
+                    <h3 class="font-bold text-2xl mb-4 text-sky-700" data-i18n="routing.private_ipv4_title">Dành cho Subnet Riêng Tư (Private Subnet)</h3>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <!-- IPv4 Routing -->
+                        <div class="ipv4-nat p-4 rounded-lg">
+                            <h4 class="font-semibold text-lg text-teal-800 mb-2" data-i18n="routing.ipv4_label"><i class="fas fa-exchange-alt mr-2"></i> Lưu lượng IPv4</h4>
+                            <p data-i18n="routing.ipv4_p1" class="mb-2">
+                                Để truy cập Internet (Outbound), Instance định tuyến qua <strong>NAT Gateway</strong>.
+                            </p>
+                            <p data-i18n="routing.ipv4_p2">
+                                <strong>Route Table:</strong> Lưu lượng <code>0.0.0.0/0</code> (tất cả) được gửi đến <strong>NAT Gateway</strong>.
+                            </p>
+                        </div>
+                        
+                        <!-- IPv6 Routing -->
+                        <div class="ipv6-egress p-4 rounded-lg">
+                            <h4 class="font-semibold text-lg text-blue-800 mb-2" data-i18n="routing.ipv6_label"><i class="fas fa-sign-out-alt mr-2"></i> Lưu lượng IPv6</h4>
+                            <p data-i18n="routing.ipv6_p1" class="mb-2">
+                                Để truy cập Internet (Outbound), Instance định tuyến qua <strong>Egress-Only Internet Gateway</strong>.
+                            </p>
+                            <p data-i18n="routing.ipv6_p2">
+                                <strong>Route Table:</strong> Lưu lượng <code>::/0</code> (tất cả) được gửi đến <strong>Egress-Only Internet Gateway</strong>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="my-10 border-gray-300">
+
+            <!-- Summary Table -->
+            <section id="summary" class="mb-12 text-center">
+                <h2 class="text-3xl font-extrabold text-sky-700 inline-block pb-1 mb-6" data-i18n="summary.title">TÓM TẮT CHỨC NĂNG GATEWAY</h2>
+                <div class="card mx-auto max-w-4xl p-0 overflow-hidden">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="summary.table.th1">Gateway</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="summary.table.th2">Giao thức</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="summary.table.th3">Chức năng</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="summary.table.th4">Vị trí áp dụng</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-bold text-sky-600" data-i18n="summary.table.igw">Internet Gateway (IGW)</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-teal-600">IPv4 & IPv6</td>
+                                <td class="px-6 py-4 whitespace-nowrap" data-i18n="summary.table.igw_func">Cho phép <strong>Inbound & Outbound</strong> (truy cập hoàn toàn)</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-teal-700 font-semibold" data-i18n="summary.table.public_sub">Public Subnet</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-bold text-teal-600" data-i18n="summary.table.nat">NAT Gateway</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-red-600">IPv4 <strong>Chỉ</strong></td>
+                                <td class="px-6 py-4 whitespace-nowrap" data-i18n="summary.table.nat_func">Chỉ cho phép <strong>Outbound</strong> IPv4</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-blue-700 font-semibold" data-i18n="summary.table.private_sub">Private Subnet</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap font-bold text-blue-600" data-i18n="summary.table.eoigw">Egress-Only Internet Gateway</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-blue-600">IPv6 <strong>Chỉ</strong></td>
+                                <td class="px-6 py-4 whitespace-nowrap" data-i18n="summary.table.eoigw_func">Chỉ cho phép <strong>Outbound</strong> IPv6 (Ngăn chặn Inbound)</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-blue-700 font-semibold" data-i18n="summary.table.private_sub_2">Private Subnet</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            
+            <!-- Key Takeaways -->
+            <section id="key-takeaways" class="mb-12 text-center">
+                <div class="p-6 space-y-4 bg-sky-100 border-2 border-sky-300 rounded-xl mx-auto max-w-4xl">
+                    <h3 class="text-2xl font-extrabold text-sky-700" data-i18n="checklist.title">KEY TAKEAWAYS</h3>
+                    <ul class="space-y-3 text-left">
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p1">
+                            <i class="fas fa-check-circle text-sky-600 mt-1 mr-3 flex-shrink-0"></i>
+                            <strong>Độc Quyền:</strong> EOIGW chỉ dùng cho <strong>lưu lượng IPv6</strong> và cho phép kết nối <strong>outbound</strong> từ VPC.
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p2">
+                            <i class="fas fa-check-circle text-sky-600 mt-1 mr-3 flex-shrink-0"></i>
+                            <strong>Bảo Mật:</strong> Nó <strong>ngăn chặn Internet</strong> khởi tạo kết nối IPv6 <strong>inbound</strong> vào Instance (khác với IGW).
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p3">
+                            <i class="fas fa-check-circle text-sky-600 mt-1 mr-3 flex-shrink-0"></i>
+                            <strong>Routing:</strong> Route Tables của Private Subnet <strong>phải</strong> được cập nhật để chuyển lưu lượng IPv6 (<code>::/0</code>) qua EOIGW.
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p4">
+                            <i class="fas fa-check-circle text-sky-600 mt-1 mr-3 flex-shrink-0"></i>
+                            <strong>Phân Biệt:</strong> Nắm vững sự khác biệt giữa IGW (Public/Full Access), NAT Gateway (Private/IPv4 Outbound), và EOIGW (Private/IPv6 Outbound) là <strong>thiết yếu</strong>.
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const translations = {
+            vi: {
+                header: {
+                    title: "Egress-Only Internet Gateway (EOIGW) | Bảo Mật IPv6",
+                    subtitle: "Giải Pháp Cho Kết Nối IPv6 Ra Bên Ngoài An Toàn"
+                },
+                intro: {
+                    title: "1. Giới Thiệu về Egress-Only Internet Gateway",
+                    p1: "<strong>Egress-Only Internet Gateways</strong> được sử dụng <strong>ĐỘC QUYỀN cho lưu lượng IPv6</strong>.",
+                    p2: "Chúng tương tự như <strong>NAT Gateways</strong>, nhưng trong khi NAT Gateways dành cho <strong>IPv4</strong> thì EOIGW được thiết kế riêng cho <strong>IPv6</strong>.",
+                    purpose_title: "Mục Đích Cốt Lõi",
+                    outbound: "<i class=\"fas fa-sign-out-alt mr-2 text-green-500\"></i> Cho phép Instance <strong>thiết lập kết nối ra bên ngoài (outbound)</strong> qua IPv6.",
+                    inbound: "<i class=\"fas fa-ban mr-2 text-red-500\"></i> <strong>NGĂN CẢN Internet</strong> khởi tạo bất kỳ kết nối IPv6 nào <strong>vào</strong> Instance của bạn.",
+                    routing_note: "<strong>Lưu ý:</strong> Để kích hoạt chức năng này, bạn <strong>phải cập nhật Route Tables</strong> (Bảng định tuyến) tương ứng."
+                },
+                scenario: {
+                    title: "2. Kịch Bản So Sánh Subnet Công Cộng & Riêng Tư",
+                    public_title: "<i class=\"fas fa-server mr-2\"></i> Subnet Công Cộng",
+                    public_p1: "EC2 Instance có thể truy cập Internet qua <strong>IPv4</strong> và <strong>IPv6</strong> thông qua <strong>Internet Gateway (IGW)</strong>.",
+                    public_p2: "<i class=\"fas fa-exchange-alt mr-1\"></i> Internet <strong>CÓ THỂ</strong> khởi tạo kết nối vào Instance (Inbound & Outbound).",
+                    private_title: "<i class=\"fas fa-shield-alt mr-2\"></i> Subnet Riêng Tư (An Toàn)",
+                    private_p1: "EC2 Instance cần truy cập Internet (ví dụ: cập nhật) mà vẫn <strong>ngăn chặn</strong> truy cập từ bên ngoài.",
+                    private_p2: "<i class=\"fas fa-arrow-up mr-1\"></i> Internet <strong>KHÔNG THỂ</strong> khởi tạo kết nối vào (Chỉ Outbound)."
+                },
+                routing: {
+                    title: "3. Tổng Quan Định Tuyến (Routing) Chi Tiết",
+                    private_ipv4_title: "Dành cho Subnet Riêng Tư (Private Subnet)",
+                    ipv4_label: "<i class=\"fas fa-exchange-alt mr-2\"></i> Lưu lượng IPv4",
+                    ipv4_p1: "Để truy cập Internet (Outbound), Instance định tuyến qua <strong>NAT Gateway</strong>.",
+                    ipv4_p2: "<strong>Route Table:</strong> Lưu lượng <code>0.0.0.0/0</code> (tất cả) được gửi đến <strong>NAT Gateway</strong>.",
+                    ipv6_label: "<i class=\"fas fa-sign-out-alt mr-2\"></i> Lưu lượng IPv6",
+                    ipv6_p1: "Để truy cập Internet (Outbound), Instance định tuyến qua <strong>Egress-Only Internet Gateway</strong>.",
+                    ipv6_p2: "<strong>Route Table:</strong> Lưu lượng <code>::/0</code> (tất cả) được gửi đến <strong>Egress-Only Internet Gateway</strong>."
+                },
+                summary: {
+                    title: "TÓM TẮT CHỨC NĂNG GATEWAY",
+                    table: {
+                        th1: "Gateway",
+                        th2: "Giao thức",
+                        th3: "Chức năng",
+                        th4: "Vị trí áp dụng",
+                        igw: "Internet Gateway (IGW)",
+                        igw_func: "Cho phép <strong>Inbound & Outbound</strong> (truy cập hoàn toàn)",
+                        public_sub: "Public Subnet",
+                        nat: "NAT Gateway",
+                        nat_func: "Chỉ cho phép <strong>Outbound</strong> IPv4",
+                        private_sub: "Private Subnet",
+                        eoigw: "Egress-Only Internet Gateway",
+                        eoigw_func: "Chỉ cho phép <strong>Outbound</strong> IPv6 (Ngăn chặn Inbound)",
+                        private_sub_2: "Private Subnet"
+                    }
+                },
+                checklist: {
+                    title: "KEY TAKEAWAYS",
+                    p1: "<strong>Độc Quyền:</strong> EOIGW chỉ dùng cho <strong>lưu lượng IPv6</strong> và cho phép kết nối <strong>outbound</strong> từ VPC.",
+                    p2: "<strong>Bảo Mật:</strong> Nó <strong>ngăn chặn Internet</strong> khởi tạo kết nối IPv6 <strong>inbound</strong> vào Instance (khác với IGW).",
+                    p3: "<strong>Routing:</strong> Route Tables của Private Subnet <strong>phải</strong> được cập nhật để chuyển lưu lượng IPv6 (<code>::/0</code>) qua EOIGW.",
+                    p4: "<strong>Phân Biệt:</strong> Nắm vững sự khác biệt giữa IGW (Public/Full Access), NAT Gateway (Private/IPv4 Outbound), và EOIGW (Private/IPv6 Outbound) là <strong>thiết yếu</strong>."
+                }
+            },
+            en: {
+                header: {
+                    title: "Egress-Only Internet Gateway (EOIGW) | IPv6 Security",
+                    subtitle: "The Solution for Secure Outbound IPv6 Connectivity"
+                },
+                intro: {
+                    title: "1. Introduction to Egress-Only Internet Gateways",
+                    p1: "<strong>Egress-Only Internet Gateways</strong> are used <strong>EXCLUSIVELY for IPv6 traffic</strong>.",
+                    p2: "They are similar to <strong>NAT Gateways</strong>, but while NAT Gateways are for <strong>IPv4</strong>, the EOIGW is designed specifically for <strong>IPv6</strong>.",
+                    purpose_title: "Core Purpose",
+                    outbound: "<i class=\"fas fa-sign-out-alt mr-2 text-green-500\"></i> Allows Instances to <strong>establish outbound connections</strong> over IPv6.",
+                    inbound: "<i class=\"fas fa-ban mr-2 text-red-500\"></i> <strong>PREVENTS the Internet</strong> from initiating any IPv6 connections <strong>to</strong> your instances.",
+                    routing_note: "<strong>Note:</strong> To enable this functionality, you <strong>must update your Route Tables</strong> accordingly."
+                },
+                scenario: {
+                    title: "2. Public vs. Private Subnet Comparison Scenario",
+                    public_title: "<i class=\"fas fa-server mr-2\"></i> Public Subnet",
+                    public_p1: "EC2 Instances can access the Internet over <strong>IPv4</strong> and <strong>IPv6</strong> through the <strong>Internet Gateway (IGW)</strong>.",
+                    public_p2: "<i class=\"fas fa-exchange-alt mr-1\"></i> The Internet <strong>CAN</strong> initiate connections to the Instance (Inbound & Outbound).",
+                    private_title: "<i class=\"fas fa-shield-alt mr-2\"></i> Private Subnet (Secure)",
+                    private_p1: "EC2 Instances need Internet access (e.g., updates) while <strong>preventing</strong> external access.",
+                    private_p2: "<i class=\"fas fa-arrow-up mr-1\"></i> The Internet <strong>CANNOT</strong> initiate connections (Outbound Only)."
+                },
+                routing: {
+                    title: "3. Comprehensive Routing Overview",
+                    private_ipv4_title: "For Private Subnets",
+                    ipv4_label: "<i class=\"fas fa-exchange-alt mr-2\"></i> IPv4 Traffic",
+                    ipv4_p1: "For Internet access (Outbound), the Instance routes traffic through a <strong>NAT Gateway</strong>.",
+                    ipv4_p2: "<strong>Route Table:</strong> All traffic (<code>0.0.0.0/0</code>) is sent to the <strong>NAT Gateway</strong>.",
+                    ipv6_label: "<i class=\"fas fa-sign-out-alt mr-2\"></i> IPv6 Traffic",
+                    ipv6_p1: "For Internet access (Outbound), the Instance routes traffic through the <strong>Egress-Only Internet Gateway</strong>.",
+                    ipv6_p2: "<strong>Route Table:</strong> All IPv6 traffic (<code>::/0</code>) is sent to the <strong>Egress-Only Internet Gateway</strong>."
+                },
+                summary: {
+                    title: "GATEWAY FUNCTIONALITY SUMMARY",
+                    table: {
+                        th1: "Gateway",
+                        th2: "Protocol",
+                        th3: "Function",
+                        th4: "Applicable Location",
+                        igw: "Internet Gateway (IGW)",
+                        igw_func: "Allows <strong>Inbound & Outbound</strong> (Full access)",
+                        public_sub: "Public Subnet",
+                        nat: "NAT Gateway",
+                        nat_func: "Allows <strong>Outbound</strong> IPv4 <strong>Only</strong>",
+                        private_sub: "Private Subnet",
+                        eoigw: "Egress-Only Internet Gateway",
+                        eoigw_func: "Allows <strong>Outbound</strong> IPv6 <strong>Only</strong> (Blocks Inbound)",
+                        private_sub_2: "Private Subnet"
+                    }
+                },
+                checklist: {
+                    title: "KEY TAKEAWAYS",
+                    p1: "<strong>Exclusive:</strong> EOIGW is only for <strong>IPv6 traffic</strong> and allows <strong>outbound</strong> connections from instances in a VPC.",
+                    p2: "<strong>Security:</strong> Unlike IGWs, it <strong>prevents the Internet</strong> from initiating <strong>inbound</strong> IPv6 connections to instances.",
+                    p3: "<strong>Routing:</strong> Private Subnet Route Tables <strong>must</strong> be updated to direct IPv6 traffic (<code>::/0</code>) through the EOIGW.",
+                    p4: "<strong>Crucial Distinction:</strong> Understanding the differences between IGW (Public/Full Access), NAT Gateway (Private/IPv4 Outbound), and EOIGW (Private/IPv6 Outbound) is <strong>essential</strong>."
+                }
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default language
+
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+
+        function getNestedTranslation(obj, path) {
+            return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+        }
+
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const translatedText = getNestedTranslation(translations[currentLanguage], key);
+                if (translatedText) {
+                    // Sử dụng innerHTML để hiển thị đúng các thẻ HTML như <strong> và <i>
+                    element.innerHTML = translatedText;
+                }
+            });
+            document.querySelector('html').setAttribute('lang', currentLanguage);
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            // Sử dụng màu Sky cho nút active (Theme Network/Secure)
+            const activeClass = 'bg-sky-600 text-white';
+            const inactiveClass = 'bg-gray-200 text-gray-700';
+
+            if (currentLanguage === 'vi') {
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            } else {
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">VPC Peering: Kết Nối Mạng Lưới Đám Mây</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Be+Vietnam+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', 'Inter', sans-serif;
+            background-color: #f5f3ff; /* Violet 50 - Theme cho kết nối/mở rộng */
+            color: #1f2937; /* Gray 800 */
+        }
+        .container {
+            max-width: 1024px;
+        }
+        .header-title {
+            color: #5b21b6; /* Violet 700 */
+            border-bottom: 4px solid #8b5cf6; /* Violet 400 */
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+            border-left: 6px solid #8b5cf6; /* Violet 400 */
+        }
+        .section-header {
+            color: #4c1d95; /* Violet 800 */
+            font-weight: 700;
+        }
+        .alert-box {
+            background-color: #f3e8ff; /* Violet 100 */
+            border: 1px solid #c4b5fd; /* Violet 300 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+        .transitive-diagram {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: #ede9fe; /* Violet 200 */
+            border-radius: 0.75rem;
+            font-weight: 700;
+        }
+        .vpc-node {
+            background-color: #7c3aed; /* Violet 600 */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .arrow {
+            font-size: 2rem;
+            color: #6d28d9; /* Violet 700 */
+        }
+        .transitive-diagram .text-red-500 {
+            color: #ef4444; /* Red for NOT connected */
+        }
+        .lang-button {
+            transition: background-color 0.2s, color 0.2s;
+        }
+        
+        /* Đảm bảo các thẻ <strong> bên trong nội dung dịch vẫn được in đậm */
+        .card strong, .alert-box strong, .vpc-node strong {
+            font-weight: 700;
+        }
+        
+        @media (max-width: 768px) {
+            .transitive-diagram {
+                flex-direction: column;
+            }
+            .arrow {
+                transform: rotate(90deg);
+                margin: 0.5rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-4 md:p-10">
+        <header class="text-center mb-12 relative">
+            <h1 class="text-4xl md:text-5xl font-extrabold header-title inline-block pb-1" data-i18n="header.title">
+                <i class="fas fa-link mr-3"></i> VPC Peering
+            </h1>
+            <p class="text-lg text-gray-500 mt-2" data-i18n="header.subtitle">Kết nối các VPC như thể chúng ở cùng một mạng</p>
+            
+            <!-- Nút chuyển đổi ngôn ngữ -->
+            <div class="absolute top-0 right-0 mt-4 mr-4 flex space-x-2">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-md bg-indigo-600 text-white font-semibold text-sm lang-button">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-md bg-gray-200 text-gray-700 font-semibold text-sm lang-button">EN</button>
+            </div>
+            
+        </header>
+
+        <main>
+            <!-- 1. Introduction and Purpose -->
+            <section id="introduction" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="intro.title">1. Mục đích và Phạm vi</h2>
+                <div class="card">
+                    <p data-i18n="intro.p1" class="mb-4">
+                        **VPC Peering** cho phép bạn kết nối hai VPC với nhau để chúng giao tiếp với nhau như thể chúng đang ở trong **cùng một mạng**. Việc kết nối này sử dụng **mạng lưới riêng của AWS**.
+                    </p>
+                    <div class="alert-box flex items-center space-x-3">
+                        <i class="fas fa-cloud-upload-alt text-violet-700 text-2xl flex-shrink-0"></i>
+                        <p class="font-semibold text-gray-800" data-i18n="intro.scope">
+                            **Phạm vi:** Có thể kết nối các VPC **trong cùng một tài khoản**, **khác tài khoản**, và **khác vùng (Region)**.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. CIDR and Route Tables -->
+            <section id="requirements" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="req.title">2. Yêu cầu Bắt buộc (CIDR & Route Tables)</h2>
+                <div class="card">
+                    <h3 class="text-xl font-bold text-violet-700 mb-2" data-i18n="req.cidr_header"><i class="fas fa-exclamation-triangle mr-2"></i> Yêu cầu về CIDR</h3>
+                    <p data-i18n="req.cidr_p1" class="mb-4">
+                        Để VPC Peering hoạt động, dải mạng **CIDR** của hai VPC **bắt buộc phải không được trùng lặp (non-overlapping)**. Nếu chúng trùng lặp, việc kết nối sẽ bị từ chối.
+                    </p>
+                    
+                    <h3 class="text-xl font-bold text-violet-700 mb-2 mt-4" data-i18n="req.route_header"><i class="fas fa-route mr-2"></i> Cập nhật Route Tables</h3>
+                    <p data-i18n="req.route_p1">
+                        Sau khi kết nối Peering được thiết lập, bạn **phải** cập nhật thủ công các **Route Tables** trong các Subnet của mỗi VPC.
+                    </p>
+                    <div class="alert-box" data-i18n="req.route_p2">
+                        <strong>Quy tắc Route:</strong> Thêm một route mới trỏ đến **CIDR** của VPC được peer, với target là **Peering Connection ID**. Điều này là bắt buộc để các Instance thực sự giao tiếp được.
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Non-Transitivity -->
+            <section id="transitivity" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="trans.title">3. Đặc điểm: Không Bắc Cầu (Non-Transitive)</h2>
+                <div class="card">
+                    <p data-i18n="trans.p1" class="mb-4">
+                        VPC Peering **không mang tính bắc cầu (not transitive)**. Điều này là **rất quan trọng**.
+                    </p>
+                    <p data-i18n="trans.p2" class="mb-4">
+                        Nếu có ba VPC (A, B, C), việc A kết nối với B, và B kết nối với C, **KHÔNG** có nghĩa là A có thể kết nối với C.
+                    </p>
+                    
+                    <h3 class="text-xl font-bold text-violet-700 mb-2 mt-4" data-i18n="trans.diagram_title">Minh họa (A, B, C)</h3>
+                    <div class="transitive-diagram">
+                        <div class="vpc-node">VPC **A**</div>
+                        <i class="arrow fas fa-long-arrow-alt-right"></i>
+                        <div class="vpc-node">VPC **B**</div>
+                        <i class="arrow fas fa-long-arrow-alt-right"></i>
+                        <div class="vpc-node">VPC **C**</div>
+                    </div>
+                    <p class="text-center font-bold text-lg mt-3" data-i18n="trans.result_ab_bc">
+                        A & B: KẾT NỐI | B & C: KẾT NỐI
+                    </p>
+                    <p class="text-center font-bold text-xl mt-3 text-red-500" data-i18n="trans.result_ac">
+                        A & C: **KHÔNG KẾT NỐI** (Cần Peering Connection riêng)
+                    </p>
+                    <p data-i18n="trans.p3" class="mt-4 italic text-gray-600">
+                        Mỗi cặp VPC muốn giao tiếp **phải** có một kết nối Peering **trực tiếp**.
+                    </p>
+                </div>
+            </section>
+
+            <!-- 4. Security Group References -->
+            <section id="security" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="security.title">4. Tham chiếu Security Group</h2>
+                <div class="card">
+                    <p data-i18n="security.p1" class="mb-4">
+                        Một tính năng mạnh mẽ là khả năng tham chiếu **Security Groups** của VPC được peer.
+                    </p>
+                    <div class="alert-box" data-i18n="security.p2">
+                        Bạn có thể định nghĩa quy tắc trong Security Group của mình (ví dụ: cho phép Inbound) bằng cách trỏ đến một **Security Group ID** từ VPC được peer, thay vì sử dụng CIDR. Điều này hoạt động được **ngay cả khi kết nối xuyên tài khoản (cross-account)**, miễn là chúng trong **cùng một Region**.
+                    </div>
+                </div>
+            </section>
+
+            <hr class="my-10 border-gray-300">
+
+            <!-- Key Takeaways -->
+            <section id="key-takeaways" class="mb-12 text-center">
+                <h2 class="text-3xl font-extrabold text-indigo-600 inline-block pb-1 mb-6" data-i18n="checklist.title">TÓM TẮT ĐIỂM CHÍNH CHO BÀI THI</h2>
+                <div class="p-6 space-y-4 bg-indigo-50 border-2 border-indigo-300 rounded-xl mx-auto max-w-4xl">
+                    <ul class="space-y-3 text-left">
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p1">
+                            <i class="fas fa-star text-indigo-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Mục đích:** Kết nối các VPC, hoạt động **xuyên Region** và **xuyên Account**.
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p2">
+                            <i class="fas fa-star text-indigo-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **CIDR:** Các dải mạng **CIDR phải không được trùng lặp**.
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p3">
+                            <i class="fas fa-star text-indigo-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Quan trọng:** VPC Peering **KHÔNG MANG TÍNH BẮC CẦU (NOT TRANSITIVE)**.
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p4">
+                            <i class="fas fa-star text-indigo-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Cấu hình:** **PHẢI** cập nhật **Route Tables** thủ công.
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p5">
+                            <i class="fas fa-star text-indigo-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Security Group:** Có thể tham chiếu Security Group của VPC được peer (cùng Region, xuyên Account).
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        const translations = {
+            vi: {
+                header: {
+                    title: "VPC Peering",
+                    subtitle: "Kết nối các VPC như thể chúng ở cùng một mạng"
+                },
+                intro: {
+                    title: "1. Mục đích và Phạm vi",
+                    p1: "<strong>VPC Peering</strong> cho phép bạn kết nối hai VPC với nhau để chúng giao tiếp với nhau như thể chúng đang ở trong <strong>cùng một mạng</strong>. Việc kết nối này sử dụng <strong>mạng lưới riêng của AWS</strong>.",
+                    scope: "<strong>Phạm vi:</strong> Có thể kết nối các VPC <strong>trong cùng một tài khoản</strong>, <strong>khác tài khoản</strong>, và <strong>khác vùng (Region)</strong>."
+                },
+                req: {
+                    title: "2. Yêu cầu Bắt buộc (CIDR & Route Tables)",
+                    cidr_header: "<i class=\"fas fa-exclamation-triangle mr-2\"></i> Yêu cầu về CIDR",
+                    cidr_p1: "Để VPC Peering hoạt động, dải mạng <strong>CIDR</strong> của hai VPC <strong>bắt buộc phải không được trùng lặp (non-overlapping)</strong>. Nếu chúng trùng lặp, việc kết nối sẽ bị từ chối.",
+                    route_header: "<i class=\"fas fa-route mr-2\"></i> Cập nhật Route Tables",
+                    route_p1: "Sau khi kết nối Peering được thiết lập, bạn <strong>phải</strong> cập nhật thủ công các <strong>Route Tables</strong> trong các Subnet của mỗi VPC.",
+                    route_p2: "<strong>Quy tắc Route:</strong> Thêm một route mới trỏ đến <strong>CIDR</strong> của VPC được peer, với target là <strong>Peering Connection ID</strong>. Điều này là bắt buộc để các Instance thực sự giao tiếp được."
+                },
+                trans: {
+                    title: "3. Đặc điểm: Không Bắc Cầu (Non-Transitive)",
+                    p1: "VPC Peering <strong>không mang tính bắc cầu (not transitive)</strong>. Điều này là <strong>rất quan trọng</strong>.",
+                    p2: "Nếu có ba VPC (A, B, C), việc A kết nối với B, và B kết nối với C, <strong>KHÔNG</strong> có nghĩa là A có thể kết nối với C.",
+                    diagram_title: "Minh họa (A, B, C)",
+                    result_ab_bc: "A & B: KẾT NỐI | B & C: KẾT NỐI",
+                    result_ac: "A & C: <strong>KHÔNG KẾT NỐI</strong> (Cần Peering Connection riêng)",
+                    p3: "Mỗi cặp VPC muốn giao tiếp <strong>phải</strong> có một kết nối Peering <strong>trực tiếp</strong>."
+                },
+                security: {
+                    title: "4. Tham chiếu Security Group",
+                    p1: "Một tính năng mạnh mẽ là khả năng tham chiếu <strong>Security Groups</strong> của VPC được peer.",
+                    p2: "Bạn có thể định nghĩa quy tắc trong Security Group của mình (ví dụ: cho phép Inbound) bằng cách trỏ đến một <strong>Security Group ID</strong> từ VPC được peer, thay vì sử dụng CIDR. Điều này hoạt động được <strong>ngay cả khi kết nối xuyên tài khoản (cross-account)</strong>, miễn là chúng trong <strong>cùng một Region</strong>."
+                },
+                checklist: {
+                    title: "TÓM TẮT ĐIỂM CHÍNH CHO BÀI THI",
+                    p1: "<strong>Mục đích:</strong> Kết nối các VPC, hoạt động <strong>xuyên Region</strong> và <strong>xuyên Account</strong>.",
+                    p2: "<strong>CIDR:</strong> Các dải mạng <strong>CIDR phải không được trùng lặp</strong>.",
+                    p3: "<strong>Quan trọng:</strong> VPC Peering <strong>KHÔNG MANG TÍNH BẮC CẦU (NOT TRANSITIVE)</strong>.",
+                    p4: "<strong>Cấu hình:</strong> <strong>PHẢI</strong> cập nhật <strong>Route Tables</strong> thủ công.",
+                    p5: "<strong>Security Group:</strong> Có thể tham chiếu Security Group của VPC được peer (cùng Region, xuyên Account)."
+                }
+            },
+            en: {
+                header: {
+                    title: "VPC Peering",
+                    subtitle: "Connecting Cloud Networks as if they were one"
+                },
+                intro: {
+                    title: "1. Purpose and Scope",
+                    p1: "<strong>VPC Peering</strong> allows you to connect two VPCs so that they communicate with each other as if they were in the <strong>same network</strong>. This connection uses the **AWS private network**.",
+                    scope: "<strong>Scope:</strong> Can connect VPCs **within the same account**, **across accounts**, and **across regions**."
+                },
+                req: {
+                    title: "2. Mandatory Requirements (CIDR & Route Tables)",
+                    cidr_header: "<i class=\"fas fa-exclamation-triangle mr-2\"></i> CIDR Requirement",
+                    cidr_p1: "For VPC Peering to work, the **CIDR** network ranges of the two VPCs **must be non-overlapping**. If they overlap, the connection will be rejected.",
+                    route_header: "<i class=\"fas fa-route mr-2\"></i> Route Table Updates",
+                    route_p1: "Once the Peering connection is established, you **must** manually update the **Route Tables** in the subnets of each VPC.",
+                    route_p2: "<strong>Route Rule:</strong> Add a new route pointing to the peered VPC's <strong>CIDR</strong>, with the target being the <strong>Peering Connection ID</strong>. This is mandatory for Instances to actually communicate."
+                },
+                trans: {
+                    title: "3. Feature: Non-Transitive",
+                    p1: "VPC Peering is **not transitive**. This is **very important**.",
+                    p2: "If you have three VPCs (A, B, C), A connecting to B, and B connecting to C, does **NOT** mean A can connect to C.",
+                    diagram_title: "Illustration (A, B, C)",
+                    result_ab_bc: "A & B: CONNECTED | B & C: CONNECTED",
+                    result_ac: "A & C: **NOT CONNECTED** (Requires separate Peering Connection)",
+                    p3: "Each pair of VPCs that wish to communicate **must** have a **direct** Peering connection."
+                },
+                security: {
+                    title: "4. Security Group References",
+                    p1: "A powerful feature is the ability to reference **Security Groups** from the peered VPC.",
+                    p2: "You can define a rule in your Security Group (e.g., allow Inbound) by pointing to a **Security Group ID** from the peered VPC, instead of using a CIDR. This works **even across accounts**, as long as they are in the **same Region**."
+                },
+                checklist: {
+                    title: "FINAL EXAM CHECKLIST",
+                    p1: "<strong>Purpose:</strong> Connect VPCs, works **across Regions** and **across Accounts**.",
+                    p2: "<strong>CIDR:</strong> The **CIDR ranges must be non-overlapping**.",
+                    p3: "<strong>Critical:</strong> VPC Peering is **NOT TRANSITIVE**.",
+                    p4: "<strong>Configuration:</strong> **MUST** manually update **Route Tables**.",
+                    p5: "<strong>Security Group:</strong> Can reference the peered VPC's Security Group (same Region, cross-Account)."
+                }
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default language
+
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+
+        function getNestedTranslation(obj, path) {
+            return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+        }
+
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const translatedText = getNestedTranslation(translations[currentLanguage], key);
+                if (translatedText) {
+                    // Sử dụng innerHTML để hiển thị đúng các thẻ HTML như <strong> và <i>
+                    element.innerHTML = translatedText; 
+                }
+            });
+            document.querySelector('html').setAttribute('lang', currentLanguage);
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            const activeClass = 'bg-indigo-600 text-white';
+            const inactiveClass = 'bg-gray-200 text-gray-700';
+
+            if (currentLanguage === 'vi') {
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            } else {
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

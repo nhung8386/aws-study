@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">Kiến Trúc Dự Phòng: Direct Connect và Site-to-Site VPN</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Be+Vietnam+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', 'Inter', sans-serif;
+            background-color: #f0fdf4; /* Emerald 50 - Theme for Reliability/Green Check */
+            color: #1f2937; /* Gray 800 */
+        }
+        .container {
+            max-width: 1024px;
+        }
+        .header-title {
+            color: #047857; /* Emerald 700 */
+            border-bottom: 4px solid #34d399; /* Emerald 400 */
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+        }
+        .section-header {
+            color: #059669; /* Emerald 600 */
+            font-weight: 700;
+        }
+
+        /* Styling cho sơ đồ kiến trúc */
+        .arch-diagram {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            text-align: center;
+        }
+        .arch-component {
+            flex: 0 0 auto;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+        }
+        
+        /* Direct Connect (Primary - Blue) */
+        .dx-primary {
+            background-color: #dbeafe; /* Blue 100 */
+            border: 2px solid #3b82f6; /* Blue 500 */
+        }
+        /* VPN (Backup - Yellow/Orange) */
+        .vpn-backup {
+            background-color: #fffbeb; /* Yellow 100 */
+            border: 2px solid #f59e0b; /* Yellow 600 */
+        }
+
+        /* Lines (Mũi tên) */
+        .line-primary, .line-backup {
+            flex-grow: 1;
+            margin: 0 1rem;
+            position: relative;
+            height: 50px; /* Chiều cao để vẽ 2 đường */
+        }
+
+        /* Primary Line (DX) */
+        .line-primary::before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 0;
+            right: 0;
+            border-top: 3px dashed #3b82f6; /* Blue dashed for private link */
+            z-index: 10;
+        }
+        .line-primary::after {
+            content: 'Direct Connect (Primary)';
+            position: absolute;
+            top: -10px;
+            width: 100%;
+            font-size: 0.75rem;
+            color: #1d4ed8;
+            font-weight: 600;
+        }
+
+        /* Backup Line (VPN over Public Internet) */
+        .line-backup::before {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            right: 0;
+            border-top: 3px solid #f59e0b; /* Orange solid for public/VPN */
+            z-index: 10;
+        }
+        .line-backup::after {
+            content: 'Site-to-Site VPN (Backup / Public Internet)';
+            position: absolute;
+            bottom: -10px;
+            width: 100%;
+            font-size: 0.75rem;
+            color: #d97706;
+            font-weight: 600;
+        }
+
+        /* Thẻ <strong> trong nội dung dịch vẫn được in đậm */
+        .card strong {
+            font-weight: 700;
+        }
+
+        /* Responsive Flow */
+        @media (max-width: 768px) {
+            .arch-diagram {
+                flex-direction: column;
+                justify-content: center;
+            }
+            .arch-component {
+                margin-bottom: 1.5rem;
+                width: 100%;
+            }
+            .line-primary, .line-backup {
+                width: 0; /* Loại bỏ chiều rộng ngang */
+                height: 50px; /* Chiều cao cố định */
+                margin: 0;
+                order: 3; /* Đặt chúng ở giữa theo chiều dọc */
+            }
+            .line-primary::after {
+                top: 0;
+                text-align: left;
+                left: 10px;
+                white-space: nowrap;
+            }
+             .line-backup::after {
+                bottom: 0;
+                text-align: left;
+                left: 10px;
+                white-space: nowrap;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-4 md:p-10">
+        <header class="text-center mb-12 relative">
+            <h1 class="text-4xl md:text-5xl font-extrabold header-title inline-block pb-1" data-i18n="header.title">
+                <i class="fas fa-sitemap mr-3"></i> Direct Connect + Site-to-Site VPN Backup
+            </h1>
+            <p class="text-lg text-gray-500 mt-2" data-i18n="header.subtitle">Giải pháp Kết nối Bền bỉ và Tiết kiệm Chi phí</p>
+            
+            <!-- Nút chuyển đổi ngôn ngữ -->
+            <div class="absolute top-0 right-0 mt-4 mr-4 flex space-x-2">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-md bg-emerald-600 text-white font-semibold text-sm lang-button">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-md bg-gray-200 text-gray-700 font-semibold text-sm lang-button">EN</button>
+            </div>
+            
+        </header>
+
+        <main>
+            <!-- 1. Introduction and Core Concept -->
+            <section id="introduction" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="intro.title">1. Kiến Trúc Kết Hợp</h2>
+                <div class="card">
+                    <p data-i18n="intro.p1" class="mb-4">
+                        Kiến trúc này kết nối trung tâm dữ liệu on-premises của công ty bạn với **Virtual Private Cloud (VPC)** của AWS, sử dụng hai loại kết nối cho mục đích **Dự phòng (Backup)**.
+                    </p>
+                    <p data-i18n="intro.p2" class="mb-4 text-emerald-700 font-semibold">
+                        Đây là một thiết lập quan trọng trong các kỳ thi vì nó giải quyết vấn đề về chi phí của việc sử dụng hoàn toàn Direct Connect, đồng thời đảm bảo tính **liên tục của dịch vụ** (Business Continuity).
+                    </p>
+                </div>
+            </section>
+            
+            <!-- 2. Primary Connection (Direct Connect) -->
+            <section id="primary-dx" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="primary.title">2. Kết Nối Chính: AWS Direct Connect</h2>
+                <div class="card dx-primary border-2 border-blue-400">
+                    <p data-i18n="primary.p1" class="mb-2">
+                        **Direct Connect (DX)** đóng vai trò là **kết nối chính (Primary Connection)**.
+                    </p>
+                    <ul class="list-disc ml-5 space-y-2 text-base">
+                        <li data-i18n="primary.b1">**Loại kết nối:** **Chuyên dụng (Dedicated)** và **Riêng tư (Private)**.</li>
+                        <li data-i18n="primary.b2">**Hiệu suất:** Cung cấp băng thông cao và hiệu suất mạng **nhất quán**.</li>
+                        <li data-i18n="primary.b3" class="font-bold text-red-700">**Nhược điểm:** Là một giải pháp **đắt tiền**, và có thể gặp sự cố ngoài ý muốn (ví dụ: lỗi phần cứng, đứt cáp).</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 3. Backup Connection (Site-to-Site VPN) -->
+            <section id="backup-vpn" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="backup.title">3. Kết Nối Dự Phòng: Site-to-Site VPN</h2>
+                <div class="card vpn-backup border-2 border-yellow-500">
+                    <p data-i18n="backup.p1" class="mb-2">
+                        Bạn thiết lập một **Site-to-Site VPN** để làm **kết nối dự phòng (Backup)**.
+                    </p>
+                    <ul class="list-disc ml-5 space-y-2 text-base">
+                        <li data-i18n="backup.b1">**Khi kích hoạt:** Kết nối VPN sẽ được sử dụng **nếu và chỉ nếu** kết nối DX chính gặp sự cố (Failover).</li>
+                        <li data-i18n="backup.b2">**Đường truyền:** VPN truyền dữ liệu qua **Internet công cộng**, cung cấp khả năng tiếp cận đáng tin cậy như một giải pháp thay thế.</li>
+                        <li data-i18n="backup.b3">**Chi phí:** Chi phí thấp hơn nhiều so với việc thiết lập một kết nối Direct Connect thứ cấp (Secondary DX).</li>
+                    </ul>
+                    <p class="mt-4 p-3 bg-red-100 rounded-lg font-semibold text-sm text-red-700" data-i18n="backup.note">
+                        Lưu ý: Mặc dù rẻ hơn, băng thông và độ nhất quán của VPN **không thể so sánh** với Direct Connect. Nó chỉ nên được xem là giải pháp **tạm thời** để duy trì kết nối.
+                    </p>
+                </div>
+            </section>
+            
+            <!-- 4. Architecture Diagram & Flow -->
+            <section id="arch-flow" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="flow.title">4. Sơ Đồ Kiến Trúc & Luồng Dữ Liệu</h2>
+                
+                <div class="arch-diagram p-4 md:p-8 bg-white rounded-xl shadow-inner">
+                    <!-- On-Premises Data Center -->
+                    <div class="arch-component bg-gray-100 border border-gray-300">
+                        <i class="fas fa-server text-3xl text-gray-600"></i>
+                        <p data-i18n="flow.on_prem_label">Corporate Data Center</p>
+                    </div>
+
+                    <!-- Connection Lines -->
+                    <div class="line-primary"></div>
+                    <div class="line-backup"></div>
+
+                    <!-- AWS VPC -->
+                    <div class="arch-component bg-emerald-100 border border-emerald-400">
+                        <i class="fab fa-aws text-3xl text-emerald-600"></i>
+                        <p data-i18n="flow.vpc_label">AWS VPC</p>
+                    </div>
+                </div>
+
+                <div class="mt-8">
+                    <h3 class="text-xl font-bold mb-3 text-gray-700" data-i18n="flow.logic_title">Logic chuyển đổi (Failover Logic)</h3>
+                    <p data-i18n="flow.logic_p1" class="mb-2">
+                        Trong cấu hình này, định tuyến (Routing - thường là BGP) được thiết lập để ưu tiên đường truyền qua **Direct Connect** (Primary).
+                    </p>
+                    <p data-i18n="flow.logic_p2">
+                        Nếu kết nối **Direct Connect** bị mất, các tuyến đường (Routes) qua kết nối **Site-to-Site VPN** sẽ trở thành đường đi tốt nhất, kích hoạt việc sử dụng VPN để duy trì liên lạc.
+                    </p>
+                </div>
+            </section>
+
+            <hr class="my-10 border-gray-300">
+
+            <!-- Key Takeaways -->
+            <section id="key-takeaways" class="mb-12 text-center">
+                <h2 class="text-3xl font-extrabold text-emerald-700 inline-block pb-1 mb-6" data-i18n="checklist.title">TÓM TẮT ĐIỂM CHÍNH CHO KỲ THI</h2>
+                <div class="p-6 space-y-4 bg-emerald-50 border-2 border-emerald-300 rounded-xl mx-auto max-w-4xl">
+                    <ul class="space-y-3 text-left">
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p1">
+                            <i class="fas fa-star text-emerald-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Direct Connect** = Kết nối **chính** (Primary), **tư nhân**, **đắt tiền**.
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p2">
+                            <i class="fas fa-hand-holding-medical text-emerald-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Site-to-Site VPN** = Kết nối **dự phòng** (Backup), đi qua **Internet công cộng**, **rẻ hơn**.
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p3">
+                            <i class="fas fa-exchange-alt text-emerald-600 mt-1 mr-3 flex-shrink-0"></i>
+                            Kiến trúc này giúp **giảm chi phí** so với việc dùng 2 kết nối DX, đồng thời đảm bảo **liên tục kết nối**.
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        const translations = {
+            vi: {
+                header: {
+                    title: "Kiến Trúc Dự Phòng: Direct Connect và Site-to-Site VPN",
+                    subtitle: "Giải pháp Kết nối Bền bỉ và Tiết kiệm Chi phí"
+                },
+                intro: {
+                    title: "1. Kiến Trúc Kết Hợp",
+                    p1: "Kiến trúc này kết nối trung tâm dữ liệu on-premises của công ty bạn với <strong>Virtual Private Cloud (VPC)</strong> của AWS, sử dụng hai loại kết nối cho mục đích <strong>Dự phòng (Backup)</strong>.",
+                    p2: "Đây là một thiết lập quan trọng trong các kỳ thi vì nó giải quyết vấn đề về chi phí của việc sử dụng hoàn toàn Direct Connect, đồng thời đảm bảo tính <strong>liên tục của dịch vụ</strong> (Business Continuity)."
+                },
+                primary: {
+                    title: "2. Kết Nối Chính: AWS Direct Connect",
+                    p1: "<strong>Direct Connect (DX)</strong> đóng vai trò là <strong>kết nối chính (Primary Connection)</strong>.",
+                    b1: "<strong>Loại kết nối:</strong> <strong>Chuyên dụng (Dedicated)</strong> và <strong>Riêng tư (Private)</strong>.",
+                    b2: "<strong>Hiệu suất:</strong> Cung cấp băng thông cao và hiệu suất mạng <strong>nhất quán</strong>.",
+                    b3: "<strong>Nhược điểm:</strong> Là một giải pháp <strong>đắt tiền</strong>, và có thể gặp sự cố ngoài ý muốn (ví dụ: lỗi phần cứng, đứt cáp)."
+                },
+                backup: {
+                    title: "3. Kết Nối Dự Phòng: Site-to-Site VPN",
+                    p1: "Bạn thiết lập một <strong>Site-to-Site VPN</strong> để làm <strong>kết nối dự phòng (Backup)</strong>.",
+                    b1: "<strong>Khi kích hoạt:</strong> Kết nối VPN sẽ được sử dụng <strong>nếu và chỉ nếu</strong> kết nối DX chính gặp sự cố (Failover).",
+                    b2: "<strong>Đường truyền:</strong> VPN truyền dữ liệu qua <strong>Internet công cộng</strong>, cung cấp khả năng tiếp cận đáng tin cậy như một giải pháp thay thế.",
+                    b3: "<strong>Chi phí:</strong> Chi phí thấp hơn nhiều so với việc thiết lập một kết nối Direct Connect thứ cấp (Secondary DX).",
+                    note: "Lưu ý: Mặc dù rẻ hơn, băng thông và độ nhất quán của VPN <strong>không thể so sánh</strong> với Direct Connect. Nó chỉ nên được xem là giải pháp <strong>tạm thời</strong> để duy trì kết nối."
+                },
+                flow: {
+                    title: "4. Sơ Đồ Kiến Trúc & Luồng Dữ Liệu",
+                    on_prem_label: "Trung Tâm Dữ Liệu On-Premises",
+                    vpc_label: "AWS VPC",
+                    logic_title: "Logic chuyển đổi (Failover Logic)",
+                    logic_p1: "Trong cấu hình này, định tuyến (Routing - thường là BGP) được thiết lập để ưu tiên đường truyền qua <strong>Direct Connect</strong> (Primary).",
+                    logic_p2: "Nếu kết nối <strong>Direct Connect</strong> bị mất, các tuyến đường (Routes) qua kết nối <strong>Site-to-Site VPN</strong> sẽ trở thành đường đi tốt nhất, kích hoạt việc sử dụng VPN để duy trì liên lạc."
+                },
+                checklist: {
+                    title: "TÓM TẮT ĐIỂM CHÍNH CHO KỲ THI",
+                    p1: "<strong>Direct Connect</strong> = Kết nối <strong>chính</strong> (Primary), <strong>tư nhân</strong>, <strong>đắt tiền</strong>.",
+                    p2: "<strong>Site-to-Site VPN</strong> = Kết nối <strong>dự phòng</strong> (Backup), đi qua <strong>Internet công cộng</strong>, <strong>rẻ hơn</strong>.",
+                    p3: "Kiến trúc này giúp <strong>giảm chi phí</strong> so với việc dùng 2 kết nối DX, đồng thời đảm bảo <strong>liên tục kết nối</strong>."
+                }
+            },
+            en: {
+                header: {
+                    title: "Direct Connect & Site-to-Site VPN Backup Architecture",
+                    subtitle: "A Reliable and Cost-Effective Connectivity Solution"
+                },
+                intro: {
+                    title: "1. The Hybrid Architecture",
+                    p1: "This architecture connects your corporate on-premises data center to your AWS <strong>Virtual Private Cloud (VPC)</strong>, using two types of connections for <strong>Backup</strong> purposes.",
+                    p2: "This is an important setup in exams because it addresses the cost issue of solely relying on Direct Connect, while ensuring <strong>Business Continuity</strong>."
+                },
+                primary: {
+                    title: "2. The Primary Connection: AWS Direct Connect",
+                    p1: "<strong>Direct Connect (DX)</strong> serves as your **primary connection**.",
+                    b1: "<strong>Connection Type:</strong> <strong>Dedicated</strong> and <strong>Private</strong>.",
+                    b2: "<strong>Performance:</strong> Provides high bandwidth and <strong>consistent</strong> network performance.",
+                    b3: "<strong>Drawback:</strong> It is an <strong>expensive</strong> solution, and the connection can experience unforeseen issues (e.g., hardware failure, cable cut)."
+                },
+                backup: {
+                    title: "3. The Backup Connection: Site-to-Site VPN",
+                    p1: "You set up a <strong>Site-to-Site VPN</strong> to act as the **backup connection**.",
+                    b1: "<strong>Activation:</strong> The VPN connection is used <strong>if and only if</strong> the primary DX connection fails (Failover).",
+                    b2: "<strong>Path:</strong> The VPN transmits data over the <strong>public internet</strong>, which may offer more reliable accessibility as a fallback path.",
+                    b3: "<strong>Cost:</strong> It is significantly cheaper than setting up a second (Secondary DX) connection.",
+                    note: "Note: While cheaper, the bandwidth and consistency of VPN are **not comparable** to Direct Connect. It should only be viewed as a **temporary solution** to maintain connectivity."
+                },
+                flow: {
+                    title: "4. Architecture Diagram & Data Flow",
+                    on_prem_label: "Corporate Data Center",
+                    vpc_label: "AWS VPC",
+                    logic_title: "Failover Logic",
+                    logic_p1: "In this configuration, routing (often BGP) is set up to prioritize the path over **Direct Connect** (Primary).",
+                    logic_p2: "If the **Direct Connect** connection is lost, the routes over the **Site-to-Site VPN** connection become the best path, triggering the use of the VPN to maintain communication."
+                },
+                checklist: {
+                    title: "KEY TAKEAWAYS FOR EXAMS",
+                    p1: "<strong>Direct Connect</strong> = **Primary**, **private**, **expensive** connection.",
+                    p2: "<strong>Site-to-Site VPN</strong> = **Backup**, uses **Public Internet**, **cheaper**.",
+                    p3: "This architecture helps **reduce cost** compared to dual DX links, while ensuring **connectivity continuity**."
+                }
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default language
+
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+
+        function getNestedTranslation(obj, path) {
+            return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+        }
+
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const translatedText = getNestedTranslation(translations[currentLanguage], key);
+                if (translatedText) {
+                    // Sử dụng innerHTML để hiển thị đúng các thẻ HTML như <strong> và <i>
+                    element.innerHTML = translatedText; 
+                }
+            });
+            document.querySelector('html').setAttribute('lang', currentLanguage);
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            // Sử dụng màu Emerald cho nút active
+            const activeClass = 'bg-emerald-600 text-white';
+            const inactiveClass = 'bg-gray-200 text-gray-700';
+
+            if (currentLanguage === 'vi') {
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            } else {
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

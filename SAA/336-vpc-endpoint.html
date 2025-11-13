@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">VPC Endpoints: Truy Cập Dịch Vụ AWS Riêng Tư</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Be+Vietnam+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', 'Inter', sans-serif;
+            background-color: #fffbeb; /* Amber 50 - Theme cho Private Link/Efficiency */
+            color: #1f2937; /* Gray 800 */
+        }
+        .container {
+            max-width: 1024px;
+        }
+        .header-title {
+            color: #b45309; /* Amber 700 */
+            border-bottom: 4px solid #f59e0b; /* Amber 500 */
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+        }
+        .section-header {
+            color: #92400e; /* Amber 800 */
+            font-weight: 700;
+        }
+
+        /* Styling cho hai loại Endpoints */
+        .interface-card {
+            border-left: 6px solid #ef4444; /* Red 500 - Thể hiện có phí/ENI */
+            background-color: #fef2f2; /* Red 50 */
+        }
+        .gateway-card {
+            border-left: 6px solid #10b981; /* Emerald 500 - Thể hiện miễn phí/route table */
+            background-color: #ecfdf5; /* Green 50 */
+        }
+        .diff-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        .highlight-box {
+            background-color: #fef3c7; /* Amber 100 */
+            border: 1px dashed #fcd34d; /* Amber 300 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+        .lang-button {
+            transition: background-color 0.2s, color 0.2s;
+        }
+        
+        /* Đảm bảo các thẻ <strong> bên trong nội dung dịch vẫn được in đậm */
+        .card strong, .diff-grid strong, .highlight-box strong {
+            font-weight: 700;
+        }
+        
+        @media (max-width: 768px) {
+            .diff-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-4 md:p-10">
+        <header class="text-center mb-12 relative">
+            <h1 class="text-4xl md:text-5xl font-extrabold header-title inline-block pb-1" data-i18n="header.title">
+                <i class="fas fa-lock mr-3"></i> VPC Endpoints
+            </h1>
+            <p class="text-lg text-gray-500 mt-2" data-i18n="header.subtitle">Truy cập riêng tư vào các dịch vụ AWS</p>
+            
+            <!-- Nút chuyển đổi ngôn ngữ -->
+            <div class="absolute top-0 right-0 mt-4 mr-4 flex space-x-2">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-md bg-amber-600 text-white font-semibold text-sm lang-button">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-md bg-gray-200 text-gray-700 font-semibold text-sm lang-button">EN</button>
+            </div>
+            
+        </header>
+
+        <main>
+            <!-- 1. Introduction and Purpose -->
+            <section id="introduction" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="intro.title">1. Giới Thiệu và Mục đích</h2>
+                <div class="card">
+                    <p data-i18n="intro.p1" class="mb-4">
+                        **VPC Endpoints** cho phép các Instance trong VPC (kể cả trong Private Subnet) truy cập các dịch vụ **AWS công cộng** (như S3, DynamoDB, SNS, CloudWatch) mà **không cần đi qua Internet Gateway hay NAT Gateway**.
+                    </p>
+                    <div class="highlight-box flex items-center space-x-3">
+                        <i class="fas fa-network-wired text-amber-700 text-2xl flex-shrink-0"></i>
+                        <p class="font-semibold text-gray-800" data-i18n="intro.key">
+                            Mục tiêu là giữ **toàn bộ lưu lượng truy cập** giữa VPC và dịch vụ AWS **nằm trong mạng riêng của AWS**.
+                        </p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 2. Two Types -->
+            <section id="types" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="types.title">2. Hai Loại VPC Endpoints</h2>
+                <div class="diff-grid">
+                    <div class="card interface-card">
+                        <h3 class="text-2xl font-bold text-red-700 mb-3" data-i18n="types.interface_title"><i class="fas fa-plug mr-2"></i> Interface Endpoints</h3>
+                        <p data-i18n="types.interface_p1" class="mb-2">
+                            Được cung cấp bởi **AWS PrivateLink**.
+                        </p>
+                        <ul class="list-disc ml-5 space-y-1 text-sm">
+                            <li data-i18n="types.interface_li1">Tạo ra một **Elastic Network Interface (ENI)** với **Địa chỉ IP Riêng** trong Subnet.</li>
+                            <li data-i18n="types.interface_li2">Hỗ trợ **Hầu hết mọi dịch vụ AWS** (ví dụ: SNS, CloudWatch, S3, DynamoDB).</li>
+                            <li data-i18n="types.interface_li3">Yêu cầu gắn **Security Group** (vì có ENI).</li>
+                            <li data-i18n="types.interface_li4" class="font-bold text-red-600">Phải trả **phí theo giờ** và **phí xử lý dữ liệu**.</li>
+                        </ul>
+                    </div>
+                    <div class="card gateway-card">
+                        <h3 class="text-2xl font-bold text-green-700 mb-3" data-i18n="types.gateway_title"><i class="fas fa-door-open mr-2"></i> Gateway Endpoints</h3>
+                        <p data-i18n="types.gateway_p1" class="mb-2">
+                            Tạo ra một **Gateway** được chỉ định là target trong **Route Table**.
+                        </p>
+                        <ul class="list-disc ml-5 space-y-1 text-sm">
+                            <li data-i18n="types.gateway_li1">**Không** tạo ENI, **không** cần Security Group.</li>
+                            <li data-i18n="types.gateway_li2">Chỉ hỗ trợ **HAI dịch vụ**: **Amazon S3** và **DynamoDB**.</li>
+                            <li data-i18n="types.gateway_li3">**Cấu hình** bằng cách cập nhật Route Table (route trỏ đến Endpoint ID).</li>
+                            <li data-i18n="types.gateway_li4" class="font-bold text-green-600">**HOÀN TOÀN MIỄN PHÍ** và tự động mở rộng (scale automatically).</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 3. S3/DynamoDB Choice and Conclusion -->
+            <section id="choice" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="choice.title">3. Lựa chọn cho S3 & DynamoDB</h2>
+                <div class="card">
+                    <p data-i18n="choice.p1" class="mb-4">
+                        Cả S3 và DynamoDB đều hỗ trợ cả hai loại Endpoint. Tuy nhiên, trong môi trường kiểm tra (Exam) và thực tế chung:
+                    </p>
+                    <div class="highlight-box font-extrabold text-lg text-amber-700 flex items-center space-x-3" data-i18n="choice.preference">
+                        <i class="fas fa-check-circle text-2xl flex-shrink-0"></i>
+                        **Gateway Endpoint** được **ƯU TIÊN** hơn cho S3 và DynamoDB vì nó **MIỄN PHÍ** và chỉ yêu cầu chỉnh sửa **Route Table**.
+                    </div>
+                    <p data-i18n="choice.p2" class="mt-4 italic">
+                        Interface Endpoint chỉ nên cân nhắc cho S3/DynamoDB trong các trường hợp nâng cao, ví dụ: khi cần truy cập riêng tư **từ môi trường On-Premise** (qua VPN/Direct Connect) hoặc qua **VPC Peering**.
+                    </p>
+                </div>
+            </section>
+
+            <hr class="my-10 border-gray-300">
+
+            <!-- Key Takeaways -->
+            <section id="key-takeaways" class="mb-12 text-center">
+                <h2 class="text-3xl font-extrabold text-amber-600 inline-block pb-1 mb-6" data-i18n="checklist.title">TÓM TẮT ĐIỂM CHÍNH</h2>
+                <div class="p-6 space-y-4 bg-amber-50 border-2 border-amber-300 rounded-xl mx-auto max-w-4xl">
+                    <ul class="space-y-3 text-left">
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p1">
+                            <i class="fas fa-bolt text-amber-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Mục tiêu:** Truy cập **riêng tư** các dịch vụ AWS mà **không cần Internet** (Internet Gateway, NAT Gateway).
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p2">
+                            <i class="fas fa-bolt text-amber-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Interface Endpoints:** Dùng cho **hầu hết dịch vụ**, **có phí**, tạo **ENI** (cần Security Group).
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p3">
+                            <i class="fas fa-bolt text-amber-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Gateway Endpoints:** Chỉ dùng cho **S3** và **DynamoDB**, **miễn phí**, chỉ cần **Route Table**.
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        const translations = {
+            vi: {
+                header: {
+                    title: "VPC Endpoints",
+                    subtitle: "Truy cập riêng tư vào các dịch vụ AWS"
+                },
+                intro: {
+                    title: "1. Giới Thiệu và Mục đích",
+                    p1: "<strong>VPC Endpoints</strong> cho phép các Instance trong VPC (kể cả trong Private Subnet) truy cập các dịch vụ <strong>AWS công cộng</strong> (như S3, DynamoDB, SNS, CloudWatch) mà <strong>không cần đi qua Internet Gateway hay NAT Gateway</strong>.",
+                    key: "Mục tiêu là giữ <strong>toàn bộ lưu lượng truy cập</strong> giữa VPC và dịch vụ AWS <strong>nằm trong mạng riêng của AWS</strong>."
+                },
+                types: {
+                    title: "2. Hai Loại VPC Endpoints",
+                    interface_title: "<i class=\"fas fa-plug mr-2\"></i> Interface Endpoints",
+                    interface_p1: "Được cung cấp bởi <strong>AWS PrivateLink</strong>.",
+                    interface_li1: "Tạo ra một <strong>Elastic Network Interface (ENI)</strong> với <strong>Địa chỉ IP Riêng</strong> trong Subnet.",
+                    interface_li2: "Hỗ trợ <strong>Hầu hết mọi dịch vụ AWS</strong> (ví dụ: SNS, CloudWatch, S3, DynamoDB).",
+                    interface_li3: "Yêu cầu gắn <strong>Security Group</strong> (vì có ENI).",
+                    interface_li4: "Phải trả <strong>phí theo giờ</strong> và <strong>phí xử lý dữ liệu</strong>.",
+                    gateway_title: "<i class=\"fas fa-door-open mr-2\"></i> Gateway Endpoints",
+                    gateway_p1: "Tạo ra một <strong>Gateway</strong> được chỉ định là target trong <strong>Route Table</strong>.",
+                    gateway_li1: "<strong>Không</strong> tạo ENI, <strong>không</strong> cần Security Group.",
+                    gateway_li2: "Chỉ hỗ trợ <strong>HAI dịch vụ</strong>: <strong>Amazon S3</strong> và <strong>DynamoDB</strong>.",
+                    gateway_li3: "<strong>Cấu hình</strong> bằng cách cập nhật Route Table (route trỏ đến Endpoint ID).",
+                    gateway_li4: "<strong>HOÀN TOÀN MIỄN PHÍ</strong> và tự động mở rộng (scale automatically)."
+                },
+                choice: {
+                    title: "3. Lựa chọn cho S3 & DynamoDB",
+                    p1: "Cả S3 và DynamoDB đều hỗ trợ cả hai loại Endpoint. Tuy nhiên, trong môi trường kiểm tra (Exam) và thực tế chung:",
+                    preference: "**Gateway Endpoint** được **ƯU TIÊN** hơn cho S3 và DynamoDB vì nó **MIỄN PHÍ** và chỉ yêu cầu chỉnh sửa **Route Table**.",
+                    p2: "Interface Endpoint chỉ nên cân nhắc cho S3/DynamoDB trong các trường hợp nâng cao, ví dụ: khi cần truy cập riêng tư <strong>từ môi trường On-Premise</strong> (qua VPN/Direct Connect) hoặc qua <strong>VPC Peering</strong>."
+                },
+                checklist: {
+                    title: "TÓM TẮT ĐIỂM CHÍNH",
+                    p1: "<strong>Mục tiêu:</strong> Truy cập <strong>riêng tư</strong> các dịch vụ AWS mà <strong>không cần Internet</strong> (Internet Gateway, NAT Gateway).",
+                    p2: "<strong>Interface Endpoints:</strong> Dùng cho <strong>hầu hết dịch vụ</strong>, <strong>có phí</strong>, tạo <strong>ENI</strong> (cần Security Group).",
+                    p3: "<strong>Gateway Endpoints:</strong> Chỉ dùng cho <strong>S3</strong> và <strong>DynamoDB</strong>, <strong>miễn phí</strong>, chỉ cần <strong>Route Table</strong>."
+                }
+            },
+            en: {
+                header: {
+                    title: "VPC Endpoints",
+                    subtitle: "Private Access to AWS Services"
+                },
+                intro: {
+                    title: "1. Introduction and Purpose",
+                    p1: "<strong>VPC Endpoints</strong> allow Instances within a VPC (even in Private Subnets) to access **public AWS services** (like S3, DynamoDB, SNS, CloudWatch) **without traversing the Internet Gateway or NAT Gateway**.",
+                    key: "The goal is to keep **all traffic** between the VPC and the AWS service **within the private AWS network**."
+                },
+                types: {
+                    title: "2. The Two Types of VPC Endpoints",
+                    interface_title: "<i class=\"fas fa-plug mr-2\"></i> Interface Endpoints",
+                    interface_p1: "Powered by **AWS PrivateLink**.",
+                    interface_li1: "Provisions an **Elastic Network Interface (ENI)** with a **Private IP Address** in your Subnet.",
+                    interface_li2: "Supports **Virtually Every AWS Service** (e.g., SNS, CloudWatch, S3, DynamoDB).",
+                    interface_li3: "Requires a **Security Group** to be attached (due to ENI).",
+                    interface_li4: "Incurs **hourly costs** and **data processing charges**.",
+                    gateway_title: "<i class=\"fas fa-door-open mr-2\"></i> Gateway Endpoints",
+                    gateway_p1: "Provisions a **Gateway** specified as a target in the **Route Table**.",
+                    gateway_li1: "<strong>No</strong> ENI created, <strong>no</strong> Security Group needed.",
+                    gateway_li2: "Supports only **TWO services**: **Amazon S3** and **DynamoDB**.",
+                    gateway_li3: "<strong>Configuration</strong> involves updating the Route Table (route points to the Endpoint ID).",
+                    gateway_li4: "Is **COMPLETELY FREE** and scales automatically."
+                }
+                ,
+                choice: {
+                    title: "3. The Choice for S3 & DynamoDB",
+                    p1: "Both S3 and DynamoDB support both Endpoint types. However, in exam settings and general practice:",
+                    preference: "The **Gateway Endpoint** is **PREFERRED** for S3 and DynamoDB because it is **FREE** and only requires a **Route Table** modification.",
+                    p2: "The Interface Endpoint should only be considered for S3/DynamoDB in advanced use cases, such as needing private access **from On-Premises environments** (via VPN/Direct Connect) or via **VPC Peering**."
+                },
+                checklist: {
+                    title: "KEY TAKEAWAYS SUMMARY",
+                    p1: "<strong>Goal:</strong> **Private** access to AWS services **without the Internet** (Internet Gateway, NAT Gateway).",
+                    p2: "<strong>Interface Endpoints:</strong> Used for **most services**, **costs money**, creates an **ENI** (needs Security Group).",
+                    p3: "<strong>Gateway Endpoints:</strong> Only for **S3** and **DynamoDB**, **free**, only requires **Route Table**."
+                }
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default language
+
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+
+        function getNestedTranslation(obj, path) {
+            return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+        }
+
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const translatedText = getNestedTranslation(translations[currentLanguage], key);
+                if (translatedText) {
+                    // Sử dụng innerHTML để hiển thị đúng các thẻ HTML như <strong> và <i>
+                    element.innerHTML = translatedText; 
+                }
+            });
+            document.querySelector('html').setAttribute('lang', currentLanguage);
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            const activeClass = 'bg-amber-600 text-white';
+            const inactiveClass = 'bg-gray-200 text-gray-700';
+
+            if (currentLanguage === 'vi') {
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            } else {
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

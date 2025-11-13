@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">Khắc phục Thảm họa (DR) trong AWS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0fdf4; /* Emerald 50 - Fresh, reliable theme */
+            color: #1f2937; /* Gray 800 */
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .header-title {
+            color: #059669; /* Emerald 600 */
+            border-bottom: 4px solid #a7f3d0; /* Emerald 200 */
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            height: 100%;
+            border: 1px solid #d1fae5; /* Light Emerald border */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 20px -5px rgba(0, 0, 0, 0.15);
+        }
+        .section-header {
+            color: #047857; /* Emerald 700 */
+            font-weight: 800;
+        }
+        .content-card strong, .takeaways-list strong {
+            font-weight: 800;
+            color: #3b82f6; /* Blue 500 - Highlight Key Terms */
+        }
+        .icon-box {
+            background-color: #d1fae5; /* Emerald 100 */
+            color: #059669; /* Emerald 600 */
+            width: 3.5rem;
+            height: 3.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        .strategy-card {
+            border-left: 5px solid #10b981; /* Emerald 500 */
+            background-color: #f0fdf4;
+        }
+        .strategy-header {
+            color: #059669;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-4 md:p-10">
+        <header class="text-center mb-12 relative">
+            <h1 class="text-4xl md:text-5xl font-extrabold header-title inline-block pb-1" data-i18n="header.title">
+                <i class="fas fa-life-ring mr-3"></i> Khắc phục Thảm họa (DR) trong AWS
+            </h1>
+            <p class="text-lg text-gray-500 mt-2" data-i18n="header.subtitle">Sẵn sàng, Phục hồi, Giảm thiểu Tác động Kinh doanh.</p>
+
+            <!-- Language Toggle Buttons -->
+            <div class="absolute top-0 right-0 mt-4 mr-4 flex space-x-2">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-md bg-emerald-600 text-white font-semibold text-sm lang-button">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-md bg-gray-200 text-gray-700 font-semibold text-sm lang-button">EN</button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Introduction & What is a Disaster -->
+            <section id="introduction" class="mb-10">
+                <div class="card p-6 bg-white shadow-xl content-card">
+                    <h2 class="text-3xl section-header mb-4" data-i18n="intro.title">Giới Thiệu về Khắc phục Thảm họa (DR)</h2>
+                    <p data-i18n="intro.p1" class="text-lg mb-4">
+                        Khắc phục thảm họa là một chủ đề <strong>quan trọng</strong> đối với các kiến trúc sư giải pháp. Bài giảng này tóm tắt các khái niệm chính, mặc dù tài liệu chính thức của AWS là tài liệu tham khảo giá trị. Việc hiểu rõ DR là kiến thức <strong>cần thiết</strong> và thường xuyên xuất hiện trong các bài kiểm tra.
+                    </p>
+                    
+                    <h3 class="text-2xl font-bold mt-6 mb-3 text-emerald-700" data-i18n="disaster.title">Thảm họa là gì?</h3>
+                    <p data-i18n="disaster.p1">
+                        Một thảm họa là bất kỳ sự kiện nào gây ảnh hưởng tiêu cực đến <strong>tính liên tục kinh doanh</strong> hoặc tài chính của công ty. Khắc phục thảm họa bao gồm việc chuẩn bị và phục hồi từ các sự kiện đó để <strong>giảm thiểu tác động</strong> của chúng.
+                    </p>
+                    <p data-i18n="disaster.p2" class="text-sm italic text-gray-500 mt-2">
+                        Các kiểu tiếp cận DR bao gồm <strong>tại chỗ sang tại chỗ</strong> (rất tốn kém), <strong>Phục hồi lai (Hybrid)</strong> (tại chỗ là chính, cloud là dự phòng), và <strong>Toàn bộ Cloud (Full cloud)</strong> (ví dụ: nhân bản giữa các Vùng AWS).
+                    </p>
+                </div>
+            </section>
+
+            <!-- Key Terms: RPO and RTO -->
+            <section id="rpo-rto" class="mb-10">
+                <h2 class="text-3xl section-header mb-6"><i class="fas fa-clock mr-2"></i> <span data-i18n="keyterms.title">Các Thuật Ngữ Chính: RPO và RTO</span></h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- RPO -->
+                    <div class="card content-card border-l-4 border-blue-500">
+                        <div class="icon-box"><i class="fas fa-history text-xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-blue-700" data-i18n="rpo.title">Recovery Point Objective (RPO)</h3>
+                        <p data-i18n="rpo.p1">
+                            Xác định thời điểm tối đa trong quá khứ mà bạn có thể <strong>khôi phục dữ liệu</strong> sau thảm họa. Nó liên quan đến tần suất sao lưu.
+                        </p>
+                        <p data-i18n="rpo.p2" class="text-sm italic text-gray-500 mt-2">
+                            Ví dụ: Nếu sao lưu diễn ra mỗi giờ, tổn thất dữ liệu tối đa là <strong>một giờ</strong>.
+                        </p>
+                    </div>
+
+                    <!-- RTO -->
+                    <div class="card content-card border-l-4 border-blue-500">
+                        <div class="icon-box"><i class="fas fa-tachometer-alt text-xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-blue-700" data-i18n="rto.title">Recovery Time Objective (RTO)</h3>
+                        <p data-i18n="rto.p1">
+                            Xác định thời gian tối đa để <strong>phục hồi và tiếp tục hoạt động</strong> sau thảm họa. Nó thể hiện thời gian ngừng hoạt động (downtime) có thể chấp nhận được.
+                        </p>
+                        <p data-i18n="rto.p2" class="text-sm italic text-gray-500 mt-2">
+                            Mục tiêu là giảm RPO và RTO, nhưng điều này thường <strong>làm tăng chi phí</strong>.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DR Strategies Overview -->
+            <section id="strategies-overview" class="mb-10">
+                <h2 class="text-3xl section-header mb-6"><i class="fas fa-cogs mr-2"></i> <span data-i18n="strategies.title">Tổng Quan về Các Chiến lược Khắc phục Thảm họa</span></h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Strategy 1: Backup and Restore -->
+                    <div class="card content-card strategy-card border-green-500">
+                        <h4 class="font-extrabold text-xl strategy-header" data-i18n="strat1.title">1. Backup & Restore</h4>
+                        <p class="text-sm mt-2" data-i18n="strat1.desc">
+                            <strong>RPO/RTO:</strong> Cao nhất | <strong>Chi phí:</strong> Thấp nhất
+                        </p>
+                    </div>
+                    
+                    <!-- Strategy 2: Pilot Light -->
+                    <div class="card content-card strategy-card border-yellow-500">
+                        <h4 class="font-extrabold text-xl strategy-header" data-i18n="strat2.title">2. Pilot Light</h4>
+                        <p class="text-sm mt-2" data-i18n="strat2.desc">
+                            <strong>RPO/RTO:</strong> Thấp hơn | <strong>Chi phí:</strong> Vừa phải
+                        </p>
+                    </div>
+
+                    <!-- Strategy 3: Warm Standby -->
+                    <div class="card content-card strategy-card border-orange-500">
+                        <h4 class="font-extrabold text-xl strategy-header" data-i18n="strat3.title">3. Warm Standby</h4>
+                        <p class="text-sm mt-2" data-i18n="strat3.desc">
+                            <strong>RPO/RTO:</strong> Thấp hơn nữa | <strong>Chi phí:</strong> Cao hơn
+                        </p>
+                    </div>
+
+                    <!-- Strategy 4: Multi-Site (Hot Site) -->
+                    <div class="card content-card strategy-card border-red-500">
+                        <h4 class="font-extrabold text-xl strategy-header" data-i18n="strat4.title">4. Multi-Site (Hot Site)</h4>
+                        <p class="text-sm mt-2" data-i18n="strat4.desc">
+                            <strong>RPO/RTO:</strong> Thấp nhất | <strong>Chi phí:</strong> Cao nhất
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Detailed Strategies -->
+            <section id="detailed-strategies" class="mb-10">
+                <h2 class="text-3xl section-header mb-6"><i class="fas fa-layer-group mr-2"></i> <span data-i18n="detailed.title">Phân Tích Chi Tiết Các Chiến Lược</span></h2>
+                
+                <div class="space-y-6">
+                    <!-- Backup and Restore -->
+                    <div class="card content-card strategy-card border-green-500">
+                        <h3 class="font-bold text-2xl mb-3 text-green-700" data-i18n="backup.title">Backup & Restore (Sao lưu và Phục hồi)</h3>
+                        <p data-i18n="backup.p1">
+                            Sao lưu dữ liệu từ trung tâm dữ liệu công ty sang lưu trữ <strong>Cloud AWS</strong> (ví dụ: <strong>S3, Glacier</strong>). RPO có thể là vài giờ (với Snapshot RDS/EBS) đến một tuần (với Snowball).
+                        </p>
+                        <ul class="list-disc ml-5 space-y-1 text-sm mt-2">
+                            <li data-i18n="backup.li1"><strong>RTO:</strong> Cao (cần thời gian để tạo lại cơ sở hạ tầng từ <strong>AMIs</strong> hoặc <strong>Snapshot</strong>).</li>
+                            <li data-i18n="backup.li2"><strong>Chi phí:</strong> Thấp (chủ yếu là chi phí lưu trữ, cơ sở hạ tầng chỉ tạo khi cần).</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Pilot Light -->
+                    <div class="card content-card strategy-card border-yellow-500">
+                        <h3 class="font-bold text-2xl mb-3 text-yellow-700" data-i18n="pilot.title">Pilot Light (Đèn hoa tiêu)</h3>
+                        <p data-i18n="pilot.p1">
+                            Giữ một <strong>phiên bản tối thiểu</strong> của ứng dụng đang chạy trong cloud (ví dụ: chỉ hệ thống cơ sở dữ liệu cốt lõi như <strong>AWS RDS</strong> được bật và liên tục nhân bản dữ liệu).
+                        </p>
+                        <ul class="list-disc ml-5 space-y-1 text-sm mt-2">
+                            <li data-i18n="pilot.li1">Khi thảm họa xảy ra, các thành phần phi cốt lõi (như <strong>EC2 instances</strong>) được tạo và khởi động.</li>
+                            <li data-i18n="pilot.li2">Sử dụng <strong>Route 53</strong> để chuyển đổi DNS sang môi trường cloud.</li>
+                            <li data-i18n="pilot.li3">Giảm <strong>RPO</strong> và <strong>RTO</strong> đáng kể so với Backup & Restore.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Warm Standby -->
+                    <div class="card content-card strategy-card border-orange-500">
+                        <h3 class="font-bold text-2xl mb-3 text-orange-700" data-i18n="warm.title">Warm Standby (Chế độ chờ Nóng)</h3>
+                        <p data-i18n="warm.p1">
+                            Duy trì một <strong>phiên bản đầy đủ nhưng giảm quy mô</strong> của môi trường sản xuất trong cloud. Các thành phần (Proxy, App Server, DB) chạy ở mức dung lượng <strong>tối thiểu</strong> và nhân bản dữ liệu liên tục.
+                        </p>
+                        <ul class="list-disc ml-5 space-y-1 text-sm mt-2">
+                            <li data-i18n="warm.li1">Khi thảm họa xảy ra, chỉ cần <strong>tăng quy mô (scale-up)</strong> các tài nguyên hiện có.</li>
+                            <li data-i18n="warm.li2"><strong>RPO</strong> và <strong>RTO</strong> thấp hơn nữa.</li>
+                            <li data-i18n="warm.li3"><strong>Chi phí</strong> cao hơn do cơ sở hạ tầng luôn chạy.</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Multi-Site / Hot Site -->
+                    <div class="card content-card strategy-card border-red-500">
+                        <h3 class="font-bold text-2xl mb-3 text-red-700" data-i18n="hot.title">Multi-Site / Hot Site (Đa vị trí / Nóng)</h3>
+                        <p data-i18n="hot.p1">
+                            Chạy các môi trường sản xuất <strong>đầy đủ quy mô</strong> đồng thời (ví dụ: tại chỗ và trong AWS). Nhân bản dữ liệu đồng bộ.
+                        </p>
+                        <ul class="list-disc ml-5 space-y-1 text-sm mt-2">
+                            <li data-i18n="hot.li1">Thường là cấu hình <strong>Active-Active</strong> (Route 53 định tuyến đến cả hai).</li>
+                            <li data-i18n="hot.li2">Chuyển đổi dự phòng (Failover) gần như <strong>tức thì</strong>.</li>
+                            <li data-i18n="hot.li3"><strong>RPO</strong> và <strong>RTO</strong> thấp nhất. <strong>Chi phí</strong> cao nhất.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- All-Cloud & Chaos Testing -->
+            <section id="cloud-testing" class="mb-10">
+                <h2 class="text-3xl section-header mb-6"><i class="fas fa-cloud-sun-rain mr-2"></i> <span data-i18n="cloudtest.title">Mẹo DR Toàn Cloud & Kiểm tra Hỗn loạn</span></h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- All-Cloud Tips -->
+                    <div class="card content-card border-l-4 border-purple-500">
+                        <h3 class="font-bold text-xl mb-3 text-purple-700" data-i18n="tips.title">Mẹo Khắc phục Thảm họa</h3>
+                        <ul class="list-disc ml-5 space-y-1 text-sm">
+                            <li data-i18n="tips.li1">Sử dụng <strong>EBS Snapshots</strong>, RDS Automated Snapshots và sao lưu thường xuyên.</li>
+                            <li data-i18n="tips.li2">Sử dụng <strong>Cross-Region Replication</strong> để giữ bản sao lưu ở nhiều Vùng.</li>
+                            <li data-i18n="tips.li3">Đối với tại chỗ sang cloud, sử dụng <strong>AWS Snowball</strong> hoặc <strong>Storage Gateway</strong>.</li>
+                            <li data-i18n="tips.li4">Sử dụng <strong>Route 53</strong> cho tính năng chuyển đổi dự phòng DNS giữa các Vùng.</li>
+                            <li data-i18n="tips.li5">Tự động hóa phục hồi bằng <strong>CloudFormation</strong> và <strong>AWS Lambda</strong>.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Chaos Testing -->
+                    <div class="card content-card border-l-4 border-purple-500">
+                        <h3 class="font-bold text-xl mb-3 text-purple-700" data-i18n="chaos.title">Kiểm tra Hỗn loạn (Chaos Testing)</h3>
+                        <p data-i18n="chaos.p1">
+                            Để đảm bảo khả năng sẵn sàng DR, hãy thường xuyên <strong>mô phỏng lỗi</strong>.
+                        </p>
+                        <p data-i18n="chaos.p2">
+                            Ví dụ: <strong>Simian Army</strong> của Netflix ngẫu nhiên chấm dứt các phiên bản EC2 trong sản xuất để kiểm tra khả năng phục hồi của cơ sở hạ tầng.
+                        </p>
+                        <p data-i18n="chaos.p3" class="text-sm italic text-gray-500 mt-2">
+                            Việc này giúp xác minh rằng hệ thống có thể sống sót và phục hồi <strong>tự động</strong>.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+
+            <hr class="my-10 border-gray-300">
+
+            <!-- Conclusion -->
+            <section id="conclusion" class="text-center">
+                <h2 class="text-3xl font-extrabold text-emerald-700 inline-block pb-1 mb-6" data-i18n="final.title"><i class="fas fa-bullseye mr-2"></i> ĐIỂM CỐT LÕI</h2>
+                <div class="card takeaways-list mx-auto max-w-4xl p-6 bg-emerald-50 border-2 border-emerald-400">
+                    <ul class="space-y-4 text-left list-disc pl-5">
+                        <li data-i18n="final.p1"><strong>Disaster Recovery</strong> là yếu tố thiết yếu để duy trì <strong>tính liên tục kinh doanh</strong>.</li>
+                        <li data-i18n="final.p2"><strong>RPO</strong> là mức tổn thất dữ liệu chấp nhận được; <strong>RTO</strong> là thời gian ngừng hoạt động chấp nhận được.</li>
+                        <li data-i18n="final.p3">Các chiến lược DR của AWS (<strong>Backup & Restore, Pilot Light, Warm Standby, Hot Site</strong>) cân bằng giữa chi phí và tốc độ phục hồi.</li>
+                        <li data-i18n="final.p4"><strong>Tự động hóa</strong> và <strong>Kiểm tra Hỗn loạn</strong> (Chaos Testing) giúp đảm bảo khả năng phục hồi hiệu quả.</li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const translations = {
+            vi: {
+                header: {
+                    title: "Khắc phục Thảm họa (DR) trong AWS",
+                    subtitle: "Sẵn sàng, Phục hồi, Giảm thiểu Tác động Kinh doanh."
+                },
+                intro: {
+                    title: "Giới Thiệu về Khắc phục Thảm họa (DR)",
+                    p1: "Khắc phục thảm họa là một chủ đề <strong>quan trọng</strong> đối với các kiến trúc sư giải pháp, đặc biệt là trong bối cảnh AWS. Bài giảng này tóm tắt các khái niệm chính với các đồ thị và sơ đồ rõ ràng để đơn giản hóa việc hiểu. Các câu hỏi về khắc phục thảm họa là phổ biến trong các kỳ thi và là kiến thức <strong>cần thiết</strong> cho các kiến trúc sư giải pháp.",
+                },
+                disaster: {
+                    title: "Thảm họa là gì?",
+                    p1: "Một thảm họa là bất kỳ sự kiện nào gây ảnh hưởng tiêu cực đến <strong>tính liên tục kinh doanh</strong> hoặc tài chính của công ty. Khắc phục thảm họa bao gồm việc chuẩn bị và phục hồi từ các sự kiện đó để <strong>giảm thiểu tác động</strong> của chúng.",
+                    p2: "Các kiểu tiếp cận DR bao gồm <strong>tại chỗ sang tại chỗ</strong> (rất tốn kém), <strong>Phục hồi lai (Hybrid)</strong> (tại chỗ là chính, cloud là dự phòng), và <strong>Toàn bộ Cloud (Full cloud)</strong> (ví dụ: nhân bản giữa các Vùng AWS)."
+                },
+                keyterms: {
+                    title: "Các Thuật Ngữ Chính: RPO và RTO"
+                },
+                rpo: {
+                    title: "Recovery Point Objective (RPO)",
+                    p1: "Xác định thời điểm tối đa trong quá khứ mà bạn có thể <strong>khôi phục dữ liệu</strong> sau thảm họa. Nó liên quan đến tần suất sao lưu.",
+                    p2: "Ví dụ: Nếu sao lưu diễn ra mỗi giờ, tổn thất dữ liệu tối đa là <strong>một giờ</strong>. Tối ưu hóa cho RPO thấp hơn thường <strong>làm tăng chi phí</strong>."
+                },
+                rto: {
+                    title: "Recovery Time Objective (RTO)",
+                    p1: "Xác định thời gian tối đa để <strong>phục hồi và tiếp tục hoạt động</strong> sau thảm họa. Nó thể hiện thời gian ngừng hoạt động (downtime) có thể chấp nhận được.",
+                    p2: "Mục tiêu là giảm RPO và RTO, nhưng điều này thường <strong>làm tăng chi phí</strong>."
+                },
+                strategies: {
+                    title: "Tổng Quan về Các Chiến lược Khắc phục Thảm họa"
+                },
+                strat1: {
+                    title: "1. Backup & Restore",
+                    desc: "<strong>RPO/RTO:</strong> Cao nhất | <strong>Chi phí:</strong> Thấp nhất"
+                },
+                strat2: {
+                    title: "2. Pilot Light",
+                    desc: "<strong>RPO/RTO:</strong> Thấp hơn | <strong>Chi phí:</strong> Vừa phải"
+                },
+                strat3: {
+                    title: "3. Warm Standby",
+                    desc: "<strong>RPO/RTO:</strong> Thấp hơn nữa | <strong>Chi phí:</strong> Cao hơn"
+                },
+                strat4: {
+                    title: "4. Multi-Site (Hot Site)",
+                    desc: "<strong>RPO/RTO:</strong> Thấp nhất | <strong>Chi phí:</strong> Cao nhất"
+                },
+                detailed: {
+                    title: "Phân Tích Chi Tiết Các Chiến Lược"
+                },
+                backup: {
+                    title: "Backup & Restore (Sao lưu và Phục hồi)",
+                    p1: "Sao lưu dữ liệu từ trung tâm dữ liệu công ty sang lưu trữ <strong>Cloud AWS</strong> (ví dụ: <strong>S3, Glacier</strong>). RPO có thể là vài giờ (với Snapshot RDS/EBS) đến một tuần (với Snowball).",
+                    li1: "<strong>RTO:</strong> Cao (cần thời gian để tạo lại cơ sở hạ tầng từ <strong>AMIs</strong> hoặc <strong>Snapshot</strong>).",
+                    li2: "<strong>Chi phí:</strong> Thấp (chủ yếu là chi phí lưu trữ, cơ sở hạ tầng chỉ tạo khi cần)."
+                },
+                pilot: {
+                    title: "Pilot Light (Đèn hoa tiêu)",
+                    p1: "Giữ một <strong>phiên bản tối thiểu</strong> của ứng dụng đang chạy trong cloud, thường là các hệ thống cốt lõi quan trọng như cơ sở dữ liệu. Ví dụ: nhân bản dữ liệu liên tục từ cơ sở dữ liệu tại chỗ sang một phiên bản <strong>AWS RDS</strong> luôn chạy.",
+                    li1: "Khi thảm họa xảy ra, các thành phần phi cốt lõi (như <strong>EC2 instances</strong>) được tạo và khởi động.",
+                    li2: "Sử dụng <strong>Route 53</strong> để chuyển đổi DNS sang môi trường cloud.",
+                    li3: "Giảm <strong>RPO</strong> và <strong>RTO</strong> đáng kể so với Backup & Restore."
+                },
+                warm: {
+                    title: "Warm Standby (Chế độ chờ Nóng)",
+                    p1: "Duy trì một <strong>phiên bản đầy đủ nhưng giảm quy mô</strong> của môi trường sản xuất trong cloud. Các thành phần (Proxy, App Server, DB) chạy ở mức dung lượng <strong>tối thiểu</strong> và nhân bản dữ liệu liên tục.",
+                    li1: "Khi thảm họa xảy ra, chỉ cần <strong>tăng quy mô (scale-up)</strong> các tài nguyên hiện có.",
+                    li2: "<strong>RPO</strong> và <strong>RTO</strong> thấp hơn nữa.",
+                    li3: "<strong>Chi phí</strong> cao hơn do cơ sở hạ tầng luôn chạy."
+                },
+                hot: {
+                    title: "Multi-Site / Hot Site (Đa vị trí / Nóng)",
+                    p1: "Chạy các môi trường sản xuất <strong>đầy đủ quy mô</strong> đồng thời (ví dụ: tại chỗ và trong AWS). Nhân bản dữ liệu giữ cho cả hai trang web đồng bộ.",
+                    li1: "Thường là cấu hình <strong>Active-Active</strong> (Route 53 định tuyến đến cả hai).",
+                    li2: "Chuyển đổi dự phòng (Failover) gần như <strong>tức thì</strong> với thời gian ngừng hoạt động tối thiểu.",
+                    li3: "<strong>RPO</strong> và <strong>RTO</strong> thấp nhất. <strong>Chi phí</strong> cao nhất."
+                },
+                cloudtest: {
+                    title: "Mẹo DR Toàn Cloud & Kiểm tra Hỗn loạn"
+                },
+                tips: {
+                    title: "Mẹo Khắc phục Thảm họa",
+                    li1: "Sử dụng <strong>EBS Snapshots</strong>, RDS Automated Snapshots, và sao lưu thường xuyên.",
+                    li2: "Sử dụng <strong>Cross-Region Replication</strong> để giữ bản sao lưu ở nhiều Vùng.",
+                    li3: "Đối với tại chỗ sang cloud, sử dụng <strong>AWS Snowball</strong> hoặc <strong>Storage Gateway</strong>.",
+                    li4: "Sử dụng <strong>Route 53</strong> cho tính năng chuyển đổi dự phòng DNS giữa các Vùng.",
+                    li5: "Tự động hóa phục hồi bằng <strong>CloudFormation</strong>, Elastic Beanstalk, CloudWatch alarms, và <strong>AWS Lambda</strong>."
+                },
+                chaos: {
+                    title: "Kiểm tra Hỗn loạn (Chaos Testing)",
+                    p1: "Để đảm bảo khả năng sẵn sàng DR, hãy thường xuyên <strong>mô phỏng lỗi</strong>.",
+                    p2: "Ví dụ: <strong>Simian Army</strong> của Netflix ngẫu nhiên chấm dứt các phiên bản EC2 trong sản xuất để kiểm tra khả năng phục hồi của cơ sở hạ tầng.",
+                    p3: "Việc này giúp xác minh rằng hệ thống có thể sống sót và phục hồi <strong>tự động</strong>, đảm bảo DR mạnh mẽ."
+                },
+                final: {
+                    title: "ĐIỂM CỐT LÕI",
+                    p1: "<strong>Disaster Recovery</strong> là yếu tố thiết yếu để duy trì <strong>tính liên tục kinh doanh</strong>.",
+                    p2: "<strong>Recovery Point Objective (RPO)</strong> là mức tổn thất dữ liệu chấp nhận được; <strong>Recovery Time Objective (RTO)</strong> là thời gian ngừng hoạt động chấp nhận được.",
+                    p3: "Các chiến lược DR của AWS (<strong>Backup & Restore, Pilot Light, Warm Standby, Hot Site</strong>) cân bằng giữa chi phí và tốc độ phục hồi.",
+                    p4: "<strong>Tự động hóa</strong> và <strong>Kiểm tra Hỗn loạn</strong> (Chaos Testing) giúp đảm bảo khả năng phục hồi hiệu quả."
+                }
+            },
+            en: {
+                header: {
+                    title: "Disaster Recovery (DR) in AWS",
+                    subtitle: "Readying, Recovering, and Minimizing Business Impact."
+                },
+                intro: {
+                    title: "Introduction to Disaster Recovery",
+                    p1: "Disaster recovery is a <strong>critical</strong> topic for solutions architects, especially in the context of AWS. This lecture summarizes the key concepts with clear explanations to simplify understanding. Disaster recovery questions are common in exams and <strong>essential</strong> knowledge for solutions architects.",
+                },
+                disaster: {
+                    title: "What is a Disaster?",
+                    p1: "A disaster is any event that negatively impacts a company's <strong>business continuity</strong> or finances. Disaster recovery involves preparing for and recovering from such events to <strong>minimize their impact</strong>.",
+                    p2: "DR approaches include <strong>On-premise to on-premise</strong> (very expensive), <strong>Hybrid recovery</strong> (on-premise primary, cloud backup), and <strong>Full cloud</strong> (e.g., replication between AWS Regions)."
+                },
+                keyterms: {
+                    title: "Key Terms: RPO and RTO"
+                },
+                rpo: {
+                    title: "Recovery Point Objective (RPO)",
+                    p1: "Defines how far back in time you can <strong>recover data</strong> after a disaster. It relates to how often backups are run.",
+                    p2: "For example, if backups occur every hour, the maximum data loss is <strong>one hour</strong>. Optimizing for lower RPO usually <strong>increases costs</strong>."
+                },
+                rto: {
+                    title: "Recovery Time Objective (RTO)",
+                    p1: "Defines how quickly you can <strong>recover and resume operations</strong> after a disaster. It represents the acceptable downtime.",
+                    p2: "Optimizing for lower RPO and RTO usually <strong>increases costs</strong>."
+                },
+                strategies: {
+                    title: "Disaster Recovery Strategies Overview"
+                },
+                strat1: {
+                    title: "1. Backup & Restore",
+                    desc: "<strong>RPO/RTO:</strong> Highest | <strong>Cost:</strong> Lowest"
+                },
+                strat2: {
+                    title: "2. Pilot Light",
+                    desc: "<strong>RPO/RTO:</strong> Lower | <strong>Cost:</strong> Moderate"
+                },
+                strat3: {
+                    title: "3. Warm Standby",
+                    desc: "<strong>RPO/RTO:</strong> Further Reduced | <strong>Cost:</strong> Higher"
+                },
+                strat4: {
+                    title: "4. Multi-Site (Hot Site)",
+                    desc: "<strong>RPO/RTO:</strong> Lowest | <strong>Cost:</strong> Highest"
+                },
+                detailed: {
+                    title: "Detailed Strategy Breakdown"
+                },
+                backup: {
+                    title: "Backup & Restore",
+                    p1: "This strategy involves backing up data from a corporate data center to <strong>AWS Cloud Storage</strong> (e.g., <strong>S3, Glacier</strong>). RPO can range from a few hours (with RDS/EBS Snapshots) to about one week (with Snowball).",
+                    li1: "<strong>RTO:</strong> High (requires significant time to recreate infrastructure using <strong>AMIs</strong> or <strong>Snapshots</strong>).",
+                    li2: "<strong>Cost:</strong> Lowest (costs are mainly for storage; infrastructure is only created when needed)."
+                },
+                pilot: {
+                    title: "Pilot Light",
+                    p1: "Keeps a <strong>minimal version</strong> of the application running in the cloud, typically the critical core systems such as the database. For example, continuous data replication from an on-premise DB to an always-running <strong>AWS RDS</strong> instance.",
+                    li1: "In case of disaster, non-critical components (like <strong>EC2 instances</strong>) are created and started.",
+                    li2: "<strong>Route 53</strong> is used to fail over DNS to the cloud environment.",
+                    li3: "Significantly lowers <strong>RPO</strong> and <strong>RTO</strong> compared to Backup & Restore."
+                },
+                warm: {
+                    title: "Warm Standby",
+                    p1: "Maintains a <strong>full but scaled-down version</strong> of the production environment running in the cloud. Components (Proxy, App Server, DB) run at <strong>minimum capacity</strong> and replicate data continuously.",
+                    li1: "In case of disaster, resources only need to be <strong>scaled-up</strong>.",
+                    li2: "Further reduced <strong>RPO</strong> and <strong>RTO</strong>.",
+                    li3: "<strong>Cost:</strong> Higher due to always running infrastructure."
+                },
+                hot: {
+                    title: "Multi-Site / Hot Site",
+                    p1: "Runs <strong>full production-scale</strong> environments simultaneously (on-premise and in AWS). Data replication keeps both sites synchronized.",
+                    li1: "Often an <strong>Active-Active</strong> setup (Route 53 routes requests to both).",
+                    li2: "Failover is nearly <strong>instantaneous</strong> with minimal downtime.",
+                    li3: "Lowest <strong>RPO</strong> and <strong>RTO</strong>. Highest <strong>Cost</strong>."
+                },
+                cloudtest: {
+                    title: "All-Cloud DR & Chaos Testing"
+                },
+                tips: {
+                    title: "Disaster Recovery Tips",
+                    li1: "Use <strong>EBS Snapshots</strong>, RDS Automated Snapshots, and backups regularly.",
+                    li2: "Use <strong>Cross-Region Replication</strong> to keep backups in multiple regions.",
+                    li3: "For on-premise to cloud data transfer, use <strong>AWS Snowball</strong> or <strong>Storage Gateway</strong>.",
+                    li4: "Use <strong>Route 53</strong> for DNS failover between regions.",
+                    li5: "Automate recovery with <strong>CloudFormation</strong>, Elastic Beanstalk, CloudWatch alarms, and <strong>AWS Lambda</strong>."
+                },
+                chaos: {
+                    title: "Chaos Testing",
+                    p1: "To ensure DR readiness, regularly <strong>simulate failures</strong>.",
+                    p2: "Example: Netflix's <strong>Simian Army</strong> randomly terminates EC2 instances in production to test infrastructure resilience.",
+                    p3: "This practice helps verify that systems can survive and recover <strong>automatically</strong>, ensuring robust disaster recovery."
+                },
+                final: {
+                    title: "KEY TAKEAWAYS",
+                    p1: "<strong>Disaster Recovery</strong> is vital for maintaining <strong>business continuity</strong>.",
+                    p2: "<strong>Recovery Point Objective (RPO)</strong> defines the acceptable data loss; <strong>Recovery Time Objective (RTO)</strong> defines acceptable downtime.",
+                    p3: "AWS DR strategies (<strong>Backup & Restore, Pilot Light, Warm Standby, Hot Site</strong>) balance cost and recovery speed.",
+                    p4: "<strong>Automation</strong> and <strong>Chaos Testing</strong>, such as Netflix's Simian Army, help ensure effective recovery."
+                }
+            }
+        };
+
+        let currentLanguage = 'vi';
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+
+        function getNestedTranslation(obj, path) {
+            // Helper function to safely retrieve nested object properties
+            return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+        }
+
+        function updateContent() {
+            // Update all elements with the current language content
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const translatedText = getNestedTranslation(translations[currentLanguage], key);
+                if (translatedText) {
+                    // Use innerHTML to render the <strong> tags correctly
+                    element.innerHTML = translatedText;
+                }
+            });
+            document.querySelector('html').setAttribute('lang', currentLanguage);
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            // Highlight the active language button
+            const activeClass = 'bg-emerald-600 text-white';
+            const inactiveClass = 'bg-gray-200 text-gray-700';
+
+            if (currentLanguage === 'vi') {
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            } else {
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

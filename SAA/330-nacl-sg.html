@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">NACLs & Security Groups: Lớp Bảo Mật Mạng</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Be+Vietnam+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', 'Inter', sans-serif;
+            background-color: #f0f9ff; /* Blue 50 - Theme cho Network/Security */
+            color: #1f2937; /* Gray 800 */
+        }
+        .container {
+            max-width: 1024px;
+        }
+        .header-title {
+            color: #0c4a6e; /* Cyan 800 */
+            border-bottom: 4px solid #0ea5e9; /* Sky 500 */
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+        }
+        .section-header {
+            color: #075985; /* Sky 800 */
+            font-weight: 700;
+        }
+
+        /* Styling cho so sánh */
+        .sg-card {
+            border-left: 6px solid #10b981; /* Emerald 500 - Stateful/Instance Level */
+            background-color: #ecfdf5; /* Green 50 */
+        }
+        .nacl-card {
+            border-left: 6px solid #3b82f6; /* Blue 500 - Stateless/Subnet Level */
+            background-color: #eff6ff; /* Blue 50 */
+        }
+        .diff-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        .priority-rule {
+            background-color: #fefce8; /* Yellow 50 */
+            border: 1px dashed #facc15; /* Yellow 400 */
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+        .lang-button {
+            transition: background-color 0.2s, color 0.2s;
+        }
+        
+        /* Đảm bảo các thẻ <strong> bên trong nội dung dịch vẫn được in đậm */
+        .card strong, .diff-grid strong, .priority-rule strong {
+            font-weight: 700;
+        }
+        
+        @media (max-width: 768px) {
+            .diff-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-4 md:p-10">
+        <header class="text-center mb-12 relative">
+            <h1 class="text-4xl md:text-5xl font-extrabold header-title inline-block pb-1" data-i18n="header.title">
+                <i class="fas fa-fingerprint mr-3"></i> NACLs & Security Groups
+            </h1>
+            <p class="text-lg text-gray-500 mt-2" data-i18n="header.subtitle">Hiểu rõ 2 lớp bảo mật thiết yếu của VPC</p>
+            
+            <!-- Nút chuyển đổi ngôn ngữ -->
+            <div class="absolute top-0 right-0 mt-4 mr-4 flex space-x-2">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-md bg-blue-600 text-white font-semibold text-sm lang-button">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-md bg-gray-200 text-gray-700 font-semibold text-sm lang-button">EN</button>
+            </div>
+            
+        </header>
+
+        <main>
+            <!-- 1. Layer Introduction -->
+            <section id="introduction" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="intro.title">1. Giới Thiệu về Các Lớp Bảo Mật</h2>
+                <div class="diff-grid">
+                    <div class="card nacl-card">
+                        <h3 class="text-2xl font-bold text-blue-700 mb-3" data-i18n="intro.nacl_title"><i class="fas fa-layer-group mr-2"></i> NACL (Network ACL)</h3>
+                        <p data-i18n="intro.nacl_p1">
+                            Hoạt động ở cấp độ **Subnet**. Đây là lớp bảo vệ **đầu tiên** mà lưu lượng truy cập phải đi qua khi vào Subnet.
+                        </p>
+                        <p class="mt-2 text-sm italic" data-i18n="intro.nacl_p2">
+                            Mỗi Subnet được liên kết với **một NACL** duy nhất.
+                        </p>
+                    </div>
+                    <div class="card sg-card">
+                        <h3 class="text-2xl font-bold text-green-700 mb-3" data-i18n="intro.sg_title"><i class="fas fa-server mr-2"></i> Security Group (SG)</h3>
+                        <p data-i18n="intro.sg_p1">
+                            Hoạt động ở cấp độ **Instance** (EC2). Đây là lớp bảo vệ **thứ hai**, nằm ngay trước Instance.
+                        </p>
+                        <p class="mt-2 text-sm italic" data-i18n="intro.sg_p2">
+                            Mỗi Instance có thể có **nhiều Security Groups**.
+                        </p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 2. Stateful vs Stateless -->
+            <section id="statefulness" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="stateful.title">2. Stateful (Có Trạng Thái) vs. Stateless (Phi Trạng Thái)</h2>
+                <div class="diff-grid">
+                    <div class="card sg-card">
+                        <h3 class="text-2xl font-bold text-green-700 mb-3" data-i18n="stateful.sg_header">Security Group: STATEFUL (Có Trạng Thái)</h3>
+                        <p data-i18n="stateful.sg_p1">
+                            Nếu **Inbound Traffic** được phép, thì **Outbound Response Traffic** liên quan sẽ được tự động cho phép, **bất kể** quy tắc Outbound là gì.
+                        </p>
+                        <p class="mt-2" data-i18n="stateful.sg_p2">
+                            Bạn **chỉ cần** định nghĩa các quy tắc **Inbound** cho các kết nối mới.
+                        </p>
+                    </div>
+                    <div class="card nacl-card">
+                        <h3 class="text-2xl font-bold text-blue-700 mb-3" data-i18n="stateful.nacl_header">NACL: STATELESS (Phi Trạng Thái)</h3>
+                        <p data-i18n="stateful.nacl_p1">
+                            NACL **không nhớ** trạng thái kết nối. Cả **Inbound Traffic** và **Outbound Response Traffic** đều phải được cho phép **riêng biệt**.
+                        </p>
+                        <p class="mt-2" data-i18n="stateful.nacl_p2">
+                            Bạn **phải** định nghĩa quy tắc **Inbound** (yêu cầu đi vào) và quy tắc **Outbound** (phản hồi đi ra) một cách **tường minh**.
+                        </p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 3. Rule Evaluation & Ephemeral Ports -->
+            <section id="rules" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="rules.title">3. Đánh giá Quy tắc & Ephemeral Ports</h2>
+                
+                <div class="card nacl-card">
+                    <h3 class="text-2xl font-bold text-blue-700 mb-3" data-i18n="rules.nacl_rule_title"><i class="fas fa-sort-numeric-down mr-2"></i> Quy tắc NACL (Numbered Rules)</h3>
+                    <p data-i18n="rules.nacl_rule_p1">
+                        Quy tắc NACL được đánh số từ **1 đến 32.000**. Quy tắc có số **nhỏ hơn** có **độ ưu tiên cao hơn**.
+                    </p>
+                    <div class="priority-rule" data-i18n="rules.nacl_rule_p2">
+                        **Quy tắc Khớp Đầu tiên** được áp dụng (**Allow** hoặc **Deny**), và các quy tắc khác sẽ bị bỏ qua.
+                        AWS khuyến nghị tăng bước 100 để chèn quy tắc mới dễ dàng.
+                    </div>
+                    <p class="mt-4 font-semibold text-red-600" data-i18n="rules.nacl_default_deny">
+                        Quy tắc mặc định cuối cùng (The final rule `*`) là **DENY ALL** cho tất cả traffic không khớp.
+                    </p>
+                </div>
+
+                <div class="card sg-card mt-6">
+                    <h3 class="text-2xl font-bold text-green-700 mb-3" data-i18n="rules.sg_rule_title"><i class="fas fa-balance-scale-left mr-2"></i> Quy tắc Security Group</h3>
+                    <p data-i18n="rules.sg_rule_p1">
+                        Security Groups chỉ hỗ trợ quy tắc **Allow** (Cho phép).
+                    </p>
+                    <p class="mt-2" data-i18n="rules.sg_rule_p2">
+                        **Tất cả** các quy tắc **Allow** đều được đánh giá. Nếu có bất kỳ quy tắc nào khớp, traffic sẽ được cho phép.
+                    </p>
+                </div>
+
+                <div class="card nacl-card mt-6">
+                    <h3 class="text-2xl font-bold text-blue-700 mb-3" data-i18n="rules.ephemeral_title"><i class="fas fa-random mr-2"></i> Tầm quan trọng của Ephemeral Ports (Cổng Tạm thời)</h3>
+                    <p data-i18n="rules.ephemeral_p1">
+                        Khi một Client (ví dụ: Web Server) khởi tạo kết nối đến một Server (ví dụ: Database), Client sử dụng một **Ephemeral Port** (cổng tạm thời) để nhận phản hồi.
+                    </p>
+                    <p class="mt-2 font-semibold text-red-600" data-i18n="rules.ephemeral_p2">
+                        Vì NACL là **stateless**, bạn **phải** cho phép **Outbound Traffic** từ Server (DB) trên dải **Ephemeral Port** (ví dụ: 1024-65535) và **Inbound Traffic** trên dải Ephemeral Port trên Client (Web) Subnet NACL.
+                    </p>
+                </div>
+            </section>
+
+            <hr class="my-10 border-gray-300">
+
+            <!-- Summary Table -->
+            <section id="summary" class="mb-12 text-center">
+                <h2 class="text-3xl font-extrabold text-indigo-600 inline-block pb-1 mb-6" data-i18n="summary.title">TÓM TẮT ĐIỂM CHÍNH</h2>
+                <div class="p-6 bg-indigo-50 border-2 border-indigo-300 rounded-xl mx-auto max-w-4xl">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-indigo-200">
+                                <th class="p-3 border border-indigo-300" data-i18n="summary.th1">Đặc điểm</th>
+                                <th class="p-3 border border-indigo-300 text-green-700" data-i18n="summary.th2">Security Group</th>
+                                <th class="p-3 border border-indigo-300 text-blue-700" data-i18n="summary.th3">NACL (Network ACL)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="p-3 border border-indigo-300 font-semibold" data-i18n="summary.td1">Cấp độ</td>
+                                <td class="p-3 border border-indigo-300" data-i18n="summary.td2">**Instance Level**</td>
+                                <td class="p-3 border border-indigo-300" data-i18n="summary.td3">**Subnet Level**</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 border border-indigo-300 font-semibold" data-i18n="summary.td4">Trạng thái</td>
+                                <td class="p-3 border border-indigo-300 text-green-700 font-bold" data-i18n="summary.td5">**STATEFUL** (Có Trạng Thái)</td>
+                                <td class="p-3 border border-indigo-300 text-blue-700 font-bold" data-i18n="summary.td6">**STATELESS** (Phi Trạng Thái)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 border border-indigo-300 font-semibold" data-i18n="summary.td7">Quy tắc</td>
+                                <td class="p-3 border border-indigo-300" data-i18n="summary.td8">Chỉ **Allow**</td>
+                                <td class="p-3 border border-indigo-300" data-i18n="summary.td9">Cả **Allow** và **Deny**</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 border border-indigo-300 font-semibold" data-i18n="summary.td10">Thứ tự ưu tiên</td>
+                                <td class="p-3 border border-indigo-300" data-i18n="summary.td11">**Tất cả** quy tắc được đánh giá.</td>
+                                <td class="p-3 border border-indigo-300" data-i18n="summary.td12">Quy tắc **thấp nhất** được áp dụng trước.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 border border-indigo-300 font-semibold" data-i18n="summary.td13">Quy tắc Mặc định</td>
+                                <td class="p-3 border border-indigo-300" data-i18n="summary.td14">**Deny All** Inbound. **Allow All** Outbound.</td>
+                                <td class="p-3 border border-indigo-300" data-i18n="summary.td15">**Allow All** Inbound/Outbound (Đối với Default NACL). **Deny All** Inbound/Outbound (Đối với Custom NACL).</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        const translations = {
+            vi: {
+                header: {
+                    title: "NACLs & Security Groups",
+                    subtitle: "Hiểu rõ 2 lớp bảo mật thiết yếu của VPC"
+                },
+                intro: {
+                    title: "1. Giới Thiệu về Các Lớp Bảo Mật",
+                    nacl_title: "<i class=\"fas fa-layer-group mr-2\"></i> NACL (Network ACL)",
+                    nacl_p1: "Hoạt động ở cấp độ <strong>Subnet</strong>. Đây là lớp bảo vệ <strong>đầu tiên</strong> mà lưu lượng truy cập phải đi qua khi vào Subnet.",
+                    nacl_p2: "Mỗi Subnet được liên kết với <strong>một NACL</strong> duy nhất.",
+                    sg_title: "<i class=\"fas fa-server mr-2\"></i> Security Group (SG)",
+                    sg_p1: "Hoạt động ở cấp độ <strong>Instance</strong> (EC2). Đây là lớp bảo vệ <strong>thứ hai</strong>, nằm ngay trước Instance.",
+                    sg_p2: "Mỗi Instance có thể có <strong>nhiều Security Groups</strong>."
+                },
+                stateful: {
+                    title: "2. Stateful (Có Trạng Thái) vs. Stateless (Phi Trạng Thái)",
+                    sg_header: "Security Group: <strong>STATEFUL</strong> (Có Trạng Thái)",
+                    sg_p1: "Nếu <strong>Inbound Traffic</strong> được phép, thì <strong>Outbound Response Traffic</strong> liên quan sẽ được tự động cho phép, <strong>bất kể</strong> quy tắc Outbound là gì.",
+                    sg_p2: "Bạn <strong>chỉ cần</strong> định nghĩa các quy tắc <strong>Inbound</strong> cho các kết nối mới.",
+                    nacl_header: "NACL: <strong>STATELESS</strong> (Phi Trạng Thái)",
+                    nacl_p1: "NACL <strong>không nhớ</strong> trạng thái kết nối. Cả <strong>Inbound Traffic</strong> và <strong>Outbound Response Traffic</strong> đều phải được cho phép <strong>riêng biệt</strong>.",
+                    nacl_p2: "Bạn <strong>phải</strong> định nghĩa quy tắc <strong>Inbound</strong> (yêu cầu đi vào) và quy tắc <strong>Outbound</strong> (phản hồi đi ra) một cách <strong>tường minh</strong>."
+                },
+                rules: {
+                    title: "3. Đánh giá Quy tắc & Ephemeral Ports",
+                    nacl_rule_title: "<i class=\"fas fa-sort-numeric-down mr-2\"></i> Quy tắc NACL (Numbered Rules)",
+                    nacl_rule_p1: "Quy tắc NACL được đánh số từ <strong>1 đến 32.000</strong>. Quy tắc có số <strong>nhỏ hơn</strong> có <strong>độ ưu tiên cao hơn</strong>.",
+                    nacl_rule_p2: "<strong>Quy tắc Khớp Đầu tiên</strong> được áp dụng (<strong>Allow</strong> hoặc <strong>Deny</strong>), và các quy tắc khác sẽ bị bỏ qua. AWS khuyến nghị tăng bước 100 để chèn quy tắc mới dễ dàng.",
+                    nacl_default_deny: "Quy tắc mặc định cuối cùng (The final rule `*`) là <strong>DENY ALL</strong> cho tất cả traffic không khớp.",
+                    sg_rule_title: "<i class=\"fas fa-balance-scale-left mr-2\"></i> Quy tắc Security Group",
+                    sg_rule_p1: "Security Groups chỉ hỗ trợ quy tắc <strong>Allow</strong> (Cho phép).",
+                    sg_rule_p2: "<strong>Tất cả</strong> các quy tắc <strong>Allow</strong> đều được đánh giá. Nếu có bất kỳ quy tắc nào khớp, traffic sẽ được cho phép.",
+                    ephemeral_title: "<i class=\"fas fa-random mr-2\"></i> Tầm quan trọng của Ephemeral Ports (Cổng Tạm thời)",
+                    ephemeral_p1: "Khi một Client (ví dụ: Web Server) khởi tạo kết nối đến một Server (ví dụ: Database), Client sử dụng một <strong>Ephemeral Port</strong> (cổng tạm thời) để nhận phản hồi.",
+                    ephemeral_p2: "Vì NACL là <strong>stateless</strong>, bạn <strong>phải</strong> cho phép <strong>Outbound Traffic</strong> từ Server (DB) trên dải <strong>Ephemeral Port</strong> (ví dụ: 1024-65535) và <strong>Inbound Traffic</strong> trên dải Ephemeral Port trên Client (Web) Subnet NACL."
+                },
+                summary: {
+                    title: "TÓM TẮT ĐIỂM CHÍNH",
+                    th1: "Đặc điểm",
+                    th2: "Security Group",
+                    th3: "NACL (Network ACL)",
+                    td1: "Cấp độ",
+                    td2: "<strong>Instance Level</strong>",
+                    td3: "<strong>Subnet Level</strong>",
+                    td4: "Trạng thái",
+                    td5: "<strong>STATEFUL</strong> (Có Trạng Thái)",
+                    td6: "<strong>STATELESS</strong> (Phi Trạng Thái)",
+                    td7: "Quy tắc",
+                    td8: "Chỉ <strong>Allow</strong>",
+                    td9: "Cả <strong>Allow</strong> và <strong>Deny</strong>",
+                    td10: "Thứ tự ưu tiên",
+                    td11: "<strong>Tất cả</strong> quy tắc được đánh giá.",
+                    td12: "Quy tắc <strong>thấp nhất</strong> được áp dụng trước.",
+                    td13: "Quy tắc Mặc định",
+                    td14: "<strong>Deny All</strong> Inbound. <strong>Allow All</strong> Outbound.",
+                    td15: "<strong>Allow All</strong> Inbound/Outbound (Đối với Default NACL). <strong>Deny All</strong> Inbound/Outbound (Đối với Custom NACL)."
+                }
+            },
+            en: {
+                header: {
+                    title: "NACLs & Security Groups",
+                    subtitle: "Understanding the Two Essential VPC Security Layers"
+                },
+                intro: {
+                    title: "1. Introduction to Security Layers",
+                    nacl_title: "<i class=\"fas fa-layer-group mr-2\"></i> NACL (Network ACL)",
+                    nacl_p1: "Operates at the <strong>Subnet Level</strong>. This is the <strong>first</strong> line of defense that traffic hits when entering a Subnet.",
+                    nacl_p2: "Each Subnet is associated with a single <strong>NACL</strong>.",
+                    sg_title: "<i class=\"fas fa-server mr-2\"></i> Security Group (SG)",
+                    sg_p1: "Operates at the <strong>Instance Level</strong> (EC2). This is the <strong>second</strong> layer of defense, sitting right in front of the Instance.",
+                    sg_p2: "Each Instance can have <strong>multiple Security Groups</strong>."
+                },
+                stateful: {
+                    title: "2. Stateful vs. Stateless",
+                    sg_header: "Security Group: <strong>STATEFUL</strong>",
+                    sg_p1: "If <strong>Inbound Traffic</strong> is allowed, the related <strong>Outbound Response Traffic</strong> is automatically permitted, <strong>regardless</strong> of the Outbound rules.",
+                    sg_p2: "You <strong>only need</strong> to define <strong>Inbound</strong> rules for new connections.",
+                    nacl_header: "NACL: <strong>STATELESS</strong>",
+                    nacl_p1: "NACL <strong>does not remember</strong> connection states. Both <strong>Inbound Traffic</strong> and <strong>Outbound Response Traffic</strong> must be <strong>explicitly</strong> allowed.",
+                    nacl_p2: "You <strong>must</strong> define both <strong>Inbound</strong> (initial request) and <strong>Outbound</strong> (response) rules <strong>separately</strong>."
+                },
+                rules: {
+                    title: "3. Rule Evaluation & Ephemeral Ports",
+                    nacl_rule_title: "<i class=\"fas fa-sort-numeric-down mr-2\"></i> NACL Rules (Numbered Rules)",
+                    nacl_rule_p1: "NACL rules are numbered from <strong>1 to 32,000</strong>. A <strong>lower number</strong> has <strong>higher precedence</strong>.",
+                    nacl_rule_p2: "The <strong>First Matching Rule</strong> is applied (<strong>Allow</strong> or <strong>Deny</strong>), and subsequent rules are ignored. AWS recommends increments of 100 for easy insertion.",
+                    nacl_default_deny: "The final rule (`*`) is <strong>DENY ALL</strong> for all non-matching traffic.",
+                    sg_rule_title: "<i class=\"fas fa-balance-scale-left mr-2\"></i> Security Group Rules",
+                    sg_rule_p1: "Security Groups only support <strong>Allow</strong> rules.",
+                    sg_rule_p2: "<strong>All</strong> <strong>Allow</strong> rules are evaluated. If any rule matches, traffic is permitted.",
+                    ephemeral_title: "<i class=\"fas fa-random mr-2\"></i> The Importance of Ephemeral Ports",
+                    ephemeral_p1: "When a Client (e.g., Web Server) initiates a connection to a Server (e.g., Database), the Client uses an <strong>Ephemeral Port</strong> (temporary port) to receive the response.",
+                    ephemeral_p2: "Because NACL is <strong>stateless</strong>, you <strong>must</strong> allow <strong>Outbound Traffic</strong> from the Server (DB) on the <strong>Ephemeral Port range</strong> (e.g., 1024-65535) and <strong>Inbound Traffic</strong> on the Ephemeral Port range on the Client (Web) Subnet NACL.",
+                },
+                summary: {
+                    title: "KEY TAKEAWAYS SUMMARY",
+                    th1: "Characteristic",
+                    th2: "Security Group",
+                    th3: "NACL (Network ACL)",
+                    td1: "Level",
+                    td2: "<strong>Instance Level</strong>",
+                    td3: "<strong>Subnet Level</strong>",
+                    td4: "State",
+                    td5: "<strong>STATEFUL</strong>",
+                    td6: "<strong>STATELESS</strong>",
+                    td7: "Rules",
+                    td8: "<strong>Allow</strong> Only",
+                    td9: "Both <strong>Allow</strong> and <strong>Deny</strong>",
+                    td10: "Precedence",
+                    td11: "<strong>All</strong> rules are evaluated.",
+                    td12: "The <strong>lowest number</strong> rule is applied first.",
+                    td13: "Default Rule",
+                    td14: "<strong>Deny All</strong> Inbound. <strong>Allow All</strong> Outbound.",
+                    td15: "<strong>Allow All</strong> Inbound/Outbound (For Default NACL). <strong>Deny All</strong> Inbound/Outbound (For Custom NACL)."
+                }
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default language
+
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+
+        function getNestedTranslation(obj, path) {
+            return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+        }
+
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const translatedText = getNestedTranslation(translations[currentLanguage], key);
+                if (translatedText) {
+                    // Sử dụng innerHTML để hiển thị đúng các thẻ HTML như <strong> và <i>
+                    element.innerHTML = translatedText; 
+                }
+            });
+            document.querySelector('html').setAttribute('lang', currentLanguage);
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            // Thay đổi màu nút theo chủ đề xanh/xanh dương
+            const activeClass = 'bg-blue-600 text-white';
+            const inactiveClass = 'bg-gray-200 text-gray-700';
+
+            if (currentLanguage === 'vi') {
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            } else {
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">IPv6 cho VPC: Giải Pháp cho Cạn Kiệt Địa Chỉ Mạng</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Be+Vietnam+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', 'Inter', sans-serif;
+            background-color: #f0fdf4; /* Emerald 50 - Theme Clean/Modern */
+            color: #1f2937; /* Gray 800 */
+        }
+        .container {
+            max-width: 1100px;
+        }
+        .header-title {
+            color: #059669; /* Emerald 600 */
+            border-bottom: 4px solid #34d399; /* Emerald 400 */
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+            border: 1px solid #d1fae5;
+        }
+        .section-header {
+            color: #047857; /* Emerald 700 */
+            font-weight: 700;
+        }
+
+        /* Styling cho <strong> */
+        .card strong {
+            font-weight: 700;
+            color: #047857; /* Darker Emerald */
+        }
+
+        /* Comparison Boxes */
+        .ipv4-box {
+            background-color: #fef2f2; /* Red 50 - Alert/Limited */
+            border-left: 5px solid #ef4444; /* Red 500 */
+        }
+        .ipv6-box {
+            background-color: #ecfdf5; /* Green 50 - Growth/Abundant */
+            border-left: 5px solid #10b981; /* Emerald 500 */
+        }
+
+        /* Dual-Stack Diagram */
+        .dual-stack-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background-color: #f7fee7; /* Lime 50 */
+            border-radius: 1rem;
+        }
+        .icon-box {
+            text-align: center;
+            width: 30%;
+        }
+        .icon-arrow {
+            width: 20%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-4 md:p-10">
+        <header class="text-center mb-12 relative">
+            <h1 class="text-4xl md:text-5xl font-extrabold header-title inline-block pb-1" data-i18n="header.title">
+                <i class="fas fa-network-wired mr-3"></i> IPv6 for VPC
+            </h1>
+            <p class="text-lg text-gray-500 mt-2" data-i18n="header.subtitle">Bước Chuyển Mình Sang Kỷ Nguyên Địa Chỉ Mạng Vô Hạn</p>
+
+            <!-- Nút chuyển đổi ngôn ngữ -->
+            <div class="absolute top-0 right-0 mt-4 mr-4 flex space-x-2">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-md bg-emerald-600 text-white font-semibold text-sm lang-button">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-md bg-gray-200 text-gray-700 font-semibold text-sm lang-button">EN</button>
+            </div>
+
+        </header>
+
+        <main>
+            <!-- 1. The Necessity: IPv4 Exhaustion -->
+            <section id="introduction" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="intro.title">1. Sự Cần Thiết: Cạn Kiệt IPv4</h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="card ipv4-box">
+                        <h3 class="text-2xl font-bold text-red-600 mb-3" data-i18n="intro.ipv4_title"><i class="fas fa-times-circle mr-2"></i> IPv4: Cạn Kiệt (Exhaustion)</h3>
+                        <p data-i18n="intro.ipv4_p1" class="mb-2">
+                            **IPv4** ban đầu được thiết kế để cung cấp khoảng **4.3 tỷ** địa chỉ.
+                        </p>
+                        <p data-i18n="intro.ipv4_p2">
+                            Các kỹ sư đã không lường trước được sự phát triển nhanh chóng của Internet. Rất nhanh sau đó, nguồn địa chỉ này đã **cạn kiệt**.
+                        </p>
+                    </div>
+                    <div class="card ipv6-box">
+                        <h3 class="text-2xl font-bold text-emerald-600 mb-3" data-i18n="intro.ipv6_title"><i class="fas fa-infinity mr-2"></i> IPv6: Vô Tận (Limitless)</h3>
+                        <p data-i18n="intro.ipv6_p1" class="mb-2">
+                            **IPv6** ra đời là người kế nhiệm. Nó được thiết kế để cung cấp một số lượng địa chỉ khổng lồ: **3.4 x 10<sup>38</sup>** địa chỉ IP duy nhất.
+                        </p>
+                        <p data-i18n="intro.ipv6_p2">
+                            Trong AWS, **mọi địa chỉ IPv6** đều là **Public** và có thể **định tuyến qua Internet** (internet-routable).
+                        </p>
+                    </div>
+                </div>
+                <div class="card mt-6">
+                    <h3 class="font-bold text-lg mb-2 text-gray-700" data-i18n="intro.format_title">Định Dạng IPv6 (Lưu ý)</h3>
+                    <p data-i18n="intro.format_p" class="text-sm italic">
+                        IPv6 sử dụng tám nhóm số thập lục phân, cách nhau bằng dấu hai chấm (ví dụ: `2001:0db8:85a3:0000:0000:8a2e:0370:7334`). **Bạn không cần phải nhớ chính xác** định dạng, nhưng hãy làm quen với giao diện của nó.
+                    </p>
+                </div>
+            </section>
+
+            <!-- 2. IPv6 in AWS VPCs (Dual-Stack) -->
+            <section id="dual-stack" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="aws.title">2. Chế Độ Dual-Stack trong AWS VPC</h2>
+                <div class="card">
+                    <p data-i18n="aws.p1" class="mb-4">
+                        Trong AWS, **IPv4 không bao giờ có thể bị vô hiệu hóa** cho VPC và Subnet của bạn. Khi bạn **kích hoạt IPv6**, VPC của bạn sẽ hoạt động ở chế độ **Dual-Stack** (Ngăn xếp kép).
+                    </p>
+                    <p data-i18n="aws.p2" class="mb-4">
+                        Điều này có nghĩa là các EC2 Instance được khởi chạy sẽ có ít nhất một địa chỉ IPv4 nội bộ **(Private)** và một địa chỉ IPv6 **(Public)**.
+                    </p>
+
+                    <div class="dual-stack-diagram mt-6">
+                        <div class="icon-box">
+                            <i class="fas fa-server text-5xl text-gray-500 mb-2"></i>
+                            <p class="font-bold text-lg" data-i18n="aws.instance_label">EC2 Instance</p>
+                            <span class="text-red-500 font-semibold block">Private IPv4</span>
+                            <span class="text-emerald-500 font-semibold block">Public IPv6</span>
+                        </div>
+                        <div class="icon-arrow">
+                            <i class="fas fa-arrow-right text-3xl text-gray-400"></i>
+                            <p class="text-xs text-gray-500 mt-1" data-i18n="aws.comm_label">Giao tiếp qua</p>
+                        </div>
+                        <div class="icon-box">
+                            <i class="fas fa-globe text-5xl text-blue-500 mb-2"></i>
+                            <p class="font-bold text-lg" data-i18n="aws.gateway_label">Internet Gateway (IGW)</p>
+                            <span class="text-red-500 font-semibold block">Hỗ trợ IPv4</span>
+                            <span class="text-emerald-500 font-semibold block">Hỗ trợ IPv6</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Troubleshooting Scenario (The IPv4 Trap) -->
+            <section id="troubleshooting" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="trouble.title">3. Tình Huống Khắc Phục Sự Cố (Bẫy IPv4)</h2>
+                <div class="card bg-yellow-50 border-2 border-yellow-200">
+                    <h3 class="text-xl font-bold text-yellow-700 mb-3" data-i18n="trouble.scenario_title"><i class="fas fa-exclamation-triangle mr-2"></i> Kịch Bản Thiếu Địa Chỉ</h3>
+                    <p data-i18n="trouble.p1" class="mb-3">
+                        **Vấn đề:** Bạn không thể khởi chạy EC2 Instance trong Subnet đã bật IPv6.
+                    </p>
+                    <p data-i18n="trouble.p2" class="mb-3">
+                        **Lý do KHÔNG phải:** Không phải vì thiếu địa chỉ IPv6. Không gian IPv6 là **rất lớn**, luôn có đủ địa chỉ.
+                    </p>
+                    <p data-i18n="trouble.p3" class="mb-4">
+                        **Lý do ĐÚNG:** Vấn đề là **không còn địa chỉ IPv4 khả dụng** trong Subnet của bạn. Vì VPC hoạt động ở chế độ Dual-Stack và **IPv4 không thể bị vô hiệu hóa**, mọi Instance mới đều **phải** nhận một địa chỉ IPv4.
+                    </p>
+
+                    <h3 class="font-bold text-lg mt-4 mb-2 text-green-700" data-i18n="trouble.solution_title">Giải Pháp</h3>
+                    <p data-i18n="trouble.solution_p" class="text-sm">
+                        Hãy **thêm một khối CIDR IPv4 mới** vào VPC và Subnet của bạn. Điều này sẽ bổ sung thêm địa chỉ IPv4 vào phạm vi mạng, cho phép bạn tiếp tục khởi chạy các EC2 Instance mới (chúng sẽ nhận địa chỉ IPv4 từ dải mới và địa chỉ IPv6 như bình thường).
+                    </p>
+                </div>
+            </section>
+
+            <hr class="my-10 border-gray-300">
+
+            <!-- Key Takeaways -->
+            <section id="key-takeaways" class="mb-12 text-center">
+                <h2 class="text-3xl font-extrabold text-emerald-700 inline-block pb-1 mb-6" data-i18n="checklist.title">TÓM TẮT CÁC ĐIỂM CHÍNH</h2>
+                <div class="p-6 space-y-4 bg-emerald-100 border-2 border-emerald-300 rounded-xl mx-auto max-w-4xl">
+                    <ul class="space-y-3 text-left">
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p1">
+                            <i class="fas fa-hand-point-right text-emerald-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Kế nhiệm:** IPv6 ra đời do sự **cạn kiệt** của địa chỉ IPv4.
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p2">
+                            <i class="fas fa-globe-americas text-emerald-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Đặc điểm IPv6:** Cung cấp **3.4 x 10<sup>38</sup>** địa chỉ. Tất cả đều là **Public** và **Internet-routable** trong AWS.
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p3">
+                            <i class="fas fa-layer-group text-emerald-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **AWS VPC:** Hoạt động ở chế độ **Dual-Stack** (hỗ trợ cả IPv4 và IPv6 cùng lúc). **Không thể** tắt IPv4.
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p4">
+                            <i class="fas fa-bug text-emerald-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Khắc phục sự cố:** Không thể khởi chạy Instance mới thường là do **hết địa chỉ IPv4**, ngay cả khi có đủ IPv6. Giải pháp là **thêm CIDR IPv4 mới**.
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const translations = {
+            vi: {
+                header: {
+                    title: "IPv6 cho VPC: Giải Pháp cho Cạn Kiệt Địa Chỉ Mạng",
+                    subtitle: "Bước Chuyển Mình Sang Kỷ Nguyên Địa Chỉ Mạng Vô Hạn"
+                },
+                intro: {
+                    title: "1. Sự Cần Thiết: Cạn Kiệt IPv4",
+                    ipv4_title: "<i class=\"fas fa-times-circle mr-2\"></i> IPv4: Cạn Kiệt (Exhaustion)",
+                    ipv4_p1: "**IPv4** ban đầu được thiết kế để cung cấp khoảng **4.3 tỷ** địa chỉ.",
+                    ipv4_p2: "Các kỹ sư đã không lường trước được sự phát triển nhanh chóng của Internet. Rất nhanh sau đó, nguồn địa chỉ này đã **cạn kiệt**.",
+                    ipv6_title: "<i class=\"fas fa-infinity mr-2\"></i> IPv6: Vô Tận (Limitless)",
+                    ipv6_p1: "**IPv6** ra đời là người kế nhiệm. Nó được thiết kế để cung cấp một số lượng địa chỉ khổng lồ: **3.4 x 10<sup>38</sup>** địa chỉ IP duy nhất.",
+                    ipv6_p2: "Trong AWS, **mọi địa chỉ IPv6** đều là **Public** và có thể **định tuyến qua Internet** (internet-routable).",
+                    format_title: "Định Dạng IPv6 (Lưu ý)",
+                    format_p: "IPv6 sử dụng tám nhóm số thập lục phân, cách nhau bằng dấu hai chấm (ví dụ: `2001:0db8:85a3:0000:0000:8a2e:0370:7334`). **Bạn không cần phải nhớ chính xác** định dạng, nhưng hãy làm quen với giao diện của nó."
+                },
+                aws: {
+                    title: "2. Chế Độ Dual-Stack trong AWS VPC",
+                    p1: "Trong AWS, **IPv4 không bao giờ có thể bị vô hiệu hóa** cho VPC và Subnet của bạn. Khi bạn **kích hoạt IPv6**, VPC của bạn sẽ hoạt động ở chế độ **Dual-Stack** (Ngăn xếp kép).",
+                    p2: "Điều này có nghĩa là các EC2 Instance được khởi chạy sẽ có ít nhất một địa chỉ IPv4 nội bộ **(Private)** và một địa chỉ IPv6 **(Public)**.",
+                    instance_label: "EC2 Instance",
+                    comm_label: "Giao tiếp qua",
+                    gateway_label: "Internet Gateway (IGW)"
+                },
+                trouble: {
+                    title: "3. Tình Huống Khắc Phục Sự Cố (Bẫy IPv4)",
+                    scenario_title: "<i class=\"fas fa-exclamation-triangle mr-2\"></i> Kịch Bản Thiếu Địa Chỉ",
+                    p1: "**Vấn đề:** Bạn không thể khởi chạy EC2 Instance trong Subnet đã bật IPv6.",
+                    p2: "**Lý do KHÔNG phải:** Không phải vì thiếu địa chỉ IPv6. Không gian IPv6 là **rất lớn**, luôn có đủ địa chỉ.",
+                    p3: "**Lý do ĐÚNG:** Vấn đề là **không còn địa chỉ IPv4 khả dụng** trong Subnet của bạn. Vì VPC hoạt động ở chế độ Dual-Stack và **IPv4 không thể bị vô hiệu hóa**, mọi Instance mới đều **phải** nhận một địa chỉ IPv4.",
+                    solution_title: "Giải Pháp",
+                    solution_p: "Hãy **thêm một khối CIDR IPv4 mới** vào VPC và Subnet của bạn. Điều này sẽ bổ sung thêm địa chỉ IPv4 vào phạm vi mạng, cho phép bạn tiếp tục khởi chạy các EC2 Instance mới (chúng sẽ nhận địa chỉ IPv4 từ dải mới và địa chỉ IPv6 như bình thường)."
+                },
+                checklist: {
+                    title: "TÓM TẮT CÁC ĐIỂM CHÍNH",
+                    p1: "**Kế nhiệm:** IPv6 ra đời do sự **cạn kiệt** của địa chỉ IPv4.",
+                    p2: "**Đặc điểm IPv6:** Cung cấp **3.4 x 10<sup>38</sup>** địa chỉ. Tất cả đều là **Public** và **Internet-routable** trong AWS.",
+                    p3: "**AWS VPC:** Hoạt động ở chế độ **Dual-Stack** (hỗ trợ cả IPv4 và IPv6 cùng lúc). **Không thể** tắt IPv4.",
+                    p4: "**Khắc phục sự cố:** Không thể khởi chạy Instance mới thường là do **hết địa chỉ IPv4**, ngay cả khi có đủ IPv6. Giải pháp là **thêm CIDR IPv4 mới**."
+                }
+            },
+            en: {
+                header: {
+                    title: "IPv6 for VPC: The Solution to Address Exhaustion",
+                    subtitle: "The Shift Towards Limitless Network Addressing"
+                },
+                intro: {
+                    title: "1. The Necessity: IPv4 Exhaustion",
+                    ipv4_title: "<i class=\"fas fa-times-circle mr-2\"></i> IPv4: Exhaustion",
+                    ipv4_p1: "**IPv4** was originally designed to provide approximately **4.3 billion** addresses.",
+                    ipv4_p2: "The engineers did not anticipate the rapid growth of the Internet. It turned out that the address space would soon be **exhausted**.",
+                    ipv6_title: "<i class=\"fas fa-infinity mr-2\"></i> IPv6: Limitless",
+                    ipv6_p1: "**IPv6** is the successor. It is designed to provide an enormous number of addresses: **3.4 x 10<sup>38</sup>** unique IP addresses.",
+                    ipv6_p2: "In AWS, **every IPv6 address** is **Public** and **internet-routable**.",
+                    format_title: "IPv6 Format (Note)",
+                    format_p: "IPv6 consists of eight groups of hexadecimal numbers, separated by colons (e.g., `2001:0db8:85a3:0000:0000:8a2e:0370:7334`). **You do not need to memorize** the exact format, but recognize its appearance."
+                },
+                aws: {
+                    title: "2. Dual-Stack Mode in AWS VPCs",
+                    p1: "In AWS, **IPv4 can never be disabled** for your VPC and subnets. When you **enable IPv6**, your VPC operates in **Dual-Stack** mode.",
+                    p2: "This means that launched EC2 instances will have at least a private IPv4 address **(Private)** and a public IPv6 address **(Public)**.",
+                    instance_label: "EC2 Instance",
+                    comm_label: "Communicates via",
+                    gateway_label: "Internet Gateway (IGW)"
+                },
+                trouble: {
+                    title: "3. Troubleshooting Scenario (The IPv4 Trap)",
+                    scenario_title: "<i class=\"fas fa-exclamation-triangle mr-2\"></i> Address Shortage Scenario",
+                    p1: "**The Problem:** You cannot launch an EC2 Instance in your IPv6-enabled Subnet.",
+                    p2: "**The reason is NOT:** Running out of IPv6 addresses. The IPv6 space is **vast**, there are always enough addresses.",
+                    p3: "**The CORRECT reason:** The issue is that there are **no available IPv4 addresses left** in your Subnet. Since the VPC is Dual-Stack and **IPv4 cannot be disabled**, every new Instance **must** receive an IPv4 address.",
+                    solution_title: "The Solution",
+                    solution_p: "The solution is to **add a new IPv4 CIDR block** to your VPC and Subnet. This replenishes the IPv4 address range, allowing you to launch new EC2 Instances (which will receive the new IPv4 address and the IPv6 address as usual)."
+                },
+                checklist: {
+                    title: "KEY TAKEAWAYS SUMMARY",
+                    p1: "**Successor:** IPv6 was introduced due to **exhaustion** of IPv4 addresses.",
+                    p2: "**IPv6 Features:** Provides **3.4 x 10<sup>38</sup>** addresses. All are **Public** and **Internet-routable** in AWS.",
+                    p3: "**AWS VPC:** Operates in **Dual-Stack** mode (supports both IPv4 and IPv6 simultaneously). IPv4 **cannot** be disabled.",
+                    p4: "**Troubleshooting:** Failing to launch a new Instance is usually due to **IPv4 exhaustion**, even if IPv6 addresses are available. The solution is to **add a new IPv4 CIDR**."
+                }
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default language
+
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+
+        function getNestedTranslation(obj, path) {
+            return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+        }
+
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const translatedText = getNestedTranslation(translations[currentLanguage], key);
+                if (translatedText) {
+                    // Sử dụng innerHTML để hiển thị đúng các thẻ HTML như <strong> và <i>
+                    element.innerHTML = translatedText;
+                }
+            });
+            document.querySelector('html').setAttribute('lang', currentLanguage);
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            // Sử dụng màu Emerald cho nút active (Theme công nghệ/tăng trưởng)
+            const activeClass = 'bg-emerald-600 text-white';
+            const inactiveClass = 'bg-gray-200 text-gray-700';
+
+            if (currentLanguage === 'vi') {
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            } else {
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

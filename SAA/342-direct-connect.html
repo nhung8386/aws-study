@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">AWS Direct Connect: Kết Nối Riêng Tư Băng Thông Cao</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Be+Vietnam+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', 'Inter', sans-serif;
+            background-color: #f5f7ff; /* Blue 50 - Theme for Private Connectivity */
+            color: #1f2937; /* Gray 800 */
+        }
+        .container {
+            max-width: 1024px;
+        }
+        .header-title {
+            color: #1e40af; /* Blue 800 */
+            border-bottom: 4px solid #60a5fa; /* Blue 400 */
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+        }
+        .section-header {
+            color: #1d4ed8; /* Blue 600 */
+            font-weight: 700;
+        }
+
+        /* Styling cho các thành phần chính (VIFs) */
+        .vif-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .vif-item {
+            border: 2px solid #93c5fd; /* Blue 300 */
+            background-color: #f0f9ff; /* Blue 50 */
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+        }
+        
+        /* Đặc biệt cho phần Connection Types */
+        .conn-type-box {
+            border-left: 6px solid #fb923c; /* Orange 400 - Lead Time Alert */
+            background-color: #fff7ed; /* Orange 50 */
+        }
+        
+        /* Đảm bảo các thẻ <strong> bên trong nội dung dịch vẫn được in đậm */
+        .card strong, .highlight-box strong {
+            font-weight: 700;
+        }
+        .resilience-box {
+            background-color: #ecfdf5; /* Green 50 (for resiliency) */
+            border: 1px solid #34d399; /* Green 400 */
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-4 md:p-10">
+        <header class="text-center mb-12 relative">
+            <h1 class="text-4xl md:text-5xl font-extrabold header-title inline-block pb-1" data-i18n="header.title">
+                <i class="fas fa-link mr-3"></i> Direct Connect & Direct Connect Gateway
+            </h1>
+            <p class="text-lg text-gray-500 mt-2" data-i18n="header.subtitle">Kết nối mạng riêng, băng thông cao tới AWS</p>
+            
+            <!-- Nút chuyển đổi ngôn ngữ -->
+            <div class="absolute top-0 right-0 mt-4 mr-4 flex space-x-2">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-md bg-blue-600 text-white font-semibold text-sm lang-button">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-md bg-gray-200 text-gray-700 font-semibold text-sm lang-button">EN</button>
+            </div>
+            
+        </header>
+
+        <main>
+            <!-- 1. Introduction and Core Concept -->
+            <section id="introduction" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="intro.title">1. Giới Thiệu AWS Direct Connect (DX)</h2>
+                <div class="card">
+                    <p data-i18n="intro.p1" class="mb-4">
+                        **AWS Direct Connect** (thường được viết tắt là **DX** trong các kỳ thi) cung cấp một **kết nối riêng tư chuyên dụng** từ mạng từ xa của bạn trực tiếp vào VPC của AWS.
+                    </p>
+                    <p data-i18n="intro.p2" class="mb-4 font-semibold text-blue-700">
+                        Ý tưởng cốt lõi: Trên cùng một kết nối Direct Connect, bạn có thể truy cập cả tài nguyên công cộng (như S3) và tài nguyên riêng tư (như EC2) bằng cách sử dụng Public Virtual Interface (VIF) và Private VIF.
+                    </p>
+                    
+                    <h3 class="text-xl font-bold mt-6 mb-3 text-blue-700" data-i18n="intro.vif_title">Giao Diện Ảo (Virtual Interfaces - VIFs)</h3>
+                    <div class="vif-grid">
+                        <div class="vif-item">
+                            <i class="fas fa-shield-alt text-2xl text-red-600 mb-2"></i>
+                            <p class="font-bold mb-1" data-i18n="intro.vif_private_title">Private VIF</p>
+                            <p class="text-sm" data-i18n="intro.vif_private_desc">
+                                Dùng để truy cập các **tài nguyên riêng tư** trong VPC của bạn (ví dụ: EC2, Subnet riêng). Kết nối qua **Virtual Private Gateway** (VGW) hoặc **Direct Connect Gateway**.
+                            </p>
+                        </div>
+                        <div class="vif-item">
+                            <i class="fas fa-globe text-2xl text-yellow-600 mb-2"></i>
+                            <p class="font-bold mb-1" data-i18n="intro.vif_public_title">Public VIF</p>
+                            <p class="text-sm" data-i18n="intro.vif_public_desc">
+                                Dùng để truy cập các **dịch vụ công cộng của AWS** (ví dụ: Amazon S3, Glacier, DynamoDB). Kết nối trực tiếp với AWS mà không cần qua VGW.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 2. Use Cases and Benefits -->
+            <section id="use-cases" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="benefits.title">2. Lợi Ích Chính Của Direct Connect</h2>
+                <div class="card">
+                    <ul class="list-disc ml-5 space-y-3 text-base">
+                        <li data-i18n="benefits.b1">**Tăng cường băng thông:** DX cung cấp băng thông cao hơn (1Gbps, 10Gbps, 100Gbps), lý tưởng cho việc truyền tải **tập dữ liệu lớn**.</li>
+                        <li data-i18n="benefits.b2">**Giảm chi phí:** Sử dụng kết nối riêng tư giúp **giảm chi phí chuyển dữ liệu** so với sử dụng Internet công cộng.</li>
+                        <li data-i18n="benefits.b3">**Trải nghiệm mạng nhất quán:** Kết nối riêng tư đảm bảo hiệu suất mạng ổn định, rất hữu ích cho các ứng dụng **thời gian thực (real-time)**.</li>
+                        <li data-i18n="benefits.b4">**Hỗ trợ môi trường Hybrid:** Giúp kết nối liền mạch giữa trung tâm dữ liệu on-premises và đám mây AWS.</li>
+                        <li data-i18n="benefits.b5">Hỗ trợ cả giao thức **IPv4 và IPv6**.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 3. Direct Connect Gateway -->
+            <section id="dx-gateway" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="gateway.title">3. Direct Connect Gateway</h2>
+                <div class="card bg-blue-50 border-2 border-blue-200">
+                    <p data-i18n="gateway.p1" class="mb-4">
+                        Nếu bạn muốn kết nối trung tâm dữ liệu on-premises của mình với **nhiều VPC ở các Vùng (Regions) khác nhau** của AWS, bạn **phải** sử dụng **Direct Connect Gateway**.
+                    </p>
+                    <p data-i18n="gateway.p2">
+                        DX Gateway kết nối qua Private VIF tới Direct Connect Location, sau đó kết nối tới các **Virtual Private Gateway** (VGW) đính kèm vào các VPC khác nhau trên các Regions khác nhau.
+                    </p>
+                </div>
+            </section>
+            
+            <!-- 4. Connection Types and Lead Time -->
+            <section id="connection-types" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="conn.title">4. Các Loại Kết Nối Direct Connect</h2>
+                <div class="card conn-type-box">
+                    <div class="vif-grid">
+                        <div>
+                            <h3 class="text-xl font-bold mb-2 text-orange-700" data-i18n="conn.dedicated_title">Dedicated Connection</h3>
+                            <ul class="list-disc ml-5 space-y-1 text-base">
+                                <li data-i18n="conn.dedicated_b1">Dung lượng: **1 Gbps, 10 Gbps, hoặc 100 Gbps**.</li>
+                                <li data-i18n="conn.dedicated_b2">Sử dụng cổng Ethernet vật lý **chuyên dụng**.</li>
+                                <li data-i18n="conn.dedicated_b3">Được yêu cầu từ AWS và cung cấp bởi đối tác DX.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold mb-2 text-orange-700" data-i18n="conn.hosted_title">Hosted Connection</h3>
+                            <ul class="list-disc ml-5 space-y-1 text-base">
+                                <li data-i18n="conn.hosted_b1">Dung lượng đa dạng: **50 Mbps, 500 Mbps, lên đến 10 Gbps**.</li>
+                                <li data-i18n="conn.hosted_b2">Được yêu cầu thông qua **Đối tác Direct Connect**.</li>
+                                <li data-i18n="conn.hosted_b3">Linh hoạt với dung lượng theo yêu cầu (add/remove capacity).</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <p class="mt-6 p-3 bg-yellow-100 rounded-lg font-semibold text-sm text-gray-700" data-i18n="conn.lead_time_note">
+                        **Lưu ý quan trọng:** Thời gian thiết lập (Lead time) cho cả hai loại kết nối thường **dài hơn một tháng**. Trong các kịch bản thi cần truyền dữ liệu trong một tuần, DX không phải là lựa chọn khả thi trừ khi kết nối đã có sẵn.
+                    </p>
+                </div>
+            </section>
+            
+            <!-- 5. Security and Resiliency -->
+            <section id="security-resiliency" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="arch.title">5. Bảo Mật và Độ Phục Hồi</h2>
+                <div class="card">
+                    <h3 class="text-xl font-bold mb-3 text-red-600" data-i18n="arch.security_title">Bảo Mật (Encryption)</h3>
+                    <p data-i18n="arch.security_p1" class="mb-4">
+                        **Direct Connect KHÔNG cung cấp mã hóa theo mặc định** vì đây là kết nối riêng tư.
+                    </p>
+                    <p data-i18n="arch.security_p2" class="mb-4">
+                        Nếu yêu cầu mã hóa, bạn có thể thiết lập **kết nối VPN (IPsec encrypted)** đè lên Direct Connect, tạo ra một lớp bảo mật bổ sung.
+                    </p>
+
+                    <h3 class="text-xl font-bold mt-6 mb-3 text-green-700" data-i18n="arch.resilience_title">Kiến Trúc Độ Phục Hồi (Resiliency)</h3>
+                    <div class="resilience-box space-y-4">
+                        <div class="border-b pb-3 border-green-200">
+                            <p class="font-bold text-lg text-green-800" data-i18n="arch.high_resiliency_title">High Resiliency (Độ Phục Hồi Cao)</p>
+                            <p class="text-sm" data-i18n="arch.high_resiliency_desc">
+                                Dành cho các tác vụ quan trọng: Thiết lập nhiều kết nối DX qua **hai trung tâm dữ liệu** và **hai Direct Connect Location khác nhau**. Mỗi Location có một Private VIF, cung cấp dự phòng.
+                            </p>
+                        </div>
+                        <div>
+                            <p class="font-bold text-lg text-green-800" data-i18n="arch.max_resiliency_title">Maximum Resiliency (Độ Phục Hồi Tối Đa)</p>
+                            <p class="text-sm" data-i18n="arch.max_resiliency_desc">
+                                Thiết lập **hai Direct Connect Location**, mỗi Location có **hai kết nối độc lập**. Tổng cộng **bốn kết nối** trên hai Location, kết thúc trên các thiết bị riêng biệt.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="my-10 border-gray-300">
+
+            <!-- Key Takeaways -->
+            <section id="key-takeaways" class="mb-12 text-center">
+                <h2 class="text-3xl font-extrabold text-blue-700 inline-block pb-1 mb-6" data-i18n="checklist.title">TÓM TẮT ĐIỂM CHÍNH</h2>
+                <div class="p-6 space-y-4 bg-blue-50 border-2 border-blue-300 rounded-xl mx-auto max-w-4xl">
+                    <ul class="space-y-3 text-left">
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p1">
+                            <i class="fas fa-route text-blue-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Direct Connect** là kết nối riêng tư, băng thông cao, cho hiệu suất mạng **nhất quán**.
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p2">
+                            <i class="fas fa-ethernet text-blue-600 mt-1 mr-3 flex-shrink-0"></i>
+                            Hỗ trợ **Private VIF** (cho VPC) và **Public VIF** (cho dịch vụ công cộng AWS).
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p3">
+                            <i class="fas fa-globe-americas text-blue-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Direct Connect Gateway** cần thiết để kết nối với **nhiều VPC ở các Regions khác nhau**.
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p4">
+                            <i class="fas fa-clock text-blue-600 mt-1 mr-3 flex-shrink-0"></i>
+                            Thời gian thiết lập (Lead time) **dài (thường hơn một tháng)**.
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p5">
+                            <i class="fas fa-lock-open text-blue-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **KHÔNG mã hóa mặc định**. Cần **VPN** overlay nếu yêu cầu encryption.
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        const translations = {
+            vi: {
+                header: {
+                    title: "AWS Direct Connect & Direct Connect Gateway",
+                    subtitle: "Kết nối mạng riêng, băng thông cao tới AWS"
+                },
+                intro: {
+                    title: "1. Giới Thiệu AWS Direct Connect (DX)",
+                    p1: "<strong>AWS Direct Connect</strong> (thường được viết tắt là <strong>DX</strong> trong các kỳ thi) cung cấp một <strong>kết nối riêng tư chuyên dụng</strong> từ mạng từ xa của bạn trực tiếp vào VPC của AWS.",
+                    p2: "Ý tưởng cốt lõi: Trên cùng một kết nối Direct Connect, bạn có thể truy cập cả tài nguyên công cộng (như Amazon S3) và tài nguyên riêng tư (như EC2) bằng cách sử dụng Public Virtual Interface (VIF) và Private VIF.",
+                    vif_title: "Giao Diện Ảo (Virtual Interfaces - VIFs)",
+                    vif_private_title: "Private VIF",
+                    vif_private_desc: "Dùng để truy cập các <strong>tài nguyên riêng tư</strong> trong VPC của bạn (ví dụ: EC2, Subnet riêng). Kết nối qua <strong>Virtual Private Gateway</strong> (VGW) hoặc <strong>Direct Connect Gateway</strong>.",
+                    vif_public_title: "Public VIF",
+                    vif_public_desc: "Dùng để truy cập các <strong>dịch vụ công cộng của AWS</strong> (ví dụ: Amazon S3, Glacier, DynamoDB). Kết nối trực tiếp với AWS mà không cần qua VGW."
+                },
+                benefits: {
+                    title: "2. Lợi Ích Chính Của Direct Connect",
+                    b1: "<strong>Tăng cường băng thông:</strong> DX cung cấp băng thông cao hơn (1Gbps, 10Gbps, 100Gbps), lý tưởng cho việc truyền tải <strong>tập dữ liệu lớn</strong>.",
+                    b2: "<strong>Giảm chi phí:</strong> Sử dụng kết nối riêng tư giúp <strong>giảm chi phí chuyển dữ liệu</strong> so với sử dụng Internet công cộng.",
+                    b3: "<strong>Trải nghiệm mạng nhất quán:</strong> Kết nối riêng tư đảm bảo hiệu suất mạng ổn định, rất hữu ích cho các ứng dụng <strong>thời gian thực (real-time)</strong>.",
+                    b4: "<strong>Hỗ trợ môi trường Hybrid:</strong> Giúp kết nối liền mạch giữa trung tâm dữ liệu on-premises và đám mây AWS.",
+                    b5: "Hỗ trợ cả giao thức <strong>IPv4 và IPv6</strong>."
+                },
+                gateway: {
+                    title: "3. Direct Connect Gateway",
+                    p1: "Nếu bạn muốn kết nối trung tâm dữ liệu on-premises của mình với <strong>nhiều VPC ở các Vùng (Regions) khác nhau</strong> của AWS, bạn <strong>phải</strong> sử dụng <strong>Direct Connect Gateway</strong>.",
+                    p2: "DX Gateway kết nối qua Private VIF tới Direct Connect Location, sau đó kết nối tới các <strong>Virtual Private Gateway</strong> (VGW) đính kèm vào các VPC khác nhau trên các Regions khác nhau."
+                },
+                conn: {
+                    title: "4. Các Loại Kết Nối Direct Connect",
+                    dedicated_title: "Dedicated Connection (Kết Nối Chuyên Dụng)",
+                    dedicated_b1: "Dung lượng: <strong>1 Gbps, 10 Gbps, hoặc 100 Gbps</strong>.",
+                    dedicated_b2: "Sử dụng cổng Ethernet vật lý <strong>chuyên dụng</strong>.",
+                    dedicated_b3: "Được yêu cầu từ AWS và cung cấp bởi đối tác DX.",
+                    hosted_title: "Hosted Connection (Kết Nối Được Lưu Trữ)",
+                    hosted_b1: "Dung lượng đa dạng: <strong>50 Mbps, 500 Mbps, lên đến 10 Gbps</strong>.",
+                    hosted_b2: "Được yêu cầu thông qua <strong>Đối tác Direct Connect</strong>.",
+                    hosted_b3: "Linh hoạt với dung lượng theo yêu cầu (add/remove capacity).",
+                    lead_time_note: "<strong>Lưu ý quan trọng:</strong> Thời gian thiết lập (Lead time) cho cả hai loại kết nối thường <strong>dài hơn một tháng</strong>. Trong các kịch bản thi cần truyền dữ liệu trong một tuần, DX không phải là lựa chọn khả thi trừ khi kết nối đã có sẵn."
+                },
+                arch: {
+                    title: "5. Bảo Mật và Độ Phục Hồi",
+                    security_title: "Bảo Mật (Encryption)",
+                    security_p1: "<strong>Direct Connect KHÔNG cung cấp mã hóa theo mặc định</strong> vì đây là kết nối riêng tư.",
+                    security_p2: "Nếu yêu cầu mã hóa, bạn có thể thiết lập <strong>kết nối VPN (IPsec encrypted)</strong> đè lên Direct Connect, tạo ra một lớp bảo mật bổ sung.",
+                    resilience_title: "Kiến Trúc Độ Phục Hồi (Resiliency)",
+                    high_resiliency_title: "High Resiliency (Độ Phục Hồi Cao)",
+                    high_resiliency_desc: "Dành cho các tác vụ quan trọng: Thiết lập nhiều kết nối DX qua <strong>hai trung tâm dữ liệu</strong> và <strong>hai Direct Connect Location khác nhau</strong>. Mỗi Location có một Private VIF, cung cấp dự phòng.",
+                    max_resiliency_title: "Maximum Resiliency (Độ Phục Hồi Tối Đa)",
+                    max_resiliency_desc: "Thiết lập <strong>hai Direct Connect Location</strong>, mỗi Location có <strong>hai kết nối độc lập</strong>. Tổng cộng <strong>bốn kết nối</strong> trên hai Location, kết thúc trên các thiết bị riêng biệt."
+                },
+                checklist: {
+                    title: "TÓM TẮT ĐIỂM CHÍNH",
+                    p1: "<strong>Direct Connect</strong> là kết nối riêng tư, băng thông cao, cho hiệu suất mạng <strong>nhất quán</strong>.",
+                    p2: "Hỗ trợ <strong>Private VIF</strong> (cho VPC) và <strong>Public VIF</strong> (cho dịch vụ công cộng AWS).",
+                    p3: "<strong>Direct Connect Gateway</strong> cần thiết để kết nối với <strong>nhiều VPC ở các Regions khác nhau</strong>.",
+                    p4: "Thời gian thiết lập (Lead time) <strong>dài (thường hơn một tháng)</strong>.",
+                    p5: "<strong>KHÔNG mã hóa mặc định</strong>. Cần <strong>VPN</strong> overlay nếu yêu cầu encryption."
+                }
+            },
+            en: {
+                header: {
+                    title: "AWS Direct Connect & Direct Connect Gateway",
+                    subtitle: "High-Bandwidth, Private Network Connection to AWS"
+                },
+                intro: {
+                    title: "1. Introduction to AWS Direct Connect (DX)",
+                    p1: "<strong>AWS Direct Connect</strong> (often abbreviated as <strong>DX</strong> in exams) provides a <strong>dedicated private connection</strong> from a remote network directly into your AWS VPC.",
+                    p2: "The key idea is that on the same Direct Connect connection, you can access both public resources (such as Amazon S3) and private resources (such as EC2) by using the Public Virtual Interface (VIF) and the Private VIF respectively.",
+                    vif_title: "Virtual Interfaces (VIFs)",
+                    vif_private_title: "Private VIF",
+                    vif_private_desc: "Used to access <strong>private resources</strong> within your VPC (e.g., EC2, private subnets). Connects through a <strong>Virtual Private Gateway</strong> (VGW) or a <strong>Direct Connect Gateway</strong>.",
+                    vif_public_title: "Public VIF",
+                    vif_public_desc: "Used to access <strong>public AWS services</strong> (e.g., Amazon S3, Glacier, DynamoDB). Connects directly to AWS without going through a VGW."
+                },
+                benefits: {
+                    title: "2. Key Benefits of Direct Connect",
+                    b1: "<strong>Increased Bandwidth:</strong> DX offers higher bandwidth (1Gbps, 10Gbps, 100Gbps), beneficial when working with <strong>large data sets</strong>.",
+                    b2: "<strong>Lower Cost:</strong> Using a private connection <strong>reduces data transfer costs</strong> compared to public internet usage.",
+                    b3: "<strong>Consistent Network Experience:</strong> The private connection provides more stable network performance, especially helpful for <strong>real-time</strong> data feeds.",
+                    b4: "<strong>Hybrid Environments Support:</strong> Facilitates seamless connectivity between on-premises data centers and the AWS cloud.",
+                    b5: "Supports both <strong>IPv4 and IPv6</strong> protocols."
+                },
+                gateway: {
+                    title: "3. Direct Connect Gateway",
+                    p1: "If you want to connect your on-premises data center to **multiple VPCs in different AWS Regions**, you **must** use a **Direct Connect Gateway**.",
+                    p2: "The DX Gateway connects via a Private VIF to the Direct Connect Location, which then connects to the **Virtual Private Gateways** (VGWs) attached to the different VPCs across various Regions."
+                },
+                conn: {
+                    title: "4. Direct Connect Connection Types",
+                    dedicated_title: "Dedicated Connection",
+                    dedicated_b1: "Capacity: **1 Gbps, 10 Gbps, or 100 Gbps**.",
+                    dedicated_b2: "Uses a **dedicated** physical Ethernet port.",
+                    dedicated_b3: "Requested from AWS and provisioned by an AWS DX partner.",
+                    hosted_title: "Hosted Connection",
+                    hosted_b1: "Various capacities: **50 Mbps, 500 Mbps, up to 10 Gbps**.",
+                    hosted_b2: "Requested via **AWS Direct Connect partners**.",
+                    hosted_b3: "Offers flexibility with capacity on demand (add/remove capacity).",
+                    lead_time_note: "<strong>Important Note:</strong> Lead times for setting up either connection type are often **longer than one month**. In exam scenarios requiring data transfer within a week, DX is typically not a viable option unless an existing connection is already established."
+                },
+                arch: {
+                    title: "5. Security and Resiliency",
+                    security_title: "Security (Encryption)",
+                    security_p1: "<strong>Direct Connect does NOT provide encryption by default</strong> because it is a private connection.",
+                    security_p2: "If encryption is required, you can set up a **VPN connection (IPsec encrypted)** on top of Direct Connect, adding an extra layer of security.",
+                    resilience_title: "Resiliency Architectures",
+                    high_resiliency_title: "High Resiliency",
+                    high_resiliency_desc: "Suitable for critical workloads: Setup multiple DX connections across **two corporate data centers** and **two different Direct Connect Locations**. Each location has a Private VIF, providing redundancy.",
+                    max_resiliency_title: "Maximum Resiliency",
+                    max_resiliency_desc: "Setup **two Direct Connect Locations**, each with **two independent connections**. This results in a total of **four connections** across two locations, terminating on separate devices."
+                },
+                checklist: {
+                    title: "KEY TAKEAWAYS SUMMARY",
+                    p1: "<strong>Direct Connect</strong> is a private, high-bandwidth link, offering <strong>consistent</strong> network performance.",
+                    p2: "Supports **Private VIFs** (for VPC) and **Public VIFs** (for AWS public services).",
+                    p3: "The **Direct Connect Gateway** is necessary for connectivity to **multiple VPCs across different Regions**.",
+                    p4: "Setup lead time is **long (often over one month)**.",
+                    p5: "<strong>NO default encryption</strong>. A **VPN** overlay is required for encryption."
+                }
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default language
+
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+
+        function getNestedTranslation(obj, path) {
+            return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+        }
+
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const translatedText = getNestedTranslation(translations[currentLanguage], key);
+                if (translatedText) {
+                    // Sử dụng innerHTML để hiển thị đúng các thẻ HTML như <strong> và <i>
+                    element.innerHTML = translatedText; 
+                }
+            });
+            document.querySelector('html').setAttribute('lang', currentLanguage);
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            // Sử dụng màu Blue cho nút active
+            const activeClass = 'bg-blue-600 text-white';
+            const inactiveClass = 'bg-gray-200 text-gray-700';
+
+            if (currentLanguage === 'vi') {
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            } else {
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

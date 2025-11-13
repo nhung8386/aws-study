@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">NAT Gateways - Hướng dẫn Ghi nhớ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Be+Vietnam+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', 'Inter', sans-serif;
+            background-color: #f0fdf4; /* Green 50 - Thể hiện sự quản lý và ổn định */
+            color: #1f2937; /* Gray 800 */
+        }
+        .container {
+            max-width: 1024px;
+        }
+        .header-title {
+            color: #10b981; /* Emerald 500 */
+            border-bottom: 4px solid #34d399; /* Emerald 400 */
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+            border-left: 6px solid #059669; /* Emerald 600 */
+        }
+        .section-header {
+            color: #065f46; /* Emerald 800 */
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+        .highlight-feature {
+            background-color: #d1fae5; /* Green 100 */
+            border: 1px solid #6ee7b7; /* Green 300 */
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+        .lang-button {
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .diff-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .nat-instance-col {
+            background-color: #fef2f2; /* Red 50 */
+            border-left: 4px solid #ef4444; /* Red 500 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+        .nat-gateway-col {
+            background-color: #ecfdf5; /* Teal 50 */
+            border-left: 4px solid #10b981; /* Emerald 500 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+        /* Đảm bảo các thẻ <strong> bên trong nội dung dịch vẫn được in đậm */
+        .card strong {
+            font-weight: 700;
+        }
+        
+        @media (max-width: 768px) {
+            .diff-card {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-4 md:p-10">
+        <header class="text-center mb-12 relative">
+            <h1 class="text-4xl md:text-5xl font-extrabold header-title inline-block pb-1" data-i18n="header.title">
+                <i class="fas fa-network-wired mr-3"></i> NAT Gateways: The Modern Solution
+            </h1>
+            <p class="text-lg text-gray-500 mt-2" data-i18n="header.subtitle">Hướng dẫn ghi nhớ các tính năng vượt trội</p>
+            
+            <!-- Nút chuyển đổi ngôn ngữ -->
+            <div class="absolute top-0 right-0 mt-4 mr-4 flex space-x-2">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-md bg-green-600 text-white font-semibold text-sm lang-button">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-md bg-gray-200 text-gray-700 font-semibold text-sm lang-button">EN</button>
+            </div>
+            
+        </header>
+
+        <main>
+            <!-- 1. Introduction -->
+            <section id="introduction" class="mb-10">
+                <h2 class="text-3xl section-header" data-i18n="intro.title">1. Giới thiệu về NAT Gateways | Introduction</h2>
+                <div class="card">
+                    <p data-i18n="intro.p1" class="mb-4">
+                        **NAT Gateways** are a **managed service** that is always running and offers **high availability** and **high bandwidth**. They are the **recommended, modern solution** for enabling internet access from **private subnets**.
+                    </p>
+                    <div class="highlight-feature flex items-center space-x-3">
+                        <i class="fas fa-shield-alt text-green-700 text-2xl"></i>
+                        <p class="font-semibold text-gray-800" data-i18n="intro.feature">
+                            **Managed Service:** No **administration** required, high availability, and automatically scaling bandwidth (**5 Gbps** up to **100 Gbps**).
+                        </p>
+                    </div>
+                    <p data-i18n="intro.p2" class="mt-4">
+                        A NAT Gateway is created in a specific **Availability Zone (AZ)**, inherits an **Elastic IP address**, and is always placed within a **public subnet**. It cannot be used with an instance within the same subnet. Therefore, the NAT Gateway can only be helpful if accessed from **another subnet**.
+                    </p>
+                    <p data-i18n="intro.p3" class="mt-4 font-bold text-red-600">
+                        **CRITICAL:** A NAT Gateway cannot work without an **Internet Gateway** attached to the VPC.
+                    </p>
+                </div>
+            </section>
+
+            <!-- 2. High Availability & Resilience -->
+            <section id="resilience" class="mb-10">
+                <h2 class="text-3xl section-header" data-i18n="resilience.title">2. Sẵn sàng Cao (High Availability)</h2>
+                <div class="card">
+                    <p data-i18n="resilience.p1" class="mb-3">
+                        The NAT Gateway is **resilient** and **redundant** only **within a single Availability Zone**.
+                    </p>
+                    <div class="highlight-feature bg-yellow-100 border-yellow-300 flex items-center space-x-3">
+                        <i class="fas fa-exclamation-triangle text-yellow-700 text-2xl"></i>
+                        <p class="font-semibold text-gray-800" data-i18n="resilience.warning">
+                            **AZ Fault Tolerance:** To achieve **fault tolerance across multiple AZs**, you **MUST** deploy a separate **NAT Gateway** in **each AZ**.
+                        </p>
+                    </div>
+                    <p data-i18n="resilience.p2" class="mt-4">
+                        Each private subnet must be routed to the NAT Gateway in the **same AZ**. There is **no need to connect the NAT Gateways together** through route tables.
+                    </p>
+                </div>
+            </section>
+
+            <!-- 3. Differences Table -->
+            <section id="differences" class="mb-10">
+                <h2 class="text-3xl section-header" data-i18n="diff.title">3. So sánh NAT Gateways vs. NAT Instances</h2>
+                <div class="card">
+                    <div class="diff-card">
+                        <div class="nat-gateway-col">
+                            <h3 class="text-xl font-bold mb-3 text-green-700" data-i18n="diff.gw.header"><i class="fas fa-check-circle mr-2"></i> NAT Gateways (Recommended)</h3>
+                            <ul class="list-disc ml-5 space-y-2 text-gray-700">
+                                <li data-i18n="diff.gw.p1">**Managed Service:** AWS quản lý **hoàn toàn**.</li>
+                                <li data-i18n="diff.gw.p2">**High Availability (AZ):** **Redundant** trong một **AZ duy nhất**.</li>
+                                <li data-i18n="diff.gw.p3">**Bandwidth:** **Tự động mở rộng** (**5 Gbps** đến **100 Gbps**).</li>
+                                <li data-i18n="diff.gw.p4">**Security:** **Không** cần Security Groups cho Gateway.</li>
+                                <li data-i18n="diff.gw.p5">**Bastion Host:** **Không** thể sử dụng làm bastion host.</li>
+                                <li data-i18n="diff.gw.p6">**Cost:** **Theo giờ** sử dụng + **data transfer**.</li>
+                            </ul>
+                        </div>
+                        <div class="nat-instance-col">
+                            <h3 class="text-xl font-bold mb-3 text-red-700" data-i18n="diff.inst.header"><i class="fas fa-times-circle mr-2"></i> NAT Instances (Outdated)</h3>
+                            <ul class="list-disc ml-5 space-y-2 text-gray-700">
+                                <li data-i18n="diff.inst.p1">**Unmanaged:** Phải **tự quản lý** OS, patching.</li>
+                                <li data-i18n="diff.inst.p2">**Availability:** **Không HA** theo mặc định (**cần scripts** phức tạp).</li>
+                                <li data-i18n="diff.inst.p3">**Bandwidth:** Phụ thuộc vào **Instance Size** (kích thước EC2).</li>
+                                <li data-i18n="diff.inst.p4">**Security:** **Yêu cầu** quản lý Security Group và cấu hình cổng.</li>
+                                <li data-i18n="diff.inst.p5">**Bastion Host:** **Có thể** được sử dụng làm bastion host.</li>
+                                <li data-i18n="diff.inst.p6">**Cost:** Theo **Instance Size/loại** + **data transfer**.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="my-10 border-gray-300">
+
+            <!-- Key Takeaways -->
+            <section id="key-takeaways" class="mb-12 text-center">
+                <h2 class="text-3xl font-extrabold text-indigo-600 inline-block pb-1 mb-6" data-i18n="checklist.title">TÓM TẮT ĐIỂM CHÍNH CHO BÀI THI</h2>
+                <div class="p-6 space-y-4 bg-indigo-50 border-2 border-indigo-300 rounded-xl mx-auto max-w-4xl">
+                    <ul class="space-y-3 text-left">
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p1">
+                            <i class="fas fa-star text-indigo-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Managed Service:** NAT Gateways là giải pháp **được quản lý (managed)**, cung cấp **băng thông cao** và **tính sẵn sàng cao**.
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p2">
+                            <i class="fas fa-star text-indigo-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Deployment:** Luôn được triển khai trong **public subnet** và **cần** có **Internet Gateway**.
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p3">
+                            <i class="fas fa-star text-indigo-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **HA Rule:** Để có tính sẵn sàng cao **đa AZ**, bạn **phải** triển khai **nhiều NAT Gateways** ở các AZ khác nhau.
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p4">
+                            <i class="fas fa-star text-indigo-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Security:** **Không** cần quản lý Security Group và **không** thể dùng làm Bastion Host.
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        const translations = {
+            vi: {
+                header: {
+                    title: "NAT Gateways: Giải Pháp Hiện Đại",
+                    subtitle: "Hướng dẫn ghi nhớ các tính năng vượt trội"
+                },
+                intro: {
+                    title: "1. Giới thiệu về NAT Gateways | Introduction",
+                    p1: "<strong>NAT Gateways</strong> là một <strong>dịch vụ được quản lý (managed service)</strong> luôn chạy, cung cấp <strong>tính sẵn sàng cao</strong> và <strong>băng thông lớn</strong>. Chúng là <strong>giải pháp hiện đại, được khuyến nghị</strong> để cho phép các subnet riêng tư truy cập internet.",
+                    feature: "<strong>Managed Service:</strong> Không cần <strong>quản trị</strong>, sẵn sàng cao và băng thông tự động mở rộng (<strong>5 Gbps</strong> lên tới <strong>100 Gbps</strong>).",
+                    p2: "NAT Gateway được tạo trong một <strong>Availability Zone (AZ)</strong> cụ thể, được thừa hưởng một <strong>Elastic IP address</strong>, và luôn được đặt trong một <strong>public subnet</strong>. Nó không thể được sử dụng với các instance trong cùng subnet; nó phải được truy cập từ <strong>một subnet khác</strong>.",
+                    p3: "<strong>QUAN TRỌNG:</strong> A NAT Gateway không thể hoạt động nếu VPC không có <strong>Internet Gateway</strong> được gắn vào."
+                },
+                resilience: {
+                    title: "2. Sẵn sàng Cao (High Availability)",
+                    p1: "The NAT Gateway có khả năng <strong>phục hồi</strong> và <strong>dự phòng</strong> chỉ <strong>trong phạm vi một Availability Zone</strong>.",
+                    warning: "<strong>Chịu lỗi AZ:</strong> Để đạt được <strong>khả năng chịu lỗi giữa các AZ</strong>, bạn <strong>PHẢI</strong> triển khai một <strong>NAT Gateway</strong> riêng biệt trong <strong>mỗi AZ</strong>.",
+                    p2: "Mỗi private subnet phải được định tuyến đến NAT Gateway trong <strong>cùng AZ</strong>. <strong>Không cần kết nối các NAT Gateway với nhau</strong> thông qua bảng định tuyến."
+                },
+                diff: {
+                    title: "3. So sánh NAT Gateways vs. NAT Instances",
+                    gw: {
+                        header: "NAT Gateways (Được Khuyến nghị)",
+                        p1: "<strong>Managed Service:</strong> AWS quản lý <strong>hoàn toàn</strong>.",
+                        p2: "<strong>High Availability (AZ):</strong> <strong>Redundant</strong> trong một <strong>AZ duy nhất</strong>.",
+                        p3: "<strong>Bandwidth:</strong> <strong>Tự động mở rộng</strong> (<strong>5 Gbps</strong> đến <strong>100 Gbps</strong>).",
+                        p4: "<strong>Security:</strong> <strong>Không</strong> cần Security Groups cho Gateway.",
+                        p5: "<strong>Bastion Host:</strong> <strong>Không</strong> thể sử dụng làm bastion host.",
+                        p6: "<strong>Cost:</strong> <strong>Theo giờ</strong> sử dụng + <strong>data transfer</strong>."
+                    },
+                    inst: {
+                        header: "NAT Instances (Lỗi thời)",
+                        p1: "<strong>Unmanaged:</strong> Phải <strong>tự quản lý</strong> OS, patching.",
+                        p2: "<strong>Availability:</strong> <strong>Không HA</strong> theo mặc định (<strong>cần scripts</strong> phức tạp).",
+                        p3: "<strong>Bandwidth:</strong> Phụ thuộc vào <strong>Instance Size</strong> (kích thước EC2).",
+                        p4: "<strong>Security:</strong> <strong>Yêu cầu</strong> quản lý Security Group và cấu hình cổng.",
+                        p5: "<strong>Bastion Host:</strong> <strong>Có thể</strong> được sử dụng làm bastion host.",
+                        p6: "<strong>Cost:</strong> Theo <strong>Instance Size/loại</strong> + <strong>data transfer</strong>."
+                    }
+                },
+                checklist: {
+                    title: "TÓM TẮT ĐIỂM CHÍNH CHO BÀI THI",
+                    p1: "<strong>Managed Service:</strong> NAT Gateways là giải pháp <strong>được quản lý (managed)</strong>, cung cấp <strong>băng thông cao</strong> và <strong>tính sẵn sàng cao</strong>.",
+                    p2: "<strong>Deployment:</strong> Luôn được triển khai trong <strong>public subnet</strong> và <strong>cần</strong> có <strong>Internet Gateway</strong>.",
+                    p3: "<strong>HA Rule:</strong> Để có tính sẵn sàng cao <strong>đa AZ</strong>, bạn <strong>phải</strong> triển khai <strong>nhiều NAT Gateways</strong> ở các AZ khác nhau.",
+                    p4: "<strong>Security:</strong> <strong>Không</strong> cần quản lý Security Group và <strong>không</strong> thể dùng làm Bastion Host."
+                }
+            },
+            en: {
+                header: {
+                    title: "NAT Gateways: The Modern Solution",
+                    subtitle: "Memory Guide for Superior Features"
+                },
+                intro: {
+                    title: "1. Introduction to NAT Gateways | Giới thiệu",
+                    p1: "<strong>NAT Gateways</strong> are a <strong>managed service</strong> that is always running and offers <strong>high availability</strong> and <strong>high bandwidth</strong>. They are the <strong>recommended, modern solution</strong> for enabling internet access from <strong>private subnets</strong>.",
+                    feature: "<strong>Managed Service:</strong> No <strong>administration</strong> required, high availability, and automatically scaling bandwidth (<strong>5 Gbps</strong> up to <strong>100 Gbps</strong>).",
+                    p2: "A NAT Gateway is created in a specific <strong>Availability Zone (AZ)</strong>, inherits an <strong>Elastic IP address</strong>, and is always placed within a <strong>public subnet</strong>. It cannot be used with an instance within the same subnet. Therefore, the NAT Gateway can only be helpful if accessed from <strong>another subnet</strong>.",
+                    p3: "<strong>CRITICAL:</strong> A NAT Gateway cannot work without an <strong>Internet Gateway</strong> attached to the VPC."
+                },
+                resilience: {
+                    title: "2. High Availability | Sẵn sàng Cao",
+                    p1: "The NAT Gateway is <strong>resilient</strong> and <strong>redundant</strong> only <strong>within a single Availability Zone</strong>.",
+                    warning: "<strong>AZ Fault Tolerance:</strong> To achieve <strong>fault tolerance across multiple AZs</strong>, you <strong>MUST</strong> deploy a separate <strong>NAT Gateway</strong> in <strong>each AZ</strong>.",
+                    p2: "Each private subnet must be routed to the NAT Gateway in the <strong>same AZ</strong>. There is <strong>no need to connect the NAT Gateways together</strong> through route tables."
+                },
+                diff: {
+                    title: "3. Differences: NAT Gateways vs. NAT Instances",
+                    gw: {
+                        header: "NAT Gateways (Recommended)",
+                        p1: "<strong>Managed Service:</strong> Fully managed by AWS.",
+                        p2: "<strong>High Availability (AZ):</strong> <strong>Redundant</strong> within a single AZ.",
+                        p3: "<strong>Bandwidth:</strong> <strong>Auto-scales</strong> (<strong>5 Gbps</strong> to <strong>100 Gbps</strong>).",
+                        p4: "<strong>Security:</strong> <strong>No</strong> security groups required for the Gateway itself.",
+                        p5: "<strong>Bastion Host:</strong> <strong>Cannot</strong> be used as a bastion host.",
+                        p6: "<strong>Cost:</strong> Per hour of usage + data processing."
+                    },
+                    inst: {
+                        header: "NAT Instances (Outdated)",
+                        p1: "<strong>Unmanaged:</strong> Requires you to manage OS, patching, etc.",
+                        p2: "<strong>Availability:</strong> <strong>Not HA</strong>/resilient by default (requires complex scripts).",
+                        p3: "<strong>Bandwidth:</strong> Depends on <strong>Instance Size</strong> (EC2 type).",
+                        p4: "<strong>Security:</strong> <strong>Requires</strong> Security Group management and manual port configuration.",
+                        p5: "<strong>Bastion Host:</strong> <strong>Can</strong> be used as a bastion host.",
+                        p6: "<strong>Cost:</strong> Based on <strong>Instance Size</strong>/type + <strong>data transfer</strong>."
+                    }
+                },
+                checklist: {
+                    title: "FINAL EXAM CHECKLIST",
+                    p1: "<strong>Managed Service:</strong> NAT Gateways provide a <strong>managed</strong>, <strong>high-bandwidth</strong>, and <strong>highly available</strong> solution.",
+                    p2: "<strong>Deployment:</strong> Always deployed in a <strong>public subnet</strong> and <strong>requires</strong> an <strong>Internet Gateway</strong>.",
+                    p3: "<strong>HA Rule:</strong> For <strong>multi-AZ</strong> high availability, you <strong>must</strong> deploy <strong>multiple NAT Gateways</strong> in different AZs.",
+                    p4: "<strong>Security:</strong> <strong>No</strong> security group management and <strong>cannot</strong> be used as a Bastion Host."
+                }
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default language
+
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+
+        function getNestedTranslation(obj, path) {
+            return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+        }
+
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const translatedText = getNestedTranslation(translations[currentLanguage], key);
+                if (translatedText) {
+                    // Sử dụng innerHTML để hiển thị đúng các thẻ HTML như <strong>
+                    element.innerHTML = translatedText; 
+                }
+            });
+            document.querySelector('html').setAttribute('lang', currentLanguage);
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            const activeClass = 'bg-green-600 text-white';
+            const inactiveClass = 'bg-gray-200 text-gray-700';
+
+            if (currentLanguage === 'vi') {
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            } else {
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

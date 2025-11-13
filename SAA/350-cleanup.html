@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">Hướng Dẫn Dọn Dẹp Tài Nguyên AWS & Quản Lý Chi Phí</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7fee7; /* Lime 50 - Theme: Saving Money */
+            color: #1f2937; /* Gray 800 */
+        }
+        .container {
+            max-width: 1000px;
+        }
+        .header-title {
+            color: #4d7c0f; /* Lime 700 */
+            border-bottom: 4px solid #a3e635; /* Lime 400 */
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+            border: 1px solid #d9f99d; /* Light lime border */
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 20px -5px rgba(0, 0, 0, 0.15);
+        }
+        .section-header {
+            color: #3f6212; /* Lime 800 */
+            font-weight: 800;
+        }
+        
+        /* Styling cho <strong> */
+        .card strong, .key-takeaways strong {
+            font-weight: 800;
+            color: #365314; /* Darker Lime */
+        }
+
+        .alert-box {
+            background-color: #fefce8; /* Yellow 50 */
+            border-left: 5px solid #facc15; /* Yellow 500 */
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-4 md:p-10">
+        <header class="text-center mb-12 relative">
+            <h1 class="text-4xl md:text-5xl font-extrabold header-title inline-block pb-1" data-i18n="header.title">
+                <i class="fas fa-money-check-alt mr-3"></i> Hướng Dẫn Dọn Dẹp Tài Nguyên AWS
+            </h1>
+            <p class="text-lg text-gray-500 mt-2" data-i18n="header.subtitle">Bảo Vệ Ví Tiền Của Bạn: Đừng Để Tài Nguyên Chạy Ngầm!</p>
+
+            <!-- Language Toggle Buttons -->
+            <div class="absolute top-0 right-0 mt-4 mr-4 flex space-x-2">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-md bg-lime-600 text-white font-semibold text-sm lang-button">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-md bg-gray-200 text-gray-700 font-semibold text-sm lang-button">EN</button>
+            </div>
+        </header>
+
+        <main>
+            <!-- 1. Resource Cleanup Section -->
+            <section id="cleanup-tasks" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="cleanup.title"><i class="fas fa-trash-alt mr-2"></i> 1. Các Tác Vụ Dọn Dẹp Cần Thiết</h2>
+                <div class="card">
+                    <p data-i18n="cleanup.intro" class="mb-6 text-lg">
+                        Trong phần này, chúng ta đã hoàn thành nhiều tác vụ. Tuy nhiên, điều quan trọng là phải xử lý các tài nguyên có thể phát sinh chi phí nếu bị bỏ quên.
+                    </p>
+
+                    <!-- Instance Cleanup -->
+                    <h3 class="font-bold text-2xl mb-3 text-red-600" data-i18n="cleanup.instance_title">EC2 Instances</h3>
+                    <ul class="list-disc ml-6 space-y-2 mb-6">
+                        <li data-i18n="cleanup.instance_action">
+                            Đảm bảo bạn đã **terminate hoặc stop** hai instance đã tạo. Khuyến nghị của tôi là **terminate tất cả instance** để tránh phí.
+                        </li>
+                    </ul>
+
+                    <!-- VPC Component Cleanup -->
+                    <h3 class="font-bold text-2xl mb-3 text-yellow-700" data-i18n="cleanup.vpc_title">Virtual Private Cloud (VPC)</h3>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="p-4 rounded-lg bg-lime-50 border-l-4 border-lime-400">
+                            <h4 class="font-semibold text-lg text-lime-800 mb-2" data-i18n="cleanup.vpc_p1_title"><i class="fas fa-network-wired mr-2"></i> Subnets & Route Tables</h4>
+                            <p data-i18n="cleanup.vpc_p1">
+                                Chúng ta không thể xóa VPC ngay lập tức. Cần phải xóa **subnets và bảng định tuyến đầu tiên**.
+                            </p>
+                        </div>
+                        <div class="p-4 rounded-lg bg-lime-50 border-l-4 border-lime-400">
+                            <h4 class="font-semibold text-lg text-lime-800 mb-2" data-i18n="cleanup.vpc_p2_title"><i class="fas fa-cloud-upload-alt mr-2"></i> Internet Gateways</h4>
+                            <p data-i18n="cleanup.vpc_p2">
+                                Cần phải tách (detached) và xóa **Internet Gateway**. Tương tự, **egress-only internet gateway** (dành cho IPv6) cũng cần được **tách (detached) và xóa**.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Costly Resources -->
+                    <h3 class="font-bold text-2xl mb-3 text-orange-600 mt-6" data-i18n="cleanup.costly_title">Tài Nguyên Phát Sinh Chi Phí Hàng Giờ</h3>
+                    <ul class="list-disc ml-6 space-y-3 mt-4">
+                        <li data-i18n="cleanup.ip_nat_action">
+                            <strong>Elastic IPs</strong> rất quan trọng để quản lý. Nhớ **gỡ bỏ Elastic IP** sau khi xóa NAT gateway để tránh phí.
+                        </li>
+                        <li data-i18n="cleanup.endpoint_action">
+                            Nhớ **xóa các endpoint này** (VPC Endpoints) vì chúng **phát sinh phí theo giờ** và có thể tích lũy chi phí.
+                        </li>
+                        <li data-i18n="cleanup.peering_action">
+                            Sau khi xóa NAT gateway và giải phóng Elastic IP, bạn cũng có thể **xóa bất kỳ peering connection** nào bạn đã thiết lập.
+                        </li>
+                    </ul>
+
+                    <!-- Final Step -->
+                    <div class="mt-6 p-4 alert-box rounded-lg">
+                        <h4 class="font-semibold text-lg text-yellow-800 mb-2" data-i18n="cleanup.nacl_title"><i class="fas fa-broom mr-2"></i> Bước Cuối Cùng (Network ACLs)</h4>
+                        <p data-i18n="cleanup.nacl_action">
+                            Trước khi xóa VPC hoàn toàn, hãy đảm bảo bạn gỡ bỏ bất kỳ Network ACL nào nếu cần thiết. Mặc dù chúng **không phát sinh phí**, dọn dẹp chúng giúp duy trì **môi trường gọn gàng**.
+                        </p>
+                    </div>
+
+                    <p class="text-xl font-bold mt-8 text-center text-red-700" data-i18n="cleanup.final_warning">
+                        Vui lòng đảm bảo **xóa và dọn dẹp tất cả tài nguyên** để tránh **các khoản phí bất ngờ** vào cuối tháng.
+                    </p>
+                </div>
+            </section>
+
+            <!-- 2. Billing Monitoring Section -->
+            <section id="billing-monitoring" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="billing.title"><i class="fas fa-chart-line mr-2"></i> 2. Giám Sát Chi Phí Qua Billing Dashboard</h2>
+                <div class="card">
+                    <p data-i18n="billing.intro" class="mb-4 text-lg">
+                        Cách tốt nhất để theo dõi chi tiêu AWS của bạn là truy cập **billing dashboard và xem xét hóa đơn thường xuyên**.
+                    </p>
+
+                    <h3 class="font-bold text-2xl mb-3 text-blue-700" data-i18n="billing.example_title">Ví Dụ Chi Phí Thực Tế</h3>
+                    <p data-i18n="billing.context" class="mb-4">
+                        Ví dụ, trong billing dashboard của tôi, tôi thấy các khoản phí liên quan đến Virtual Private Cloud. Tôi đã vào mục hóa đơn và chọn tháng hiện tại:
+                    </p>
+
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <!-- EC2/NAT -->
+                        <div class="p-4 rounded-lg bg-red-50 border-l-4 border-red-400">
+                            <p data-i18n="billing.ec2_nat" class="text-red-800">
+                                <i class="fas fa-exclamation-triangle mr-2"></i>
+                                Elastic Compute Cloud đã phát sinh phí **$1.25**. NAT gateway cũng đã tốn **$1.25** cho đến nay.
+                            </p>
+                        </div>
+                        <!-- Route 53 -->
+                        <div class="p-4 rounded-lg bg-orange-50 border-l-4 border-orange-400">
+                            <p data-i18n="billing.route53" class="text-orange-800">
+                                <i class="fas fa-globe mr-2"></i>
+                                Route 53 đã tốn **$0.70**. Tôi đã quên xóa hosted zone, vốn có chi phí **$0.50** mỗi tháng.
+                            </p>
+                        </div>
+                        <!-- Analyzer -->
+                        <div class="md:col-span-2 p-4 rounded-lg bg-purple-50 border-l-4 border-purple-400">
+                            <p data-i18n="billing.analyzer" class="text-purple-800">
+                                <i class="fas fa-magnifying-glass mr-2"></i>
+                                VPC Reachability Analyzer cũng đã phát sinh một số chi phí.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="my-10 border-gray-300">
+
+            <!-- 3. Key Takeaways -->
+            <section id="key-takeaways" class="mb-12 text-center">
+                <h2 class="text-3xl font-extrabold text-lime-700 inline-block pb-1 mb-6" data-i18n="takeaways.title"><i class="fas fa-bullhorn mr-2"></i> KEY TAKEAWAYS</h2>
+                <div class="card key-takeaways mx-auto max-w-4xl p-6 bg-lime-50 border-2 border-lime-400">
+                    <ul class="space-y-4 text-left">
+                        <li data-i18n="takeaways.p1" class="flex items-start">
+                            <i class="fas fa-check-circle text-lime-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Luôn luôn terminate hoặc stop instance** để tránh chi phí không cần thiết.
+                        </li>
+                        <li data-i18n="takeaways.p2" class="flex items-start">
+                            <i class="fas fa-check-circle text-lime-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Dọn dẹp các thành phần VPC** như subnets, route tables, internet gateways và elastic IPs để **ngăn chặn phí phát sinh liên tục**.
+                        </li>
+                        <li data-i18n="takeaways.p3" class="flex items-start">
+                            <i class="fas fa-check-circle text-lime-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Xóa VPC endpoints và peering connection** vì chúng **phát sinh phí theo giờ**.
+                        </li>
+                        <li data-i18n="takeaways.p4" class="flex items-start">
+                            <i class="fas fa-check-circle text-lime-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Thường xuyên xem xét AWS billing dashboard** để giám sát và quản lý chi tiêu một cách hiệu quả.
+                        </li>
+                        <li data-i18n="takeaways.p5" class="flex items-start">
+                            <i class="fas fa-exclamation-triangle text-red-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Việc bỏ qua việc dọn dẹp tài nguyên** có thể dẫn đến **phí bất ngờ** vào cuối chu kỳ thanh toán.
+                        </li>
+                    </ul>
+                </div>
+                <p class="mt-8 text-lg text-gray-700" data-i18n="takeaways.conclusion">
+                    Điều này kết thúc bài giảng. Tôi hy vọng bạn thấy nó hữu ích, và tôi mong được gặp bạn trong bài giảng tiếp theo!
+                </p>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const translations = {
+            vi: {
+                header: {
+                    title: "Hướng Dẫn Dọn Dẹp Tài Nguyên AWS & Quản Lý Chi Phí",
+                    subtitle: "Bảo Vệ Ví Tiền Của Bạn: Đừng Để Tài Nguyên Chạy Ngầm!"
+                },
+                cleanup: {
+                    title: "1. Các Tác Vụ Dọn Dẹp Cần Thiết",
+                    intro: "Trong phần này, chúng ta đã hoàn thành nhiều tác vụ. Tuy nhiên, điều quan trọng là phải xử lý các tài nguyên có thể phát sinh chi phí nếu bị bỏ quên.",
+                    instance_title: "EC2 Instances",
+                    instance_action: "Đảm bảo bạn đã <strong>terminate hoặc stop</strong> hai instance đã tạo. Khuyến nghị của tôi là <strong>terminate tất cả instance</strong> để tránh phí.",
+                    vpc_title: "Virtual Private Cloud (VPC)",
+                    vpc_p1_title: "<i class=\"fas fa-network-wired mr-2\"></i> Subnets & Route Tables",
+                    vpc_p1: "Chúng ta không thể xóa VPC ngay lập tức. Cần phải xóa <strong>subnets và bảng định tuyến đầu tiên</strong>.",
+                    vpc_p2_title: "<i class=\"fas fa-cloud-upload-alt mr-2\"></i> Internet Gateways",
+                    vpc_p2: "Cần phải tách (detached) và xóa <strong>Internet Gateway</strong>. Tương tự, <strong>egress-only internet gateway</strong> (dành cho IPv6) cũng cần được <strong>tách (detached) và xóa</strong>.",
+                    costly_title: "Tài Nguyên Phát Sinh Chi Phí Hàng Giờ",
+                    ip_nat_action: "<strong>Elastic IPs</strong> rất quan trọng để quản lý. Nhớ <strong>gỡ bỏ Elastic IP</strong> sau khi xóa NAT gateway để tránh phí.",
+                    endpoint_action: "Nhớ <strong>xóa các endpoint này</strong> (VPC Endpoints) vì chúng <strong>phát sinh phí theo giờ</strong> và có thể tích lũy chi phí.",
+                    peering_action: "Sau khi xóa NAT gateway và giải phóng Elastic IP, bạn cũng có thể <strong>xóa bất kỳ peering connection</strong> nào bạn đã thiết lập.",
+                    nacl_title: "<i class=\"fas fa-broom mr-2\"></i> Bước Cuối Cùng (Network ACLs)",
+                    nacl_action: "Trước khi xóa VPC hoàn toàn, hãy đảm bảo bạn gỡ bỏ bất kỳ Network ACL nào nếu cần thiết. Mặc dù chúng <strong>không phát sinh phí</strong>, dọn dẹp chúng giúp duy trì <strong>môi trường gọn gàng</strong>.",
+                    final_warning: "Vui lòng đảm bảo <strong>xóa và dọn dẹp tất cả tài nguyên</strong> để tránh <strong>các khoản phí bất ngờ</strong> vào cuối tháng."
+                },
+                billing: {
+                    title: "2. Giám Sát Chi Phí Qua Billing Dashboard",
+                    intro: "Cách tốt nhất để theo dõi chi tiêu AWS của bạn là truy cập <strong>billing dashboard và xem xét hóa đơn thường xuyên</strong>.",
+                    example_title: "Ví Dụ Chi Phí Thực Tế",
+                    context: "Ví dụ, trong billing dashboard của tôi, tôi thấy các khoản phí liên quan đến Virtual Private Cloud. Tôi đã vào mục hóa đơn và chọn tháng hiện tại:",
+                    ec2_nat: "<i class=\"fas fa-exclamation-triangle mr-2\"></i> Elastic Compute Cloud đã phát sinh phí <strong>$1.25</strong>. NAT gateway cũng đã tốn <strong>$1.25</strong> cho đến nay.",
+                    route53: "<i class=\"fas fa-globe mr-2\"></i> Route 53 đã tốn <strong>$0.70</strong>. Tôi đã quên xóa hosted zone, vốn có chi phí <strong>$0.50</strong> mỗi tháng.",
+                    analyzer: "<i class=\"fas fa-magnifying-glass mr-2\"></i> VPC Reachability Analyzer cũng đã phát sinh một số chi phí."
+                },
+                takeaways: {
+                    title: "KEY TAKEAWAYS",
+                    p1: "<strong>Luôn luôn terminate hoặc stop instance</strong> để tránh chi phí không cần thiết.",
+                    p2: "<strong>Dọn dẹp các thành phần VPC</strong> như subnets, route tables, internet gateways và elastic IPs để <strong>ngăn chặn phí phát sinh liên tục</strong>.",
+                    p3: "<strong>Xóa VPC endpoints và peering connection</strong> vì chúng <strong>phát sinh phí theo giờ</strong>.",
+                    p4: "<strong>Thường xuyên xem xét AWS billing dashboard</strong> để giám sát và quản lý chi tiêu một cách hiệu quả.",
+                    p5: "<strong>Việc bỏ qua việc dọn dọn tài nguyên</strong> có thể dẫn đến <strong>phí bất ngờ</strong> vào cuối chu kỳ thanh toán.",
+                    conclusion: "Điều này kết thúc bài giảng. Tôi hy vọng bạn thấy nó hữu ích, và tôi mong được gặp bạn trong bài giảng tiếp theo!"
+                }
+            },
+            en: {
+                header: {
+                    title: "AWS Resource Cleanup Guide & Cost Management",
+                    subtitle: "Protect Your Wallet: Don't Leave Resources Running!"
+                },
+                cleanup: {
+                    title: "1. Essential Cleanup Tasks",
+                    intro: "In this section, we have completed many tasks. However, it is important to address resources that may incur costs if left running.",
+                    instance_title: "EC2 Instances",
+                    instance_action: "Ensure you either <strong>terminate or stop</strong> the two instances we created. I recommend you <strong>terminate all instances</strong> to avoid charges.",
+                    vpc_title: "Virtual Private Cloud (VPC)",
+                    vpc_p1_title: "<i class=\"fas fa-network-wired mr-2\"></i> Subnets & Route Tables",
+                    vpc_p1: "We cannot delete the VPC immediately. We need to delete the <strong>subnets and the first route table</strong>.",
+                    vpc_p2_title: "<i class=\"fas fa-cloud-upload-alt mr-2\"></i> Internet Gateways",
+                    vpc_p2: "The internet gateway must be <strong>detached and deleted</strong>. Similarly, the <strong>egress-only internet gateway</strong> needs to be <strong>detached and deleted</strong>.",
+                    costly_title: "Hourly Cost-Incurring Resources",
+                    ip_nat_action: "<strong>Elastic IPs</strong> are very important to manage. Remember to <strong>remove the Elastic IP</strong> after deleting the NAT gateway to avoid charges.",
+                    endpoint_action: "Remember to <strong>delete these endpoints</strong> (VPC Endpoints) because they <strong>incur hourly fees</strong> and can accumulate costs over time.",
+                    peering_action: "After deleting the NAT gateway and releasing the Elastic IP, you can also <strong>delete any peering connections</strong> you have established.",
+                    nacl_title: "<i class=\"fas fa-broom mr-2\"></i> Final Step (Network ACLs)",
+                    nacl_action: "Before removing the VPC entirely, ensure you remove any Network ACLs if necessary. Although they <strong>do not incur costs</strong>, cleaning them up maintains a <strong>tidy environment</strong>.",
+                    final_warning: "Please make sure to <strong>delete and clean up all resources</strong> to avoid <strong>unexpected charges</strong> at the end of the month."
+                },
+                billing: {
+                    title: "2. Monitoring Costs via the Billing Dashboard",
+                    intro: "The best way to monitor your AWS expenses is to visit your <strong>billing dashboard and review your bill regularly</strong>.",
+                    example_title: "Real-World Cost Examples",
+                    context: "For example, in my billing dashboard, I can see charges related to the Virtual Private Cloud. I navigated to the bills section and selected the current month:",
+                    ec2_nat: "<i class=\"fas fa-exclamation-triangle mr-2\"></i> Elastic Compute Cloud has incurred a charge of <strong>$1.25</strong>. The NAT gateway has also cost me <strong>$1.25</strong> so far.",
+                    route53: "<i class=\"fas fa-globe mr-2\"></i> Route 53 has cost me <strong>$0.70</strong>. I had forgotten to delete the hosted zone, which costs <strong>$0.50</strong> per month.",
+                    analyzer: "<i class=\"fas fa-magnifying-glass mr-2\"></i> The VPC Reachability Analyzer has also incurred some charges."
+                },
+                takeaways: {
+                    title: "KEY TAKEAWAYS",
+                    p1: "<strong>Always terminate or stop instances</strong> to avoid unnecessary costs.",
+                    p2: "<strong>Clean up VPC components</strong> such as subnets, route tables, internet gateways, and elastic IPs to <strong>prevent ongoing charges</strong>.",
+                    p3: "<strong>Delete VPC endpoints and peering connections</strong> as they <strong>incur hourly fees</strong>.",
+                    p4: "<strong>Regularly review your AWS billing dashboard</strong> to monitor and manage expenses effectively.",
+                    p5: "<strong>Neglecting to clean up resources</strong> can lead to <strong>unexpected charges</strong> at the end of the billing cycle.",
+                    conclusion: "This concludes the lecture. I hope you found it helpful, and I look forward to seeing you in the next lecture."
+                }
+            }
+        };
+
+        let currentLanguage = 'vi';
+
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+
+        function getNestedTranslation(obj, path) {
+            return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+        }
+
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const translatedText = getNestedTranslation(translations[currentLanguage], key);
+                if (translatedText) {
+                    // Sử dụng innerHTML để hiển thị đúng các thẻ HTML như <strong> và <i>
+                    element.innerHTML = translatedText;
+                }
+            });
+            document.querySelector('html').setAttribute('lang', currentLanguage);
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            // Sử dụng màu Lime cho nút active (Theme Money/Cleanup)
+            const activeClass = 'bg-lime-600 text-white';
+            const inactiveClass = 'bg-gray-200 text-gray-700';
+
+            if (currentLanguage === 'vi') {
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            } else {
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

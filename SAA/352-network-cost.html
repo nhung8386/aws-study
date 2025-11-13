@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">Tóm Tắt Chi Phí Mạng Lưới AWS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0fdfa; /* Teal 50 - Cost/Optimization Theme */
+            color: #1f2937; /* Gray 800 */
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .header-title {
+            color: #0f766e; /* Teal 700 */
+            border-bottom: 4px solid #5eead4; /* Teal 300 */
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            height: 100%;
+            border: 1px solid #99f6e4; /* Light Teal border */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 20px -5px rgba(0, 0, 0, 0.15);
+        }
+        .section-header {
+            color: #0d9488; /* Teal 600 */
+            font-weight: 800;
+        }
+        
+        /* Styling cho <strong> */
+        .content-card strong, .takeaways-list strong {
+            font-weight: 800;
+            color: #047857; /* Emerald 700 - Highlight Cost/Traffic */
+        }
+
+        .icon-box {
+            background-color: #ccfbf1; /* Teal 100 */
+            color: #14b8a6; /* Teal 500 */
+            width: 4rem;
+            height: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-4 md:p-10">
+        <header class="text-center mb-12 relative">
+            <h1 class="text-4xl md:text-5xl font-extrabold header-title inline-block pb-1" data-i18n="header.title">
+                <i class="fas fa-hand-holding-usd mr-3"></i> Tóm Tắt Chi Phí Mạng Lưới AWS
+            </h1>
+            <p class="text-lg text-gray-500 mt-2" data-i18n="header.subtitle">Hiểu rõ luồng dữ liệu, tối ưu hóa chi phí.</p>
+
+            <!-- Language Toggle Buttons -->
+            <div class="absolute top-0 right-0 mt-4 mr-4 flex space-x-2">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-md bg-teal-600 text-white font-semibold text-sm lang-button">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-md bg-gray-200 text-gray-700 font-semibold text-sm lang-button">EN</button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Introduction -->
+            <section id="introduction" class="mb-10">
+                <div class="card p-6 bg-white shadow-xl content-card">
+                    <h2 class="text-3xl section-header mb-4" data-i18n="intro.title">Chi Phí Mạng Lưới Trong AWS</h2>
+                    <p data-i18n="intro.p1" class="text-lg mb-4">
+                        Hãy thảo luận về chi phí mạng lưới trong AWS tính theo gigabyte. Tổng quan này được đơn giản hóa để giải thích rõ ràng một vài khái niệm quan trọng. Chi phí mạng lưới có thể trở nên rất phức tạp, nhưng bản tóm tắt cấp cao này sẽ giúp bạn chuẩn bị cho kỳ thi.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Core Rules Grid -->
+            <section id="core-rules">
+                <h2 class="text-3xl section-header mb-6" data-i18n="rules.title"><i class="fas fa-money-check-alt mr-2"></i> Quy Tắc Chi Phí Cốt Lõi (EC2)</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- 1. Incoming Traffic is Free -->
+                    <div class="card content-card">
+                        <div class="icon-box"><i class="fas fa-arrow-alt-circle-down text-2xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-teal-700" data-i18n="rule1.title">Traffic Đến (Ingress)</h3>
+                        <p data-i18n="rule1.p1">
+                            Bất kỳ lưu lượng truy cập nào <strong>đến (incoming)</strong> các phiên bản <strong>EC2</strong> của bạn đều <strong>miễn phí</strong>.
+                        </p>
+                        <p data-i18n="rule1.p2" class="text-sm italic text-gray-500">
+                            (Áp dụng cho mọi lưu lượng inbound từ internet vào EC2)
+                        </p>
+                    </div>
+
+                    <!-- 2. Same AZ Communication (Private IP) -->
+                    <div class="card content-card">
+                        <div class="icon-box"><i class="fas fa-compress-alt text-2xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-teal-700" data-i18n="rule2.title">Cùng Vùng Sẵn Sàng (AZ)</h3>
+                        <p data-i18n="rule2.p1">
+                            Lưu lượng giữa hai phiên bản EC2 trong <strong>cùng một AZ</strong> là <strong>miễn phí</strong>, miễn là chúng giao tiếp bằng <strong>IP riêng (Private IP)</strong> của chúng.
+                        </p>
+                        <p data-i18n="rule2.p2" class="text-sm italic text-gray-500">
+                            (Giữ lưu lượng trong mạng nội bộ AWS)
+                        </p>
+                    </div>
+
+                    <!-- 3. Cross-AZ Communication (Private IP) -->
+                    <div class="card content-card">
+                        <div class="icon-box"><i class="fas fa-network-wired text-2xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-teal-700" data-i18n="rule3.title">Giữa Các AZ (Private IP)</h3>
+                        <p data-i18n="rule3.p1">
+                            Lưu lượng giữa các AZ trong <strong>cùng một Khu vực</strong>, sử dụng <strong>IP riêng</strong>, có chi phí <strong>bằng một nửa</strong> (ví dụ: 1 cent/GB).
+                        </p>
+                        <p data-i18n="rule3.p2" class="text-sm italic text-gray-500">
+                            (Sử dụng IP riêng giúp chi phí thấp hơn)
+                        </p>
+                    </div>
+
+                    <!-- 4. Cross-AZ Communication (Public IP) -->
+                    <div class="card content-card">
+                        <div class="icon-box"><i class="fas fa-cloud text-2xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-teal-700" data-i18n="rule4.title">Giữa Các AZ (Public IP)</h3>
+                        <p data-i18n="rule4.p1">
+                            Lưu lượng giữa các AZ trong cùng một Khu vực, sử dụng <strong>IP công cộng (Public IP) hoặc IP đàn hồi (Elastic IP)</strong>, có chi phí <strong>cao hơn</strong> (ví dụ: 2 cent/GB).
+                        </p>
+                    </div>
+
+                    <!-- 5. Inter-Region Communication -->
+                    <div class="card content-card">
+                        <div class="icon-box"><i class="fas fa-globe text-2xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-teal-700" data-i18n="rule5.title">Giữa Các Khu Vực (Regions)</h3>
+                        <p data-i18n="rule5.p1">
+                            Khi lưu lượng truyền giữa <strong>các Khu vực AWS khác nhau</strong>, chi phí là <strong>2 cent mỗi gigabyte</strong>.
+                        </p>
+                        <p data-i18n="rule5.p2" class="text-sm italic text-red-500">
+                            (Lưu lượng giữa các khu vực có thể khá tốn kém)
+                        </p>
+                    </div>
+
+                     <!-- 6. Egress/Ingress Principle -->
+                    <div class="card content-card">
+                        <div class="icon-box"><i class="fas fa-sign-out-alt text-2xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-teal-700" data-i18n="rule6.title">Nguyên Tắc Egress (Đi ra)</h3>
+                        <p data-i18n="rule6.p1">
+                            <strong>Ingress traffic</strong> (đi vào AWS) thường <strong>miễn phí</strong>. <strong>Egress traffic</strong> (đi ra khỏi AWS) <strong>phát sinh chi phí</strong>.
+                        </p>
+                        <p data-i18n="rule6.p2" class="text-sm italic text-gray-500">
+                            (Mục tiêu là giữ càng nhiều lưu lượng càng tốt trong AWS)
+                        </p>
+                    </div>
+
+                </div>
+            </section>
+
+            <hr class="my-10 border-gray-300">
+
+            <!-- Cost Optimization Strategies -->
+            <section id="optimization-strategies">
+                <h2 class="text-3xl section-header mb-6" data-i18n="optim.title"><i class="fas fa-lightbulb mr-2"></i> Tối Ưu Hóa Chi Phí Mạng Lưới</h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Strategy 1: Compute Placement -->
+                    <div class="card content-card">
+                        <h3 class="font-bold text-xl mb-3 text-teal-700" data-i18n="optim1.title">Chiến Lược: Vị Trí Tính Toán</h3>
+                        <p data-i18n="optim1.p1">
+                            Để giảm chi phí egress, hãy <strong>chuyển ứng dụng xử lý dữ liệu vào AWS</strong>.
+                        </p>
+                        <p data-i18n="optim1.p2">
+                            Ví dụ: Nếu một ứng dụng tại trung tâm dữ liệu doanh nghiệp truy vấn 100MB dữ liệu từ RDS/S3, di chuyển ứng dụng đó vào EC2 trong cùng AZ với cơ sở dữ liệu sẽ giúp <strong>100MB truyền tải miễn phí</strong>, và chỉ cần trả phí cho kết quả tổng hợp nhỏ (ví dụ: 50KB) đi ra.
+                        </p>
+                    </div>
+
+                    <!-- Strategy 2: High Availability vs Cost -->
+                    <div class="card content-card">
+                        <h3 class="font-bold text-xl mb-3 text-teal-700" data-i18n="optim2.title">Chiến Lược: Cân Bằng HA và Chi Phí</h3>
+                        <p data-i18n="optim2.p1">
+                            Đặt các instance trong <strong>cùng một AZ</strong> giúp <strong>tối đa hóa tiết kiệm chi phí</strong> mạng lưới (0 cent/GB).
+                        </p>
+                        <p data-i18n="optim2.p2" class="text-sm italic text-red-500">
+                            Tuy nhiên, điều này <strong>làm giảm tính sẵn sàng cao (High Availability)</strong> vì nếu AZ đó gặp sự cố, sẽ không có cơ chế chuyển đổi dự phòng (failover). Phải cân bằng HA và chi phí dựa trên yêu cầu của bạn.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="my-10 border-gray-300">
+
+            <!-- S3 and CDN Costs -->
+            <section id="s3-cdn-costs">
+                <h2 class="text-3xl section-header mb-6" data-i18n="s3.title"><i class="fas fa-database mr-2"></i> Chi Phí Truyền Tải Dữ Liệu S3 & CloudFront</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- S3 Transfers -->
+                    <div class="card content-card">
+                        <h3 class="font-bold text-xl mb-3 text-teal-700" data-i18n="s3_c1.title">S3 Data Transfer</h3>
+                        <ul class="list-disc ml-5 space-y-2">
+                            <li data-i18n="s3_c1.p1">Data <strong>ingress</strong> vào S3 bucket là <strong>miễn phí</strong>.</li>
+                            <li data-i18n="s3_c1.p2">Tải xuống từ S3 ra internet: <strong>9 cent mỗi gigabyte</strong>.</li>
+                            <li data-i18n="s3_c1.p3">S3 Transfer Acceleration: thêm <strong>4 đến 8 cent mỗi gigabyte</strong> để tăng tốc độ.</li>
+                            <li data-i18n="s3_c1.p4">Sao chép giữa các khu vực (Cross-region replication): <strong>2 cent mỗi gigabyte</strong>.</li>
+                        </ul>
+                    </div>
+
+                    <!-- CloudFront Transfers -->
+                    <div class="card content-card">
+                        <h3 class="font-bold text-xl mb-3 text-teal-700" data-i18n="s3_c2.title">Tối Ưu Với CloudFront</h3>
+                        <ul class="list-disc ml-5 space-y-2">
+                            <li data-i18n="s3_c2.p1">Truyền tải Data giữa <strong>S3 và CloudFront là miễn phí</strong>.</li>
+                            <li data-i18n="s3_c2.p2">Từ CloudFront ra internet: khoảng <strong>8.5 cent mỗi gigabyte</strong> (rẻ hơn S3 trực tiếp).</li>
+                            <li data-i18n="s3_c2.p3">Yêu cầu (Requests) tới CloudFront <strong>rẻ hơn khoảng bảy lần</strong> so với yêu cầu tới S3.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="my-10 border-gray-300">
+
+            <!-- Cost Comparison -->
+            <section id="cost-comparison">
+                <h2 class="text-3xl section-header mb-6" data-i18n="comp.title"><i class="fas fa-balance-scale-right mr-2"></i> So Sánh Chi Phí: NAT Gateway vs. VPC Endpoint</h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- NAT Gateway Costs -->
+                    <div class="card content-card border-l-4 border-red-500">
+                        <h3 class="font-bold text-2xl mb-3 text-red-600" data-i18n="comp1.title">NAT Gateway (Tốn kém hơn)</h3>
+                        <p class="mb-4" data-i18n="comp1.desc">
+                            Lưu lượng truy cập S3 từ private subnet đi qua NAT Gateway và Internet Gateway ra internet.
+                        </p>
+                        <ul class="list-disc ml-5 space-y-2">
+                            <li data-i18n="comp1.p1">Phí hàng giờ: <strong>$0.045 mỗi giờ</strong> cho NAT Gateway.</li>
+                            <li data-i18n="comp1.p2">Phí xử lý dữ liệu: <strong>$0.045 mỗi gigabyte</strong> được xử lý qua NAT Gateway.</li>
+                            <li data-i18n="comp1.p3">Chi phí truyền tải dữ liệu: 0.09\$ mỗi GB ra S3 liên khu vực (hoặc $0 nếu cùng khu vực).</li>
+                        </ul>
+                    </div>
+
+                    <!-- VPC Gateway Endpoint Costs -->
+                    <div class="card content-card border-l-4 border-green-500">
+                        <h3 class="font-bold text-2xl mb-3 text-green-600" data-i18n="comp2.title">VPC Gateway Endpoint (Tối ưu)</h3>
+                        <p class="mb-4" data-i18n="comp2.desc">
+                            Cho phép kết nối riêng tư trực tiếp từ private subnet đến S3 mà không cần đi qua internet.
+                        </p>
+                        <ul class="list-disc ml-5 space-y-2">
+                            <li data-i18n="comp2.p1">Phí hàng giờ: <strong>Miễn phí</strong> (No hourly charge).</li>
+                            <li data-i18n="comp2.p2">Phí truyền tải dữ liệu: <strong>$0.01 mỗi gigabyte</strong> truyền tải vào và ra S3 trong cùng khu vực.</li>
+                            <li data-i18n="comp2.p3">Kết luận: Sử dụng VPC Endpoint có thể <strong>giảm đáng kể chi phí</strong> so với NAT Gateway.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="my-10 border-gray-300">
+
+            <!-- Final Takeaways -->
+            <section id="final-takeaways" class="text-center">
+                <h2 class="text-3xl font-extrabold text-teal-700 inline-block pb-1 mb-6" data-i18n="final.title"><i class="fas fa-chart-line mr-2"></i> TÓM TẮT CÁC ĐIỂM CHÍNH</h2>
+                <div class="card takeaways-list mx-auto max-w-4xl p-6 bg-teal-50 border-2 border-teal-400">
+                    <ul class="space-y-4 text-left list-disc pl-5">
+                        <li data-i18n="final.p1">Lưu lượng <strong>đến (incoming)</strong> EC2 là <strong>miễn phí</strong>, và lưu lượng giữa các instance trong <strong>cùng AZ</strong> sử dụng <strong>IP riêng</strong> cũng <strong>miễn phí</strong>.</li>
+                        <li data-i18n="final.p2">Sử dụng <strong>IP riêng</strong> để giao tiếp giữa các AZ trong cùng khu vực sẽ có chi phí <strong>bằng một nửa</strong> so với IP công cộng/đàn hồi.</li>
+                        <li data-i18n="final.p3">Truyền tải dữ liệu giữa <strong>các Khu vực khác nhau</strong> phát sinh <strong>chi phí cao hơn</strong> (2 cent/GB).</li>
+                        <li data-i18n="final.p4">Tối ưu hóa: <strong>Giữ lưu lượng xử lý dữ liệu ở lại trong AWS</strong> bằng cách di chuyển logic ứng dụng gần cơ sở dữ liệu.</li>
+                        <li data-i18n="final.p5">Sử dụng <strong>VPC Gateway Endpoints</strong> để truy cập S3 trong cùng khu vực <strong>rẻ hơn đáng kể</strong> so với việc định tuyến qua NAT Gateway.</li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const translations = {
+            vi: {
+                header: {
+                    title: "Tóm Tắt Chi Phí Mạng Lưới AWS",
+                    subtitle: "Hiểu rõ luồng dữ liệu, tối ưu hóa chi phí."
+                },
+                intro: {
+                    title: "Chi Phí Mạng Lưới Trong AWS",
+                    p1: "Hãy thảo luận về chi phí mạng lưới trong AWS tính theo gigabyte. Tổng quan này được đơn giản hóa để giải thích rõ ràng một vài khái niệm quan trọng. Chi phí mạng lưới có thể trở nên rất phức tạp, nhưng bản tóm tắt cấp cao này sẽ giúp bạn chuẩn bị cho kỳ thi."
+                },
+                rules: {
+                    title: "Quy Tắc Chi Phí Cốt Lõi (EC2)"
+                },
+                rule1: {
+                    title: "Traffic Đến (Ingress)",
+                    p1: "Bất kỳ lưu lượng truy cập nào <strong>đến (incoming)</strong> các phiên bản <strong>EC2</strong> của bạn đều <strong>miễn phí</strong>. Đó là, tất cả lưu lượng inbound vào EC2 đều miễn phí.",
+                    p2: "(Áp dụng cho mọi lưu lượng inbound từ internet vào EC2)"
+                },
+                rule2: {
+                    title: "Cùng Vùng Sẵn Sàng (AZ)",
+                    p1: "Vì AZ đại diện cho nhiều trung tâm dữ liệu gần nhau về mặt địa lý, bất kỳ lưu lượng nào giữa hai phiên bản EC2 trong <strong>cùng một AZ</strong> sẽ là <strong>miễn phí</strong>, miễn là chúng giao tiếp bằng <strong>IP riêng (Private IP)</strong> của chúng.",
+                    p2: "(Sử dụng IP riêng đảm bảo lưu lượng ở trong mạng được kết nối)"
+                },
+                rule3: {
+                    title: "Giữa Các AZ (Private IP)",
+                    p1: "Nếu hai phiên bản EC2 nằm trong các AZ khác nhau nhưng trong cùng một khu vực giao tiếp bằng <strong>IP riêng</strong>, chi phí sẽ <strong>bằng một nửa</strong> (vì lưu lượng sử dụng mạng nội bộ AWS liên kết hai AZs).",
+                    p2: "(Sử dụng IP riêng giúp chi phí thấp hơn)"
+                },
+                rule4: {
+                    title: "Giữa Các AZ (Public IP)",
+                    p1: "Lưu lượng giữa các AZ trong cùng một Khu vực, sử dụng <strong>IP công cộng (Public IP)</strong> hoặc <strong>IP đàn hồi (Elastic IP)</strong>, có chi phí <strong>2 cent mỗi gigabyte</strong>.",
+                },
+                rule5: {
+                    title: "Giữa Các Khu Vực (Regions)",
+                    p1: "Khi lưu lượng truyền giữa <strong>các Khu vực AWS khác nhau</strong>, chi phí là <strong>2 cent mỗi gigabyte</strong>. Lưu lượng liên khu vực này có thể khá tốn kém.",
+                    p2: "(Lưu lượng giữa các khu vực có thể khá tốn kém)"
+                },
+                rule6: {
+                    title: "Nguyên Tắc Egress (Đi ra)",
+                    p1: "<strong>Egress traffic</strong> (lưu lượng đi ra khỏi AWS) phát sinh chi phí, trong khi <strong>ingress traffic</strong> (đi vào AWS) thường <strong>miễn phí</strong>. Gửi dữ liệu vào AWS thường không mất phí, nhưng lấy dữ liệu ra khỏi AWS sẽ phát sinh phí.",
+                    p2: "(Mục tiêu của bạn là giữ càng nhiều lưu lượng internet càng tốt trong AWS để giảm thiểu chi phí)"
+                },
+                optim: {
+                    title: "Tối Ưu Hóa Chi Phí Mạng Lưới Với Các Quyết Định Kiến Trúc"
+                },
+                optim1: {
+                    title: "Chiến Lược: Vị Trí Tính Toán",
+                    p1: "Một cách tiếp cận thông minh là <strong>chuyển ứng dụng vào AWS</strong>, ví dụ, trên một phiên bản EC2 trong cùng AZ với cơ sở dữ liệu.",
+                    p2: "Trong trường hợp này, 100 megabyte truyền tải dữ liệu trong cùng AZ là <strong>miễn phí</strong>, và chỉ 50 kilobyte kết quả truy vấn được gửi ra ngoài, giúp <strong>giảm đáng kể chi phí egress</strong>."
+                },
+                optim2: {
+                    title: "Chiến Lược: Cân Bằng HA và Chi Phí",
+                    p1: "Đối với các cụm yêu cầu giao tiếp nhiều giữa các EC2 instance, đặt các instance trong <strong>cùng một AZ</strong> giúp <strong>tối đa hóa tiết kiệm chi phí</strong>.",
+                    p2: "Tuy nhiên, việc tiết kiệm chi phí này <strong>làm giảm tính sẵn sàng cao (High Availability)</strong> vì nếu AZ đó gặp sự cố, sẽ không có cơ chế chuyển đổi dự phòng. Bạn phải cân bằng HA và chi phí dựa trên yêu cầu của mình."
+                },
+                s3: {
+                    title: "Chi Phí Truyền Tải Dữ Liệu Amazon S3 (Ví dụ tại Mỹ)"
+                },
+                s3_c1: {
+                    title: "S3 Data Transfer",
+                    p1: "Data <strong>ingress</strong> vào S3 bucket là <strong>miễn phí</strong>.",
+                    p2: "Tải xuống dữ liệu từ S3 ra máy tính của bạn qua internet tốn <strong>9 cent mỗi gigabyte</strong>.",
+                    p3: "Sử dụng S3 Transfer Acceleration để tăng tốc truyền tải (nhanh hơn 50 đến 500%) sẽ thêm chi phí từ <strong>4 đến 8 cent mỗi gigabyte</strong>.",
+                    p4: "Sao chép giữa các khu vực (Cross-region replication) cho S3 buckets tốn <strong>2 cent mỗi gigabyte</strong>."
+                },
+                s3_c2: {
+                    title: "Tối Ưu Với CloudFront",
+                    p1: "Truyền tải Data giữa <strong>S3 và CloudFront là miễn phí</strong>.",
+                    p2: "Truyền tải Data từ CloudFront ra internet tốn <strong>8.5 cent mỗi gigabyte</strong> (rẻ hơn một chút so với truyền tải S3 trực tiếp ra internet).",
+                    p3: "Yêu cầu (Requests) tới CloudFront <strong>rẻ hơn khoảng bảy lần</strong> so với yêu cầu tới S3. CloudFront cũng cung cấp khả năng caching, giúp giảm độ trễ."
+                },
+                comp: {
+                    title: "So Sánh Chi Phí: NAT Gateway vs. VPC Endpoint"
+                },
+                comp1: {
+                    title: "NAT Gateway (Tốn kém hơn)",
+                    desc: "Lưu lượng truy cập S3 từ private subnet đi qua NAT Gateway và Internet Gateway ra internet.",
+                    p1: "Phí hàng giờ: <strong>$0.045 mỗi giờ</strong> cho NAT Gateway.",
+                    p2: "Phí xử lý dữ liệu: <strong>$0.045 mỗi gigabyte</strong> được xử lý qua NAT Gateway.",
+                    p3: "Chi phí truyền tải dữ liệu: 0.09\$ mỗi GB ra S3 liên khu vực (hoặc $0 nếu cùng khu vực)."
+                },
+                comp2: {
+                    title: "VPC Gateway Endpoint (Tối ưu)",
+                    desc: "Cho phép kết nối riêng tư trực tiếp từ private subnet đến S3 mà không cần đi qua internet.",
+                    p1: "Phí hàng giờ: <strong>Miễn phí</strong> (Không có phí hàng giờ).",
+                    p2: "Phí truyền tải dữ liệu: <strong>$0.01 mỗi gigabyte</strong> truyền tải vào và ra S3 trong cùng khu vực (cùng region).",
+                    p3: "Kết luận: Sử dụng VPC Endpoint có thể <strong>giảm đáng kể chi phí</strong> so với NAT Gateway, đây là một cân nhắc quan trọng cho kỳ thi."
+                },
+                final: {
+                    title: "TÓM TẮT CÁC ĐIỂM CHÍNH",
+                    p1: "Lưu lượng <strong>đến (incoming)</strong> EC2 là <strong>miễn phí</strong>, và lưu lượng giữa các instance trong <strong>cùng AZ</strong> sử dụng <strong>IP riêng</strong> cũng <strong>miễn phí</strong>.",
+                    p2: "Sử dụng <strong>IP riêng</strong> để giao tiếp giữa các instance trong các AZ khác nhau trong cùng khu vực sẽ có chi phí <strong>bằng một nửa</strong> so với sử dụng IP công cộng hoặc IP đàn hồi.",
+                    p3: "Truyền tải dữ liệu giữa <strong>các Khu vực AWS khác nhau</strong> phát sinh <strong>chi phí cao hơn</strong>, vì vậy các quyết định kiến trúc nên cân bằng giữa chi phí và tính sẵn sàng.",
+                    p4: "Tối ưu hóa: <strong>Giữ lưu lượng xử lý dữ liệu ở lại trong AWS</strong> bằng cách di chuyển logic ứng dụng gần cơ sở dữ liệu để giảm chi phí egress.",
+                    p5: "Sử dụng <strong>VPC Gateway Endpoints</strong> cho truy cập S3 trong cùng khu vực <strong>rẻ hơn đáng kể</strong> so với việc sử dụng NAT Gateways, giảm chi phí truyền tải dữ liệu."
+                }
+            },
+            en: {
+                header: {
+                    title: "AWS Networking Costs Summary",
+                    subtitle: "Understand data flow, optimize expenses."
+                },
+                intro: {
+                    title: "Networking Costs in AWS",
+                    p1: "Let's discuss networking costs in AWS per gigabyte. This overview is simplified to explain a few important concepts clearly. Networking costs can get very complicated, but this high-level summary should help you prepare for the exam."
+                },
+                rules: {
+                    title: "Core Cost Rules (EC2)"
+                },
+                rule1: {
+                    title: "Incoming Traffic (Ingress)",
+                    p1: "Any <strong>incoming traffic</strong> to your <strong>EC2 instances</strong> is <strong>free</strong>. That means all inbound traffic onto EC2 is free of charge.",
+                    p2: "(Applies to all inbound traffic from the internet to EC2)"
+                },
+                rule2: {
+                    title: "Same Availability Zone (AZ)",
+                    p1: "Since an AZ represents multiple data centers geographically close to each other, any traffic between two EC2 instances in the <strong>same AZ</strong> will be <strong>free</strong>, provided they communicate using their <strong>private IP addresses</strong>.",
+                    p2: "(Using private IPs ensures the traffic stays within the connected network)"
+                },
+                rule3: {
+                    title: "Cross-AZ Communication (Private IP)",
+                    p1: "If two EC2 instances in different AZs within the same region communicate using a <strong>private IP</strong>, the cost is <strong>half as much</strong> (e.g., 1 cent/GB) because the traffic uses the internal AWS network linking the two AZs.",
+                    p2: "(Use private IPs whenever possible for lower costs)"
+                },
+                rule4: {
+                    title: "Cross-AZ Communication (Public IP)",
+                    p1: "If two EC2 instances in different AZs within the same region communicate using a <strong>public IP</strong> or <strong>elastic IP</strong>, the cost is <strong>2 cents per gigabyte</strong>.",
+                },
+                rule5: {
+                    title: "Between Different Regions",
+                    p1: "When traffic flows between <strong>different AWS regions</strong>, the cost is <strong>2 cents per gigabyte</strong>. This inter-region traffic can be quite expensive.",
+                    p2: "(Inter-region traffic can be quite expensive)"
+                },
+                rule6: {
+                    title: "Egress/Ingress Principle",
+                    p1: "<strong>Egress traffic</strong> (outbound from AWS) incurs charges, while <strong>ingress traffic</strong> (inbound to AWS) is typically <strong>free</strong>. Sending data to AWS usually costs nothing, but taking data outside AWS incurs charges.",
+                    p2: "(Your goal should be to keep as much internet traffic as possible within AWS to minimize costs)"
+                },
+                optim: {
+                    title: "Optimizing Networking Costs with Architectural Decisions"
+                },
+                optim1: {
+                    title: "Strategy: Compute Placement",
+                    p1: "A smarter approach is to <strong>move the application into AWS</strong>, for example, on an EC2 instance in the same availability zone as the database.",
+                    p2: "In this case, the 100 megabytes of data transfer within the AZ is <strong>free</strong>, and only the 50 kilobytes of query results are sent outside, greatly <strong>reducing egress costs</strong>."
+                },
+                optim2: {
+                    title: "Strategy: Balance HA and Cost",
+                    p1: "For clusters requiring extensive communication between EC2 instances, placing instances in the <strong>same availability zone</strong> <strong>maximizes cost savings</strong> (0 cent/GB).",
+                    p2: "However, this cost saving <strong>reduces high availability (HA)</strong> since if the AZ goes down, there is no failover. You must balance high availability and cost based on your requirements."
+                },
+                s3: {
+                    title: "Amazon S3 Data Transfer Pricing (USA Example)"
+                },
+                s3_c1: {
+                    title: "S3 Data Transfer",
+                    p1: "Data <strong>ingress</strong> into an S3 bucket is <strong>free</strong>.",
+                    p2: "Downloading data from S3 to your computer over the internet costs <strong>9 cents per gigabyte</strong>.",
+                    p3: "Using S3 Transfer Acceleration to speed up transfers adds an additional cost between <strong>4 to 8 cents per gigabyte</strong>.",
+                    p4: "Cross-region replication for S3 buckets costs <strong>2 cents per gigabyte</strong>."
+                },
+                s3_c2: {
+                    title: "Optimization With CloudFront",
+                    p1: "Data transfer between <strong>S3 and CloudFront is free</strong>.",
+                    p2: "Data transfer from CloudFront to the internet costs <strong>8.5 cents per gigabyte</strong> (slightly cheaper than direct S3 internet transfer).",
+                    p3: "Requests to CloudFront are about <strong>seven times cheaper</strong> than requests to S3. CloudFront also provides caching capabilities."
+                },
+                comp: {
+                    title: "Cost Comparison: NAT Gateway vs. VPC Endpoint"
+                },
+                comp1: {
+                    title: "NAT Gateway (More Expensive)",
+                    desc: "Traffic flows from the EC2 instances through the NAT Gateway and Internet Gateway to the internet to access S3.",
+                    p1: "Hourly charge: <strong>$0.045 per hour</strong> for the NAT Gateway.",
+                    p2: "Data processing charge: <strong>$0.045 per gigabyte</strong> of data processed through the NAT Gateway.",
+                    p3: "Data transfer cost: $0.09 per GB out to S3 cross-region (or $0 if same region)."
+                },
+                comp2: {
+                    title: "VPC Gateway Endpoint (Optimized)",
+                    desc: "Allows private connectivity directly from the private subnets to S3 without traversing the internet.",
+                    p1: "Hourly charge: <strong>No hourly charge</strong> (Free).",
+                    p2: "Data transfer charge: <strong>$0.01 per gigabyte</strong> of data transferred in and out of S3 within the same region.",
+                    p3: "Conclusion: Using a VPC Endpoint can <strong>significantly reduce costs</strong> compared to a NAT Gateway, which is an important consideration for the exam."
+                },
+                final: {
+                    title: "KEY TAKEAWAYS",
+                    p1: "<strong>Incoming traffic</strong> to EC2 instances is <strong>free</strong>, and traffic between instances in the <strong>same AZ</strong> using <strong>private IPs</strong> is also <strong>free</strong>.",
+                    p2: "Using <strong>private IPs</strong> for communication between instances in different AZs within the same region costs <strong>half as much</strong> as using public or elastic IPs.",
+                    p3: "Data transfer between <strong>different AWS regions</strong> incurs <strong>higher costs</strong>, so architectural decisions should balance cost and availability.",
+                    p4: "Optimization: <strong>Keep data processing traffic within AWS</strong> by moving application logic closer to the database to minimize egress costs.",
+                    p5: "Utilizing <strong>VPC Gateway Endpoints</strong> for S3 access in the same region is <strong>significantly cheaper</strong> than using NAT Gateways, reducing data transfer costs."
+                }
+            }
+        };
+
+        let currentLanguage = 'vi';
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+
+        function getNestedTranslation(obj, path) {
+            return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+        }
+
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const translatedText = getNestedTranslation(translations[currentLanguage], key);
+                if (translatedText) {
+                    // Sử dụng innerHTML để hiển thị đúng các thẻ HTML như <strong> và <i>
+                    element.innerHTML = translatedText;
+                }
+            });
+            document.querySelector('html').setAttribute('lang', currentLanguage);
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            // Sử dụng màu Teal cho nút active
+            const activeClass = 'bg-teal-600 text-white';
+            const inactiveClass = 'bg-gray-200 text-gray-700';
+
+            if (currentLanguage === 'vi') {
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            } else {
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

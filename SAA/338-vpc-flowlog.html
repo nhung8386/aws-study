@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">VPC Flow Logs: Giám Sát và Khắc Phục Sự Cố Mạng</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Be+Vietnam+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', 'Inter', sans-serif;
+            background-color: #f0f9ff; /* Blue 50 - Theme cho Network Monitoring/Analytics */
+            color: #1f2937; /* Gray 800 */
+        }
+        .container {
+            max-width: 1024px;
+        }
+        .header-title {
+            color: #0c4a6e; /* Cyan 800 */
+            border-bottom: 4px solid #06b6d4; /* Cyan 500 */
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+        }
+        .section-header {
+            color: #0e7490; /* Cyan 700 */
+            font-weight: 700;
+        }
+
+        /* Styling cho các loại Log/Lưu trữ */
+        .log-storage-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        .storage-item {
+            border: 2px solid #a5f3fc; /* Cyan 200 */
+            background-color: #ecfeff; /* Cyan 50 */
+            padding: 1rem;
+            border-radius: 0.75rem;
+            text-align: center;
+        }
+        
+        /* Đặc biệt cho phần Troubleshooting */
+        .troubleshoot-card {
+            border-left: 6px solid #fb923c; /* Orange 400 - Cảnh báo/Troubleshooting */
+            background-color: #fff7ed; /* Orange 50 */
+        }
+
+        /* Đảm bảo các thẻ <strong> bên trong nội dung dịch vẫn được in đậm */
+        .card strong, .highlight-box strong {
+            font-weight: 700;
+        }
+        .action-box {
+            background-color: #f0fdf4; /* Green 50 */
+            border: 1px dashed #4ade80; /* Green 300 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .log-storage-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-4 md:p-10">
+        <header class="text-center mb-12 relative">
+            <h1 class="text-4xl md:text-5xl font-extrabold header-title inline-block pb-1" data-i18n="header.title">
+                <i class="fas fa-traffic-light mr-3"></i> VPC Flow Logs
+            </h1>
+            <p class="text-lg text-gray-500 mt-2" data-i18n="header.subtitle">Phân tích sâu lưu lượng IP của VPC</p>
+            
+            <!-- Nút chuyển đổi ngôn ngữ -->
+            <div class="absolute top-0 right-0 mt-4 mr-4 flex space-x-2">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-md bg-cyan-600 text-white font-semibold text-sm lang-button">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-md bg-gray-200 text-gray-700 font-semibold text-sm lang-button">EN</button>
+            </div>
+            
+        </header>
+
+        <main>
+            <!-- 1. What are Flow Logs? -->
+            <section id="introduction" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="intro.title">1. VPC Flow Logs là gì?</h2>
+                <div class="card">
+                    <p data-i18n="intro.p1" class="mb-4">
+                        **VPC Flow Logs** cho phép bạn thu thập thông tin về lưu lượng IP đi vào các interface mạng của bạn. Bạn có thể thiết lập chúng ở cấp độ **VPC**, cấp độ **Subnet**, hoặc cấp độ **Elastic Network Interface (ENI)**.
+                    </p>
+                    <p data-i18n="intro.p2" class="mb-4">
+                        Các log này cũng thu thập thông tin cho các interface được quản lý (Managed Interfaces) như ELB, RDS, NAT Gateway, Transit Gateway, v.v. Chúng cực kỳ hữu ích để **giám sát và khắc phục sự cố** kết nối mạng.
+                    </p>
+
+                    <h3 class="text-xl font-bold mt-6 mb-3 text-cyan-700" data-i18n="intro.storage_title">Mục tiêu Lưu trữ Flow Logs</h3>
+                    <div class="log-storage-grid">
+                        <div class="storage-item">
+                            <i class="fas fa-sitemap text-3xl text-blue-500 mb-2"></i>
+                            <p class="font-semibold" data-i18n="intro.storage1">Amazon S3</p>
+                        </div>
+                        <div class="storage-item">
+                            <i class="fas fa-cloud-upload-alt text-3xl text-green-500 mb-2"></i>
+                            <p class="font-semibold" data-i18n="intro.storage2">CloudWatch Logs</p>
+                        </div>
+                        <div class="storage-item">
+                            <i class="fas fa-fire text-3xl text-red-500 mb-2"></i>
+                            <p class="font-semibold" data-i18n="intro.storage3">Kinesis Data Firehose</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 2. Record Format and Analysis -->
+            <section id="format" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="format.title">2. Định Dạng và Phân Tích Bản Ghi Log</h2>
+                <div class="card">
+                    <h3 class="text-xl font-bold mb-3 text-cyan-700" data-i18n="format.fields_title">Các Trường Dữ liệu Chính</h3>
+                    <p data-i18n="format.fields_p" class="mb-4">
+                        Bản ghi Flow Log chứa siêu dữ liệu quan trọng về gói tin. Các trường chính bao gồm: **version, interface ID, source address, destination address, source port, destination port, protocol, packets, bytes, start, action,** và **log status**.
+                    </p>
+
+                    <h3 class="text-xl font-bold mt-6 mb-3 text-cyan-700" data-i18n="format.insights_title">Thông tin có thể trích xuất</h3>
+                    <ul class="list-disc ml-5 space-y-2 text-sm">
+                        <li data-i18n="format.insight1">**Source/Destination Address:** Giúp xác định các IP có vấn đề, các cuộc tấn công lặp lại, hoặc các IP bị từ chối liên tục.</li>
+                        <li data-i18n="format.insight2">**Source/Destination Port:** Giúp xác định các cổng có vấn đề.</li>
+                        <li data-i18n="format.insight3">**Action (ACCEPT/REJECT):** Cho biết liệu lưu lượng có thành công hoặc thất bại ở cấp độ **Security Group (SG)** hay **Network ACL (NACL)**.</li>
+                        <li data-i18n="format.insight4">**Phân tích:** Dùng để phân tích hành vi sử dụng, hoặc phát hiện hành vi độc hại như **port scans**.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 3. Troubleshooting -->
+            <section id="troubleshooting" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="trouble.title">3. Khắc Phục Sự Cố SG và NACL (<i class="fas fa-exclamation-triangle text-orange-500"></i>)</h2>
+                <div class="card troubleshoot-card">
+                    <p data-i18n="trouble.p1" class="mb-4">
+                        Quy tắc vàng: **NACLs** là **stateless** (không trạng thái) và **Security Groups** là **stateful** (có trạng thái).
+                    </p>
+                    
+                    <h4 class="text-lg font-bold text-orange-700 mt-4 mb-2" data-i18n="trouble.inbound_title">Lưu lượng Inbound (Đi vào)</h4>
+                    <div class="action-box bg-red-50 border-red-300">
+                        <p data-i18n="trouble.inbound1">
+                            **REJECT** Inbound: Có thể do **NACL** từ chối hoặc **Security Group** từ chối.
+                        </p>
+                        <p data-i18n="trouble.inbound2" class="mt-2 font-bold">
+                            **ACCEPT** Inbound và **REJECT** Outbound: Chắc chắn là sự cố **NACL**. (Vì SG là stateful, nếu inbound được chấp nhận, outbound tự động được cho phép).
+                        </p>
+                    </div>
+
+                    <h4 class="text-lg font-bold text-orange-700 mt-4 mb-2" data-i18n="trouble.outbound_title">Lưu lượng Outbound (Đi ra)</h4>
+                    <div class="action-box bg-green-50 border-green-300">
+                        <p data-i18n="trouble.outbound1">
+                            **REJECT** Outbound: Có thể là sự cố **NACL** hoặc **Security Group**.
+                        </p>
+                        <p data-i18n="trouble.outbound2" class="mt-2 font-bold">
+                            **ACCEPT** Outbound và **REJECT** Inbound: Chắc chắn là sự cố **NACL**. (Vì NACL là stateless, bạn cần cho phép cả hai chiều).
+                        </p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 4. Querying and Integration -->
+            <section id="querying" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="query.title">4. Truy Vấn và Tích Hợp</h2>
+                <div class="card">
+                    <h3 class="text-xl font-bold mb-3 text-cyan-700" data-i18n="query.tools_title">Các Công Cụ Truy Vấn</h3>
+                    <ul class="list-disc ml-5 space-y-2 text-sm">
+                        <li data-i18n="query.tool1">**Amazon Athena (trên S3):** Dùng cho phân tích **SQL ad hoc** trên dữ liệu Flow Logs được lưu trữ dài hạn.</li>
+                        <li data-i18n="query.tool2">**CloudWatch Logs Insights:** Dùng cho phân tích **streaming** và truy vấn dữ liệu trực tiếp trong CloudWatch.</li>
+                    </ul>
+
+                    <h3 class="text-xl font-bold mt-6 mb-3 text-cyan-700" data-i18n="query.patterns_title">Mẫu Phân Tích và Cảnh Báo</h3>
+                    <p data-i18n="query.patterns_p" class="mb-4">
+                        Bạn có thể sử dụng **CloudWatch Contributor Insights** để tìm các địa chỉ IP hàng đầu tạo ra nhiều lưu lượng nhất.
+                    </p>
+                    <p data-i18n="query.patterns_p2">
+                        Thiết lập **CloudWatch Logs Metric Filters** để phát hiện các hoạt động bất thường, ví dụ: nếu phát hiện sự gia tăng bất thường trong lưu lượng **SSH** hoặc **RDP**, bạn có thể kích hoạt **CloudWatch Alarm** và gửi cảnh báo qua **Amazon SNS** để xử lý kịp thời.
+                    </p>
+                </div>
+            </section>
+
+            <hr class="my-10 border-gray-300">
+
+            <!-- Key Takeaways -->
+            <section id="key-takeaways" class="mb-12 text-center">
+                <h2 class="text-3xl font-extrabold text-cyan-700 inline-block pb-1 mb-6" data-i18n="checklist.title">TÓM TẮT ĐIỂM CHÍNH</h2>
+                <div class="p-6 space-y-4 bg-cyan-50 border-2 border-cyan-300 rounded-xl mx-auto max-w-4xl">
+                    <ul class="space-y-3 text-left">
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p1">
+                            <i class="fas fa-check-circle text-cyan-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **VPC Flow Logs** thu thập siêu dữ liệu lưu lượng IP ở cấp độ VPC, Subnet, hoặc **ENI**.
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p2">
+                            <i class="fas fa-check-circle text-cyan-600 mt-1 mr-3 flex-shrink-0"></i>
+                            Dùng **Athena (trên S3)** cho phân tích SQL dài hạn, hoặc **CloudWatch Logs Insights** cho phân tích streaming.
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p3">
+                            <i class="fas fa-check-circle text-cyan-600 mt-1 mr-3 flex-shrink-0"></i>
+                            Trường **Action** giúp khắc phục sự cố: **ACCEPT** inbound + **REJECT** outbound = Lỗi **NACL** (vì SG là **stateful**).
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p4">
+                            <i class="fas fa-check-circle text-cyan-600 mt-1 mr-3 flex-shrink-0"></i>
+                            Cần **IAM Service Role** với các quyền `logs:CreateLogGroup`, `logs:CreateLogStream`, và `logs:PutLogEvents` để xuất log tới CloudWatch Logs.
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        const translations = {
+            vi: {
+                header: {
+                    title: "VPC Flow Logs",
+                    subtitle: "Phân tích sâu lưu lượng IP của VPC"
+                },
+                intro: {
+                    title: "1. VPC Flow Logs là gì?",
+                    p1: "<strong>VPC Flow Logs</strong> cho phép bạn thu thập thông tin về lưu lượng IP đi vào các interface mạng của bạn. Bạn có thể thiết lập chúng ở cấp độ <strong>VPC</strong>, cấp độ <strong>Subnet</strong>, hoặc cấp độ <strong>Elastic Network Interface (ENI)</strong>.",
+                    p2: "Các log này cũng thu thập thông tin cho các interface được quản lý (Managed Interfaces) như ELB, RDS, NAT Gateway, Transit Gateway, v.v. Chúng cực kỳ hữu ích để <strong>giám sát và khắc phục sự cố</strong> kết nối mạng.",
+                    storage_title: "Mục tiêu Lưu trữ Flow Logs",
+                    storage1: "Amazon S3",
+                    storage2: "CloudWatch Logs",
+                    storage3: "Kinesis Data Firehose"
+                },
+                format: {
+                    title: "2. Định Dạng và Phân Tích Bản Ghi Log",
+                    fields_title: "Các Trường Dữ liệu Chính",
+                    fields_p: "Bản ghi Flow Log chứa siêu dữ liệu quan trọng về gói tin. Các trường chính bao gồm: <strong>version, interface ID, source address, destination address, source port, destination port, protocol, packets, bytes, start, action,</strong> và <strong>log status</strong>.",
+                    insights_title: "Thông tin có thể trích xuất",
+                    insight1: "<strong>Source/Destination Address:</strong> Giúp xác định các IP có vấn đề, các cuộc tấn công lặp lại, hoặc các IP bị từ chối liên tục.",
+                    insight2: "<strong>Source/Destination Port:</strong> Giúp xác định các cổng có vấn đề.",
+                    insight3: "<strong>Action (ACCEPT/REJECT):</strong> Cho biết liệu lưu lượng có thành công hoặc thất bại ở cấp độ <strong>Security Group (SG)</strong> hay <strong>Network ACL (NACL)</strong>.",
+                    insight4: "<strong>Phân tích:</strong> Dùng để phân tích hành vi sử dụng, hoặc phát hiện hành vi độc hại như <strong>port scans</strong>."
+                },
+                trouble: {
+                    title: "3. Khắc Phục Sự Cố SG và NACL (<i class=\"fas fa-exclamation-triangle text-orange-500\"></i>)",
+                    p1: "Quy tắc vàng: <strong>NACLs</strong> là <strong>stateless</strong> (không trạng thái) và <strong>Security Groups</strong> là <strong>stateful</strong> (có trạng thái).",
+                    inbound_title: "Lưu lượng Inbound (Đi vào)",
+                    inbound1: "<strong>REJECT</strong> Inbound: Có thể do <strong>NACL</strong> từ chối hoặc <strong>Security Group</strong> từ chối.",
+                    inbound2: "<strong>ACCEPT</strong> Inbound và <strong>REJECT</strong> Outbound: Chắc chắn là sự cố <strong>NACL</strong>. (Vì SG là stateful, nếu inbound được chấp nhận, outbound tự động được cho phép).",
+                    outbound_title: "Lưu lượng Outbound (Đi ra)",
+                    outbound1: "<strong>REJECT</strong> Outbound: Có thể là sự cố <strong>NACL</strong> hoặc <strong>Security Group</strong>.",
+                    outbound2: "<strong>ACCEPT</strong> Outbound và <strong>REJECT</strong> Inbound: Chắc chắn là sự cố <strong>NACL</strong>. (Vì NACL là stateless, bạn cần cho phép cả hai chiều)."
+                },
+                query: {
+                    title: "4. Truy Vấn và Tích Hợp",
+                    tools_title: "Các Công Cụ Truy Vấn",
+                    tool1: "<strong>Amazon Athena (trên S3):</strong> Dùng cho phân tích <strong>SQL ad hoc</strong> trên dữ liệu Flow Logs được lưu trữ dài hạn.",
+                    tool2: "<strong>CloudWatch Logs Insights:</strong> Dùng cho phân tích <strong>streaming</strong> và truy vấn dữ liệu trực tiếp trong CloudWatch.",
+                    patterns_title: "Mẫu Phân Tích và Cảnh Báo",
+                    patterns_p: "Bạn có thể sử dụng <strong>CloudWatch Contributor Insights</strong> để tìm các địa chỉ IP hàng đầu tạo ra nhiều lưu lượng nhất.",
+                    patterns_p2: "Thiết lập <strong>CloudWatch Logs Metric Filters</strong> để phát hiện các hoạt động bất thường, ví dụ: nếu phát hiện sự gia tăng bất thường trong lưu lượng <strong>SSH</strong> hoặc <strong>RDP</strong>, bạn có thể kích hoạt <strong>CloudWatch Alarm</strong> và gửi cảnh báo qua <strong>Amazon SNS</strong> để xử lý kịp thời."
+                },
+                checklist: {
+                    title: "TÓM TẮT ĐIỂM CHÍNH",
+                    p1: "<strong>VPC Flow Logs</strong> thu thập siêu dữ liệu lưu lượng IP ở cấp độ VPC, Subnet, hoặc <strong>ENI</strong>.",
+                    p2: "Dùng <strong>Athena (trên S3)</strong> cho phân tích SQL dài hạn, hoặc <strong>CloudWatch Logs Insights</strong> cho phân tích streaming.",
+                    p3: "Trường <strong>Action</strong> giúp khắc phục sự cố: <strong>ACCEPT</strong> inbound + <strong>REJECT</strong> outbound = Lỗi <strong>NACL</strong> (vì SG là <strong>stateful</strong>).",
+                    p4: "Cần <strong>IAM Service Role</strong> với các quyền logs:CreateLogGroup, logs:CreateLogStream, và logs:PutLogEvents để xuất log tới CloudWatch Logs."
+                }
+            },
+            en: {
+                header: {
+                    title: "VPC Flow Logs",
+                    subtitle: "Network Monitoring and Troubleshooting"
+                },
+                intro: {
+                    title: "1. What are VPC Flow Logs?",
+                    p1: "<strong>VPC Flow Logs</strong> allow you to capture information about IP traffic going into your network interfaces. You can set them up at the **VPC** level, the **Subnet** level, or the **Elastic Network Interface (ENI)** level.",
+                    p2: "These logs also capture information for managed interfaces such as ELB, RDS, NAT Gateway, Transit Gateway, and so on. They are extremely helpful to **monitor and troubleshoot** network connectivity issues.",
+                    storage_title: "Flow Logs Storage Destinations",
+                    storage1: "Amazon S3",
+                    storage2: "CloudWatch Logs",
+                    storage3: "Kinesis Data Firehose"
+                },
+                format: {
+                    title: "2. Record Format and Analysis",
+                    fields_title: "Key Data Fields",
+                    fields_p: "A Flow Log record contains essential network packet metadata. Key fields include: <strong>version, interface ID, source address, destination address, source port, destination port, protocol, packets, bytes, start, action,</strong> and <strong>log status</strong>.",
+                    insights_title: "Information that can be derived",
+                    insight1: "<strong>Source/Destination Address:</strong> Helps identify problematic IPs, repeated attacks, or continuously denied IPs.",
+                    insight2: "<strong>Source/Destination Port:</strong> Helps identify problematic ports.",
+                    insight3: "<strong>Action (ACCEPT/REJECT):</strong> Indicates whether the traffic succeeded or failed at the <strong>Security Group (SG)</strong> or <strong>Network ACL (NACL)</strong> level.",
+                    insight4: "<strong>Analysis:</strong> Used for analyzing usage patterns or detecting malicious behavior such as **port scans**."
+                },
+                trouble: {
+                    title: "3. Troubleshooting SG and NACL (<i class=\"fas fa-exclamation-triangle text-orange-500\"></i>)",
+                    p1: "The golden rule: **NACLs** are **stateless** and **Security Groups** are **stateful**.",
+                    inbound_title: "Inbound Traffic",
+                    inbound1: "<strong>REJECT</strong> Inbound: Can mean either the <strong>NACL</strong> is refusing the request or the <strong>Security Group</strong> is refusing the request.",
+                    inbound2: "<strong>ACCEPT</strong> Inbound and **REJECT** Outbound: Can **only** mean a **NACL** issue. (Because SG is stateful: if inbound is accepted, outbound is automatically allowed).",
+                    outbound_title: "Outbound Traffic",
+                    outbound1: "<strong>REJECT</strong> Outbound: Then you may have a **NACL** or a **Security Group** issue.",
+                    outbound2: "<strong>ACCEPT</strong> Outbound and **REJECT** Inbound: Then it **must** be a **NACL** issue. (Because NACL is stateless, you need to explicitly allow both directions)."
+                },
+                query: {
+                    title: "4. Querying and Integration",
+                    tools_title: "Querying Tools",
+                    tool1: "<strong>Amazon Athena (on S3):</strong> Used for **ad hoc SQL analysis** of stored Flow Logs for long-term storage.",
+                    tool2: "<strong>CloudWatch Logs Insights:</strong> Used for **streaming analysis** and direct querying within CloudWatch.",
+                    patterns_title: "Analysis and Alerting Patterns",
+                    patterns_p: "You can use <strong>CloudWatch Contributor Insights</strong> to find the top IP addresses contributing the most network traffic.",
+                    patterns_p2: "Set up <strong>CloudWatch Logs Metric Filters</strong> to detect anomalous activity, for example: if you detect an unusual increase in **SSH** or **RDP** traffic, you can trigger a **CloudWatch Alarm** and send an alert to an **Amazon SNS** topic for timely action."
+                },
+                checklist: {
+                    title: "KEY TAKEAWAYS SUMMARY",
+                    p1: "<strong>VPC Flow Logs</strong> capture IP traffic metadata at the VPC, Subnet, or **ENI** level.",
+                    p2: "Use <strong>Athena (on S3)</strong> for long-term SQL analysis, or <strong>CloudWatch Logs Insights</strong> for streaming analysis.",
+                    p3: "The **Action** field helps troubleshoot: <strong>ACCEPT</strong> inbound + **REJECT** outbound = **NACL** issue (because SG is **stateful**).",
+                    p4: "Requires an **IAM Service Role** with logs:CreateLogGroup, logs:CreateLogStream, and logs:PutLogEvents permissions to publish logs to CloudWatch Logs."
+                }
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default language
+
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+
+        function getNestedTranslation(obj, path) {
+            return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+        }
+
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const translatedText = getNestedTranslation(translations[currentLanguage], key);
+                if (translatedText) {
+                    // Sử dụng innerHTML để hiển thị đúng các thẻ HTML như <strong> và <i>
+                    element.innerHTML = translatedText; 
+                }
+            });
+            document.querySelector('html').setAttribute('lang', currentLanguage);
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            // Sử dụng màu Cyan cho nút active
+            const activeClass = 'bg-cyan-600 text-white';
+            const inactiveClass = 'bg-gray-200 text-gray-700';
+
+            if (currentLanguage === 'vi') {
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            } else {
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

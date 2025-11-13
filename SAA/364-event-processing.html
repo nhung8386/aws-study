@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">Xử lý Sự kiện trong AWS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f9ff; /* Sky 50 - Architecture/Reliability Theme */
+            color: #1a202c; /* Dark Blue/Gray */
+        }
+        .header-bg {
+            background-color: #0c4a6e; /* Sky 900 */
+        }
+        .highlight-text {
+            color: #0284c7; /* Sky 600 */
+        }
+        .card {
+            background-color: white;
+            border-top: 5px solid #38bdf8; /* Sky 400 */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: 100%;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15);
+        }
+        .icon-box {
+            color: #0284c7;
+        }
+        .key-feature strong {
+            font-weight: 800;
+            color: #dc2626; /* Red 600 for emphasis on retry/DLQ */
+        }
+        .toggle-active {
+            background-color: #0284c7 !important;
+            color: white !important;
+        }
+        .toggle-inactive {
+            background-color: #e5e7eb; /* Gray 200 */
+            color: #4b5563; /* Gray 600 */
+        }
+    </style>
+</head>
+<body>
+    <header class="header-bg shadow-xl">
+        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 class="text-3xl font-extrabold text-white" data-i18n="header.title">
+                <i class="fas fa-stream mr-3"></i> Xử lý Sự kiện trong AWS
+            </h1>
+            <!-- Language Toggles -->
+            <div class="flex space-x-2 p-1 bg-white rounded-full shadow-md">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-full font-semibold text-sm transition toggle-active">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-full font-semibold text-sm transition toggle-inactive">EN</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+
+        <!-- SQS & Lambda Section -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-extrabold highlight-text mb-8 pb-3 border-b-2 border-sky-200" data-i18n="sqs_lambda.title">
+                <i class="fas fa-cogs mr-3"></i> SQS & Lambda: Xử lý Hàng đợi và Cơ chế Thử lại
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <!-- SQS Standard -->
+                <div class="card p-6 rounded-xl key-feature">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-layer-group"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="sqs_lambda.s1.title"><strong class="font-bold">SQS Standard</strong> & Lambda</h3>
+                    <p class="text-gray-600 text-sm mb-3" data-i18n="sqs_lambda.s1.body">
+                        Lambda kéo tin nhắn từ hàng đợi <strong class="font-bold">SQS</strong>. Nếu xử lý thất bại, tin nhắn sẽ được đưa trở lại hàng đợi để <strong class="font-bold">thử lại</strong> (retry).
+                    </p>
+                    <div class="mt-4 p-3 bg-red-50 rounded-md">
+                        <strong class="text-red-700 block mb-1" data-i18n="sqs_lambda.s1.dlq_label">Giải pháp Lỗi vĩnh viễn:</strong>
+                        <span class="text-sm text-red-900" data-i18n="sqs_lambda.s1.dlq_value">Thiết lập <strong class="font-bold">Dead Letter Queue (DLQ)</strong> tại <strong class="font-bold">SQS</strong> để cô lập tin nhắn sau N lần thử lại.</span>
+                    </div>
+                </div>
+
+                <!-- SQS FIFO -->
+                <div class="card p-6 rounded-xl key-feature">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-sort-numeric-up-alt"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="sqs_lambda.s2.title"><strong class="font-bold">SQS FIFO</strong> & Lambda</h3>
+                    <p class="text-gray-600 text-sm mb-3" data-i18n="sqs_lambda.s2.body">
+                        Đảm bảo <strong class="font-bold">xử lý theo thứ tự</strong>. Tuy nhiên, nếu một tin nhắn <strong class="font-bold">thất bại</strong>, nó sẽ <strong class="font-bold">chặn</strong> toàn bộ hàng đợi.
+                    </p>
+                    <div class="mt-4 p-3 bg-red-50 rounded-md">
+                        <strong class="text-red-700 block mb-1" data-i18n="sqs_lambda.s2.dlq_label">Giải pháp Chặn:</strong>
+                        <span class="text-sm text-red-900" data-i18n="sqs_lambda.s2.dlq_value">Sử dụng <strong class="font-bold">DLQ</strong> (cấu hình tại SQS) để loại bỏ tin nhắn lỗi và <strong class="font-bold">giải phóng</strong> hàng đợi.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SNS & Fan Out Pattern -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-extrabold highlight-text mb-8 pb-3 border-b-2 border-sky-200" data-i18n="sns_fanout.title">
+                <i class="fas fa-bullhorn mr-3"></i> SNS, Lambda và Mẫu Fan Out
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- SNS Lambda -->
+                <div class="card p-6 rounded-xl key-feature">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-bell"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="sns_fanout.s1.title"><strong class="font-bold">SNS</strong> & Lambda</h3>
+                    <p class="text-gray-600 text-sm mb-3" data-i18n="sns_fanout.s1.body">
+                        Tin nhắn được gửi <strong class="font-bold">bất đồng bộ</strong> từ SNS đến Lambda. Lambda thử lại nội bộ <strong class="font-bold">lên đến 3 lần</strong> nếu xử lý lỗi.
+                    </p>
+                    <div class="mt-4 p-3 bg-blue-50 rounded-md">
+                        <strong class="text-blue-700 block mb-1" data-i18n="sns_fanout.s1.dlq_label">Vị trí DLQ:</strong>
+                        <span class="text-sm text-blue-900" data-i18n="sns_fanout.s1.dlq_value">DLQ (thường là SQS) được cấu hình tại <strong class="font-bold">dịch vụ Lambda</strong> (không phải SNS).</span>
+                    </div>
+                </div>
+
+                <!-- Fan Out Pattern -->
+                <div class="card p-6 rounded-xl key-feature">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-share-alt"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="sns_fanout.s2.title">Mẫu <strong class="font-bold">Fan Out</strong></h3>
+                    <p class="text-gray-600 text-sm mb-3" data-i18n="sns_fanout.s2.body">
+                        Sử dụng <strong class="font-bold">SNS Topic</strong> làm lớp trung gian. Các hàng đợi <strong class="font-bold">SQS</strong> (hoặc Lambda) đăng ký.
+                    </p>
+                    <div class="mt-4 p-3 bg-blue-50 rounded-md">
+                        <strong class="text-blue-700 block mb-1" data-i18n="sns_fanout.s2.advantage_label">Lợi thế:</strong>
+                        <span class="text-sm text-blue-900" data-i18n="sns_fanout.s2.advantage_value">Đảm bảo <strong class="font-bold">phân phối đáng tin cậy</strong> đến nhiều đích (queues) chỉ bằng một lần gửi tin nhắn.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- S3 Events and EventBridge -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-extrabold highlight-text mb-8 pb-3 border-b-2 border-sky-200" data-i18n="s3_eventbridge.title">
+                <i class="fas fa-route mr-3"></i> Sự kiện S3 & Bộ định tuyến EventBridge
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <!-- S3 Events -->
+                <div class="card p-6 rounded-xl key-feature">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-folder-open"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="s3_eventbridge.s1.title">Thông báo Sự kiện <strong class="font-bold">Amazon S3</strong></h3>
+                    <p class="text-gray-600 text-sm mb-3" data-i18n="s3_eventbridge.s1.body">
+                        S3 tạo sự kiện khi có các hành động như tạo/xóa đối tượng. Có thể lọc theo tên đối tượng.
+                    </p>
+                    <div class="mt-4 p-3 bg-teal-50 rounded-md">
+                        <strong class="text-teal-700 block mb-1" data-i18n="s3_eventbridge.s1.targets_label">Các Đích đến (Targets):</strong>
+                        <span class="text-sm text-teal-900" data-i18n="s3_eventbridge.s1.targets_value"><strong class="font-bold">SNS, SQS, hoặc Lambda</strong>. Thường được phân phối trong vài giây.</span>
+                    </div>
+                </div>
+
+                <!-- EventBridge -->
+                <div class="card p-6 rounded-xl key-feature">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-filter"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="s3_eventbridge.s2.title"><strong class="font-bold">Amazon EventBridge</strong></h3>
+                    <p class="text-gray-600 text-sm mb-3" data-i18n="s3_eventbridge.s2.body">
+                        Sử dụng <strong class="font-bold">các quy tắc nâng cao</strong> để định tuyến sự kiện S3 (hoặc sự kiện từ 18+ dịch vụ khác) đến nhiều đích (targets).
+                    </p>
+                    <ul class="mt-4 p-3 bg-teal-50 rounded-md text-sm text-teal-900 list-disc list-inside">
+                        <li data-i18n="s3_eventbridge.s2.l1">Lọc sự kiện bằng <strong class="font-bold">metadata</strong>, kích thước đối tượng, v.v.</li>
+                        <li data-i18n="s3_eventbridge.s2.l2">Tích hợp với <strong class="font-bold">CloudTrail</strong> để phản ứng với các API call (ví dụ: DeleteTable).</li>
+                        <li data-i18n="s3_eventbridge.s2.l3">Hỗ trợ <strong class="font-bold">Lưu trữ (Archiving)</strong> và <strong class="font-bold">Phát lại (Replaying)</strong> sự kiện.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- External Events & Conclusion -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-extrabold highlight-text mb-8 pb-3 border-b-2 border-sky-200" data-i18n="external_conclusion.title">
+                <i class="fas fa-link mr-3"></i> Tích hợp Bên ngoài & Kết luận
+            </h2>
+
+            <div class="p-6 bg-white shadow-xl rounded-xl border-t-4 border-sky-600 key-feature">
+                <h3 class="text-xl font-semibold highlight-text mb-3" data-i18n="external_conclusion.s1.title">Sự kiện từ Bên ngoài vào AWS</h3>
+                <p class="text-gray-700 text-lg" data-i18n="external_conclusion.s1.body">
+                    Các hệ thống bên ngoài có thể gửi sự kiện vào AWS thông qua <strong class="font-bold">API Gateway</strong>, sau đó định tuyến đến <strong class="font-bold">Kinesis Data Streams</strong> để xử lý theo thời gian thực (ví dụ: bằng <strong class="font-bold">Kinesis Data Firehose</strong> để lưu trữ vào S3).
+                </p>
+                <div class="mt-4 p-3 bg-gray-100 rounded-lg">
+                    <strong class="text-gray-700 block mb-1" data-i18n="external_conclusion.takeaways.title">Tóm tắt Kiến trúc:</strong>
+                    <ul class="list-none pl-0 text-sm text-gray-800 space-y-1">
+                        <li data-i18n="external_conclusion.takeaways.l1"><strong class="font-bold">SQS/Lambda</strong>: Tốt cho việc xử lý không đồng bộ, thử lại và sử dụng DLQ.</li>
+                        <li data-i18n="external_conclusion.takeaways.l2"><strong class="font-bold">SNS/Fan Out</strong>: Tốt cho việc phân phối một tin nhắn đến nhiều đích một cách đáng tin cậy.</li>
+                        <li data-i18n="external_conclusion.takeaways.l3"><strong class="font-bold">EventBridge</strong>: Tốt cho định tuyến sự kiện phức tạp, lọc metadata và tích hợp CloudTrail.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // --- Translation Data ---
+        const translations = {
+            'vi': {
+                'header.title': 'Xử lý Sự kiện trong AWS',
+                
+                'sqs_lambda.title': 'SQS & Lambda: Xử lý Hàng đợi và Cơ chế Thử lại',
+                'sqs_lambda.s1.title': '<strong class="font-bold">SQS Standard</strong> & Lambda',
+                'sqs_lambda.s1.body': 'Lambda kéo tin nhắn từ hàng đợi <strong class="font-bold">SQS</strong>. Nếu xử lý thất bại, tin nhắn sẽ được đưa trở lại hàng đợi để <strong class="font-bold">thử lại</strong> (retry).',
+                'sqs_lambda.s1.dlq_label': 'Giải pháp Lỗi vĩnh viễn:',
+                'sqs_lambda.s1.dlq_value': 'Thiết lập <strong class="font-bold">Dead Letter Queue (DLQ)</strong> tại <strong class="font-bold">SQS</strong> để cô lập tin nhắn sau N lần thử lại.',
+
+                'sqs_lambda.s2.title': '<strong class="font-bold">SQS FIFO</strong> & Lambda',
+                'sqs_lambda.s2.body': 'Đảm bảo <strong class="font-bold">xử lý theo thứ tự</strong>. Tuy nhiên, nếu một tin nhắn <strong class="font-bold">thất bại</strong>, nó sẽ <strong class="font-bold">chặn</strong> toàn bộ hàng đợi.',
+                'sqs_lambda.s2.dlq_label': 'Giải pháp Chặn:',
+                'sqs_lambda.s2.dlq_value': 'Sử dụng <strong class="font-bold">DLQ</strong> (cấu hình tại SQS) để loại bỏ tin nhắn lỗi và <strong class="font-bold">giải phóng</strong> hàng đợi.',
+
+                'sns_fanout.title': 'SNS, Lambda và Mẫu Fan Out',
+                'sns_fanout.s1.title': '<strong class="font-bold">SNS</strong> & Lambda',
+                'sns_fanout.s1.body': 'Tin nhắn được gửi <strong class="font-bold">bất đồng bộ</strong> từ SNS đến Lambda. Lambda thử lại nội bộ <strong class="font-bold">lên đến 3 lần</strong> nếu xử lý lỗi.',
+                'sns_fanout.s1.dlq_label': 'Vị trí DLQ:',
+                'sns_fanout.s1.dlq_value': 'DLQ (thường là SQS) được cấu hình tại <strong class="font-bold">dịch vụ Lambda</strong> (không phải SNS).',
+
+                'sns_fanout.s2.title': 'Mẫu <strong class="font-bold">Fan Out</strong>',
+                'sns_fanout.s2.body': 'Sử dụng <strong class="font-bold">SNS Topic</strong> làm lớp trung gian. Các hàng đợi <strong class="font-bold">SQS</strong> (hoặc Lambda) đăng ký.',
+                'sns_fanout.s2.advantage_label': 'Lợi thế:',
+                'sns_fanout.s2.advantage_value': 'Đảm bảo <strong class="font-bold">phân phối đáng tin cậy</strong> đến nhiều đích (queues) chỉ bằng một lần gửi tin nhắn.',
+
+                's3_eventbridge.title': 'Sự kiện S3 & Bộ định tuyến EventBridge',
+                's3_eventbridge.s1.title': 'Thông báo Sự kiện <strong class="font-bold">Amazon S3</strong>',
+                's3_eventbridge.s1.body': 'S3 tạo sự kiện khi có các hành động như tạo/xóa đối tượng. Có thể lọc theo tên đối tượng.',
+                's3_eventbridge.s1.targets_label': 'Các Đích đến (Targets):',
+                's3_eventbridge.s1.targets_value': '<strong class="font-bold">SNS, SQS, hoặc Lambda</strong>. Thường được phân phối trong vài giây.',
+
+                's3_eventbridge.s2.title': '<strong class="font-bold">Amazon EventBridge</strong>',
+                's3_eventbridge.s2.body': 'Sử dụng <strong class="font-bold">các quy tắc nâng cao</strong> để định tuyến sự kiện S3 (hoặc sự kiện từ 18+ dịch vụ khác) đến nhiều đích (targets).',
+                's3_eventbridge.s2.l1': 'Lọc sự kiện bằng <strong class="font-bold">metadata</strong>, kích thước đối tượng, v.v.',
+                's3_eventbridge.s2.l2': 'Tích hợp với <strong class="font-bold">CloudTrail</strong> để phản ứng với các API call (ví dụ: DeleteTable).',
+                's3_eventbridge.s2.l3': 'Hỗ trợ <strong class="font-bold">Lưu trữ (Archiving)</strong> và <strong class="font-bold">Phát lại (Replaying)</strong> sự kiện.',
+
+                'external_conclusion.title': 'Tích hợp Bên ngoài & Kết luận',
+                'external_conclusion.s1.title': 'Sự kiện từ Bên ngoài vào AWS',
+                'external_conclusion.s1.body': 'Các hệ thống bên ngoài có thể gửi sự kiện vào AWS thông qua <strong class="font-bold">API Gateway</strong>, sau đó định tuyến đến <strong class="font-bold">Kinesis Data Streams</strong> để xử lý theo thời gian thực (ví dụ: bằng <strong class="font-bold">Kinesis Data Firehose</strong> để lưu trữ vào S3).',
+                'external_conclusion.takeaways.title': 'Tóm tắt Kiến trúc:',
+                'external_conclusion.takeaways.l1': '<strong class="font-bold">SQS/Lambda</strong>: Tốt cho việc xử lý không đồng bộ, thử lại và sử dụng DLQ.',
+                'external_conclusion.takeaways.l2': '<strong class="font-bold">SNS/Fan Out</strong>: Tốt cho việc phân phối một tin nhắn đến nhiều đích một cách đáng tin cậy.',
+                'external_conclusion.takeaways.l3': '<strong class="font-bold">EventBridge</strong>: Tốt cho định tuyến sự kiện phức tạp, lọc metadata và tích hợp CloudTrail.'
+            },
+            'en': {
+                'header.title': 'Event Processing in AWS',
+
+                'sqs_lambda.title': 'SQS & Lambda: Queue Processing and Retry Mechanisms',
+                'sqs_lambda.s1.title': '<strong class="font-bold">SQS Standard</strong> & Lambda',
+                'sqs_lambda.s1.body': 'Lambda pulls messages from an <strong class="font-bold">SQS</strong> queue. If processing fails, the message is put back into the queue for <strong class="font-bold">retry</strong>.',
+                'sqs_lambda.s1.dlq_label': 'Permanent Failure Solution:',
+                'sqs_lambda.s1.dlq_value': 'Configure a <strong class="font-bold">Dead Letter Queue (DLQ)</strong> on the <strong class="font-bold">SQS side</strong> to isolate messages after N attempts.',
+
+                'sqs_lambda.s2.title': '<strong class="font-bold">SQS FIFO</strong> & Lambda',
+                'sqs_lambda.s2.body': 'Ensures <strong class="font-bold">ordered processing</strong>. However, if one message <strong class="font-bold">fails</strong>, it <strong class="font-bold">blocks</strong> the entire queue.',
+                'sqs_lambda.s2.dlq_label': 'Blocking Solution:',
+                'sqs_lambda.s2.dlq_value': 'Use a <strong class="font-bold">DLQ</strong> (configured on SQS) to remove the failing message and <strong class="font-bold">unblock</strong> the queue.',
+
+                'sns_fanout.title': 'SNS, Lambda, and the Fan Out Pattern',
+                'sns_fanout.s1.title': '<strong class="font-bold">SNS</strong> & Lambda',
+                'sns_fanout.s1.body': 'Messages are sent <strong class="font-bold">asynchronously</strong> from SNS to Lambda. Lambda internally retries processing a message <strong class="font-bold">up to 3 times</strong> if it fails.',
+                'sns_fanout.s1.dlq_label': 'DLQ Location:',
+                'sns_fanout.s1.dlq_value': 'The DLQ (usually SQS) is configured on the <strong class="font-bold">Lambda service side</strong> (not SNS).',
+
+                'sns_fanout.s2.title': '<strong class="font-bold">Fan Out</strong> Pattern',
+                'sns_fanout.s2.body': 'Uses an <strong class="font-bold">SNS Topic</strong> as a middle layer. Multiple <strong class="font-bold">SQS</strong> queues (or Lambda functions) subscribe to it.',
+                'sns_fanout.s2.advantage_label': 'Advantage:',
+                'sns_fanout.s2.advantage_value': 'Ensures <strong class="font-bold">reliable delivery</strong> to multiple destinations (queues) with a single message send.',
+
+                's3_eventbridge.title': 'S3 Events and EventBridge Router',
+                's3_eventbridge.s1.title': '<strong class="font-bold">Amazon S3</strong> Event Notifications',
+                's3_eventbridge.s1.body': 'S3 generates events for bucket actions like object creation/deletion. Events can be filtered by object name.',
+                's3_eventbridge.s1.targets_label': 'Integration Targets:',
+                's3_eventbridge.s1.targets_value': '<strong class="font-bold">SNS, SQS, or Lambda</strong> functions. Delivery is typically within seconds.',
+
+                's3_eventbridge.s2.title': '<strong class="font-bold">Amazon EventBridge</strong>',
+                's3_eventbridge.s2.body': 'Uses <strong class="font-bold">advanced rules</strong> to route S3 events (or events from 18+ other services) to multiple destinations (targets).',
+                's3_eventbridge.s2.l1': 'Filter events using <strong class="font-bold">metadata</strong>, object size, etc.',
+                's3_eventbridge.s2.l2': 'Integrates with <strong class="font-bold">CloudTrail</strong> to react to API calls (e.g., DeleteTable).',
+                's3_eventbridge.s2.l3': 'Supports event <strong class="font-bold">Archiving</strong> and <strong class="font-bold">Replaying</strong>.',
+
+                'external_conclusion.title': 'External Integration & Conclusion',
+                'external_conclusion.s1.title': 'External Events into AWS',
+                'external_conclusion.s1.body': 'External systems can send events into AWS via <strong class="font-bold">API Gateway</strong>, which can then route them into <strong class="font-bold">Kinesis Data Streams</strong> for real-time processing (e.g., via <strong class="font-bold">Kinesis Data Firehose</strong> to S3 storage).',
+                'external_conclusion.takeaways.title': 'Architectural Summary:',
+                'external_conclusion.takeaways.l1': '<strong class="font-bold">SQS/Lambda</strong>: Good for asynchronous processing, retries, and DLQ handling.',
+                'external_conclusion.takeaways.l2': '<strong class="font-bold">SNS/Fan Out</strong>: Good for reliably distributing one message to multiple destinations.',
+                'external_conclusion.takeaways.l3': '<strong class="font-bold">EventBridge</strong>: Good for complex event routing, metadata filtering, and CloudTrail integration.'
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+        const activeClass = 'toggle-active';
+        const inactiveClass = 'toggle-inactive';
+
+        // Helper function to update content
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const content = translations[currentLanguage][key];
+                if (content) {
+                    // Use innerHTML to allow for strong/bold tags within the content
+                    element.innerHTML = content;
+                }
+            });
+            
+            // Update the main document language attribute
+            document.documentElement.lang = currentLanguage;
+            
+            // Update toggle button styles
+            updateLanguageButtons();
+        }
+
+        // Function to update button styles
+        function updateLanguageButtons() {
+            if (currentLanguage === 'vi') {
+                langToggleVi.classList.add(...activeClass.split(' '));
+                langToggleVi.classList.remove(...inactiveClass.split(' '));
+                langToggleEn.classList.add(...inactiveClass.split(' '));
+                langToggleEn.classList.remove(...activeClass.split(' '));
+            } else {
+                langToggleEn.classList.add(...activeClass.split(' '));
+                langToggleEn.classList.remove(...inactiveClass.split(' '));
+                langToggleVi.classList.add(...inactiveClass.split(' '));
+                langToggleVi.classList.remove(...activeClass.split(' '));
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize content with default language
+            updateContent();
+
+            // Language toggle event listeners
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

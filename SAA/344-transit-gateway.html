@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">AWS Transit Gateway: Đơn Giản Hóa Mạng Lưới Đám Mây</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Be+Vietnam+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', 'Inter', sans-serif;
+            background-color: #f0f9ff; /* Sky 50 - Theme for Cloud/Networking */
+            color: #1f2937; /* Gray 800 */
+        }
+        .container {
+            max-width: 1100px;
+        }
+        .header-title {
+            color: #0369a1; /* Sky 700 */
+            border-bottom: 4px solid #38bdf8; /* Sky 400 */
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+        }
+        .section-header {
+            color: #0284c7; /* Sky 600 */
+            font-weight: 700;
+        }
+
+        /* Styling cho sơ đồ Hub-and-Spoke */
+        .hub-spoke-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            min-height: 400px;
+            padding-top: 50px;
+        }
+        .tg-hub {
+            background-color: #e0f2fe; /* Blue 100 */
+            border: 3px solid #0ea5e9; /* Sky 500 */
+            color: #0369a1;
+            padding: 1.5rem 3rem;
+            border-radius: 50%;
+            z-index: 20;
+            font-weight: 700;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(14, 165, 233, 0.5);
+        }
+        .tg-hub p { font-size: 1.25rem; }
+
+        .spoke-group {
+            position: absolute;
+            width: 90%;
+            height: 90%;
+            top: 5%;
+            left: 5%;
+        }
+
+        .spoke {
+            position: absolute;
+            background-color: #ffffff;
+            border: 1px solid #94a3b8;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .vpc1 { top: 0; left: 10%; background-color: #ecfdf5; border-color: #34d399; } /* Green */
+        .vpc2 { top: 0; right: 10%; background-color: #fff7ed; border-color: #fb923c; } /* Orange */
+        .vpn-dc { bottom: 0; left: 5%; background-color: #f0f9ff; border-color: #60a5fa; } /* Blue */
+        .cross-region { bottom: 0; right: 5%; background-color: #fef2f2; border-color: #f87171; } /* Red */
+
+        /* CSS cho các đường kết nối (đường xuyên tâm) */
+        .line {
+            position: absolute;
+            border-left: 2px dashed #0ea5e9;
+            transform-origin: 0% 0%;
+            z-index: 10;
+        }
+
+        /* Line positioning (Cần điều chỉnh thủ công cho đẹp) */
+        .line-1 { height: 170px; top: 180px; left: 35%; transform: rotate(-60deg); }
+        .line-2 { height: 170px; top: 180px; left: 65%; transform: rotate(60deg); }
+        .line-3 { height: 170px; top: 220px; left: 35%; transform: rotate(-120deg); }
+        .line-4 { height: 170px; top: 220px; left: 65%; transform: rotate(120deg); }
+        
+        @media (max-width: 768px) {
+            .tg-hub {
+                padding: 1rem 2rem;
+                font-size: 0.8rem;
+            }
+            .tg-hub p { font-size: 1rem; }
+            .hub-spoke-diagram {
+                min-height: 500px;
+            }
+            .spoke { font-size: 0.75rem; padding: 0.5rem; }
+            
+            /* Tái định vị cho màn hình nhỏ */
+            .vpc1 { top: 50px; left: 5%; }
+            .vpc2 { top: 50px; right: 5%; }
+            .vpn-dc { bottom: 50px; left: 5%; }
+            .cross-region { bottom: 50px; right: 5%; }
+
+            /* Loại bỏ các đường chéo phức tạp trên mobile để giữ bố cục */
+            .line { display: none; }
+        }
+
+        /* Ứng dụng styling cho <strong> trong nội dung dịch */
+        .card strong {
+            font-weight: 700;
+            color: #0369a1;
+        }
+        .bg-ecmp {
+            background-color: #e0f7fa; /* Cyan 50 */
+            border: 1px solid #00bcd4; /* Cyan 500 */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-4 md:p-10">
+        <header class="text-center mb-12 relative">
+            <h1 class="text-4xl md:text-5xl font-extrabold header-title inline-block pb-1" data-i18n="header.title">
+                <i class="fas fa-network-wired mr-3"></i> AWS Transit Gateway
+            </h1>
+            <p class="text-lg text-gray-500 mt-2" data-i18n="header.subtitle">Giải pháp Mạng Lưới Tập Trung (Hub-and-Spoke)</p>
+            
+            <!-- Nút chuyển đổi ngôn ngữ -->
+            <div class="absolute top-0 right-0 mt-4 mr-4 flex space-x-2">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-md bg-sky-600 text-white font-semibold text-sm lang-button">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-md bg-gray-200 text-gray-700 font-semibold text-sm lang-button">EN</button>
+            </div>
+            
+        </header>
+
+        <main>
+            <!-- 1. Overview and Problem Solved -->
+            <section id="overview" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="overview.title">1. Tổng Quan & Vấn Đề Cần Giải Quyết</h2>
+                <div class="card">
+                    <p data-i18n="overview.p1" class="mb-4">
+                        Khi kiến trúc AWS của bạn phát triển với nhiều **VPC** cần kết nối với nhau, với trung tâm dữ liệu on-premises qua **VPN**, hoặc qua **Direct Connect**, cấu trúc mạng có thể trở nên cực kỳ **phức tạp** (hỗn độn).
+                    </p>
+                    <p data-i18n="overview.p2">
+                        **Transit Gateway (TGW)** được ra đời để giải quyết điều này. Nó cung cấp một kết nối **xuyên suốt (transitive peering)** giữa hàng ngàn VPC và các kết nối mạng khác trong một mô hình **Hub-and-Spoke** (Hình nan hoa).
+                    </p>
+                </div>
+            </section>
+            
+            <!-- 2. Hub-and-Spoke Architecture -->
+            <section id="architecture" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="arch.title">2. Kiến Trúc Hub-and-Spoke</h2>
+                <div class="card bg-gray-50">
+                    <div class="hub-spoke-diagram">
+                        <div class="tg-hub" data-i18n="arch.hub_label">
+                            <i class="fas fa-satellite-dish text-3xl mb-1"></i>
+                            <p>AWS Transit Gateway</p>
+                            <span class="text-sm font-normal">(HUB)</span>
+                        </div>
+
+                        <!-- Spoke Components -->
+                        <div class="spoke-group">
+                            <div class="spoke vpc1" style="top: 50px; left: 10%;" data-i18n="arch.vpc1">VPC A (Account 1)</div>
+                            <div class="spoke vpc2" style="top: 50px; right: 10%;" data-i18n="arch.vpc2">VPC B (Account 2)</div>
+                            <div class="spoke vpn-dc" style="bottom: 50px; left: 10%;" data-i18n="arch.vpn_dc"><i class="fas fa-building mr-1"></i> Data Center (VPN/DX)</div>
+                            <div class="spoke cross-region" style="bottom: 50px; right: 10%;" data-i18n="arch.cross_region"><i class="fas fa-globe-asia mr-1"></i> TGW Peering (Region B)</div>
+
+                            <!-- Lines (Chỉ hiển thị trên desktop) -->
+                            <div class="hidden md:block">
+                                <div class="line line-1" style="top: 190px; left: 49%; height: 100px; transform: rotate(-60deg);"></div>
+                                <div class="line line-2" style="top: 190px; left: 51%; height: 100px; transform: rotate(60deg);"></div>
+                                <div class="line line-3" style="top: 250px; left: 49%; height: 100px; transform: rotate(-120deg);"></div>
+                                <div class="line line-4" style="top: 250px; left: 51%; height: 100px; transform: rotate(120deg);"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-center mt-4 font-semibold text-gray-600" data-i18n="arch.caption">
+                        Tất cả các "Nan hoa" (Spokes: VPC, VPN, DX, Peering) đều kết nối về "Trục" (Hub: Transit Gateway).
+                    </p>
+                </div>
+            </section>
+
+            <!-- 3. Key Capabilities -->
+            <section id="features" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="features.title">3. Các Tính Năng & Khả Năng Chính</h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="card bg-sky-50 border-2 border-sky-200">
+                        <h3 class="text-xl font-bold mb-2 text-sky-700" data-i18n="features.routing_title"><i class="fas fa-route mr-2"></i> Kiểm Soát Định Tuyến (Routing Control)</h3>
+                        <p data-i18n="features.routing_p1">
+                            Bạn sử dụng **Bảng Định Tuyến (Route Tables)** cho **Transit Gateway** để định nghĩa chính xác **VPC nào** được phép giao tiếp với **VPC nào**. Điều này mang lại sự kiểm soát **tuyệt đối** và nâng cao **bảo mật mạng**.
+                        </p>
+                        <p class="mt-2 p-2 bg-yellow-100 rounded-md text-sm text-yellow-700 font-semibold" data-i18n="features.multicast_note">
+                            <i class="fas fa-exclamation-triangle mr-1"></i> **Lưu ý Đặc Biệt:** Transit Gateway là dịch vụ **AWS duy nhất** hỗ trợ **IP Multicast**. Nếu gặp IP Multicast trong kỳ thi, hãy nhớ ngay đến TGW!
+                        </p>
+                    </div>
+                    <div class="card bg-sky-50 border-2 border-sky-200">
+                        <h3 class="text-xl font-bold mb-2 text-sky-700" data-i18n="features.regional_title"><i class="fas fa-share-alt mr-2"></i> Tính Khu Vực & Chia Sẻ Tài Nguyên</h3>
+                        <ul class="list-disc ml-5 space-y-2 text-base">
+                            <li data-i18n="features.regional_b1">**TGW là tài nguyên theo Khu vực (Regional Resource)**.</li>
+                            <li data-i18n="features.regional_b2">Hỗ trợ **peering** giữa các **Khu vực (Cross-Region)**.</li>
+                            <li data-i18n="features.regional_b3">Có thể **chia sẻ** TGW với các tài khoản AWS khác bằng **Resource Access Manager (RAM)**.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. ECMP for VPN Bandwidth Scaling -->
+            <section id="ecmp-scaling" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="ecmp.title">4. Tăng Băng Thông VPN bằng **ECMP**</h2>
+                <div class="card bg-ecmp border-2 border-cyan-400">
+                    <h3 class="text-2xl font-bold mb-3 text-cyan-800" data-i18n="ecmp.subtitle">Equal-Cost Multi-Path (ECMP)</h3>
+                    <p data-i18n="ecmp.p1" class="mb-4">
+                        **ECMP** là một chiến lược định tuyến cho phép chuyển tiếp các gói tin qua **nhiều đường dẫn tốt nhất** cùng một lúc, thay vì chỉ một đường.
+                    </p>
+                    <p data-i18n="ecmp.p2" class="mb-4">
+                        Bằng cách tạo **nhiều kết nối Site-to-Site VPN** đến một Transit Gateway, bạn có thể **tăng thông lượng** của mình lên AWS.
+                    </p>
+
+                    <div class="bg-white p-4 rounded-lg border border-gray-200">
+                        <h4 class="font-bold text-lg mb-2" data-i18n="ecmp.comparison_title">So sánh Thông lượng VPN</h4>
+                        <ul class="list-disc ml-5 space-y-2 text-sm">
+                            <li data-i18n="ecmp.comparison_b1">**VPN đến VPC (Virtual Private Gateway):** Giới hạn **1.25 Gbps** (chỉ sử dụng một tunnel hiệu quả).</li>
+                            <li data-i18n="ecmp.comparison_b2" class="font-bold text-cyan-700">**VPN đến Transit Gateway (Sử dụng ECMP):** **2.5 Gbps** cho mỗi kết nối VPN vì nó tận dụng được cả hai tunnel.</li>
+                            <li data-i18n="ecmp.comparison_b3">**Mở rộng:** Bạn có thể thêm 2, 3, hoặc nhiều kết nối VPN vào TGW để **tăng gấp đôi/gấp ba** thông lượng.</li>
+                        </ul>
+                    </div>
+                    
+                    <p class="mt-4 p-3 bg-red-100 rounded-lg font-semibold text-sm text-red-700" data-i18n="ecmp.cost_note">
+                        <i class="fas fa-dollar-sign mr-1"></i> Lưu ý Chi phí: Mặc dù hiệu suất tăng, bạn sẽ chịu **chi phí cho mỗi gigabyte** dữ liệu truyền qua Transit Gateway.
+                    </p>
+                </div>
+            </section>
+            
+            <!-- 5. Sharing Direct Connect -->
+            <section id="dx-sharing" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="dxshare.title">5. Chia Sẻ Direct Connect Qua Nhiều Tài Khoản</h2>
+                <div class="card">
+                    <p data-i18n="dxshare.p1" class="mb-4">
+                        Transit Gateway cho phép bạn chia sẻ một kết nối **Direct Connect (DX)** giữa **nhiều tài khoản AWS** một cách hiệu quả.
+                    </p>
+                    <p data-i18n="dxshare.p2" class="mb-2">
+                        **Quy trình:**
+                    </p>
+                    <ul class="list-decimal ml-5 space-y-2 text-base">
+                        <li data-i18n="dxshare.b1">Thiết lập kết nối **DX** vật lý đến **DX Location**.</li>
+                        <li data-i18n="dxshare.b2">Kết nối **DX Location** với **Direct Connect Gateway**.</li>
+                        <li data-i18n="dxshare.b3">Kết nối **Direct Connect Gateway** với **Transit Gateway**.</li>
+                        <li data-i18n="dxshare.b4">Các **VPC** (từ các tài khoản khác nhau) được đính kèm vào **Transit Gateway**.</li>
+                    </ul>
+                    <p class="mt-4 font-semibold text-sky-700" data-i18n="dxshare.conclusion">
+                        Kiến trúc này **rất tiện lợi** và **hiệu quả**, cho phép một kết nối vật lý phục vụ toàn bộ tổ chức.
+                    </p>
+                </div>
+            </section>
+
+            <hr class="my-10 border-gray-300">
+
+            <!-- Key Takeaways -->
+            <section id="key-takeaways" class="mb-12 text-center">
+                <h2 class="text-3xl font-extrabold text-sky-700 inline-block pb-1 mb-6" data-i18n="checklist.title">ĐIỂM CHÍNH CẦN NHỚ VỀ TGW</h2>
+                <div class="p-6 space-y-4 bg-sky-50 border-2 border-sky-300 rounded-xl mx-auto max-w-4xl">
+                    <ul class="space-y-3 text-left">
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p1">
+                            <i class="fas fa-star text-sky-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Đơn giản hóa:** Chuyển đổi mạng lưới phức tạp thành mô hình **Hub-and-Spoke** tập trung.
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p2">
+                            <i class="fas fa-route text-sky-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Kiểm soát:** Sử dụng **Route Tables** TGW để kiểm soát hoàn toàn lưu lượng (giữa VPCs, VPN, DX, Peering).
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p3">
+                            <i class="fas fa-layer-group text-sky-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Kỳ thi:** Dịch vụ **duy nhất** hỗ trợ **IP Multicast**.
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p4">
+                            <i class="fas fa-tachometer-alt text-sky-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Tăng tốc:** Tăng băng thông **VPN** bằng cách sử dụng nhiều kết nối VPN đến TGW qua **ECMP**.
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p5">
+                            <i class="fas fa-handshake text-sky-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Chia sẻ:** Cho phép chia sẻ kết nối **Direct Connect** qua nhiều **Account** và **VPC**.
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        const translations = {
+            vi: {
+                header: {
+                    title: "AWS Transit Gateway: Đơn Giản Hóa Mạng Lưới Đám Mây",
+                    subtitle: "Giải pháp Mạng Lưới Tập Trung (Hub-and-Spoke)"
+                },
+                overview: {
+                    title: "1. Tổng Quan & Vấn Đề Cần Giải Quyết",
+                    p1: "Khi kiến trúc AWS của bạn phát triển với nhiều <strong>VPC</strong> cần kết nối với nhau, với trung tâm dữ liệu on-premises qua <strong>VPN</strong>, hoặc qua <strong>Direct Connect</strong>, cấu trúc mạng có thể trở nên cực kỳ <strong>phức tạp</strong> (hỗn độn).",
+                    p2: "<strong>Transit Gateway (TGW)</strong> được ra đời để giải quyết điều này. Nó cung cấp một kết nối <strong>xuyên suốt (transitive peering)</strong> giữa hàng ngàn VPC và các kết nối mạng khác trong một mô hình <strong>Hub-and-Spoke</strong> (Hình nan hoa)."
+                },
+                arch: {
+                    title: "2. Kiến Trúc Hub-and-Spoke",
+                    hub_label: "AWS Transit Gateway",
+                    vpc1: "VPC A (Tài khoản 1)",
+                    vpc2: "VPC B (Tài khoản 2)",
+                    vpn_dc: "<i class=\"fas fa-building mr-1\"></i> Trung Tâm Dữ Liệu (VPN/DX)",
+                    cross_region: "<i class=\"fas fa-globe-asia mr-1\"></i> TGW Peering (Khu vực B)",
+                    caption: "Tất cả các \"Nan hoa\" (Spokes: VPC, VPN, DX, Peering) đều kết nối về \"Trục\" (Hub: Transit Gateway)."
+                },
+                features: {
+                    title: "3. Các Tính Năng & Khả Năng Chính",
+                    routing_title: "<i class=\"fas fa-route mr-2\"></i> Kiểm Soát Định Tuyến (Routing Control)",
+                    routing_p1: "Bạn sử dụng <strong>Bảng Định Tuyến (Route Tables)</strong> cho <strong>Transit Gateway</strong> để định nghĩa chính xác <strong>VPC nào</strong> được phép giao tiếp với <strong>VPC nào</strong>. Điều này mang lại sự kiểm soát <strong>tuyệt đối</strong> và nâng cao <strong>bảo mật mạng</strong>.",
+                    multicast_note: "<i class=\"fas fa-exclamation-triangle mr-1\"></i> <strong>Lưu ý Đặc Biệt:</strong> Transit Gateway là dịch vụ <strong>AWS duy nhất</strong> hỗ trợ <strong>IP Multicast</strong>. Nếu gặp IP Multicast trong kỳ thi, hãy nhớ ngay đến TGW!"
+                },
+                regional_title: "<i class=\"fas fa-share-alt mr-2\"></i> Tính Khu Vực & Chia Sẻ Tài Nguyên",
+                regional_b1: "<strong>TGW là tài nguyên theo Khu vực (Regional Resource)</strong>.",
+                regional_b2: "Hỗ trợ <strong>peering</strong> giữa các <strong>Khu vực (Cross-Region)</strong>.",
+                regional_b3: "Có thể <strong>chia sẻ</strong> TGW với các tài khoản AWS khác bằng <strong>Resource Access Manager (RAM)</strong>."
+                ,
+                ecmp: {
+                    title: "4. Tăng Băng Thông VPN bằng **ECMP**",
+                    subtitle: "Equal-Cost Multi-Path (ECMP)",
+                    p1: "<strong>ECMP</strong> là một chiến lược định tuyến cho phép chuyển tiếp các gói tin qua <strong>nhiều đường dẫn tốt nhất</strong> cùng một lúc, thay vì chỉ một đường.",
+                    p2: "Bằng cách tạo <strong>nhiều kết nối Site-to-Site VPN</strong> đến một Transit Gateway, bạn có thể **tăng thông lượng** của mình lên AWS.",
+                    comparison_title: "So sánh Thông lượng VPN",
+                    comparison_b1: "<strong>VPN đến VPC (Virtual Private Gateway):</strong> Giới hạn <strong>1.25 Gbps</strong> (chỉ sử dụng một tunnel hiệu quả).",
+                    comparison_b2: "<strong>VPN đến Transit Gateway (Sử dụng ECMP):</strong> <strong>2.5 Gbps</strong> cho mỗi kết nối VPN vì nó tận dụng được cả hai tunnel.",
+                    comparison_b3: "<strong>Mở rộng:</strong> Bạn có thể thêm 2, 3, hoặc nhiều kết nối VPN vào TGW để **tăng gấp đôi/gấp ba** thông lượng.",
+                    cost_note: "<i class=\"fas fa-dollar-sign mr-1\"></i> Lưu ý Chi phí: Mặc dù hiệu suất tăng, bạn sẽ chịu **chi phí cho mỗi gigabyte** dữ liệu truyền qua Transit Gateway."
+                },
+                dxshare: {
+                    title: "5. Chia Sẻ Direct Connect Qua Nhiều Tài Khoản",
+                    p1: "Transit Gateway cho phép bạn chia sẻ một kết nối <strong>Direct Connect (DX)</strong> giữa <strong>nhiều tài khoản AWS</strong> một cách hiệu quả.",
+                    p2: "<strong>Quy trình:</strong>",
+                    b1: "Thiết lập kết nối <strong>DX</strong> vật lý đến **DX Location**.",
+                    b2: "Kết nối **DX Location** với <strong>Direct Connect Gateway</strong>.",
+                    b3: "Kết nối **Direct Connect Gateway** với **Transit Gateway**.",
+                    b4: "Các <strong>VPC</strong> (từ các tài khoản khác nhau) được đính kèm vào **Transit Gateway**.",
+                    conclusion: "Kiến trúc này **rất tiện lợi** và **hiệu quả**, cho phép một kết nối vật lý phục vụ toàn bộ tổ chức."
+                },
+                checklist: {
+                    title: "ĐIỂM CHÍNH CẦN NHỚ VỀ TGW",
+                    p1: "<strong>Đơn giản hóa:</strong> Chuyển đổi mạng lưới phức tạp thành mô hình **Hub-and-Spoke** tập trung.",
+                    p2: "<strong>Kiểm soát:</strong> Sử dụng **Route Tables** TGW để kiểm soát hoàn toàn lưu lượng (giữa VPCs, VPN, DX, Peering).",
+                    p3: "<strong>Kỳ thi:</strong> Dịch vụ **duy nhất** hỗ trợ **IP Multicast**.",
+                    p4: "<strong>Tăng tốc:</strong> Tăng băng thông **VPN** bằng cách sử dụng nhiều kết nối VPN đến TGW qua **ECMP**.",
+                    p5: "<strong>Chia sẻ:</strong> Cho phép chia sẻ kết nối **Direct Connect** qua nhiều **Account** và **VPC**."
+                }
+            },
+            en: {
+                header: {
+                    title: "AWS Transit Gateway: Cloud Network Simplification",
+                    subtitle: "The Hub-and-Spoke Centralized Networking Solution"
+                },
+                overview: {
+                    title: "1. Overview & Problem Solved",
+                    p1: "As your AWS architecture grows with multiple **VPCs** that need to connect to each other, to an on-premises data center via **VPN**, or via **Direct Connect**, the network topology can become extremely **complex** (a mess).",
+                    p2: "The **Transit Gateway (TGW)** was introduced to solve this. It provides a **transitive peering** connection between thousands of VPCs and other network connections in a **Hub-and-Spoke** star topology."
+                },
+                arch: {
+                    title: "2. Hub-and-Spoke Architecture",
+                    hub_label: "AWS Transit Gateway",
+                    vpc1: "VPC A (Account 1)",
+                    vpc2: "VPC B (Account 2)",
+                    vpn_dc: "<i class=\"fas fa-building mr-1\"></i> Corporate Data Center (VPN/DX)",
+                    cross_region: "<i class=\"fas fa-globe-asia mr-1\"></i> TGW Peering (Region B)",
+                    caption: "All \"Spokes\" (VPCs, VPN, DX, Peering) connect to the central \"Hub\" (Transit Gateway)."
+                },
+                features: {
+                    title: "3. Key Features & Capabilities",
+                    routing_title: "<i class=\"fas fa-route mr-2\"></i> Routing Control",
+                    routing_p1: "You use **Route Tables** for the **Transit Gateway** to define exactly **which VPCs** are allowed to communicate with **which VPCs**. This provides **absolute** control and enhances **network security**.",
+                    multicast_note: "<i class=\"fas fa-exclamation-triangle mr-1\"></i> **Special Note:** Transit Gateway is the **only AWS service** that supports **IP Multicast**. If you see IP Multicast in an exam, think TGW!"
+                },
+                regional_title: "<i class=\"fas fa-share-alt mr-2\"></i> Regionality & Resource Sharing",
+                regional_b1: "The **TGW is a Regional Resource**.",
+                regional_b2: "Supports **peering** across **Regions (Cross-Region)**.",
+                regional_b3: "Can be **shared** with other AWS accounts using the **Resource Access Manager (RAM)**."
+                ,
+                ecmp: {
+                    title: "4. Scaling VPN Bandwidth with **ECMP**",
+                    subtitle: "Equal-Cost Multi-Path (ECMP)",
+                    p1: "**ECMP** is a routing strategy that forwards packets over **multiple best paths** simultaneously, instead of just one.",
+                    p2: "By creating **multiple Site-to-Site VPN connections** to a Transit Gateway, you can **increase the throughput** of your connection to AWS.",
+                    comparison_title: "VPN Throughput Comparison",
+                    comparison_b1: "<strong>VPN to VPC (Virtual Private Gateway):</strong> Limited to **1.25 Gbps** (effectively uses one tunnel).",
+                    comparison_b2: "<strong>VPN to Transit Gateway (Using ECMP):</strong> **2.5 Gbps** per VPN connection as it utilizes both tunnels.",
+                    comparison_b3: "<strong>Scaling:</strong> You can add 2, 3, or more VPN connections to the TGW to **double/triple** your throughput.",
+                    cost_note: "<i class=\"fas fa-dollar-sign mr-1\"></i> Cost Note: While performance increases, you will incur **cost for each gigabyte** of data transferred through the Transit Gateway."
+                },
+                dxshare: {
+                    title: "5. Sharing Direct Connect Across Multiple Accounts",
+                    p1: "The Transit Gateway allows you to share a single **Direct Connect (DX)** connection across **multiple AWS accounts** efficiently.",
+                    p2: "<strong>The Process:</strong>",
+                    b1: "Establish the physical **DX** connection to the **DX Location**.",
+                    b2: "Connect the **DX Location** to a **Direct Connect Gateway**.",
+                    b3: "Connect the **Direct Connect Gateway** to the **Transit Gateway**.",
+                    b4: "**VPCs** (from different accounts) are attached to the **Transit Gateway**.",
+                    conclusion: "This architecture is **very convenient** and **efficient**, allowing one physical connection to serve the entire organization."
+                },
+                checklist: {
+                    title: "KEY TGW TAKEAWAYS",
+                    p1: "<strong>Simplification:</strong> Transforms complex networks into a centralized **Hub-and-Spoke** model.",
+                    p2: "<strong>Control:</strong> Uses TGW **Route Tables** to gain full traffic control (between VPCs, VPN, DX, Peering).",
+                    p3: "<strong>Exam Must-Know:</strong> The **only** service that supports **IP Multicast**.",
+                    p4: "<strong>Speed:</strong> Increases **VPN** bandwidth by using multiple VPN connections to TGW via **ECMP**.",
+                    p5: "<strong>Sharing:</strong> Enables sharing a **Direct Connect** connection across multiple **Accounts** and **VPCs**."
+                }
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default language
+
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+
+        function getNestedTranslation(obj, path) {
+            return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+        }
+
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const translatedText = getNestedTranslation(translations[currentLanguage], key);
+                if (translatedText) {
+                    // Sử dụng innerHTML để hiển thị đúng các thẻ HTML như <strong> và <i>
+                    element.innerHTML = translatedText; 
+                }
+            });
+            document.querySelector('html').setAttribute('lang', currentLanguage);
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            // Sử dụng màu Sky cho nút active
+            const activeClass = 'bg-sky-600 text-white';
+            const inactiveClass = 'bg-gray-200 text-gray-700';
+
+            if (currentLanguage === 'vi') {
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            } else {
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">AWS Database Migration Service (DMS)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fffbeb; /* Amber 50 - Data/Migration Theme */
+            color: #1f2937; /* Gray 800 */
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .header-title {
+            color: #d97706; /* Amber 600 */
+            border-bottom: 4px solid #fde68a; /* Amber 200 */
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            height: 100%;
+            border: 1px solid #fcd34d; /* Light Amber border */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 20px -5px rgba(0, 0, 0, 0.15);
+        }
+        .section-header {
+            color: #b45309; /* Amber 700 */
+            font-weight: 800;
+        }
+        .content-card strong, .takeaways-list strong {
+            font-weight: 800;
+            color: #ef4444; /* Red 500 - Highlight Key Terms */
+        }
+        .icon-box {
+            background-color: #fef3c7; /* Amber 100 */
+            color: #d97706; /* Amber 600 */
+            width: 3.5rem;
+            height: 3.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        .migration-type-card {
+            border-left: 5px solid #d97706;
+            background-color: #fffbeb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-4 md:p-10">
+        <header class="text-center mb-12 relative">
+            <h1 class="text-4xl md:text-5xl font-extrabold header-title inline-block pb-1" data-i18n="header.title">
+                <i class="fas fa-database mr-3"></i> AWS Database Migration Service (DMS)
+            </h1>
+            <p class="text-lg text-gray-500 mt-2" data-i18n="header.subtitle">Dịch vụ Di chuyển Cơ sở Dữ liệu Nhanh chóng và An toàn.</p>
+
+            <!-- Language Toggle Buttons -->
+            <div class="absolute top-0 right-0 mt-4 mr-4 flex space-x-2">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-md bg-amber-600 text-white font-semibold text-sm lang-button">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-md bg-gray-200 text-gray-700 font-semibold text-sm lang-button">EN</button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Introduction -->
+            <section id="introduction" class="mb-10">
+                <div class="card p-6 bg-white shadow-xl content-card">
+                    <h2 class="text-3xl section-header mb-4" data-i18n="intro.title">Giới Thiệu về AWS Database Migration Service (DMS)</h2>
+                    <p data-i18n="intro.p1" class="text-lg mb-4">
+                        Để di chuyển cơ sở dữ liệu từ hệ thống <strong>tại chỗ (on-premises)</strong> của bạn lên AWS Cloud, bạn nên sử dụng <strong>DMS</strong>, hoặc Database Migration Service. Đây là một dịch vụ cơ sở dữ liệu nhanh chóng và <strong>an toàn</strong>, cho phép bạn di chuyển cơ sở dữ liệu lên AWS. Dịch vụ này có khả năng phục hồi và tự phục hồi (self-healing). Quan trọng là, trong quá trình di chuyển, cơ sở dữ liệu nguồn vẫn <strong>sẵn sàng</strong> hoạt động.
+                    </p>
+                    
+                    <h3 class="text-2xl font-bold mt-6 mb-3 text-amber-700" data-i18n="replication.title">Hỗ trợ Nhân bản Dữ liệu Liên tục</h3>
+                    <p data-i18n="replication.p1">
+                        DMS hỗ trợ nhân bản dữ liệu liên tục bằng cách sử dụng <strong>Change Data Capture (CDC)</strong>.
+                    </p>
+                    <p data-i18n="replication.p2" class="text-sm italic text-gray-500 mt-2">
+                        Để sử dụng DMS, bạn cần tạo một <strong>EC2 instance</strong>. Instance này chạy phần mềm DMS và thực hiện các tác vụ nhân bản, liên tục kéo dữ liệu từ nguồn và chèn vào đích.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Migration Types -->
+            <section id="migration-types" class="mb-10">
+                <h2 class="text-3xl section-header mb-6"><i class="fas fa-exchange-alt mr-2"></i> <span data-i18n="types.title">Các Loại Di chuyển Cơ sở Dữ liệu</span></h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Homogeneous Migration -->
+                    <div class="card content-card migration-type-card border-orange-500">
+                        <div class="icon-box"><i class="fas fa-copy text-xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-orange-700" data-i18n="homo.title">Homogeneous Migrations (Đồng nhất)</h3>
+                        <p data-i18n="homo.p1">
+                            Di chuyển giữa các công cụ cơ sở dữ liệu <strong>giống nhau</strong>.
+                        </p>
+                        <p data-i18n="homo.p2" class="text-sm italic text-gray-500 mt-2">
+                            Ví dụ: <strong>Oracle sang Oracle</strong> hoặc <strong>PostgreSQL sang PostgreSQL</strong>. Trong trường hợp này, <strong>không cần</strong> sử dụng Schema Conversion Tool (SCT).
+                        </p>
+                    </div>
+
+                    <!-- Heterogeneous Migration -->
+                    <div class="card content-card migration-type-card border-red-500">
+                        <div class="icon-box"><i class="fas fa-layer-group text-xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-red-700" data-i18n="hetero.title">Heterogeneous Migrations (Dị biệt)</h3>
+                        <p data-i18n="hetero.p1">
+                            Di chuyển giữa các công cụ cơ sở dữ liệu <strong>khác nhau</strong>.
+                        </p>
+                        <p data-i18n="hetero.p2" class="text-sm italic text-gray-500 mt-2">
+                            Ví dụ: <strong>Microsoft SQL Server sang Aurora</strong>. Trong trường hợp này, <strong>cần</strong> sử dụng AWS Schema Conversion Tool (SCT).
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SCT for Heterogeneous Migrations -->
+            <section id="sct-section" class="mb-10">
+                <div class="card p-6 bg-white content-card border-l-4 border-red-500">
+                    <h2 class="text-3xl section-header mb-4" data-i18n="sct.title">Sử dụng AWS Schema Conversion Tool (SCT)</h2>
+                    <p data-i18n="sct.p1" class="mb-3">
+                        Nếu cơ sở dữ liệu nguồn và đích <strong>không cùng loại công cụ</strong>, bạn phải sử dụng <strong>AWS SCT</strong> (Schema Conversion Tool).
+                    </p>
+                    <p data-i18n="sct.p2">
+                        SCT chịu trách nhiệm <strong>chuyển đổi lược đồ cơ sở dữ liệu</strong> (schema) từ công cụ này sang công cụ khác (ví dụ: chuyển đổi từ <strong>Oracle</strong> hoặc <strong>SQL Server</strong> sang <strong>MySQL, PostgreSQL</strong> hoặc <strong>Aurora</strong>).
+                    </p>
+                    <p data-i18n="sct.p3" class="text-sm italic text-gray-500 mt-3">
+                        Hãy nhớ: Di chuyển giữa cùng một công cụ (ví dụ: PostgreSQL tại chỗ sang RDS PostgreSQL) <strong>không cần SCT</strong>. Di chuyển giữa các công cụ khác nhau (ví dụ: Oracle sang PostgreSQL) <strong>cần SCT</strong>.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Supported Databases -->
+            <section id="supported-dbs" class="mb-10">
+                <h2 class="text-3xl section-header mb-6"><i class="fas fa-list-ul mr-2"></i> <span data-i18n="db.title">Các Cơ sở Dữ liệu Nguồn và Đích Được Hỗ trợ</span></h2>
+                
+                <p data-i18n="db.intro" class="mb-4 text-gray-700">
+                    Ý tưởng chung là DMS có thể giúp bạn di chuyển cơ sở dữ liệu từ hầu hết mọi nơi đến <strong>hầu hết mọi dịch vụ cơ sở dữ liệu</strong> mà AWS cung cấp.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Source DBs -->
+                    <div class="card content-card border-l-4 border-amber-500">
+                        <h3 class="font-bold text-xl mb-3 text-amber-700" data-i18n="db.source.title">Cơ sở Dữ liệu Nguồn (Source Databases)</h3>
+                        <p data-i18n="db.source.p1">
+                            Có thể là cơ sở dữ liệu <strong>tại chỗ</strong>, <strong>EC2-based</strong> (Oracle, SQL Server, MySQL, MongoDB, v.v.), cơ sở dữ liệu <strong>Azure</strong>, hoặc <strong>RDS/Aurora/S3/DocumentDB</strong>.
+                        </p>
+                    </div>
+
+                    <!-- Target DBs -->
+                    <div class="card content-card border-l-4 border-amber-500">
+                        <h3 class="font-bold text-xl mb-3 text-amber-700" data-i18n="db.target.title">Cơ sở Dữ liệu Đích (Target Databases)</h3>
+                        <p data-i18n="db.target.p1">
+                            Bao gồm các cơ sở dữ liệu <strong>tại chỗ/EC2-based</strong>, <strong>Amazon RDS</strong> (bao gồm cả Aurora), <strong>Redshift, DynamoDB, Amazon S3, Kinesis Data Streams, Apache Kafka, DocumentDB, Neptune, Redis</strong> và <strong>Babelfish</strong>.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Multi-AZ and Continuous Replication -->
+            <section id="multi-az-replication" class="mb-10">
+                <h2 class="text-3xl section-header mb-6"><i class="fas fa-globe-americas mr-2"></i> <span data-i18n="multi.title">Triển khai Multi-AZ và Tính năng Bổ sung</span></h2>
+                
+                <div class="card p-6 bg-white content-card border-l-4 border-blue-500">
+                    <h3 class="font-bold text-2xl mb-3 text-blue-700" data-i18n="multi.az.title">Triển khai Multi-AZ cho DMS</h3>
+                    <p data-i18n="multi.az.p1">
+                        DMS hỗ trợ triển khai <strong>Multi-AZ (Đa Vùng Sẵn sàng)</strong>. Điều này có nghĩa là bạn có một Replication Instance ở một AZ và một bản sao (replica) đồng bộ ở một AZ khác làm bản sao dự phòng (standby).
+                    </p>
+                    <ul class="list-disc ml-5 space-y-1 text-sm mt-3">
+                        <li data-i18n="multi.az.li1">Cung cấp <strong>khả năng phục hồi</strong> trước lỗi AZ cụ thể.</li>
+                        <li data-i18n="multi.az.li2">Đảm bảo <strong>dữ liệu dư thừa</strong> và loại bỏ hiện tượng đóng băng I/O.</li>
+                        <li data-i18n="multi.az.li3">Giảm thiểu các <strong>đột biến độ trễ (latency spikes)</strong>.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <hr class="my-10 border-gray-300">
+
+            <!-- Conclusion -->
+            <section id="conclusion" class="text-center">
+                <h2 class="text-3xl font-extrabold text-amber-700 inline-block pb-1 mb-6" data-i18n="final.title"><i class="fas fa-check-circle mr-2"></i> TÓM TẮT CHÍNH</h2>
+                <div class="card takeaways-list mx-auto max-w-4xl p-6 bg-amber-50 border-2 border-amber-400">
+                    <ul class="space-y-4 text-left list-disc pl-5">
+                        <li data-i18n="final.p1"><strong>AWS Database Migration Service (DMS)</strong> cho phép di chuyển nhanh chóng, an toàn và có khả năng phục hồi từ tại chỗ sang AWS, trong khi cơ sở dữ liệu nguồn vẫn <strong>sẵn sàng</strong>.</li>
+                        <li data-i18n="final.p2">DMS hỗ trợ cả di chuyển <strong>đồng nhất (homogeneous)</strong> và <strong>dị biệt (heterogeneous)</strong>, với nhân bản liên tục thông qua <strong>Change Data Capture (CDC)</strong>.</li>
+                        <li data-i18n="final.p3">Một <strong>EC2 instance</strong> chạy phần mềm DMS thực hiện các tác vụ nhân bản.</li>
+                        <li data-i18n="final.p4"><strong>AWS Schema Conversion Tool (SCT)</strong> là <strong>bắt buộc</strong> khi di chuyển giữa các công cụ cơ sở dữ liệu khác nhau (dị biệt).</li>
+                        <li data-i18n="final.p5">DMS hỗ trợ triển khai <strong>Multi-AZ</strong> để đạt được tính sẵn sàng cao.</li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const translations = {
+            vi: {
+                header: {
+                    title: "AWS Database Migration Service (DMS)",
+                    subtitle: "Dịch vụ Di chuyển Cơ sở Dữ liệu Nhanh chóng và An toàn."
+                },
+                intro: {
+                    title: "Giới Thiệu về AWS Database Migration Service (DMS)",
+                    p1: "Để di chuyển cơ sở dữ liệu từ hệ thống <strong>tại chỗ (on-premises)</strong> của bạn lên AWS Cloud, bạn nên sử dụng <strong>DMS</strong>, hoặc Database Migration Service. Đây là một dịch vụ cơ sở dữ liệu nhanh chóng và <strong>an toàn</strong>, cho phép bạn di chuyển cơ sở dữ liệu lên AWS. Dịch vụ này có khả năng phục hồi và tự phục hồi (self-healing). Quan trọng là, trong quá trình di chuyển, cơ sở dữ liệu nguồn vẫn <strong>sẵn sàng</strong> hoạt động.",
+                },
+                replication: {
+                    title: "Hỗ trợ Nhân bản Dữ liệu Liên tục",
+                    p1: "DMS hỗ trợ nhân bản dữ liệu liên tục bằng cách sử dụng <strong>Change Data Capture (CDC)</strong>.",
+                    p2: "Để sử dụng DMS, bạn cần tạo một <strong>EC2 instance</strong>. Instance này chạy phần mềm DMS và thực hiện các tác vụ nhân bản, liên tục kéo dữ liệu từ nguồn và chèn vào đích."
+                },
+                types: {
+                    title: "Các Loại Di chuyển Cơ sở Dữ liệu"
+                },
+                homo: {
+                    title: "Homogeneous Migrations (Đồng nhất)",
+                    p1: "Di chuyển giữa các công cụ cơ sở dữ liệu <strong>giống nhau</strong>.",
+                    p2: "Ví dụ: <strong>Oracle sang Oracle</strong> hoặc <strong>PostgreSQL sang PostgreSQL</strong>. Trong trường hợp này, <strong>không cần</strong> sử dụng Schema Conversion Tool (SCT)."
+                },
+                hetero: {
+                    title: "Heterogeneous Migrations (Dị biệt)",
+                    p1: "Di chuyển giữa các công cụ cơ sở dữ liệu <strong>khác nhau</strong>.",
+                    p2: "Ví dụ: <strong>Microsoft SQL Server sang Aurora</strong>. Trong trường hợp này, <strong>cần</strong> sử dụng AWS Schema Conversion Tool (SCT)."
+                },
+                sct: {
+                    title: "Sử dụng AWS Schema Conversion Tool (SCT)",
+                    p1: "Nếu cơ sở dữ liệu nguồn và đích <strong>không cùng loại công cụ</strong>, bạn phải sử dụng <strong>AWS SCT</strong> (Schema Conversion Tool).",
+                    p2: "SCT chịu trách nhiệm <strong>chuyển đổi lược đồ cơ sở dữ liệu</strong> (schema) từ công cụ này sang công cụ khác (ví dụ: chuyển đổi từ <strong>Oracle</strong> hoặc <strong>SQL Server</strong> sang <strong>MySQL, PostgreSQL</strong> hoặc <strong>Aurora</strong>).",
+                    p3: "Hãy nhớ: Di chuyển giữa cùng một công cụ (ví dụ: PostgreSQL tại chỗ sang RDS PostgreSQL) <strong>không cần SCT</strong>. Di chuyển giữa các công cụ khác nhau (ví dụ: Oracle sang PostgreSQL) <strong>cần SCT</strong>."
+                },
+                db: {
+                    title: "Các Cơ sở Dữ liệu Nguồn và Đích Được Hỗ trợ",
+                    intro: "Ý tưởng chung là DMS có thể giúp bạn di chuyển cơ sở dữ liệu từ hầu hết mọi nơi đến <strong>hầu hết mọi dịch vụ cơ sở dữ liệu</strong> mà AWS cung cấp.",
+                    source: {
+                        title: "Cơ sở Dữ liệu Nguồn (Source Databases)",
+                        p1: "Có thể là cơ sở dữ liệu <strong>tại chỗ</strong>, <strong>EC2-based</strong> (Oracle, SQL Server, MySQL, MariaDB, PostgreSQL, MongoDB, SAP, DB2), cơ sở dữ liệu <strong>Azure</strong>, hoặc <strong>Amazon RDS</strong> (bao gồm Aurora), <strong>Amazon S3</strong> và <strong>DocumentDB</strong>."
+                    },
+                    target: {
+                        title: "Cơ sở Dữ liệu Đích (Target Databases)",
+                        p1: "Bao gồm các cơ sở dữ liệu <strong>tại chỗ/EC2-based</strong>, bất kỳ cơ sở dữ liệu nào trên <strong>Amazon RDS</strong>, <strong>Redshift, DynamoDB, Amazon S3, Kinesis Data Streams, Apache Kafka, DocumentDB, Amazon Neptune, Redis</strong> và <strong>Babelfish</strong>."
+                    }
+                },
+                multi: {
+                    title: "Triển khai Multi-AZ và Tính năng Bổ sung",
+                    az: {
+                        title: "Triển khai Multi-AZ cho DMS",
+                        p1: "DMS hỗ trợ triển khai <strong>Multi-AZ (Đa Vùng Sẵn sàng)</strong>. Điều này có nghĩa là bạn có một Replication Instance ở một AZ và một bản sao (replica) đồng bộ ở một AZ khác làm bản sao dự phòng (standby).",
+                        li1: "Cung cấp <strong>khả năng phục hồi</strong> trước lỗi AZ cụ thể.",
+                        li2: "Đảm bảo <strong>dữ liệu dư thừa</strong> và loại bỏ hiện tượng đóng băng I/O.",
+                        li3: "Giảm thiểu các <strong>đột biến độ trễ (latency spikes)</strong>."
+                    }
+                },
+                final: {
+                    title: "TÓM TẮT CHÍNH",
+                    p1: "<strong>AWS Database Migration Service (DMS)</strong> cho phép di chuyển nhanh chóng, an toàn và có khả năng phục hồi từ tại chỗ sang AWS, trong khi cơ sở dữ liệu nguồn vẫn <strong>sẵn sàng</strong>.",
+                    p2: "DMS hỗ trợ cả di chuyển <strong>đồng nhất (homogeneous)</strong> và <strong>dị biệt (heterogeneous)</strong>, với nhân bản liên tục thông qua <strong>Change Data Capture (CDC)</strong>.",
+                    p3: "Một <strong>EC2 instance</strong> chạy phần mềm DMS thực hiện các tác vụ nhân bản.",
+                    p4: "<strong>AWS Schema Conversion Tool (SCT)</strong> là <strong>bắt buộc</strong> khi di chuyển giữa các công cụ cơ sở dữ liệu khác nhau (dị biệt).",
+                    p5: "DMS hỗ trợ triển khai <strong>Multi-AZ</strong> cho tính sẵn sàng cao, dữ liệu dư thừa và giảm thiểu độ trễ."
+                }
+            },
+            en: {
+                header: {
+                    title: "AWS Database Migration Service (DMS)",
+                    subtitle: "A Quick and Secure Database Migration Service."
+                },
+                intro: {
+                    title: "Introduction to AWS Database Migration Service (DMS)",
+                    p1: "To migrate a database from your <strong>on-premises</strong> systems to the AWS Cloud, you should use <strong>DMS</strong>, or Database Migration Service. It is a quick and <strong>secure</strong> database service that allows you to migrate your database to AWS. The service is resilient and self-healing. Importantly, during the migration, the source database remains <strong>available</strong>.",
+                },
+                replication: {
+                    title: "Supports Continuous Data Replication",
+                    p1: "DMS supports continuous data replication using <strong>Change Data Capture (CDC)</strong>.",
+                    p2: "To use DMS, you need to create an <strong>EC2 instance</strong>. This instance runs the DMS software and performs the replication tasks, continuously pulling data from the source database and inserting it into the target database."
+                },
+                types: {
+                    title: "Types of Database Migrations"
+                },
+                homo: {
+                    title: "Homogeneous Migrations",
+                    p1: "Migration between the <strong>same</strong> database engines.",
+                    p2: "Example: <strong>Oracle to Oracle</strong> or <strong>PostgreSQL to PostgreSQL</strong>. In this case, <strong>no</strong> Schema Conversion Tool (SCT) is needed."
+                },
+                hetero: {
+                    title: "Heterogeneous Migrations",
+                    p1: "Migration between <strong>different</strong> database engines.",
+                    p2: "Example: <strong>Microsoft SQL Server to Aurora</strong>. In this case, <strong>AWS Schema Conversion Tool (SCT) is required</strong>."
+                },
+                sct: {
+                    title: "Using AWS Schema Conversion Tool (SCT)",
+                    p1: "If the source and target databases do <strong>not have the same engine</strong>, you need to use <strong>AWS SCT</strong> (Schema Conversion Tool).",
+                    p2: "SCT converts the database schema from one engine to another (e.g., migrating an OLTP database from <strong>SQL Server</strong> or <strong>Oracle</strong> to <strong>MySQL, PostgreSQL</strong>, or <strong>Aurora</strong>).",
+                    p3: "Remember: Migrating between the same engine (e.g., on-premises PostgreSQL to RDS PostgreSQL) <strong>does not require SCT</strong>. Migrating between different engines (e.g., Oracle to PostgreSQL) <strong>does require SCT</strong>."
+                },
+                db: {
+                    title: "Supported Source and Target Databases",
+                    intro: "The general idea is that DMS can help you migrate a database from almost anywhere onto <strong>almost any database service</strong> that AWS offers.",
+                    source: {
+                        title: "Source Databases",
+                        p1: "Can be <strong>on-premises</strong>, <strong>EC2 instance-based</strong> (Oracle, SQL Server, MySQL, MariaDB, PostgreSQL, MongoDB, SAP, DB2), <strong>Azure databases</strong>, or <strong>Amazon RDS</strong> (including Aurora), <strong>Amazon S3</strong>, and <strong>DocumentDB</strong>."
+                    },
+                    target: {
+                        title: "Target Databases",
+                        p1: "Include <strong>on-premises/EC2 instance-based</strong> databases, any database on <strong>Amazon RDS</strong>, <strong>Redshift, DynamoDB, Amazon S3, Kinesis Data Streams, Apache Kafka, DocumentDB, Amazon Neptune, Redis</strong>, and <strong>Babelfish</strong>."
+                    }
+                },
+                multi: {
+                    title: "Multi-AZ Deployment and Additional Features",
+                    az: {
+                        title: "Multi-AZ Deployment for DMS",
+                        p1: "DMS supports <strong>Multi-AZ (Multi-Availability Zone)</strong> deployment. This means you can have a DMS Replication Instance in one AZ and a synchronous replica in another AZ acting as a standby.",
+                        li1: "Provides <strong>resilience</strong> to failure in a specific AZ.",
+                        li2: "Ensures <strong>data redundancy</strong> and eliminates IO freezes.",
+                        li3: "Minimizes <strong>latency spikes</strong>."
+                    }
+                },
+                final: {
+                    title: "KEY TAKEAWAYS",
+                    p1: "<strong>AWS Database Migration Service (DMS)</strong> enables quick, secure, and resilient migration from on-premises to AWS while keeping the source database <strong>available</strong>.",
+                    p2: "DMS supports both <strong>homogeneous</strong> and <strong>heterogeneous</strong> migrations, with continuous data replication using <strong>Change Data Capture (CDC)</strong>.",
+                    p3: "An <strong>EC2 instance</strong> running DMS software performs the replication tasks.",
+                    p4: "The <strong>AWS Schema Conversion Tool (SCT)</strong> is <strong>required</strong> when migrating between different database engines (heterogeneous).",
+                    p5: "DMS supports <strong>Multi-AZ</strong> deployments for high availability, data redundancy, and minimizing latency."
+                }
+            }
+        };
+
+        let currentLanguage = 'vi';
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+
+        function getNestedTranslation(obj, path) {
+            // Helper function to safely retrieve nested object properties
+            return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+        }
+
+        function updateContent() {
+            // Update all elements with the current language content
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const translatedText = getNestedTranslation(translations[currentLanguage], key);
+                if (translatedText) {
+                    // Use innerHTML to render the <strong> tags correctly
+                    element.innerHTML = translatedText;
+                }
+            });
+            document.querySelector('html').setAttribute('lang', currentLanguage);
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            // Highlight the active language button
+            const activeClass = 'bg-amber-600 text-white';
+            const inactiveClass = 'bg-gray-200 text-gray-700';
+
+            if (currentLanguage === 'vi') {
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            } else {
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">Tóm Tắt Chuyên Sâu Các Khái Niệm VPC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4ff; /* Indigo 50 - Networking Theme */
+            color: #1f2937; /* Gray 800 */
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .header-title {
+            color: #312e81; /* Indigo 800 */
+            border-bottom: 4px solid #818cf8; /* Indigo 400 */
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            height: 100%;
+            border: 1px solid #c7d2fe; /* Light Indigo border */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 20px -5px rgba(0, 0, 0, 0.15);
+        }
+        .section-header {
+            color: #4338ca; /* Indigo 700 */
+            font-weight: 800;
+        }
+        
+        /* Styling cho <strong> */
+        .content-card strong, .takeaways-list strong {
+            font-weight: 800;
+            color: #1e3a8a; /* Blue 800 - Highlight Concepts */
+        }
+
+        .icon-box {
+            background-color: #e0e7ff; /* Indigo 100 */
+            color: #4f46e5; /* Indigo 600 */
+            width: 4rem;
+            height: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-4 md:p-10">
+        <header class="text-center mb-12 relative">
+            <h1 class="text-4xl md:text-5xl font-extrabold header-title inline-block pb-1" data-i18n="header.title">
+                <i class="fas fa-project-diagram mr-3"></i> Tóm Tắt Chuyên Sâu Các Khái Niệm VPC
+            </h1>
+            <p class="text-lg text-gray-500 mt-2" data-i18n="header.subtitle">Mọi thứ bạn cần biết về Mạng Lưới Đám Mây Riêng Ảo của AWS.</p>
+
+            <!-- Language Toggle Buttons -->
+            <div class="absolute top-0 right-0 mt-4 mr-4 flex space-x-2">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-md bg-indigo-600 text-white font-semibold text-sm lang-button">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-md bg-gray-200 text-gray-700 font-semibold text-sm lang-button">EN</button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Introduction -->
+            <section id="introduction" class="mb-10">
+                <div class="card p-6 bg-white shadow-xl content-card">
+                    <h2 class="text-3xl section-header mb-4" data-i18n="intro.title">Tóm Tắt Phần VPC</h2>
+                    <p data-i18n="intro.p1" class="text-lg mb-4">
+                        Phần này đã khá dài và thú vị. Nếu bạn cần xem lại một số nội dung, hãy cân nhắc xem lại hai lần hoặc sau một thời gian, vì các khái niệm về VPC ban đầu có thể khó nắm bắt. Mạng lưới giới thiệu nhiều từ viết tắt và khái niệm mới, vì vậy hãy dành thời gian và đừng ngần ngại xem lại tài liệu nếu cần.
+                    </p>
+                    <p data-i18n="intro.p2" class="text-lg font-semibold text-indigo-700">
+                        <i class="fas fa-hand-point-right mr-2"></i> Đây là tóm tắt các khái niệm chính:
+                    </p>
+                </div>
+            </section>
+
+            <!-- Concepts Grid -->
+            <section id="vpc-concepts">
+                <h2 class="text-3xl section-header mb-6" data-i18n="concepts.title"><i class="fas fa-cubes mr-2"></i> Các Khái Niệm Cốt Lõi</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- 1. CIDR and VPC Basics -->
+                    <div class="card content-card">
+                        <div class="icon-box"><i class="fas fa-map-marked-alt text-2xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-indigo-700" data-i18n="concept1.title">CIDR & VPC Basics</h3>
+                        <p data-i18n="concept1.p1">
+                            A <strong>CIDR</strong> (Classless Inter-Domain Routing) represents an <strong>IP range</strong>.
+                        </p>
+                        <p data-i18n="concept1.p2">
+                            A <strong>VPC</strong> (Virtual Private Cloud) supports both <strong>IPv4 and IPv6</strong> addressing.
+                        </p>
+                    </div>
+
+                    <!-- 2. Subnets and AZs -->
+                    <div class="card content-card">
+                        <div class="icon-box"><i class="fas fa-server text-2xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-indigo-700" data-i18n="concept2.title">Subnets & Availability Zones</h3>
+                        <p data-i18n="concept2.p1">
+                            <strong>Subnets</strong> are associated with specific <strong>Availability Zones (AZs)</strong>.
+                        </p>
+                        <p data-i18n="concept2.p2">
+                            Within subnets, CIDRs are defined. Subnets can be <strong>public or private</strong>.
+                        </p>
+                    </div>
+
+                    <!-- 3. Public Subnets and Internet Access -->
+                    <div class="card content-card">
+                        <div class="icon-box"><i class="fas fa-globe-americas text-2xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-indigo-700" data-i18n="concept3.title">Public Subnets & Internet Access</h3>
+                        <p data-i18n="concept3.p1">
+                            <strong>Public subnets</strong> are created by attaching an <strong>Internet Gateway</strong>.
+                        </p>
+                        <p data-i18n="concept3.p2">
+                            A route is established from the public subnet to the <strong>Internet Gateway</strong>. This setup provides IPv4 and IPv6 internet access if enabled.
+                        </p>
+                    </div>
+                    
+                    <!-- 4. Route Tables -->
+                    <div class="card content-card">
+                        <div class="icon-box"><i class="fas fa-route text-2xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-indigo-700" data-i18n="concept4.title">Route Tables</h3>
+                        <p data-i18n="concept4.p1">
+                            <strong>Route tables</strong> are edited to include routes to the Internet Gateway, VPC peering connections, VPC endpoints, and more.
+                        </p>
+                        <p data-i18n="concept4.p2">
+                            They are <strong>essential to ensure proper network flow</strong> within the VPC.
+                        </p>
+                    </div>
+
+                    <!-- 5. Bastion Host -->
+                    <div class="card content-card">
+                        <div class="icon-box"><i class="fas fa-shield-alt text-2xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-indigo-700" data-i18n="concept5.title">Bastion Host</h3>
+                        <p data-i18n="concept5.p1">
+                            A <strong>bastion host</strong> is a public EC2 instance that allows <strong>SSH access</strong>.
+                        </p>
+                        <p data-i18n="concept5.p2">
+                            This instance can SSH into other EC2 instances located in <strong>private subnets</strong>, serving as a secure gateway.
+                        </p>
+                    </div>
+
+                    <!-- 6. NAT Gateways (and deprecated NAT Instances) -->
+                    <div class="card content-card">
+                        <div class="icon-box"><i class="fas fa-exchange-alt text-2xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-indigo-700" data-i18n="concept6.title">NAT Gateways</h3>
+                        <p data-i18n="concept6.p1">
+                            <strong>NAT Gateways</strong> are managed by AWS, provide <strong>scalable internet access</strong> to private EC2 instances, and support <strong>IPv4 traffic</strong>.
+                        </p>
+                        <p data-i18n="concept6.p2">
+                            NAT instances are considered outdated and are being deprecated.
+                        </p>
+                    </div>
+
+                    <!-- 7. NACLs and Security Groups -->
+                    <div class="card content-card">
+                        <div class="icon-box"><i class="fas fa-firewall text-2xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-indigo-700" data-i18n="concept7.title">NACLs & Security Groups</h3>
+                        <p data-i18n="concept7.p1">
+                            <strong>NACLs</strong> are <strong>stateless firewall rules</strong> applied at the <strong>subnet level</strong>. Ephemeral ports are important.
+                        </p>
+                        <p data-i18n="concept7.p2">
+                            <strong>Security groups</strong> are <strong>stateful</strong> and applied at the <strong>EC2 instance level</strong> (outbound response is auto-allowed).
+                        </p>
+                    </div>
+
+                    <!-- 8. VPC Peering -->
+                    <div class="card content-card">
+                        <div class="icon-box"><i class="fas fa-link text-2xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-indigo-700" data-i18n="concept8.title">VPC Peering</h3>
+                        <p data-i18n="concept8.p1">
+                            <strong>VPC peering</strong> connects two VPCs with <strong>non-overlapping CIDRs</strong>.
+                        </p>
+                        <p data-i18n="concept8.p2">
+                            Peering connections are <strong>non-transitive</strong>; connecting three VPCs requires three peering connections.
+                        </p>
+                    </div>
+
+                    <!-- 9. VPC Endpoints -->
+                    <div class="card content-card">
+                        <div class="icon-box"><i class="fas fa-bullseye text-2xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-indigo-700" data-i18n="concept9.title">VPC Endpoints</h3>
+                        <p data-i18n="concept9.p1">
+                            <strong>VPC endpoints</strong> allow <strong>private access to AWS services</strong> (S3, DynamoDB, SSM, etc.).
+                        </p>
+                        <p data-i18n="concept9.p2">
+                            <strong>Gateway endpoints</strong> for <strong>Amazon S3 and DynamoDB</strong>. <strong>Interface endpoints</strong> for <strong>other services</strong>.
+                        </p>
+                    </div>
+
+                    <!-- 10. VPC Flow Logs -->
+                    <div class="card content-card">
+                        <div class="icon-box"><i class="fas fa-chart-bar text-2xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-indigo-700" data-i18n="concept10.title">VPC Flow Logs</h3>
+                        <p data-i18n="concept10.p1">
+                            <strong>VPC Flow Logs</strong> capture <strong>metadata about all packets</strong> (accepted/rejected traffic).
+                        </p>
+                        <p data-i18n="concept10.p2">
+                            Logs can be stored in <strong>Amazon S3</strong> for analysis with Athena or sent to <strong>CloudWatch Logs</strong>.
+                        </p>
+                    </div>
+
+                    <!-- 11. Connecting VPC to Data Centers -->
+                    <div class="card content-card">
+                        <div class="icon-box"><i class="fas fa-building text-2xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-indigo-700" data-i18n="concept11.title">VPC to Data Centers</h3>
+                        <p data-i18n="concept11.p1">
+                            <strong>Site-to-Site VPN</strong> uses a VPN connection over the <strong>public internet</strong>.
+                        </p>
+                        <p data-i18n="concept11.p2">
+                            <strong>Direct Connect</strong> provides a <strong>private, stable connection</strong> that does not traverse the public internet.
+                        </p>
+                    </div>
+
+                    <!-- 12. PrivateLink (VPC Endpoint Services) -->
+                    <div class="card content-card">
+                        <div class="icon-box"><i class="fas fa-lock text-2xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-indigo-700" data-i18n="concept12.title">PrivateLink</h3>
+                        <p data-i18n="concept12.p1">
+                            <strong>PrivateLink</strong> enables <strong>private connectivity to services within your VPC</strong> that you have created.
+                        </p>
+                        <p data-i18n="concept12.p2">
+                            Connects to customer VPCs <strong>without requiring VPC peering, public internet, NAT Gateway, or route tables</strong>.
+                        </p>
+                    </div>
+
+                    <!-- 13. Transit Gateway -->
+                    <div class="card content-card">
+                        <div class="icon-box"><i class="fas fa-th text-2xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-indigo-700" data-i18n="concept13.title">Transit Gateway</h3>
+                        <p data-i18n="concept13.p1">
+                            <strong>Transit Gateway</strong> provides <strong>transitive peering connections</strong> for your VPCs, VPNs, and Direct Connect.
+                        </p>
+                        <p data-i18n="concept13.p2">
+                            It allows all traffic to flow through it, <strong>đơn giản hóa kiến trúc mạng</strong>.
+                        </p>
+                    </div>
+
+                    <!-- 14. IPv6 in VPC -->
+                    <div class="card content-card">
+                        <div class="icon-box"><i class="fas fa-ethernet text-2xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-indigo-700" data-i18n="concept14.title">IPv6 in VPC</h3>
+                        <p data-i18n="concept14.p1">
+                            IPv6 can be enabled in your VPC.
+                        </p>
+                        <p data-i18n="concept14.p2">
+                            An <strong>egress-only Internet Gateway</strong> exists, which functions like a NAT Gateway but for <strong>IPv6 traffic outbound to the internet</strong>.
+                        </p>
+                    </div>
+                    
+                    <!-- 15. ClassicLink -->
+                    <div class="card content-card">
+                        <div class="icon-box"><i class="fas fa-clock text-2xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-indigo-700" data-i18n="concept15.title">ClassicLink (Deprecated)</h3>
+                        <p data-i18n="concept15.p1">
+                            ClassicLink connects EC2-Classic instances privately to your VPC.
+                        </p>
+                        <p data-i18n="concept15.p2">
+                            It is <strong>being deprecated soon</strong>.
+                        </p>
+                    </div>
+
+                     <!-- 16. Traffic Mirroring -->
+                    <div class="card content-card">
+                        <div class="icon-box"><i class="fas fa-copy text-2xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-indigo-700" data-i18n="concept16.title">Traffic Mirroring</h3>
+                        <p data-i18n="concept16.p1">
+                            <strong>Traffic Mirroring</strong> copies network traffic from your ENIs to other destinations for further analysis.
+                        </p>
+                    </div>
+
+                     <!-- 17. Direct Connect Gateway -->
+                    <div class="card content-card">
+                        <div class="icon-box"><i class="fas fa-code-branch text-2xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-indigo-700" data-i18n="concept17.title">Direct Connect Gateway</h3>
+                        <p data-i18n="concept17.p1">
+                            <strong>Direct Connect Gateway</strong> allows connecting a Direct Connect to <strong>multiple VPCs across different AWS regions</strong>.
+                        </p>
+                    </div>
+                    
+                </div>
+            </section>
+
+            <hr class="my-10 border-gray-300">
+
+            <!-- Conclusion and Key Takeaways -->
+            <section id="takeaways" class="text-center">
+                <h2 class="text-3xl font-extrabold text-indigo-700 inline-block pb-1 mb-6" data-i18n="takeaways.title"><i class="fas fa-star mr-2"></i> KEY TAKEAWAYS</h2>
+                <div class="card takeaways-list mx-auto max-w-4xl p-6 bg-indigo-50 border-2 border-indigo-400">
+                    <ul class="space-y-4 text-left list-disc pl-5">
+                        <li data-i18n="takeaways.p1">
+                            A <strong>CIDR</strong> defines an <strong>IP range</strong>, and a <strong>VPC</strong> (Virtual Private Cloud) supports both <strong>IPv4 and IPv6</strong>.
+                        </li>
+                        <li data-i18n="takeaways.p2">
+                            <strong>Public subnets connect to the internet via an Internet Gateway</strong> and appropriate route tables.
+                        </li>
+                        <li data-i18n="takeaways.p3">
+                            <strong>NAT Gateways provide scalable internet access to private subnets</strong>, replacing older NAT instances.
+                        </li>
+                        <li data-i18n="takeaways.p4">
+                            <strong>Network ACLs are stateless firewall rules at the subnet level</strong>, while <strong>security groups are stateful and applied at the instance level</strong>.
+                        </li>
+                        <li data-i18n="takeaways.p5">
+                            <strong>VPC peering connects VPCs with non-overlapping CIDRs</strong> but is <strong>non-transitive</strong>; multiple connections are needed for multiple VPCs.
+                        </li>
+                        <li data-i18n="takeaways.p6">
+                            <strong>VPC endpoints</strong> allow <strong>private access to AWS services</strong> without internet exposure.
+                        </li>
+                        <li data-i18n="takeaways.p7">
+                            <strong>VPC Flow Logs</strong> capture <strong>metadata about network traffic</strong> for monitoring and analysis.
+                        </li>
+                        <li data-i18n="takeaways.p8">
+                            <strong>Site-to-site VPN and Direct Connect</strong> provide options to connect VPCs to on-premises data centers, with <strong>Direct Connect offering a private, stable connection</strong>.
+                        </li>
+                        <li data-i18n="takeaways.p9">
+                            <strong>PrivateLink</strong> enables private connectivity to services within your VPC without requiring VPC peering or internet exposure.
+                        </li>
+                        <li data-i18n="takeaways.p10">
+                            <strong>Transit Gateway</strong> facilitates <strong>transitive routing</strong> between VPCs, VPNs, and Direct Connect connections.
+                        </li>
+                        <li data-i18n="takeaways.p11">
+                            <strong>IPv6 support includes egress-only Internet Gateways</strong> for outbound internet traffic.
+                        </li>
+                    </ul>
+                </div>
+                <p class="mt-8 text-lg text-gray-700" data-i18n="takeaways.conclusion">
+                    Điều này kết luận phần tóm tắt toàn diện về VPC. Việc xem lại phần này sẽ giúp củng cố sự hiểu biết của bạn nếu có bất kỳ khái niệm nào chưa rõ ràng.
+                </p>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const translations = {
+            vi: {
+                header: {
+                    title: "Tóm Tắt Chuyên Sâu Các Khái Niệm VPC",
+                    subtitle: "Mọi thứ bạn cần biết về Mạng Lưới Đám Mây Riêng Ảo của AWS."
+                },
+                intro: {
+                    title: "Tóm Tắt Phần VPC",
+                    p1: "Phần này đã khá dài và thú vị. Nếu bạn cần xem lại một số nội dung, hãy cân nhắc xem lại hai lần hoặc sau một thời gian, vì các khái niệm về VPC ban đầu có thể khó nắm bắt. Mạng lưới giới thiệu nhiều từ viết tắt và khái niệm mới, vì vậy hãy dành thời gian và đừng ngần ngại xem lại tài liệu nếu cần.",
+                    p2: "<i class=\"fas fa-hand-point-right mr-2\"></i> Đây là tóm tắt các khái niệm chính:"
+                },
+                concepts: {
+                    title: "Các Khái Niệm Cốt Lõi"
+                },
+                concept1: {
+                    title: "CIDR & VPC Basics",
+                    p1: "<strong>CIDR</strong> (Classless Inter-Domain Routing) đại diện cho một <strong>dải IP</strong>.",
+                    p2: "<strong>VPC</strong> (Virtual Private Cloud) hỗ trợ cả địa chỉ <strong>IPv4 và IPv6</strong>."
+                },
+                concept2: {
+                    title: "Subnets & Availability Zones",
+                    p1: "<strong>Subnets</strong> được liên kết với các <strong>Availability Zones (AZs)</strong> cụ thể.",
+                    p2: "Trong subnets, CIDRs được xác định. Subnets có thể là <strong>public hoặc private</strong>."
+                },
+                concept3: {
+                    title: "Public Subnets & Internet Access",
+                    p1: "<strong>Public subnets</strong> được tạo ra bằng cách đính kèm một <strong>Internet Gateway</strong>.",
+                    p2: "Một route được thiết lập từ public subnet đến <strong>Internet Gateway</strong>. Thiết lập này cung cấp truy cập internet IPv4 và IPv6 nếu được bật."
+                },
+                concept4: {
+                    title: "Route Tables",
+                    p1: "<strong>Route tables</strong> được chỉnh sửa để bao gồm các route đến Internet Gateway, VPC peering connections, VPC endpoints, và nhiều thứ khác.",
+                    p2: "Chúng là <strong>thiết yếu để đảm bảo luồng mạng thích hợp</strong> trong VPC."
+                },
+                concept5: {
+                    title: "Bastion Host",
+                    p1: "<strong>Bastion host</strong> là một EC2 instance public cho phép truy cập <strong>SSH</strong>.",
+                    p2: "Instance này có thể SSH vào các EC2 instance khác nằm trong <strong>private subnets</strong>. Nó đóng vai trò như một cổng bảo mật cho quyền truy cập quản trị."
+                },
+                concept6: {
+                    title: "NAT Gateways",
+                    p1: "<strong>NAT Gateways</strong> được quản lý bởi AWS, cung cấp <strong>truy cập internet có khả năng mở rộng</strong> cho các EC2 instance private, và hỗ trợ <strong>lưu lượng IPv4</strong>.",
+                    p2: "NAT instances được coi là lỗi thời và đang được loại bỏ. Chúng yêu cầu vô hiệu hóa cờ kiểm tra source/destination và điều chỉnh quy tắc security group."
+                },
+                concept7: {
+                    title: "NACLs & Security Groups",
+                    p1: "<strong>NACLs</strong> là các quy tắc firewall <strong>phi trạng thái (stateless)</strong> được áp dụng ở <strong>cấp độ subnet</strong>, xác định truy cập inbound và outbound. Các cổng ephemeral ports là cân nhắc quan trọng trong cấu hình NACL.",
+                    p2: "<strong>Security groups</strong> là <strong>có trạng thái (stateful)</strong> và được áp dụng ở <strong>cấp độ EC2 instance</strong>. Nếu lưu lượng inbound được cho phép bởi security group, phản hồi outbound sẽ tự động được cho phép, và ngược lại."
+                },
+                concept8: {
+                    title: "VPC Peering",
+                    p1: "<strong>VPC peering</strong> kết nối hai VPC với <strong>CIDR không trùng lặp</strong>.",
+                    p2: "Peering connections là <strong>không truyền tải (non-transitive)</strong>; kết nối ba VPC yêu cầu ba peering connections."
+                },
+                concept9: {
+                    title: "VPC Endpoints",
+                    p1: "<strong>VPC endpoints</strong> cho phép <strong>truy cập riêng tư (private access) vào các dịch vụ AWS</strong> như Amazon S3, DynamoDB, CloudFormation, và SSM trong VPC.",
+                    p2: "<strong>Gateway endpoints</strong> được sử dụng cho <strong>Amazon S3 và DynamoDB</strong>. <strong>Interface endpoints</strong> được sử dụng cho <strong>các dịch vụ khác</strong>."
+                },
+                concept10: {
+                    title: "VPC Flow Logs",
+                    p1: "<strong>VPC Flow Logs</strong> chụp <strong>metadata về tất cả các gói tin</strong> trong VPC, bao gồm lưu lượng được chấp nhận và bị từ chối.",
+                    p2: "Log có thể được lưu trữ trong <strong>Amazon S3</strong> để phân tích với Athena hoặc gửi đến <strong>CloudWatch Logs</strong> để phân tích với CloudWatch Log Insights."
+                },
+                concept11: {
+                    title: "VPC to Data Centers",
+                    p1: "Hai tùy chọn tồn tại: Site-to-Site VPN và Direct Connect. <strong>Site-to-Site VPN</strong> sử dụng kết nối VPN qua <strong>internet công cộng</strong>, yêu cầu một virtual private gateway trên AWS và một customer gateway ở data center.",
+                    p2: "<strong>Direct Connect</strong> cung cấp một <strong>kết nối riêng tư, ổn định</strong> mà không đi qua internet công cộng nhưng yêu cầu kết nối vật lý đến một địa điểm Direct Connect."
+                },
+                concept12: {
+                    title: "PrivateLink",
+                    p1: "<strong>PrivateLink</strong> cho phép <strong>kết nối riêng tư đến các dịch vụ trong VPC của bạn</strong> mà bạn đã tạo.",
+                    p2: "Nó kết nối với VPC của khách hàng <strong>mà không yêu cầu VPC peering, internet công cộng, NAT Gateway, hay route tables</strong>. Thường được sử dụng với Network Load Balancer và ENI."
+                },
+                concept13: {
+                    title: "Transit Gateway",
+                    p1: "<strong>Transit Gateway</strong> cung cấp <strong>kết nối peering truyền tải (transitive)</strong> cho các VPC, VPN, và Direct Connect của bạn.",
+                    p2: "Nó cho phép tất cả lưu lượng đi qua nó, <strong>đơn giản hóa kiến trúc mạng</strong>."
+                },
+                concept14: {
+                    title: "IPv6 in VPC",
+                    p1: "IPv6 có thể được bật trong VPC của bạn.",
+                    p2: "Có một <strong>egress-only Internet Gateway</strong>, hoạt động giống như NAT Gateway nhưng dành cho <strong>lưu lượng IPv6 outbound ra internet</strong>."
+                },
+                concept15: {
+                    title: "ClassicLink (Deprecated)",
+                    p1: "ClassicLink kết nối EC2-Classic instances riêng tư với VPC của bạn.",
+                    p2: "Nó <strong>đang được loại bỏ sớm</strong>."
+                },
+                concept16: {
+                    title: "Traffic Mirroring",
+                    p1: "<strong>Traffic Mirroring</strong> sao chép lưu lượng mạng từ các ENI của bạn đến các điểm đến khác để phân tích sâu hơn."
+                },
+                concept17: {
+                    title: "Direct Connect Gateway",
+                    p1: "<strong>Direct Connect Gateway</strong> cho phép kết nối một Direct Connect với <strong>nhiều VPC trên các khu vực AWS khác nhau</strong>."
+                },
+                takeaways: {
+                    title: "KEY TAKEAWAYS",
+                    p1: "A <strong>CIDR</strong> defines an <strong>IP range</strong>, and a <strong>VPC</strong> (Virtual Private Cloud) supports both <strong>IPv4 and IPv6</strong>.",
+                    p2: "<strong>Public subnets kết nối với internet qua Internet Gateway</strong> và route tables thích hợp.",
+                    p3: "<strong>NAT Gateways cung cấp truy cập internet có khả năng mở rộng cho private subnets</strong>, thay thế các NAT instance cũ hơn.",
+                    p4: "<strong>Network ACLs là quy tắc firewall phi trạng thái ở cấp độ subnet</strong>, trong khi <strong>security groups là có trạng thái và được áp dụng ở cấp độ instance</strong>.",
+                    p5: "<strong>VPC peering kết nối VPCs với CIDR không trùng lặp</strong> nhưng là <strong>không truyền tải (non-transitive)</strong>; nhiều kết nối là cần thiết cho nhiều VPC.",
+                    p6: "<strong>VPC endpoints</strong> cho phép <strong>truy cập riêng tư (private access) vào các dịch vụ AWS</strong> mà không cần phơi bày ra internet.",
+                    p7: "<strong>VPC Flow Logs</strong> chụp <strong>metadata về lưu lượng mạng</strong> để giám sát và phân tích.",
+                    p8: "<strong>Site-to-site VPN và Direct Connect</strong> cung cấp các tùy chọn để kết nối VPC với data center tại chỗ, với <strong>Direct Connect cung cấp một kết nối riêng tư, ổn định</strong>.",
+                    p9: "<strong>PrivateLink</strong> cho phép kết nối riêng tư đến các dịch vụ trong VPC của bạn mà không yêu cầu VPC peering hoặc phơi bày ra internet.",
+                    p10: "<strong>Transit Gateway</strong> tạo điều kiện cho <strong>định tuyến truyền tải (transitive routing)</strong> giữa các VPC, VPN và kết nối Direct Connect.",
+                    p11: "Hỗ trợ <strong>IPv6 bao gồm egress-only Internet Gateways</strong> cho lưu lượng internet outbound.",
+                    conclusion: "Điều này kết luận phần tóm tắt toàn diện về VPC. Việc xem lại phần này sẽ giúp củng cố sự hiểu biết của bạn nếu có bất kỳ khái niệm nào chưa rõ ràng."
+                }
+            },
+            en: {
+                header: {
+                    title: "In-Depth VPC Concepts Summary",
+                    subtitle: "Everything you need to know about AWS Virtual Private Cloud."
+                },
+                intro: {
+                    title: "VPC Section Summary",
+                    p1: "This section has been quite long and interesting. If you need to revise some content, consider watching it twice or after some time, as VPC concepts can be challenging to grasp initially. Networking introduces many new acronyms and concepts, so take your time and do not hesitate to revisit the material if needed.",
+                    p2: "<i class=\"fas fa-hand-point-right mr-2\"></i> Here is a summary of the key concepts:"
+                },
+                concepts: {
+                    title: "Core Concepts"
+                },
+                concept1: {
+                    title: "CIDR & VPC Basics",
+                    p1: "A <strong>CIDR</strong> (Classless Inter-Domain Routing) represents an <strong>IP range</strong>.",
+                    p2: "A <strong>VPC</strong> (Virtual Private Cloud) supports both <strong>IPv4 and IPv6</strong> addressing."
+                },
+                concept2: {
+                    title: "Subnets & Availability Zones",
+                    p1: "<strong>Subnets</strong> are associated with specific <strong>Availability Zones (AZs)</strong>.",
+                    p2: "Within subnets, CIDRs are defined. Subnets can be <strong>public or private</strong>."
+                },
+                concept3: {
+                    title: "Public Subnets & Internet Access",
+                    p1: "<strong>Public subnets</strong> are created by attaching an <strong>Internet Gateway</strong>.",
+                    p2: "A route is established from the public subnet to the <strong>Internet Gateway</strong>. This setup provides IPv4 and IPv6 internet access if enabled."
+                },
+                concept4: {
+                    title: "Route Tables",
+                    p1: "<strong>Route tables</strong> are edited to include routes to the Internet Gateway, VPC peering connections, VPC endpoints, and more.",
+                    p2: "They are <strong>essential to ensure proper network flow</strong> within the VPC."
+                },
+                concept5: {
+                    title: "Bastion Host",
+                    p1: "A <strong>bastion host</strong> is a public EC2 instance that allows <strong>SSH access</strong>.",
+                    p2: "This instance can SSH into other EC2 instances located in <strong>private subnets</strong>. It serves as a secure gateway for administrative access."
+                },
+                concept6: {
+                    title: "NAT Gateways",
+                    p1: "<strong>NAT Gateways</strong> are managed by AWS, provide <strong>scalable internet access</strong> to private EC2 instances, and support <strong>IPv4 traffic</strong>.",
+                    p2: "NAT instances are considered outdated and are being deprecated. They require disabling the source/destination check flag and adjusting security group rules."
+                },
+                concept7: {
+                    title: "NACLs & Security Groups",
+                    p1: "<strong>NACLs</strong> are <strong>stateless firewall rules</strong> applied at the <strong>subnet level</strong>, defining inbound and outbound access. Ephemeral ports are important considerations in NACL configurations.",
+                    p2: "<strong>Security groups</strong> are <strong>stateful</strong> and applied at the <strong>EC2 instance level</strong>. If inbound traffic is allowed by a security group, the outbound response is automatically allowed, and vice versa."
+                },
+                concept8: {
+                    title: "VPC Peering",
+                    p1: "<strong>VPC peering</strong> connects two VPCs with <strong>non-overlapping CIDRs</strong>.",
+                    p2: "Peering connections are <strong>non-transitive</strong>; connecting three VPCs requires three peering connections."
+                },
+                concept9: {
+                    title: "VPC Endpoints",
+                    p1: "<strong>VPC endpoints</strong> allow <strong>private access to AWS services</strong> such as Amazon S3, DynamoDB, CloudFormation, and SSM within the VPC.",
+                    p2: "<strong>Gateway endpoints</strong> are used for <strong>Amazon S3 and DynamoDB</strong>. <strong>Interface endpoints</strong> are used for <strong>other services</strong>."
+                },
+                concept10: {
+                    title: "VPC Flow Logs",
+                    p1: "<strong>VPC Flow Logs</strong> capture <strong>metadata about all packets</strong> within the VPC, including accepted and rejected traffic.",
+                    p2: "Logs can be stored in <strong>Amazon S3</strong> for analysis with Athena or sent to <strong>CloudWatch Logs</strong> for analysis with CloudWatch Log Insights."
+                },
+                concept11: {
+                    title: "VPC to Data Centers",
+                    p1: "Two options exist: Site-to-Site VPN and Direct Connect. <strong>Site-to-Site VPN</strong> uses a VPN connection over the <strong>public internet</strong>, requiring a virtual private gateway on AWS and a customer gateway on the data center.",
+                    p2: "<strong>Direct Connect</strong> provides a <strong>private, stable connection</strong> that does not traverse the public internet but requires physical connection to a Direct Connect location."
+                },
+                concept12: {
+                    title: "PrivateLink",
+                    p1: "<strong>PrivateLink</strong> enables <strong>private connectivity to services within your VPC</strong> that you have created.",
+                    p2: "It connects to customer VPCs <strong>without requiring VPC peering, public internet, NAT Gateway, or route tables</strong>. Typically used with a Network Load Balancer and an ENI."
+                },
+                concept13: {
+                    title: "Transit Gateway",
+                    p1: "<strong>Transit Gateway</strong> provides <strong>transitive peering connections</strong> for your VPCs, VPNs, and Direct Connect.",
+                    p2: "It allows all traffic to flow through it, <strong>simplifying network architecture</strong>."
+                },
+                concept14: {
+                    title: "IPv6 in VPC",
+                    p1: "IPv6 can be enabled in your VPC.",
+                    p2: "An <strong>egress-only Internet Gateway</strong> exists, which functions like a NAT Gateway but for <strong>IPv6 traffic outbound to the internet</strong>."
+                },
+                concept15: {
+                    title: "ClassicLink (Deprecated)",
+                    p1: "ClassicLink connects EC2-Classic instances privately to your VPC.",
+                    p2: "It is <strong>being deprecated soon</strong>."
+                },
+                concept16: {
+                    title: "Traffic Mirroring",
+                    p1: "<strong>Traffic Mirroring</strong> copies network traffic from your ENIs to other destinations for further analysis."
+                },
+                concept17: {
+                    title: "Direct Connect Gateway",
+                    p1: "<strong>Direct Connect Gateway</strong> allows connecting a Direct Connect to <strong>multiple VPCs across different AWS regions</strong>."
+                },
+                takeaways: {
+                    title: "KEY TAKEAWAYS",
+                    p1: "A <strong>CIDR</strong> defines an <strong>IP range</strong>, and a <strong>VPC</strong> (Virtual Private Cloud) supports both <strong>IPv4 and IPv6</strong>.",
+                    p2: "<strong>Public subnets connect to the internet via an Internet Gateway</strong> and appropriate route tables.",
+                    p3: "<strong>NAT Gateways provide scalable internet access to private subnets</strong>, replacing older NAT instances.",
+                    p4: "<strong>Network ACLs are stateless firewall rules at the subnet level</strong>, while <strong>security groups are stateful and applied at the instance level</strong>.",
+                    p5: "<strong>VPC peering connects VPCs with non-overlapping CIDRs</strong> but is <strong>non-transitive</strong>; multiple connections are needed for multiple VPCs.",
+                    p6: "<strong>VPC endpoints</strong> allow <strong>private access to AWS services</strong> without internet exposure.",
+                    p7: "<strong>VPC Flow Logs</strong> capture <strong>metadata about network traffic</strong> for monitoring and analysis.",
+                    p8: "<strong>Site-to-site VPN and Direct Connect</strong> provide options to connect VPCs to on-premises data centers, with <strong>Direct Connect offering a private, stable connection</strong>.",
+                    p9: "<strong>PrivateLink</strong> enables private connectivity to services within your VPC without requiring VPC peering or internet exposure.",
+                    p10: "<strong>Transit Gateway</strong> facilitates <strong>transitive routing</strong> between VPCs, VPNs, and Direct Connect connections.",
+                    p11: "<strong>IPv6 support includes egress-only Internet Gateways</strong> for outbound internet traffic.",
+                    conclusion: "This was a comprehensive summary of the VPC section. If some concepts are unclear, revisiting this section will help solidify your understanding."
+                }
+            }
+        };
+
+        let currentLanguage = 'vi';
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+
+        function getNestedTranslation(obj, path) {
+            return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+        }
+
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const translatedText = getNestedTranslation(translations[currentLanguage], key);
+                if (translatedText) {
+                    // Sử dụng innerHTML để hiển thị đúng các thẻ HTML như <strong> và <i>
+                    element.innerHTML = translatedText;
+                }
+            });
+            document.querySelector('html').setAttribute('lang', currentLanguage);
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            // Sử dụng màu Indigo cho nút active (Theme Networking)
+            const activeClass = 'bg-indigo-600 text-white';
+            const inactiveClass = 'bg-gray-200 text-gray-700';
+
+            if (currentLanguage === 'vi') {
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            } else {
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

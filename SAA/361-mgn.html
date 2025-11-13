@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">Dịch vụ Di chuyển Ứng dụng AWS (MGN)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0fdfa; /* Teal 50 - Migration/Flow Theme */
+            color: #111827; /* Gray 900 */
+        }
+        .header-bg {
+            background-color: #0d9488; /* Teal 600 */
+        }
+        .highlight-text {
+            color: #0f766e; /* Teal 700 */
+        }
+        .card {
+            background-color: white;
+            border-left: 5px solid #2dd4bf; /* Teal 400 */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: 100%;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15);
+        }
+        .icon-box {
+            color: #0d9488;
+        }
+        .key-feature strong {
+            font-weight: 800;
+            color: #dc2626; /* Red for emphasis */
+        }
+        .toggle-active {
+            background-color: #0d9488 !important;
+            color: white !important;
+        }
+        .toggle-inactive {
+            background-color: #e5e7eb; /* Gray 200 */
+            color: #4b5563; /* Gray 600 */
+        }
+    </style>
+</head>
+<body>
+    <header class="header-bg shadow-xl">
+        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 class="text-3xl font-extrabold text-white" data-i18n="header.title">
+                <i class="fas fa-arrows-alt-h mr-3"></i> Dịch vụ Di chuyển Ứng dụng AWS (MGN)
+            </h1>
+            <!-- Language Toggles -->
+            <div class="flex space-x-2 p-1 bg-white rounded-full shadow-md">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-full font-semibold text-sm transition toggle-active">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-full font-semibold text-sm transition toggle-inactive">EN</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+
+        <!-- Introduction & Discovery -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-extrabold highlight-text mb-8 pb-3 border-b-2 border-teal-200" data-i18n="section1.title">
+                <i class="fas fa-search-dollar mr-3"></i> Lập kế hoạch Di chuyển với <strong class="font-bold">Application Discovery Service</strong>
+            </h2>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                <!-- Planning Intro -->
+                <div class="card p-6 rounded-xl key-feature lg:col-span-1">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-map-marked-alt"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="section1.p1.title">Kịch bản Di chuyển</h3>
+                    <p class="text-gray-600 text-sm" data-i18n="section1.p1.body">
+                        Di chuyển là cần thiết khi bạn muốn chuyển các máy chủ và trung tâm dữ liệu <strong class="font-bold">tại chỗ (on-premises)</strong> sang đám mây. Để lập kế hoạch, bạn sử dụng <strong class="font-bold">AWS Application Discovery Service</strong> để quét máy chủ và thu thập dữ liệu.
+                    </p>
+                </div>
+
+                <!-- Agentless Discovery -->
+                <div class="card p-6 rounded-xl key-feature">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-link"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="section1.f1.title">Khám phá Không Agent (Agentless)</h3>
+                    <p class="text-gray-600 text-sm" data-i18n="section1.f1.body">
+                        Sử dụng một <strong class="font-bold">Connector</strong> để cung cấp thông tin về <strong class="font-bold">cấu hình</strong> và <strong class="font-bold">lịch sử hiệu suất</strong> của các máy ảo (VM), bao gồm việc sử dụng CPU, bộ nhớ và đĩa.
+                    </p>
+                </div>
+
+                <!-- Agent-based Discovery -->
+                <div class="card p-6 rounded-xl key-feature">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-user-check"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="section1.f2.title">Khám phá Có Agent (Agent-based)</h3>
+                    <p class="text-gray-600 text-sm" data-i18n="section1.f2.body">
+                        Sử dụng <strong class="font-bold">Application Discovery Agent</strong> để cung cấp thông tin chi tiết hơn từ bên trong VM, bao gồm <strong class="font-bold">quá trình đang chạy</strong> và dữ liệu <strong class="font-bold">kết nối mạng</strong>. Rất hữu ích cho <strong class="font-bold">ánh xạ phụ thuộc (dependency mapping)</strong>.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Migration Hub -->
+            <div class="mt-6 p-6 bg-teal-100 rounded-xl shadow-md border-l-4 border-teal-600 key-feature">
+                <h3 class="text-xl font-semibold highlight-text mb-2" data-i18n="section1.hub.title">Xem Kết quả trong <strong class="font-bold">AWS Migration Hub</strong></h3>
+                <p class="text-gray-700 text-sm" data-i18n="section1.hub.body">
+                    Tất cả dữ liệu do Application Discovery Service thu thập sẽ được xem tập trung trong <strong class="font-bold">AWS Migration Hub</strong>. Dịch vụ này giúp bạn lập bản đồ những gì cần di chuyển và cách các thành phần <strong class="font-bold">được kết nối</strong> với nhau.
+                </p>
+            </div>
+        </section>
+
+        <!-- Application Migration Service (MGN) -->
+        <section class="mb-12 p-8 bg-white shadow-xl rounded-xl border-t-8 border-red-500 key-feature">
+            <h2 class="text-3xl font-extrabold text-red-700 mb-6" data-i18n="section2.title">
+                <i class="fas fa-exchange-alt mr-3"></i> Di chuyển Tới AWS với <strong class="font-bold">Application Migration Service (MGN)</strong>
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- MGN Intro -->
+                <div>
+                    <h3 class="text-xl font-semibold highlight-text mb-2" data-i18n="section2.intro.title">Giải pháp <strong class="font-bold">Lift-and-Shift</strong> đơn giản nhất</h3>
+                    <p class="text-gray-700 mt-2" data-i18n="section2.intro.body">
+                        <strong class="font-bold">MGN</strong> (trước đây là CloudEndure Migration) là cách đơn giản nhất để di chuyển từ tại chỗ sang AWS. Nó cho phép <strong class="font-bold">rehosting</strong> (hay còn gọi là lift-and-shift), chuyển đổi máy chủ vật lý, VM, hoặc dịch vụ đám mây khác để chạy <strong class="font-bold">nguyên bản (natively) trên AWS</strong>.
+                    </p>
+                </div>
+
+                <!-- How it works -->
+                <div>
+                    <h3 class="text-xl font-semibold highlight-text mb-2" data-i18n="section2.how.title">Cơ chế Hoạt động</h3>
+                    <ol class="list-decimal list-inside space-y-2 text-gray-700">
+                        <li data-i18n="section2.how.l1">Cài đặt một <strong class="font-bold">Replication Agent</strong> (Agent Nhân bản) trên các máy chủ tại chỗ của bạn.</li>
+                        <li data-i18n="section2.how.l2">Agent này thực hiện <strong class="font-bold">nhân bản liên tục</strong> (continuous replication) các ổ đĩa của bạn sang AWS.</li>
+                        <li data-i18n="section2.how.l3">Dữ liệu được lưu trữ trên các <strong class="font-bold">EC2 instance</strong> và <strong class="font-bold">EBS volumes</strong> có chi phí thấp (môi trường staging).</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Cutover Process -->
+            <div class="mt-8 p-6 bg-red-50 rounded-lg border border-red-200">
+                <h3 class="text-xl font-semibold text-red-700 mb-2" data-i18n="section2.cutover.title">Quy trình <strong class="font-bold">Cutover</strong></h3>
+                <p class="text-gray-700 text-sm" data-i18n="section2.cutover.body">
+                    Khi sẵn sàng thực hiện cutover (chuyển đổi), bạn chuyển từ môi trường staging sang môi trường production. Tại thời điểm này, bạn có thể chọn kích thước <strong class="font-bold">EC2 instance</strong> và <strong class="font-bold">EBS volume</strong> lớn hơn, phù hợp với hiệu suất yêu cầu. Quá trình này giúp <strong class="font-bold">giảm thiểu thời gian ngừng hoạt động (minimal downtime)</strong>.
+                </p>
+            </div>
+        </section>
+
+        <!-- Benefits -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-extrabold highlight-text mb-8 pb-3 border-b-2 border-teal-200" data-i18n="section3.title">
+                <i class="fas fa-tasks mr-3"></i> Lợi ích Chính
+            </h2>
+            <ul class="space-y-4 list-none pl-0 key-feature">
+                <li class="flex items-start">
+                    <span class="text-teal-600 mr-3 mt-1"><i class="fas fa-check-circle"></i></span>
+                    <span data-i18n="section3.l1">Hỗ trợ nhiều <strong class="font-bold">nền tảng, hệ điều hành và cơ sở dữ liệu</strong>.</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-teal-600 mr-3 mt-1"><i class="fas fa-check-circle"></i></span>
+                    <span data-i18n="section3.l2"><strong class="font-bold">Thời gian ngừng hoạt động tối thiểu</strong> (Minimal Downtime) trong quá trình di chuyển.</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-teal-600 mr-3 mt-1"><i class="fas fa-check-circle"></i></span>
+                    <span data-i18n="section3.l3">Giảm chi phí bằng cách <strong class="font-bold">tự động hóa</strong> quy trình, loại bỏ nhu cầu thuê tài nguyên kỹ thuật phức tạp.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Key Takeaways -->
+        <section class="p-6 bg-teal-100 rounded-xl shadow-md border-t-4 border-teal-600">
+            <h2 class="text-2xl font-bold highlight-text mb-4" data-i18n="takeaways.title">
+                <i class="fas fa-book-reader mr-2"></i> Tóm tắt
+            </h2>
+            <ul class="space-y-3 text-lg list-none pl-0 key-feature">
+                <li class="flex items-start">
+                    <span class="text-teal-600 mr-3 mt-1"><i class="fas fa-angle-right"></i></span>
+                    <span data-i18n="takeaways.l1"><strong class="font-bold">Application Discovery Service</strong> giúp lập kế hoạch di chuyển bằng cách thu thập dữ liệu sử dụng máy chủ và ánh xạ phụ thuộc.</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-teal-600 mr-3 mt-1"><i class="fas fa-angle-right"></i></span>
+                    <span data-i18n="takeaways.l2">Có hai phương pháp khám phá: <strong class="font-bold">Agentless (Connector)</strong> và <strong class="font-bold">Agent-based (Agent)</strong>, phương pháp thứ hai cho dữ liệu chi tiết hơn.</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-teal-600 mr-3 mt-1"><i class="fas fa-angle-right"></i></span>
+                    <span data-i18n="takeaways.l3"><strong class="font-bold">AWS Migration Hub</strong> cung cấp chế độ xem tập trung dữ liệu di chuyển đã thu thập.</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-teal-600 mr-3 mt-1"><i class="fas fa-angle-right"></i></span>
+                    <span data-i18n="takeaways.l4"><strong class="font-bold">AWS Application Migration Service (MGN)</strong> cho phép di chuyển <strong class="font-bold">lift-and-shift</strong> với nhân bản liên tục và <strong class="font-bold">thời gian ngừng hoạt động tối thiểu</strong>.</span>
+                </li>
+            </ul>
+        </section>
+    </main>
+
+    <script>
+        // --- Translation Data ---
+        const translations = {
+            'vi': {
+                'header.title': 'Dịch vụ Di chuyển Ứng dụng AWS (MGN)',
+                'section1.title': 'Lập kế hoạch Di chuyển với <strong class="font-bold">Application Discovery Service</strong>',
+                'section1.p1.title': 'Kịch bản Di chuyển',
+                'section1.p1.body': 'Di chuyển là cần thiết khi bạn muốn chuyển các máy chủ và trung tâm dữ liệu <strong class="font-bold">tại chỗ (on-premises)</strong> sang đám mây. Để lập kế hoạch, bạn sử dụng <strong class="font-bold">AWS Application Discovery Service</strong> để quét máy chủ và thu thập dữ liệu.',
+                'section1.f1.title': 'Khám phá Không Agent (Agentless)',
+                'section1.f1.body': 'Sử dụng một <strong class="font-bold">Connector</strong> để cung cấp thông tin về <strong class="font-bold">cấu hình</strong> và <strong class="font-bold">lịch sử hiệu suất</strong> của các máy ảo (VM), bao gồm việc sử dụng CPU, bộ nhớ và đĩa.',
+                'section1.f2.title': 'Khám phá Có Agent (Agent-based)',
+                'section1.f2.body': 'Sử dụng <strong class="font-bold">Application Discovery Agent</strong> để cung cấp thông tin chi tiết hơn từ bên trong VM, bao gồm <strong class="font-bold">quá trình đang chạy</strong> và dữ liệu <strong class="font-bold">kết nối mạng</strong>. Rất hữu ích cho <strong class="font-bold">ánh xạ phụ thuộc (dependency mapping)</strong>.',
+                'section1.hub.title': 'Xem Kết quả trong <strong class="font-bold">AWS Migration Hub</strong>',
+                'section1.hub.body': 'Tất cả dữ liệu do Application Discovery Service thu thập sẽ được xem tập trung trong <strong class="font-bold">AWS Migration Hub</strong>. Dịch vụ này giúp bạn lập bản đồ những gì cần di chuyển và cách các thành phần <strong class="font-bold">được kết nối</strong> với nhau.',
+                
+                'section2.title': 'Di chuyển Tới AWS với <strong class="font-bold">Application Migration Service (MGN)</strong>',
+                'section2.intro.title': 'Giải pháp <strong class="font-bold">Lift-and-Shift</strong> đơn giản nhất',
+                'section2.intro.body': '<strong class="font-bold">MGN</strong> (trước đây là CloudEndure Migration) là cách đơn giản nhất để di chuyển từ tại chỗ sang AWS. Nó cho phép <strong class="font-bold">rehosting</strong> (hay còn gọi là lift-and-shift), chuyển đổi máy chủ vật lý, VM, hoặc dịch vụ đám mây khác để chạy <strong class="font-bold">nguyên bản (natively) trên AWS</strong>.',
+                'section2.how.title': 'Cơ chế Hoạt động',
+                'section2.how.l1': 'Cài đặt một <strong class="font-bold">Replication Agent</strong> (Agent Nhân bản) trên các máy chủ tại chỗ của bạn.',
+                'section2.how.l2': 'Agent này thực hiện <strong class="font-bold">nhân bản liên tục</strong> (continuous replication) các ổ đĩa của bạn sang AWS.',
+                'section2.how.l3': 'Dữ liệu được lưu trữ trên các <strong class="font-bold">EC2 instance</strong> và <strong class="font-bold">EBS volumes</strong> có chi phí thấp (môi trường staging).',
+                'section2.cutover.title': 'Quy trình <strong class="font-bold">Cutover</strong>',
+                'section2.cutover.body': 'Khi sẵn sàng thực hiện cutover (chuyển đổi), bạn chuyển từ môi trường staging sang môi trường production. Tại thời điểm này, bạn có thể chọn kích thước <strong class="font-bold">EC2 instance</strong> và <strong class="font-bold">EBS volume</strong> lớn hơn, phù hợp với hiệu suất yêu cầu. Quá trình này giúp <strong class="font-bold">giảm thiểu thời gian ngừng hoạt động (minimal downtime)</strong>.',
+
+                'section3.title': 'Lợi ích Chính',
+                'section3.l1': 'Hỗ trợ nhiều <strong class="font-bold">nền tảng, hệ điều hành và cơ sở dữ liệu</strong>.',
+                'section3.l2': '<strong class="font-bold">Thời gian ngừng hoạt động tối thiểu</strong> (Minimal Downtime) trong quá trình di chuyển.',
+                'section3.l3': 'Giảm chi phí bằng cách <strong class="font-bold">tự động hóa</strong> quy trình, loại bỏ nhu cầu thuê tài nguyên kỹ thuật phức tạp.',
+
+                'takeaways.title': 'Tóm tắt',
+                'takeaways.l1': '<strong class="font-bold">Application Discovery Service</strong> giúp lập kế hoạch di chuyển bằng cách thu thập dữ liệu sử dụng máy chủ và ánh xạ phụ thuộc.',
+                'takeaways.l2': 'Có hai phương pháp khám phá: <strong class="font-bold">Agentless (Connector)</strong> và <strong class="font-bold">Agent-based (Agent)</strong>, phương pháp thứ hai cho dữ liệu chi tiết hơn.',
+                'takeaways.l3': '<strong class="font-bold">AWS Migration Hub</strong> cung cấp chế độ xem tập trung dữ liệu di chuyển đã thu thập.',
+                'takeaways.l4': '<strong class="font-bold">AWS Application Migration Service (MGN)</strong> cho phép di chuyển <strong class="font-bold">lift-and-shift</strong> với nhân bản liên tục và <strong class="font-bold">thời gian ngừng hoạt động tối thiểu</strong>.'
+            },
+            'en': {
+                'header.title': 'AWS Application Migration Service (MGN)',
+                'section1.title': 'Planning Migration with <strong class="font-bold">Application Discovery Service</strong>',
+                'section1.p1.title': 'Cloud Migration Use Cases',
+                'section1.p1.body': 'Migration is necessary if you have on-premises servers and data centers and want to move to the cloud. To plan, you use the <strong class="font-bold">AWS Application Discovery Service</strong> to scan servers and gather data.',
+                'section1.f1.title': 'Agentless Discovery',
+                'section1.f1.body': 'Uses a <strong class="font-bold">Connector</strong> to provide information about your virtual machines (VMs), including their <strong class="font-bold">configuration</strong> and <strong class="font-bold">performance history</strong> such as CPU, memory, and disk usage.',
+                'section1.f2.title': 'Agent-based Discovery',
+                'section1.f2.body': 'Uses an <strong class="font-bold">Application Discovery Agent</strong> to offer more detailed updates and information from within your VMs, including <strong class="font-bold">running processes</strong> and detailed <strong class="font-bold">network connection</strong> data. This is particularly useful for <strong class="font-bold">dependency mapping</strong>.',
+                'section1.hub.title': 'Viewing Results in <strong class="font-bold">AWS Migration Hub</strong>',
+                'section1.hub.body': 'All data collected by the Application Discovery Service can be viewed within the <strong class="font-bold">AWS Migration Hub</strong>. This service helps you map out what needs to be moved and how the components are <strong class="font-bold">interconnected</strong>.',
+                
+                'section2.title': 'Moving to AWS with <strong class="font-bold">Application Migration Service (MGN)</strong>',
+                'section2.intro.title': 'The Simplest <strong class="font-bold">Lift-and-Shift</strong> Solution',
+                'section2.intro.body': '<strong class="font-bold">MGN</strong> (formerly CloudEndure Migration) is the simplest way to move from on-premises to AWS. It enables <strong class="font-bold">rehosting</strong> (commonly called lift-and-shift), converting physical servers, VMs, or other cloud services to run <strong class="font-bold">natively on AWS</strong>.',
+                'section2.how.title': 'How it Works',
+                'section2.how.l1': 'You install a <strong class="font-bold">Replication Agent</strong> on your data center servers.',
+                'section2.how.l2': 'This agent performs <strong class="font-bold">continuous replication</strong> of your disks to AWS.',
+                'section2.how.l3': 'The data is stored on low-cost <strong class="font-bold">EC2 instances</strong> and <strong class="font-bold">EBS volumes</strong> (staging environment).',
+                'section2.cutover.title': '<strong class="font-bold">Cutover</strong> Process',
+                'section2.cutover.body': 'When you are ready to perform a cutover, you transition from the staging environment to production. At this point, you can select a larger <strong class="font-bold">EC2 instance</strong> size and <strong class="font-bold">EBS volumes</strong> that match your required performance. This process ensures <strong class="font-bold">minimal downtime</strong>.',
+
+                'section3.title': 'Key Benefits',
+                'section3.l1': 'Supports a wide range of <strong class="font-bold">platforms, operating systems, and databases</strong>.',
+                'section3.l2': '<strong class="font-bold">Minimal Downtime</strong> during migration.',
+                'section3.l3': 'Reduces costs by <strong class="font-bold">automating</strong> the process, eliminating the need to hire complex engineering resources.',
+
+                'takeaways.title': 'Key Takeaways',
+                'takeaways.l1': '<strong class="font-bold">AWS Application Discovery Service</strong> helps plan cloud migrations by gathering server utilization and dependency data.',
+                'takeaways.l2': 'Two discovery methods exist: <strong class="font-bold">Agentless (Connector)</strong> and <strong class="font-bold">Agent-based (Agent)</strong>, the latter giving more detailed data.',
+                'takeaways.l3': '<strong class="font-bold">AWS Migration Hub</strong> provides a centralized view of migration data collected.',
+                'takeaways.l4': '<strong class="font-bold">AWS Application Migration Service (MGN)</strong> enables <strong class="font-bold">lift-and-shift</strong> migration with continuous replication and <strong class="font-bold">minimal downtime</strong>.'
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+        const activeClass = 'toggle-active';
+        const inactiveClass = 'toggle-inactive';
+
+        // Helper function to update content
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const content = translations[currentLanguage][key];
+                if (content) {
+                    // Use innerHTML to allow for strong/bold tags within the content
+                    element.innerHTML = content;
+                }
+            });
+            
+            // Update the main document language attribute
+            document.documentElement.lang = currentLanguage;
+            
+            // Update toggle button styles
+            updateLanguageButtons();
+        }
+
+        // Function to update button styles
+        function updateLanguageButtons() {
+            if (currentLanguage === 'vi') {
+                langToggleVi.classList.add(...activeClass.split(' '));
+                langToggleVi.classList.remove(...inactiveClass.split(' '));
+                langToggleEn.classList.add(...inactiveClass.split(' '));
+                langToggleEn.classList.remove(...activeClass.split(' '));
+            } else {
+                langToggleEn.classList.add(...activeClass.split(' '));
+                langToggleEn.classList.remove(...inactiveClass.split(' '));
+                langToggleVi.classList.add(...inactiveClass.split(' '));
+                langToggleVi.classList.remove(...activeClass.split(' '));
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize content with default language
+            updateContent();
+
+            // Language toggle event listeners
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">Di chuyển cơ sở dữ liệu RDS & Aurora</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Slate 50 - Light background */
+            color: #1e293b; /* Slate 800 - Main text color */
+        }
+        .header-bg {
+            background-color: #0d9488; /* Teal 600 - AWS Aurora-like color */
+        }
+        .highlight-text {
+            color: #0f766e; /* Teal 700 */
+        }
+        .card {
+            background-color: white;
+            border-left: 5px solid #0d9488; /* Teal border for impact */
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .icon-container {
+            color: #0d9488;
+        }
+        .toggle-active {
+            background-color: #0d9488 !important;
+            color: white !important;
+        }
+        .toggle-inactive {
+            background-color: #e2e8f0; /* Slate 200 */
+            color: #475569; /* Slate 600 */
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header-bg shadow-lg">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 class="text-3xl font-extrabold text-white" data-i18n="header.title">
+                Di chuyển cơ sở dữ liệu RDS & Aurora
+            </h1>
+            <!-- Language Toggles -->
+            <div class="flex space-x-2 p-1 bg-white rounded-full shadow-md">
+                <button id="lang-toggle-vi" class="px-4 py-2 rounded-full font-semibold text-sm transition toggle-active">
+                    <span class="flag-icon">🇻🇳</span> VI
+                </button>
+                <button id="lang-toggle-en" class="px-4 py-2 rounded-full font-semibold text-sm transition toggle-inactive">
+                    <span class="flag-icon">🇬🇧</span> EN
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+
+        <!-- Introduction -->
+        <section class="mb-12 p-6 bg-white shadow-xl rounded-xl">
+            <h2 class="text-2xl font-bold highlight-text mb-4" data-i18n="intro.title">
+                <strong class="font-bold">Giới thiệu về Di chuyển RDS và Aurora</strong>
+            </h2>
+            <p class="text-lg" data-i18n="intro.p1">
+                Bài giảng này bao gồm các phương pháp di chuyển cơ sở dữ liệu sang Aurora MySQL. Dù ngắn gọn, nội dung này rất <strong class="font-bold">thiết yếu cho việc ôn thi</strong>, có thể là câu hỏi cho một bài thi.
+            </p>
+        </section>
+
+        <!-- MySQL to Aurora Migration -->
+        <section class="mb-16">
+            <h2 class="text-3xl font-extrabold highlight-text mb-8">
+                <i class="fas fa-database mr-3"></i> <span data-i18n="mysql.title">Các Tùy chọn Di chuyển <strong class="font-bold">RDS MySQL sang Aurora MySQL</strong></span>
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+
+                <!-- Card 1: Snapshot Restoration -->
+                <div class="card p-6 rounded-xl shadow-lg">
+                    <div class="icon-container text-3xl mb-3"><i class="fas fa-camera"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="mysql.p1.title">Khôi phục từ Snapshot</h3>
+                    <p class="text-gray-600 text-sm" data-i18n="mysql.p1.body">
+                        Tạo một Snapshot cơ sở dữ liệu từ RDS MySQL và khôi phục Snapshot này thành cơ sở dữ liệu MySQL Aurora. Phương pháp này có thể gây ra một chút <strong class="font-bold">thời gian ngừng hoạt động (downtime)</strong> vì bạn cần phải dừng các hoạt động trên cơ sở dữ liệu MySQL gốc trước khi di chuyển sang Aurora.
+                    </p>
+                </div>
+
+                <!-- Card 2: Aurora Read Replica -->
+                <div class="card p-6 rounded-xl shadow-lg">
+                    <div class="icon-container text-3xl mb-3"><i class="fas fa-copy"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="mysql.p2.title">Bản sao chỉ đọc (Read Replica) Aurora</h3>
+                    <p class="text-gray-600 text-sm" data-i18n="mysql.p2.body">
+                        Tạo một Bản sao chỉ đọc Amazon Aurora (Aurora Read Replica) trên nền tảng phiên bản RDS MySQL của bạn. Khi <strong class="font-bold">độ trễ bản sao (replica lag) đạt đến 0</strong>, bạn có thể thăng cấp nó. Phương pháp này có thể tốn nhiều thời gian hơn và có thể phát sinh <strong class="font-bold">chi phí bổ sung</strong>.
+                    </p>
+                </div>
+
+                <!-- Card 3: Percona XtraBackup -->
+                <div class="card p-6 rounded-xl shadow-lg">
+                    <div class="icon-container text-3xl mb-3"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="mysql.p3.title">Di chuyển MySQL bên ngoài bằng <strong class="font-bold">Percona XtraBackup</strong></h3>
+                    <p class="text-gray-600 text-sm" data-i18n="mysql.p3.body">
+                        Đối với cơ sở dữ liệu MySQL <strong class="font-bold">bên ngoài RDS</strong>, bạn sao lưu bằng tiện ích Percona XtraBackup, tải lên Amazon S3, sau đó nhập trực tiếp vào cụm Aurora MySQL mới. Lưu ý rằng <strong class="font-bold">chỉ tiện ích Percona XtraBackup mới được hỗ trợ</strong>.
+                    </p>
+                </div>
+
+                <!-- Card 4: MySQL Dump Utility -->
+                <div class="card p-6 rounded-xl shadow-lg">
+                    <div class="icon-container text-3xl mb-3"><i class="fas fa-file-export"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="mysql.p4.title">Tiện ích MySQL Dump</h3>
+                    <p class="text-gray-600 text-sm" data-i18n="mysql.p4.body">
+                        Chạy tiện ích MySQL Dump và chuyển đầu ra vào Aurora. Phương pháp này <strong class="font-bold">tốn thời gian</strong> và <strong class="font-bold">không tận dụng Amazon S3</strong>.
+                    </p>
+                </div>
+
+                <!-- Card 5: Amazon DMS -->
+                <div class="card p-6 rounded-xl shadow-lg">
+                    <div class="icon-container text-3xl mb-3"><i class="fas fa-arrows-alt-h"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="mysql.p5.title">Dịch vụ Di chuyển Cơ sở dữ liệu Amazon (DMS)</h3>
+                    <p class="text-gray-600 text-sm" data-i18n="mysql.p5.body">
+                        Nếu cả hai cơ sở dữ liệu đều đang hoạt động, bạn có thể sử dụng Amazon DMS để thực hiện <strong class="font-bold">sao chép liên tục</strong> giữa hai cơ sở dữ liệu.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PostgreSQL to Aurora Migration -->
+        <section class="mb-16">
+            <h2 class="text-3xl font-extrabold highlight-text mb-8">
+                <i class="fab fa-dev mr-3"></i> <span data-i18n="pgsql.title">Các Tùy chọn Di chuyển <strong class="font-bold">PostgreSQL sang Aurora PostgreSQL</strong></span>
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                <!-- Card 1: Snapshot Restoration -->
+                <div class="card p-6 rounded-xl shadow-lg">
+                    <div class="icon-container text-3xl mb-3"><i class="fas fa-camera-retro"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="pgsql.p1.title">Khôi phục từ Snapshot</h3>
+                    <p class="text-gray-600 text-sm" data-i18n="pgsql.p1.body">
+                        Bạn có thể khôi phục các Snapshot cơ sở dữ liệu thành cơ sở dữ liệu Amazon Aurora PostgreSQL.
+                    </p>
+                </div>
+
+                <!-- Card 2: Aurora Read Replica -->
+                <div class="card p-6 rounded-xl shadow-lg">
+                    <div class="icon-container text-3xl mb-3"><i class="fas fa-clone"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="pgsql.p2.title">Bản sao chỉ đọc (Read Replica) Aurora</h3>
+                    <p class="text-gray-600 text-sm" data-i18n="pgsql.p2.body">
+                        Ngoài ra, hãy tạo Bản sao chỉ đọc Amazon Aurora (Aurora Read Replica) của cơ sở dữ liệu PostgreSQL. Khi độ trễ sao chép bằng 0, hãy thăng cấp nó thành cụm cơ sở dữ liệu riêng.
+                    </p>
+                </div>
+
+                <!-- Card 3: S3 Import -->
+                <div class="card p-6 rounded-xl shadow-lg">
+                    <div class="icon-container text-3xl mb-3"><i class="fas fa-box-open"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="pgsql.p3.title">PostgreSQL bên ngoài qua Nhập S3</h3>
+                    <p class="text-gray-600 text-sm" data-i18n="pgsql.p3.body">
+                        Đối với <strong class="font-bold">cơ sở dữ liệu PostgreSQL bên ngoài</strong>, hãy tạo bản sao lưu, tải lên Amazon S3, sau đó nhập dữ liệu bằng cách sử dụng tiện ích mở rộng AWS S3 Aurora.
+                    </p>
+                </div>
+
+                <!-- Card 4: Amazon DMS -->
+                <div class="card p-6 rounded-xl shadow-lg">
+                    <div class="icon-container text-3xl mb-3"><i class="fas fa-sync-alt"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="pgsql.p4.title">Dịch vụ Di chuyển Cơ sở dữ liệu Amazon (DMS)</h3>
+                    <p class="text-gray-600 text-sm" data-i18n="pgsql.p4.body">
+                        Cuối cùng, Amazon DMS có thể được sử dụng để <strong class="font-bold">di chuyển liên tục</strong> từ PostgreSQL sang Amazon Aurora.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Key Takeaways -->
+        <section class="mb-12 p-6 bg-teal-50 border-t-4 border-teal-600 rounded-xl shadow-md">
+            <h2 class="text-2xl font-bold highlight-text mb-4" data-i18n="takeaways.title">
+                <i class="fas fa-lightbulb mr-2"></i> Các điểm chính cần ghi nhớ
+            </h2>
+            <ul class="space-y-3 text-lg list-none pl-0">
+                <li class="flex items-start">
+                    <span class="text-teal-600 mr-3 mt-1"><i class="fas fa-check-circle"></i></span>
+                    <span data-i18n="takeaways.l1">Có nhiều phương pháp để di chuyển cơ sở dữ liệu RDS MySQL sang Aurora MySQL, bao gồm <strong class="font-bold">khôi phục từ snapshot</strong> và tạo <strong class="font-bold">Bản sao chỉ đọc Aurora</strong>.</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-teal-600 mr-3 mt-1"><i class="fas fa-check-circle"></i></span>
+                    <span data-i18n="takeaways.l2">Sử dụng <strong class="font-bold">Bản sao chỉ đọc Amazon Aurora</strong> cho phép sao chép liên tục với thời gian ngừng hoạt động tối thiểu khi độ trễ sao chép đạt đến 0.</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-teal-600 mr-3 mt-1"><i class="fas fa-check-circle"></i></span>
+                    <span data-i18n="takeaways.l3">Cơ sở dữ liệu <strong class="font-bold">MySQL bên ngoài</strong> có thể được di chuyển bằng cách sử dụng các bản sao lưu tiện ích <strong class="font-bold">Percona XtraBackup</strong> được nhập qua Amazon S3.</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-teal-600 mr-3 mt-1"><i class="fas fa-check-circle"></i></span>
+                    <span data-i18n="takeaways.l4"><strong class="font-bold">Amazon DMS</strong> hỗ trợ sao chép liên tục cho cả quá trình di chuyển MySQL và PostgreSQL sang Aurora.</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-teal-600 mr-3 mt-1"><i class="fas fa-check-circle"></i></span>
+                    <span data-i18n="takeaways.l5">Có các <strong class="font-bold">tùy chọn di chuyển tương tự</strong> cho cơ sở dữ liệu PostgreSQL, bao gồm khôi phục từ snapshot, Bản sao chỉ đọc Aurora, nhập từ S3 và DMS.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Conclusion -->
+        <section class="p-6 bg-gray-100 rounded-xl text-center">
+            <p class="text-base text-gray-700" data-i18n="footer.p1">
+                Bài giảng về di chuyển RDS và Aurora kết thúc tại đây. Các phương pháp này cung cấp các tùy chọn linh hoạt tùy thuộc vào thiết lập cơ sở dữ liệu và khả năng chịu đựng thời gian ngừng hoạt động của bạn.
+            </p>
+        </section>
+
+    </main>
+
+    <script>
+        // --- Translation Data ---
+        const translations = {
+            'vi': {
+                'header.title': 'Di chuyển cơ sở dữ liệu RDS & Aurora',
+                'intro.title': '<strong class="font-bold">Giới thiệu về Di chuyển RDS và Aurora</strong>',
+                'intro.p1': 'Bài giảng này bao gồm các phương pháp di chuyển cơ sở dữ liệu sang Aurora MySQL. Dù ngắn gọn, nội dung này rất <strong class="font-bold">thiết yếu cho việc ôn thi</strong>, có thể là câu hỏi cho một bài thi.',
+
+                'mysql.title': 'Các Tùy chọn Di chuyển <strong class="font-bold">RDS MySQL sang Aurora MySQL</strong>',
+                'mysql.p1.title': 'Khôi phục từ Snapshot',
+                'mysql.p1.body': 'Tạo một Snapshot cơ sở dữ liệu từ RDS MySQL và khôi phục Snapshot này thành cơ sở dữ liệu MySQL Aurora. Phương pháp này có thể gây ra một chút <strong class="font-bold">thời gian ngừng hoạt động (downtime)</strong> vì bạn cần phải dừng các hoạt động trên cơ sở dữ liệu MySQL gốc trước khi di chuyển sang Aurora.',
+                'mysql.p2.title': 'Bản sao chỉ đọc (Read Replica) Aurora',
+                'mysql.p2.body': 'Tạo một Bản sao chỉ đọc Amazon Aurora (Aurora Read Replica) trên nền tảng phiên bản RDS MySQL của bạn. Khi <strong class="font-bold">độ trễ bản sao (replica lag) đạt đến 0</strong>, tức là bản sao Aurora đã đồng bộ hoàn toàn với MySQL, bạn có thể thăng cấp nó thành một cụm cơ sở dữ liệu riêng. Phương pháp này có thể tốn nhiều thời gian hơn tùy chọn Snapshot và có thể phát sinh <strong class="font-bold">chi phí bổ sung</strong> do sao chép mạng.',
+                'mysql.p3.title': 'Di chuyển MySQL bên ngoài bằng <strong class="font-bold">Percona XtraBackup</strong>',
+                'mysql.p3.body': 'Nếu bạn có cơ sở dữ liệu MySQL <strong class="font-bold">bên ngoài RDS</strong>, bạn có thể sao lưu nó bằng tiện ích Percona XtraBackup. Thao tác này tạo ra một tệp sao lưu mà bạn tải lên Amazon S3. Amazon Aurora hỗ trợ trực tiếp nhập tệp sao lưu này vào cụm DB Aurora MySQL mới. Lưu ý rằng <strong class="font-bold">chỉ tiện ích Percona XtraBackup mới được hỗ trợ</strong> cho phương pháp này.',
+                'mysql.p4.title': 'Tiện ích MySQL Dump',
+                'mysql.p4.body': 'Bạn có thể chạy tiện ích MySQL Dump trên cơ sở dữ liệu MySQL và chuyển đầu ra vào cơ sở dữ liệu Amazon Aurora hiện có của bạn. Phương pháp này <strong class="font-bold">tốn thời gian</strong> và <strong class="font-bold">không tận dụng Amazon S3</strong>.',
+                'mysql.p5.title': 'Dịch vụ Di chuyển Cơ sở dữ liệu Amazon (DMS)',
+                'mysql.p5.body': 'Nếu cả hai cơ sở dữ liệu đều đang hoạt động, bạn có thể sử dụng Amazon DMS để thực hiện <strong class="font-bold">sao chép liên tục</strong> giữa hai cơ sở dữ liệu.',
+
+                'pgsql.title': 'Các Tùy chọn Di chuyển <strong class="font-bold">PostgreSQL sang Aurora PostgreSQL</strong>',
+                'pgsql.p1.title': 'Khôi phục từ Snapshot',
+                'pgsql.p1.body': 'Bạn có thể khôi phục các Snapshot cơ sở dữ liệu thành cơ sở dữ liệu Amazon Aurora PostgreSQL.',
+                'pgsql.p2.title': 'Bản sao chỉ đọc (Read Replica) Aurora',
+                'pgsql.p2.body': 'Ngoài ra, hãy tạo Bản sao chỉ đọc Amazon Aurora (Aurora Read Replica) của cơ sở dữ liệu PostgreSQL. Khi độ trễ sao chép bằng 0, hãy thăng cấp nó thành cụm cơ sở dữ liệu riêng.',
+                'pgsql.p3.title': 'PostgreSQL bên ngoài qua Nhập S3',
+                'pgsql.p3.body': 'Đối với <strong class="font-bold">cơ sở dữ liệu PostgreSQL bên ngoài</strong>, hãy tạo bản sao lưu và tải lên Amazon S3. Sau đó, nhập dữ liệu bằng cách sử dụng tiện ích mở rộng AWS S3 Aurora, tiện ích này sẽ tạo ra một cơ sở dữ liệu mới.',
+                'pgsql.p4.title': 'Dịch vụ Di chuyển Cơ sở dữ liệu Amazon (DMS)',
+                'pgsql.p4.body': 'Cuối cùng, Amazon DMS có thể được sử dụng để <strong class="font-bold">di chuyển liên tục</strong> từ PostgreSQL sang Amazon Aurora.',
+
+                'takeaways.title': 'Các điểm chính cần ghi nhớ',
+                'takeaways.l1': 'Có nhiều phương pháp để di chuyển cơ sở dữ liệu RDS MySQL sang Aurora MySQL, bao gồm <strong class="font-bold">khôi phục từ snapshot</strong> và tạo <strong class="font-bold">Bản sao chỉ đọc Aurora</strong>.',
+                'takeaways.l2': 'Sử dụng <strong class="font-bold">Bản sao chỉ đọc Amazon Aurora</strong> cho phép sao chép liên tục với thời gian ngừng hoạt động tối thiểu khi độ trễ sao chép đạt đến 0.',
+                'takeaways.l3': 'Cơ sở dữ liệu <strong class="font-bold">MySQL bên ngoài</strong> có thể được di chuyển bằng cách sử dụng các bản sao lưu tiện ích <strong class="font-bold">Percona XtraBackup</strong> được nhập qua Amazon S3.',
+                'takeaways.l4': '<strong class="font-bold">Amazon DMS</strong> hỗ trợ sao chép liên tục cho cả quá trình di chuyển MySQL và PostgreSQL sang Aurora.',
+                'takeaways.l5': 'Có các <strong class="font-bold">tùy chọn di chuyển tương tự</strong> cho cơ sở dữ liệu PostgreSQL, bao gồm khôi phục từ snapshot, Bản sao chỉ đọc Aurora, nhập từ S3 và DMS.',
+
+                'footer.p1': 'Bài giảng về di chuyển RDS và Aurora kết thúc tại đây. Các phương pháp này cung cấp các tùy chọn linh hoạt tùy thuộc vào thiết lập cơ sở dữ liệu và khả năng chịu đựng thời gian ngừng hoạt động của bạn.'
+            },
+            'en': {
+                'header.title': 'RDS & Aurora Migrations',
+                'intro.title': '<strong class="font-bold">Introduction to RDS and Aurora Migrations</strong>',
+                'intro.p1': 'This lecture covers methods to migrate databases to Aurora MySQL. Although brief, this content is essential for exam preparation, possibly for one question.',
+
+                'mysql.title': 'Migration Options for <strong class="font-bold">RDS MySQL to Aurora MySQL</strong>',
+                'mysql.p1.title': 'Snapshot Restoration',
+                'mysql.p1.body': 'Take a database snapshot from the RDS MySQL database and restore this snapshot as a MySQL Aurora database. This method may involve some <strong class="font-bold">downtime</strong> because you need to stop operations on the original MySQL database before migrating to Aurora.',
+                'mysql.p2.title': 'Aurora Read Replica',
+                'mysql.p2.body': 'Create an Amazon Aurora Read Replica on top of your RDS MySQL instance. Once the <strong class="font-bold">replica lag reaches zero</strong>, meaning the Aurora replica has fully caught up with MySQL, you can promote it to its own database cluster. This approach can take more time than the snapshot option and may incur <strong class="font-bold">additional costs</strong> due to network replication.',
+                'mysql.p3.title': 'External MySQL Migration Using <strong class="font-bold">Percona XtraBackup</strong>',
+                'mysql.p3.body': 'If you have a MySQL database <strong class="font-bold">external to RDS</strong>, you can back it up using the Percona XtraBackup utility. This creates a backup file which you upload to Amazon S3. Amazon Aurora supports directly importing this backup file into a new Aurora MySQL DB cluster. Note that <strong class="font-bold">only the Percona XtraBackup utility is supported</strong> for this method.',
+                'mysql.p4.title': 'MySQL Dump Utility',
+                'mysql.p4.body': 'You can run the MySQL Dump utility against a MySQL database and pipe the output into your existing Amazon Aurora database. This method is <strong class="font-bold">time-consuming</strong> and <strong class="font-bold">does not leverage Amazon S3</strong>.',
+                'mysql.p5.title': 'Amazon Database Migration Service (DMS)',
+                'mysql.p5.body': 'If both databases are operational, you can use Amazon DMS to perform <strong class="font-bold">continuous replication</strong> between the two databases.',
+
+                'pgsql.title': 'Migration Options for <strong class="font-bold">PostgreSQL to Aurora PostgreSQL</strong>',
+                'pgsql.p1.title': 'Snapshot Restoration',
+                'pgsql.p1.body': 'You can restore database snapshots as Amazon Aurora PostgreSQL databases.',
+                'pgsql.p2.title': 'Aurora Read Replica',
+                'pgsql.p2.body': 'Alternatively, create an Amazon Aurora Read Replica of your PostgreSQL database. Once the replication lag is zero, promote it to its own database cluster.',
+                'pgsql.p3.title': 'External PostgreSQL via S3 Import',
+                'pgsql.p3.body': 'For <strong class="font-bold">external PostgreSQL databases</strong>, create a backup and upload it to Amazon S3. Then, import the data using the AWS S3 Aurora extension, which creates a new database.',
+                'pgsql.p4.title': 'Amazon Database Migration Service (DMS)',
+                'pgsql.p4.body': 'Finally, Amazon DMS can be used for <strong class="font-bold">continuous migration</strong> from PostgreSQL to Amazon Aurora.',
+
+                'takeaways.title': 'Key Takeaways',
+                'takeaways.l1': 'There are multiple methods to migrate RDS MySQL databases to Aurora MySQL, including <strong class="font-bold">snapshot restoration</strong> and creating <strong class="font-bold">Aurora Read Replicas</strong>.',
+                'takeaways.l2': 'Using <strong class="font-bold">Amazon Aurora Read Replicas</strong> allows for continuous replication with minimal downtime once replication lag reaches zero.',
+                'takeaways.l3': '<strong class="font-bold">External MySQL</strong> databases can be migrated using <strong class="font-bold">Percona XtraBackup</strong> utility backups imported via Amazon S3.',
+                'takeaways.l4': '<strong class="font-bold">Amazon DMS</strong> supports continuous replication for both MySQL and PostgreSQL migrations to Aurora.',
+                'takeaways.l5': '<strong class="font-bold">Similar migration options</strong> exist for PostgreSQL databases, including snapshot restoration, Aurora Read Replicas, S3 imports, and DMS.',
+
+                'footer.p1': 'This concludes the lecture on RDS and Aurora migrations. These methods provide flexible options depending on your database setup and downtime tolerance.'
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+        const activeClass = 'toggle-active';
+        const inactiveClass = 'toggle-inactive';
+
+        // Function to update all content based on the current language
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const content = translations[currentLanguage][key];
+                if (content) {
+                    // Use innerHTML to allow for strong/bold tags within the content
+                    element.innerHTML = content;
+                }
+            });
+            
+            // Update the main document language attribute
+            document.documentElement.lang = currentLanguage;
+            
+            // Update toggle button styles
+            updateLanguageButtons();
+        }
+
+        // Function to update button styles
+        function updateLanguageButtons() {
+            if (currentLanguage === 'vi') {
+                langToggleVi.classList.add(...activeClass.split(' '));
+                langToggleVi.classList.remove(...inactiveClass.split(' '));
+                langToggleEn.classList.add(...inactiveClass.split(' '));
+                langToggleEn.classList.remove(...activeClass.split(' '));
+            } else {
+                langToggleEn.classList.add(...activeClass.split(' '));
+                langToggleEn.classList.remove(...inactiveClass.split(' '));
+                langToggleVi.classList.add(...inactiveClass.split(' '));
+                langToggleVi.classList.remove(...activeClass.split(' '));
+            }
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize content with default language
+            updateContent();
+
+            // Language toggle event listeners
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

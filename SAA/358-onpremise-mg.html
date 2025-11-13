@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">Chiến lược Tại chỗ với AWS (On-Premises Strategies)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0fdf4; /* Emerald 50 - Green for Infrastructure/On-Prem */
+            color: #1f2937; /* Gray 800 */
+        }
+        .header-bg {
+            background-color: #059669; /* Emerald 600 */
+        }
+        .section-header {
+            color: #047857; /* Emerald 700 */
+            border-bottom: 2px solid #a7f3d0;
+        }
+        .card {
+            background-color: white;
+            border-left: 5px solid #10b981; /* Emerald 500 */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15);
+        }
+        .icon-box {
+            color: #059669; /* Emerald 600 */
+        }
+        .key-term strong {
+            font-weight: 800;
+            color: #ef4444; /* Red 500 - Highlight Key Terms */
+        }
+        .toggle-active {
+            background-color: #059669 !important;
+            color: white !important;
+        }
+        .toggle-inactive {
+            background-color: #e5e7eb; /* Gray 200 */
+            color: #4b5563; /* Gray 600 */
+        }
+    </style>
+</head>
+<body>
+    <header class="header-bg shadow-lg">
+        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 class="text-3xl font-extrabold text-white" data-i18n="header.title">
+                <i class="fas fa-server mr-3"></i> Chiến lược Tại chỗ với AWS
+            </h1>
+            <!-- Language Toggles -->
+            <div class="flex space-x-2 p-1 bg-white rounded-full shadow-md">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-full font-semibold text-sm transition toggle-active">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-full font-semibold text-sm transition toggle-inactive">EN</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+
+        <!-- Introduction -->
+        <section class="mb-12 p-6 bg-white shadow-xl rounded-xl border-l-4 border-emerald-600">
+            <h2 class="text-2xl font-bold section-header mb-4 pb-2" data-i18n="intro.title">
+                <strong class="font-bold">Giới thiệu về Chiến lược Tại chỗ</strong>
+            </h2>
+            <p class="text-lg key-term" data-i18n="intro.p1">
+                Bài giảng lý thuyết này tập trung vào các chiến lược <strong class="font-bold">tại chỗ (on-premises)</strong> với AWS. Việc nắm rõ các dịch vụ này ở cấp độ rất cao là <strong class="font-bold">cực kỳ quan trọng</strong> cho kỳ thi.
+            </p>
+        </section>
+
+        <!-- Core On-Prem Capabilities -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-extrabold section-header mb-8 pb-3" data-i18n="core.title">
+                <i class="fas fa-cogs mr-3"></i> Khả năng Tại chỗ Cốt lõi
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Amazon Linux 2 On-Premises -->
+                <div class="card p-6 rounded-xl key-term">
+                    <div class="icon-box text-3xl mb-3"><i class="fab fa-linux"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="core.linux.title">Amazon Linux 2 On-Premises</h3>
+                    <p class="text-gray-600 text-sm" data-i18n="core.linux.body">
+                        Bạn có thể tải xuống <strong class="font-bold">Amazon Linux 2 AMI</strong> dưới dạng máy ảo (VM) ở định dạng <strong class="font-bold">ISO</strong>. Tải ISO này vào phần mềm VM thông dụng (như VMware, KVM, VirtualBox, hoặc Hyper-V) để chạy Amazon Linux 2 <strong class="font-bold">trực tiếp trên cơ sở hạ tầng tại chỗ</strong> của bạn.
+                    </p>
+                </div>
+
+                <!-- VM Import and Export -->
+                <div class="card p-6 rounded-xl key-term">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-hdd"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="core.vm.title">VM Import and Export</h3>
+                    <p class="text-gray-600 text-sm" data-i18n="core.vm.body">
+                        Tính năng này cho phép bạn <strong class="font-bold">di chuyển các VM và ứng dụng hiện có</strong> của bạn vào <strong class="font-bold">EC2</strong>. Nó cũng hữu ích cho chiến lược <strong class="font-bold">khôi phục thảm họa (Disaster Recovery)</strong>, cho phép bạn sao lưu các VM tại chỗ lên đám mây và <strong class="font-bold">xuất ngược</strong> các VM từ EC2 trở lại môi trường tại chỗ.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Migration Services -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-extrabold section-header mb-8 pb-3" data-i18n="migration.title">
+                <i class="fas fa-cloud-upload-alt mr-3"></i> Các Dịch vụ Di chuyển (Migration Services)
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Application Discovery Service -->
+                <div class="card p-6 rounded-xl key-term">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-search"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="migration.discovery.title">AWS Application Discovery Service</h3>
+                    <p class="text-gray-600 text-sm" data-i18n="migration.discovery.body">
+                        Dịch vụ này giúp <strong class="font-bold">thu thập thông tin</strong> về các máy chủ tại chỗ của bạn. Nó cung cấp thông tin về việc sử dụng máy chủ và <strong class="font-bold">ánh xạ phụ thuộc (dependency mappings)</strong> để lập kế hoạch di chuyển lớn sang đám mây.
+                    </p>
+                </div>
+
+                <!-- Migration Hub -->
+                <div class="card p-6 rounded-xl key-term">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-map-marked-alt"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="migration.hub.title">AWS Migration Hub</h3>
+                    <p class="text-gray-600 text-sm" data-i18n="migration.hub.body">
+                        Bạn có thể <strong class="font-bold">theo dõi tất cả các quá trình di chuyển</strong> bằng cách sử dụng Migration Hub.
+                    </p>
+                </div>
+
+                <!-- DMS -->
+                <div class="card p-6 rounded-xl key-term">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-database"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="migration.dms.title">Database Migration Service (DMS)</h3>
+                    <p class="text-gray-600 text-sm" data-i18n="migration.dms.body">
+                        Cho phép <strong class="font-bold">nhân bản cơ sở dữ liệu</strong> từ tại chỗ sang AWS hoặc ngược lại. Hữu ích cho việc <strong class="font-bold">sao chép liên tục</strong> trong giai đoạn chuyển đổi. Hỗ trợ nhiều công nghệ DB như Oracle, MySQL, DynamoDB, v.v., bao gồm cả các trường hợp sử dụng nâng cao (ví dụ: MySQL sang DynamoDB).
+                    </p>
+                </div>
+
+                <!-- MGN -->
+                <div class="card p-6 rounded-xl key-term lg:col-span-3">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-sync-alt"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="migration.mgn.title">Application Migration Service (MGN)</h3>
+                    <p class="text-gray-600 text-sm" data-i18n="migration.mgn.body">
+                        Được sử dụng để <strong class="font-bold">nhân bản tăng dần (incremental replication)</strong> các <strong class="font-bold">máy chủ trực tiếp tại chỗ</strong> (on-premises live servers) lên AWS.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Summary -->
+        <section class="mb-12 p-6 bg-emerald-100 border-l-4 border-red-500 rounded-xl shadow-md">
+            <h2 class="text-2xl font-bold text-red-700 mb-4" data-i18n="summary.title">
+                <i class="fas fa-exclamation-triangle mr-2"></i> Tóm tắt Các Dịch vụ Tại chỗ và Di chuyển
+            </h2>
+            <ul class="space-y-3 text-lg list-disc pl-5 key-term">
+                <li data-i18n="summary.l1">Có thể chạy <strong class="font-bold">Amazon Linux 2</strong> tại chỗ (on-premises).</li>
+                <li data-i18n="summary.l2"><strong class="font-bold">VM Import and Export</strong> dùng để di chuyển giữa tại chỗ và EC2.</li>
+                <li data-i18n="summary.l3">Dịch vụ lập kế hoạch và theo dõi: <strong class="font-bold">Application Discovery Service</strong> và <strong class="font-bold">AWS Migration Hub</strong>.</li>
+                <li data-i18n="summary.l4">Dịch vụ nhân bản: <strong class="font-bold">Database Migration Service (DMS)</strong> cho cơ sở dữ liệu và <strong class="font-bold">Application Migration Service (MGN)</strong> cho máy chủ trực tiếp (live servers).</li>
+            </ul>
+            <p class="text-sm italic text-gray-500 mt-4" data-i18n="summary.note">
+                Chỉ cần nhớ các tên này ở cấp độ cao để bạn không bất ngờ khi thấy chúng trong câu hỏi của kỳ thi và biết rằng chúng liên quan đến các chiến lược tại chỗ.
+            </p>
+        </section>
+    </main>
+
+    <script>
+        // --- Translation Data ---
+        const translations = {
+            'vi': {
+                'header.title': 'Chiến lược Tại chỗ với AWS (On-Premises Strategies)',
+                'intro.title': '<strong class="font-bold">Giới thiệu về Chiến lược Tại chỗ</strong>',
+                'intro.p1': 'Bài giảng lý thuyết này tập trung vào các chiến lược <strong class="font-bold">tại chỗ (on-premises)</strong> với AWS. Việc nắm rõ các dịch vụ này ở cấp độ rất cao là <strong class="font-bold">cực kỳ quan trọng</strong> cho kỳ thi.',
+                
+                'core.title': 'Khả năng Tại chỗ Cốt lõi',
+                'core.linux.title': 'Amazon Linux 2 On-Premises',
+                'core.linux.body': 'Bạn có thể tải xuống <strong class="font-bold">Amazon Linux 2 AMI</strong> dưới dạng máy ảo (VM) ở định dạng <strong class="font-bold">ISO</strong>. Tải ISO này vào phần mềm VM thông dụng (như VMware, KVM, VirtualBox, hoặc Hyper-V) để chạy Amazon Linux 2 <strong class="font-bold">trực tiếp trên cơ sở hạ tầng tại chỗ</strong> của bạn.',
+                'core.vm.title': 'VM Import and Export',
+                'core.vm.body': 'Tính năng này cho phép bạn <strong class="font-bold">di chuyển các VM và ứng dụng hiện có</strong> của bạn vào <strong class="font-bold">EC2</strong>. Nó cũng hữu ích cho chiến lược <strong class="font-bold">khôi phục thảm họa (Disaster Recovery)</strong>, cho phép bạn sao lưu các VM tại chỗ lên đám mây và <strong class="font-bold">xuất ngược</strong> các VM từ EC2 trở lại môi trường tại chỗ.',
+
+                'migration.title': 'Các Dịch vụ Di chuyển (Migration Services)',
+                'migration.discovery.title': 'AWS Application Discovery Service',
+                'migration.discovery.body': 'Dịch vụ này giúp <strong class="font-bold">thu thập thông tin</strong> về các máy chủ tại chỗ của bạn. Nó cung cấp thông tin về việc sử dụng máy chủ và <strong class="font-bold">ánh xạ phụ thuộc (dependency mappings)</strong> để lập kế hoạch di chuyển lớn sang đám mây.',
+                'migration.hub.title': 'AWS Migration Hub',
+                'migration.hub.body': 'Bạn có thể <strong class="font-bold">theo dõi tất cả các quá trình di chuyển</strong> bằng cách sử dụng Migration Hub.',
+                'migration.dms.title': 'Database Migration Service (DMS)',
+                'migration.dms.body': 'Cho phép <strong class="font-bold">nhân bản cơ sở dữ liệu</strong> từ tại chỗ sang AWS hoặc ngược lại. Hữu ích cho việc <strong class="font-bold">sao chép liên tục</strong> trong giai đoạn chuyển đổi. Hỗ trợ nhiều công nghệ DB như Oracle, MySQL, DynamoDB, v.v., bao gồm cả các trường hợp sử dụng nâng cao (ví dụ: MySQL sang DynamoDB).',
+                'migration.mgn.title': 'Application Migration Service (MGN)',
+                'migration.mgn.body': 'Được sử dụng để <strong class="font-bold">nhân bản tăng dần (incremental replication)</strong> các <strong class="font-bold">máy chủ trực tiếp tại chỗ</strong> (on-premises live servers) lên AWS.',
+
+                'summary.title': 'Tóm tắt Các Dịch vụ Tại chỗ và Di chuyển',
+                'summary.l1': 'Có thể chạy <strong class="font-bold">Amazon Linux 2</strong> tại chỗ (on-premises).',
+                'summary.l2': '<strong class="font-bold">VM Import and Export</strong> dùng để di chuyển giữa tại chỗ và EC2.',
+                'summary.l3': 'Dịch vụ lập kế hoạch và theo dõi: <strong class="font-bold">Application Discovery Service</strong> và <strong class="font-bold">AWS Migration Hub</strong>.',
+                'summary.l4': 'Dịch vụ nhân bản: <strong class="font-bold">Database Migration Service (DMS)</strong> cho cơ sở dữ liệu và <strong class="font-bold">Application Migration Service (MGN)</strong> cho máy chủ trực tiếp (live servers).',
+                'summary.note': 'Chỉ cần nhớ các tên này ở cấp độ cao để bạn không bất ngờ khi thấy chúng trong câu hỏi của kỳ thi và biết rằng chúng liên quan đến các chiến lược tại chỗ.'
+            },
+            'en': {
+                'header.title': 'On-Premises Strategies with AWS',
+                'intro.title': '<strong class="font-bold">Introduction to On-Premises Strategies</strong>',
+                'intro.p1': 'This theoretical lecture covers on-premises strategies with AWS. It is <strong class="font-bold">extremely important</strong> to know about the services that AWS offers at a very, very high level when going to the exam.',
+
+                'core.title': 'Core On-Prem Capabilities',
+                'core.linux.title': 'Amazon Linux 2 On-Premises',
+                'core.linux.body': 'We have the ability to download the <strong class="font-bold">Amazon Linux 2 AMI</strong> as a virtual machine (VM) in the <strong class="font-bold">ISO</strong> format. You can load this ISO image into common VM software (including VMware, KVM, VirtualBox, or Hyper-V) to run Amazon Linux 2 <strong class="font-bold">on your on-premises infrastructure</strong> directly.',
+                'core.vm.title': 'VM Import and Export',
+                'core.vm.body': 'This feature allows you to <strong class="font-bold">migrate your existing VMs and applications</strong> into <strong class="font-bold">EC2</strong>. You can also create a <strong class="font-bold">disaster recovery</strong> strategy: backing up on-premises VMs into the cloud. Since it\'s called import and export, you can <strong class="font-bold">export</strong> VMs from EC2 back to your on-premises environment.',
+
+                'migration.title': 'Migration Services',
+                'migration.discovery.title': 'AWS Application Discovery Service',
+                'migration.discovery.body': 'This service allows you to <strong class="font-bold">gather information</strong> about your on-premises servers. It provides server utilization information and <strong class="font-bold">dependency mappings</strong>, which helps in planning a massive migration to the cloud.',
+                'migration.hub.title': 'AWS Migration Hub',
+                'migration.hub.body': 'You can <strong class="font-bold">track all that migration</strong> using the Migration Hub.',
+                'migration.dms.title': 'Database Migration Service (DMS)',
+                'migration.dms.body': 'Allows you to <strong class="font-bold">replicate databases</strong> from on-premises to AWS or vice-versa. Useful for <strong class="font-bold">continuous replication</strong> during transition. Works with various DB technologies like Oracle, MySQL, DynamoDB, etc., and enables advanced use cases (e.g., MySQL into DynamoDB).',
+                'migration.mgn.title': 'Application Migration Service (MGN)',
+                'migration.mgn.body': 'Used for <strong class="font-bold">incremental replication</strong> of <strong class="font-bold">on-premises live servers</strong> to AWS.',
+                
+                'summary.title': 'Summary of On-Premises and Migration Services',
+                'summary.l1': '<strong class="font-bold">Amazon Linux 2</strong> can be run on-premises.',
+                'summary.l2': '<strong class="font-bold">VM Import and Export</strong> for migration between on-premises and EC2.',
+                'summary.l3': 'Planning and tracking services: <strong class="font-bold">Application Discovery Service</strong> and <strong class="font-bold">AWS Migration Hub</strong>.',
+                'summary.l4': 'Replication services: <strong class="font-bold">Database Migration Service (DMS)</strong> for databases and <strong class="font-bold">Application Migration Service (MGN)</strong> for live servers.',
+                'summary.note': 'Just remember these names at a high level so that if you see them in an exam question you will not be surprised and you will know they relate to on-premises strategies.'
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+        const activeClass = 'toggle-active';
+        const inactiveClass = 'toggle-inactive';
+
+        // Helper function to update content
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const content = translations[currentLanguage][key];
+                if (content) {
+                    // Use innerHTML to allow for strong/bold tags within the content
+                    element.innerHTML = content;
+                }
+            });
+            
+            // Update the main document language attribute
+            document.documentElement.lang = currentLanguage;
+            
+            // Update toggle button styles
+            updateLanguageButtons();
+        }
+
+        // Function to update button styles
+        function updateLanguageButtons() {
+            if (currentLanguage === 'vi') {
+                langToggleVi.classList.add(...activeClass.split(' '));
+                langToggleVi.classList.remove(...inactiveClass.split(' '));
+                langToggleEn.classList.add(...inactiveClass.split(' '));
+                langToggleEn.classList.remove(...activeClass.split(' '));
+            } else {
+                langToggleEn.classList.add(...activeClass.split(' '));
+                langToggleEn.classList.remove(...inactiveClass.split(' '));
+                langToggleVi.classList.add(...inactiveClass.split(' '));
+                langToggleVi.classList.remove(...activeClass.split(' '));
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize content with default language
+            updateContent();
+
+            // Language toggle event listeners
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

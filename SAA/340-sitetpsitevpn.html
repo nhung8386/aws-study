@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">AWS Site-to-Site VPN: Kết Nối VPC với Data Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Be+Vietnam+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', 'Inter', sans-serif;
+            background-color: #f0fdf4; /* Green 50 - Theme cho Security/Connectivity */
+            color: #1f2937; /* Gray 800 */
+        }
+        .container {
+            max-width: 1024px;
+        }
+        .header-title {
+            color: #166534; /* Green 800 */
+            border-bottom: 4px solid #4ade80; /* Green 400 */
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+        }
+        .section-header {
+            color: #16a34a; /* Green 600 */
+            font-weight: 700;
+        }
+
+        /* Styling cho các thành phần chính (VGW, CGW) */
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .component-item {
+            border: 2px solid #bbf7d0; /* Green 200 */
+            background-color: #f7fee7; /* Green 50 */
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+        }
+        
+        /* Đặc biệt cho phần Exam Notes */
+        .exam-note {
+            border-left: 6px solid #f97316; /* Orange 600 - Exam Alert */
+            background-color: #fff7ed; /* Orange 50 */
+        }
+        
+        /* Đảm bảo các thẻ <strong> bên trong nội dung dịch vẫn được in đậm */
+        .card strong, .highlight-box strong {
+            font-weight: 700;
+        }
+        .cloudhub-box {
+            background-color: #eff6ff; /* Blue 50 */
+            border: 1px dashed #60a5fa; /* Blue 400 */
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-4 md:p-10">
+        <header class="text-center mb-12 relative">
+            <h1 class="text-4xl md:text-5xl font-extrabold header-title inline-block pb-1" data-i18n="header.title">
+                <i class="fas fa-network-wired mr-3"></i> Site-to-Site VPN
+            </h1>
+            <p class="text-lg text-gray-500 mt-2" data-i18n="header.subtitle">Kết nối an toàn VPC với Mạng On-premises</p>
+            
+            <!-- Nút chuyển đổi ngôn ngữ -->
+            <div class="absolute top-0 right-0 mt-4 mr-4 flex space-x-2">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-md bg-green-600 text-white font-semibold text-sm lang-button">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-md bg-gray-200 text-gray-700 font-semibold text-sm lang-button">EN</button>
+            </div>
+            
+        </header>
+
+        <main>
+            <!-- 1. Introduction and Core Components -->
+            <section id="introduction" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="intro.title">1. Giới Thiệu Site-to-Site VPN</h2>
+                <div class="card">
+                    <p data-i18n="intro.p1" class="mb-4">
+                        **Site-to-Site VPN** cho phép kết nối **VPC** của AWS với trung tâm dữ liệu (corporate data center) của công ty bạn bằng một kết nối riêng tư, **đã được mã hóa** thông qua Internet công cộng.
+                    </p>
+                    <p data-i18n="intro.p2" class="mb-4">
+                        Kết nối này thiết lập một đường hầm bảo mật, cho phép giao tiếp an toàn giữa hai mạng.
+                    </p>
+
+                    <h3 class="text-xl font-bold mt-6 mb-3 text-green-700" data-i18n="intro.components_title">Các Thành Phần Cốt Lõi</h3>
+                    <div class="component-grid">
+                        <div class="component-item">
+                            <i class="fas fa-cloud text-3xl text-blue-600 mb-2"></i>
+                            <p class="font-bold text-lg mb-1" data-i18n="intro.vgw_title">Virtual Private Gateway (VGW)</p>
+                            <p class="text-sm" data-i18n="intro.vgw_desc">
+                                Hoạt động như một bộ tập trung VPN (VPN concentrator) ở phía **AWS VPC**. VGW được tạo và đính kèm vào VPC. Bạn cũng có thể tùy chỉnh **Autonomous System Number (ASN)** nếu cần.
+                            </p>
+                        </div>
+                        <div class="component-item">
+                            <i class="fas fa-server text-3xl text-red-600 mb-2"></i>
+                            <p class="font-bold text-lg mb-1" data-i18n="intro.cgw_title">Customer Gateway (CGW)</p>
+                            <p class="text-sm" data-i18n="intro.cgw_desc">
+                                Đại diện cho thiết bị vật lý hoặc phần mềm ở phía mạng công ty. AWS duy trì danh sách các thiết bị **CGW đã được kiểm tra và hỗ trợ** để đảm bảo tương thích.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 2. Customer Gateway Setup and IP Types -->
+            <section id="cgw-setup" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="cgw.title">2. Thiết Lập Thiết Bị Customer Gateway</h2>
+                <div class="card">
+                    <p data-i18n="cgw.p1" class="mb-4">
+                        Địa chỉ IP được sử dụng khi cấu hình thiết bị CGW phụ thuộc vào môi trường của thiết bị đó:
+                    </p>
+                    <ul class="list-disc ml-5 space-y-3 text-base">
+                        <li data-i18n="cgw.ip1">
+                            Nếu CGW có **public, internet-routable IP address**, địa chỉ IP công cộng này được sử dụng để thiết lập kết nối giữa VGW và CGW.
+                        </li>
+                        <li data-i18n="cgw.ip2">
+                            Nếu CGW có **private IP address**, nó thường nằm sau thiết bị NAT với **NAT Traversal (NAT-T)** được bật. Trong trường hợp này, IP công cộng của thiết bị NAT sẽ được sử dụng cho kết nối VPN.
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 3. Exam Notes (Critical Points) -->
+            <section id="exam-notes" class="mb-10">
+                <h2 class="text-3xl section-header mb-6 text-orange-600" data-i18n="exam.title">3. Lưu Ý Quan Trọng Khi Thi Cử <i class="fas fa-exclamation-triangle text-orange-500"></i></h2>
+                <div class="card exam-note">
+                    <ul class="list-disc ml-5 space-y-4 text-base font-medium">
+                        <li data-i18n="exam.note1">
+                            Kết nối Site-to-Site VPN **sẽ không hoạt động** cho đến khi **route propagation** được bật trong các bảng định tuyến (route tables) VPC cho các subnet liên quan.
+                        </li>
+                        <li data-i18n="exam.note2">
+                            Để cho phép lưu lượng ping (ICMP) từ on-premises tới các phiên bản EC2 trên AWS, bạn phải đảm bảo rằng **ICMP protocol được bật Inbound** trong security group đính kèm vào các phiên bản đó.
+                        </li>
+                    </ul>
+                </div>
+            </section>
+            
+            <!-- 4. AWS VPN CloudHub -->
+            <section id="cloudhub" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="cloudhub.title">4. AWS VPN CloudHub</h2>
+                <div class="card cloudhub-box">
+                    <p data-i18n="cloudhub.p1" class="mb-4">
+                        **AWS VPN CloudHub** cho phép nhiều mạng khách hàng hoặc trung tâm dữ liệu (mỗi nơi có CGW riêng) giao tiếp an toàn thông qua một **Virtual Private Gateway** duy nhất của VPC.
+                    </p>
+                    <p data-i18n="cloudhub.p2" class="mb-4">
+                        Đây là mô hình **hub-and-spoke** chi phí thấp để kết nối mạng chính hoặc mạng phụ giữa các địa điểm khác nhau, chỉ sử dụng kết nối VPN đã được mã hóa.
+                    </p>
+
+                    <h3 class="text-xl font-bold mt-4 mb-3 text-blue-700" data-i18n="cloudhub.config_title">Cấu Hình CloudHub</h3>
+                    <ol class="list-decimal ml-5 space-y-2 text-sm">
+                        <li data-i18n="cloudhub.config1">Thiết lập nhiều kết nối Site-to-Site VPN trên **cùng một Virtual Private Gateway**.</li>
+                        <li data-i18n="cloudhub.config2">Bật **dynamic routing** (định tuyến động).</li>
+                        <li data-i18n="cloudhub.config3">Cấu hình các bảng định tuyến (route tables) VPC phù hợp.</li>
+                    </ol>
+                </div>
+            </section>
+
+            <hr class="my-10 border-gray-300">
+
+            <!-- Key Takeaways -->
+            <section id="key-takeaways" class="mb-12 text-center">
+                <h2 class="text-3xl font-extrabold text-green-700 inline-block pb-1 mb-6" data-i18n="checklist.title">TÓM TẮT ĐIỂM CHÍNH</h2>
+                <div class="p-6 space-y-4 bg-green-50 border-2 border-green-300 rounded-xl mx-auto max-w-4xl">
+                    <ul class="space-y-3 text-left">
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p1">
+                            <i class="fas fa-lock text-green-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Site-to-site VPN** tạo kết nối **mã hóa** giữa VPC và data center qua Internet công cộng.
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p2">
+                            <i class="fas fa-handshake text-green-600 mt-1 mr-3 flex-shrink-0"></i>
+                            Cần **VGW** (phía AWS) và thiết bị **CGW** (phía công ty).
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p3">
+                            <i class="fas fa-code-branch text-green-600 mt-1 mr-3 flex-shrink-0"></i>
+                            Để VPN hoạt động, **route propagation** phải được **bật** trong bảng định tuyến VPC.
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p4">
+                            <i class="fas fa-project-diagram text-green-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **VPN CloudHub** cho phép nhiều mạng khách hàng giao tiếp qua **một VGW** duy nhất (mô hình hub-and-spoke).
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        const translations = {
+            vi: {
+                header: {
+                    title: "AWS Site-to-Site VPN",
+                    subtitle: "Kết nối an toàn VPC với Mạng On-premises"
+                },
+                intro: {
+                    title: "1. Giới Thiệu Site-to-Site VPN",
+                    p1: "<strong>Site-to-Site VPN</strong> cho phép kết nối <strong>VPC</strong> của AWS với trung tâm dữ liệu (corporate data center) của công ty bạn bằng một kết nối riêng tư, <strong>đã được mã hóa</strong> thông qua Internet công cộng.",
+                    p2: "Kết nối này thiết lập một đường hầm bảo mật, cho phép giao tiếp an toàn giữa hai mạng.",
+                    components_title: "Các Thành Phần Cốt Lõi",
+                    vgw_title: "Virtual Private Gateway (VGW)",
+                    vgw_desc: "Hoạt động như một bộ tập trung VPN (VPN concentrator) ở phía <strong>AWS VPC</strong>. VGW được tạo và đính kèm vào VPC. Bạn cũng có thể tùy chỉnh <strong>Autonomous System Number (ASN)</strong> nếu cần.",
+                    cgw_title: "Customer Gateway (CGW)",
+                    cgw_desc: "Đại diện cho thiết bị vật lý hoặc phần mềm ở phía mạng công ty. AWS duy trì danh sách các thiết bị <strong>CGW đã được kiểm tra và hỗ trợ</strong> để đảm bảo tương thích."
+                },
+                cgw: {
+                    title: "2. Thiết Lập Thiết Bị Customer Gateway",
+                    p1: "Địa chỉ IP được sử dụng khi cấu hình thiết bị CGW phụ thuộc vào môi trường của thiết bị đó:",
+                    ip1: "Nếu CGW có <strong>public, internet-routable IP address</strong>, địa chỉ IP công cộng này được sử dụng để thiết lập kết nối giữa VGW và CGW.",
+                    ip2: "Nếu CGW có <strong>private IP address</strong>, nó thường nằm sau thiết bị NAT với <strong>NAT Traversal (NAT-T)</strong> được bật. Trong trường hợp này, IP công cộng của thiết bị NAT sẽ được sử dụng cho kết nối VPN."
+                },
+                exam: {
+                    title: "3. Lưu Ý Quan Trọng Khi Thi Cử",
+                    note1: "Kết nối Site-to-Site VPN <strong>sẽ không hoạt động</strong> cho đến khi <strong>route propagation</strong> được bật trong các bảng định tuyến (route tables) VPC cho các subnet liên quan.",
+                    note2: "Để cho phép lưu lượng ping (ICMP) từ on-premises tới các phiên bản EC2 trên AWS, bạn phải đảm bảo rằng <strong>ICMP protocol được bật Inbound</strong> trong security group đính kèm vào các phiên bản đó."
+                },
+                cloudhub: {
+                    title: "4. AWS VPN CloudHub",
+                    p1: "<strong>AWS VPN CloudHub</strong> cho phép nhiều mạng khách hàng hoặc trung tâm dữ liệu (mỗi nơi có CGW riêng) giao tiếp an toàn thông qua một <strong>Virtual Private Gateway</strong> duy nhất của VPC.",
+                    p2: "Đây là mô hình **hub-and-spoke** chi phí thấp để kết nối mạng chính hoặc mạng phụ giữa các địa điểm khác nhau, chỉ sử dụng kết nối VPN đã được mã hóa.",
+                    config_title: "Cấu Hình CloudHub",
+                    config1: "Thiết lập nhiều kết nối Site-to-Site VPN trên <strong>cùng một Virtual Private Gateway</strong>.",
+                    config2: "Bật <strong>dynamic routing</strong> (định tuyến động).",
+                    config3: "Cấu hình các bảng định tuyến (route tables) VPC phù hợp."
+                },
+                checklist: {
+                    title: "TÓM TẮT ĐIỂM CHÍNH",
+                    p1: "<strong>Site-to-site VPN</strong> tạo kết nối **mã hóa** giữa VPC và data center qua Internet công cộng.",
+                    p2: "Cần **VGW** (phía AWS) và thiết bị **CGW** (phía công ty).",
+                    p3: "Để VPN hoạt động, **route propagation** phải được **bật** trong bảng định tuyến VPC.",
+                    p4: "<strong>VPN CloudHub</strong> cho phép nhiều mạng khách hàng giao tiếp qua **một VGW** duy nhất (mô hình hub-and-spoke)."
+                }
+            },
+            en: {
+                header: {
+                    title: "AWS Site-to-Site VPN",
+                    subtitle: "Securely Connecting VPC to On-premises Network"
+                },
+                intro: {
+                    title: "1. Introduction to Site-to-Site VPN",
+                    p1: "The concept of <strong>Site-to-Site VPN</strong> involves connecting an AWS <strong>VPC</strong> to a corporate data center using a private, <strong>encrypted connection</strong> over the public internet.",
+                    p2: "This setup establishes a secure tunnel, enabling secure communication between the two networks.",
+                    components_title: "Core Components",
+                    vgw_title: "Virtual Private Gateway (VGW)",
+                    vgw_desc: "Acts as a VPN concentrator on the **AWS VPC** side of the VPN connection. The VGW is created and attached to the VPC. It is also possible to customize the **Autonomous System Number (ASN)** if needed.",
+                    cgw_title: "Customer Gateway (CGW)",
+                    cgw_desc: "Represents the physical or software device on the corporate data center side. AWS maintains a list of **tested and supported CGW devices** to ensure compatibility."
+                },
+                cgw: {
+                    title: "2. Customer Gateway Device Setup",
+                    p1: "The IP address used when configuring the customer gateway device depends on whether the device has a public or private IP:",
+                    ip1: "If the CGW has a **public, internet-routable IP address**, this public IP is used to establish connectivity between the VGW and CGW.",
+                    ip2: "If the CGW has a **private IP address**, it is typically behind a NAT device with **NAT Traversal (NAT-T)** enabled. In this case, the public IP of the NAT device is used for the VPN connection."
+                },
+                exam: {
+                    title: "3. Important Exam Notes <i class=\"fas fa-exclamation-triangle text-orange-500\"></i>",
+                    note1: "The Site-to-Site VPN connection **will not function** until **route propagation** is enabled in the VPC route tables for the relevant subnets.",
+                    note2: "To allow ping (ICMP) traffic from on-premises to AWS EC2 instances, ensure that the **ICMP protocol is enabled Inbound** in the security group attached to the instances."
+                },
+                cloudhub: {
+                    title: "4. AWS VPN CloudHub",
+                    p1: "<strong>AWS VPN CloudHub</strong> allows multiple customer networks or data centers (each with their own CGW) to securely communicate through a single VPC's **Virtual Private Gateway**.",
+                    p2: "This setup follows a low-cost **hub-and-spoke** model for primary or secondary network connectivity between different locations, using only encrypted VPN connections.",
+                    config_title: "CloudHub Configuration",
+                    config1: "Set up multiple Site-to-Site VPN connections on the **same virtual private gateway**.",
+                    config2: "Enable **dynamic routing**.",
+                    config3: "Configure VPC route tables accordingly."
+                },
+                checklist: {
+                    title: "KEY TAKEAWAYS SUMMARY",
+                    p1: "<strong>Site-to-site VPN</strong> creates an **encrypted** connection between a VPC and a data center over the public internet.",
+                    p2: "Requires a **VGW** (on the AWS side) and a **CGW** device (on the corporate side).",
+                    p3: "For the VPN to function, **route propagation** must be **enabled** in the VPC route table.",
+                    p4: "<strong>VPN CloudHub</strong> allows multiple customer networks to communicate through a **single VGW** (hub-and-spoke model)."
+                }
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default language
+
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+
+        function getNestedTranslation(obj, path) {
+            return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+        }
+
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const translatedText = getNestedTranslation(translations[currentLanguage], key);
+                if (translatedText) {
+                    // Sử dụng innerHTML để hiển thị đúng các thẻ HTML như <strong> và <i>
+                    element.innerHTML = translatedText; 
+                }
+            });
+            document.querySelector('html').setAttribute('lang', currentLanguage);
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            // Sử dụng màu Green cho nút active
+            const activeClass = 'bg-green-600 text-white';
+            const inactiveClass = 'bg-gray-200 text-gray-700';
+
+            if (currentLanguage === 'vi') {
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            } else {
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

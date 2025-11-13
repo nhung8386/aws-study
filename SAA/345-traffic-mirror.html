@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">VPC Traffic Mirroring: Phân Tích Lưu Lượng Mạng</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Be+Vietnam+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', 'Inter', sans-serif;
+            background-color: #f7fee7; /* Lime 50 - Security/Inspection Theme */
+            color: #1e293b; /* Slate 800 */
+        }
+        .container {
+            max-width: 1100px;
+        }
+        .header-title {
+            color: #4d7c0f; /* Lime 700 */
+            border-bottom: 4px solid #a3e635; /* Lime 400 */
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+        }
+        .section-header {
+            color: #65a30d; /* Lime 600 */
+            font-weight: 700;
+        }
+
+        /* Ứng dụng styling cho <strong> trong nội dung dịch */
+        .card strong {
+            font-weight: 700;
+            color: #4d7c0f; /* Green for security focus */
+        }
+        
+        /* Diagram Styling (Focus on Duplication) */
+        .mirror-diagram {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 2rem 0;
+            position: relative;
+        }
+
+        .diagram-box {
+            background-color: #ecfccb; /* Lime 100 */
+            border: 3px solid #84cc16; /* Lime 500 */
+            padding: 1rem;
+            border-radius: 0.75rem;
+            text-align: center;
+            width: 30%;
+            min-width: 150px;
+            font-weight: 600;
+            position: relative;
+        }
+        
+        .source-box {
+            background-color: #fff7ed;
+            border-color: #f97316; /* Orange - Original Traffic */
+        }
+
+        .target-box {
+            background-color: #f0f9ff;
+            border-color: #3b82f6; /* Blue - Inspection Target */
+        }
+
+        .mirror-line {
+            position: absolute;
+            top: 50%;
+            left: 30%;
+            width: 40%;
+            height: 0;
+            border-top: 2px dashed #4d7c0f; /* Mirrored Traffic Line */
+            z-index: 10;
+        }
+        .mirror-line::before, .mirror-line::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #4d7c0f;
+            border-radius: 50%;
+            top: -4px;
+        }
+        .mirror-line::before { left: 0; }
+        .mirror-line::after { right: 0; }
+
+        .original-flow {
+            position: absolute;
+            top: 30%; /* Cao hơn */
+            left: 5%;
+            width: 30%;
+            border-top: 3px solid #f97316; /* Original Traffic Line (Orange) */
+            transition: all 0.5s ease-in-out;
+        }
+
+        .original-flow::after {
+            content: 'Traffic Gốc';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            color: #f97316;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .mirror-diagram {
+                flex-direction: column;
+            }
+            .diagram-box {
+                width: 80%;
+                margin-bottom: 2rem;
+            }
+            .mirror-line, .original-flow {
+                display: none; /* Hide complex lines on mobile */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-4 md:p-10">
+        <header class="text-center mb-12 relative">
+            <h1 class="text-4xl md:text-5xl font-extrabold header-title inline-block pb-1" data-i18n="header.title">
+                <i class="fas fa-eye mr-3"></i> VPC Traffic Mirroring
+            </h1>
+            <p class="text-lg text-gray-500 mt-2" data-i18n="header.subtitle">Giám sát và Phân tích Mạng Không Gây Gián Đoạn</p>
+
+            <!-- Nút chuyển đổi ngôn ngữ -->
+            <div class="absolute top-0 right-0 mt-4 mr-4 flex space-x-2">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-md bg-lime-600 text-white font-semibold text-sm lang-button">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-md bg-gray-200 text-gray-700 font-semibold text-sm lang-button">EN</button>
+            </div>
+
+        </header>
+
+        <main>
+            <!-- 1. Overview and Problem Solved -->
+            <section id="overview" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="overview.title">1. Giới Thiệu Tính Năng</h2>
+                <div class="card">
+                    <p data-i18n="overview.p1" class="mb-4">
+                        **VPC Traffic Mirroring** là một tính năng bảo mật mạnh mẽ được thiết kế để **thu thập và kiểm tra** lưu lượng mạng bên trong một **Virtual Private Cloud (VPC)** mà **không làm gián đoạn** hoạt động bình thường của nó.
+                    </p>
+                    <p data-i18n="overview.p2">
+                        Ý tưởng chính là chuyển hướng một bản sao của lưu lượng mạng tới các **thiết bị bảo mật** (security appliances) mà chúng ta quản lý để phân tích chi tiết.
+                    </p>
+                </div>
+            </section>
+
+            <!-- 2. The Mirroring Process (Diagram Section) -->
+            <section id="process" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="process.title">2. Mô Hình Hoạt Động Của Traffic Mirroring</h2>
+                <div class="card bg-gray-50">
+                    <div class="mirror-diagram">
+                        <!-- Source Box -->
+                        <div class="diagram-box source-box">
+                            <i class="fas fa-server text-3xl mb-2 text-orange-600"></i>
+                            <p data-i18n="process.source_title">NGUỒN (SOURCE)</p>
+                            <span class="text-sm font-normal" data-i18n="process.source_desc">EC2 Instance / ENI</span>
+                        </div>
+
+                        <!-- Mirroring Icon -->
+                        <div class="relative flex flex-col items-center justify-center w-1/4">
+                            <i class="fas fa-copy text-4xl text-lime-600 animate-pulse"></i>
+                            <p class="text-xs mt-1 font-semibold text-lime-700" data-i18n="process.mirror_label">Traffic Duplication</p>
+                        </div>
+
+                        <!-- Target Box -->
+                        <div class="diagram-box target-box">
+                            <i class="fas fa-shield-alt text-3xl mb-2 text-blue-600"></i>
+                            <p data-i18n="process.target_title">ĐÍCH (TARGET)</p>
+                            <span class="text-sm font-normal" data-i18n="process.target_desc">NLB / Security Appliance</span>
+                        </div>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-6 mt-8">
+                        <div class="p-4 bg-gray-100 rounded-lg">
+                            <h3 class="font-bold text-lg mb-2 text-orange-600" data-i18n="process.original_flow_title">Luồng Gốc (Original Flow)</h3>
+                            <p data-i18n="process.original_flow_p">Lưu lượng truy cập **Internet Inbound/Outbound** tiếp tục đi đến EC2 Instance như bình thường. Hiệu suất của Instance **không bị ảnh hưởng**.</p>
+                        </div>
+                        <div class="p-4 bg-gray-100 rounded-lg">
+                            <h3 class="font-bold text-lg mb-2 text-lime-600" data-i18n="process.mirrored_flow_title">Luồng Sao Chép (Mirrored Flow)</h3>
+                            <p data-i18n="process.mirrored_flow_p">Một **bản sao (duplicate)** chính xác của các gói tin được gửi đến Network Load Balancer (NLB) để phân tích, cho phép **giám sát liên tục**.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 3. Configuration and Flexibility -->
+            <section id="config" class="mb-10">
+                <h2 class="text-3xl section-header mb-6" data-i18n="config.title">3. Cấu Hình & Tính Linh Hoạt</h2>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <!-- Source/Target -->
+                    <div class="card bg-green-50 border-2 border-green-200">
+                        <h3 class="text-xl font-bold mb-3 text-green-700" data-i18n="config.source_target_title"><i class="fas fa-sliders-h mr-2"></i> Nguồn & Đích (Source & Target)</h3>
+                        <p class="font-semibold mb-1" data-i18n="config.source_label">Nguồn (Source):</p>
+                        <ul class="list-disc ml-5 space-y-1 text-sm mb-3">
+                            <li data-i18n="config.source_item">**Elastic Network Interfaces (ENIs)** của EC2.</li>
+                            <li data-i18n="config.source_multi">Hỗ trợ **nhiều nguồn ENI** đến cùng một đích.</li>
+                        </ul>
+                        <p class="font-semibold mb-1" data-i18n="config.target_label">Đích (Target):</p>
+                        <ul class="list-disc ml-5 space-y-1 text-sm">
+                            <li data-i18n="config.target_item1">ENI riêng (Dedicated ENI).</li>
+                            <li data-i18n="config.target_item2">**Network Load Balancer (NLB)** (thường được dùng cho các nhóm bảo mật Auto Scaling).</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Filtering -->
+                    <div class="card bg-green-50 border-2 border-green-200">
+                        <h3 class="text-xl font-bold mb-3 text-green-700" data-i18n="config.filter_title"><i class="fas fa-filter mr-2"></i> Bộ Lọc Lưu Lượng (Filters)</h3>
+                        <p data-i18n="config.filter_p1" class="mb-3">
+                            Bộ lọc là **Tùy chọn (Optional)** nhưng rất quan trọng để giảm thiểu dữ liệu sao chép và **tiết kiệm chi phí**.
+                        </p>
+                        <p class="font-semibold mb-1" data-i18n="config.filter_use">Có thể lọc theo:</p>
+                        <ul class="list-disc ml-5 space-y-1 text-sm">
+                            <li data-i18n="config.filter_item1">**Giao thức (Protocol)** (TCP, UDP, ICMP).</li>
+                            <li data-i18n="config.filter_item2">**Cổng nguồn/đích (Source/Destination Port)**.</li>
+                            <li data-i18n="config.filter_item3">**Dải CIDR** nguồn/đích.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Cross VPC/Use Cases -->
+                    <div class="card bg-green-50 border-2 border-green-200">
+                        <h3 class="text-xl font-bold mb-3 text-green-700" data-i18n="config.usecase_title"><i class="fas fa-link mr-2"></i> Yêu Cầu & Trường Hợp Sử Dụng</h3>
+                        <p class="font-semibold mb-1" data-i18n="config.requirements_label">Yêu Cầu Kết Nối:</p>
+                        <p data-i18n="config.requirements_p1" class="text-sm mb-3">
+                            Nguồn và Đích phải ở **cùng VPC** hoặc trong các VPC được kết nối qua **VPC Peering**.
+                        </p>
+                        <p class="font-semibold mb-1" data-i18n="config.usecase_label">Các Trường Hợp Sử Dụng Phổ Biến:</p>
+                        <ul class="list-disc ml-5 space-y-1 text-sm">
+                            <li data-i18n="config.usecase_item1">**Content Inspection** (Kiểm tra nội dung).</li>
+                            <li data-i18n="config.usecase_item2">**Threat Monitoring** (Giám sát mối đe dọa).</li>
+                            <li data-i18n="config.usecase_item3">**Network Troubleshooting** (Khắc phục sự cố mạng).</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="my-10 border-gray-300">
+
+            <!-- Key Takeaways -->
+            <section id="key-takeaways" class="mb-12 text-center">
+                <h2 class="text-3xl font-extrabold text-lime-700 inline-block pb-1 mb-6" data-i18n="checklist.title">TÓM TẮT CÁC ĐIỂM CHÍNH</h2>
+                <div class="p-6 space-y-4 bg-lime-100 border-2 border-lime-300 rounded-xl mx-auto max-w-4xl">
+                    <ul class="space-y-3 text-left">
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p1">
+                            <i class="fas fa-shield-alt text-lime-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Mục đích:** Thu thập và kiểm tra lưu lượng mạng một cách **không gây gián đoạn (non-intrusive)**.
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p2">
+                            <i class="fas fa-exchange-alt text-lime-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Thành phần:** Lưu lượng từ **ENI nguồn** được sao chép đến **NLB** hoặc **ENI đích**.
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p3">
+                            <i class="fas fa-compress-arrows-alt text-lime-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Linh hoạt:** Có thể áp dụng **bộ lọc** để chỉ thu thập lưu lượng **cụ thể**, giảm chi phí và khối lượng dữ liệu.
+                        </li>
+                        <li class="text-gray-800 flex items-start" data-i18n="checklist.p4">
+                            <i class="fas fa-project-diagram text-lime-600 mt-1 mr-3 flex-shrink-0"></i>
+                            **Phạm vi:** Hoạt động trong cùng VPC hoặc **giữa các VPC** được kết nối qua VPC Peering.
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const translations = {
+            vi: {
+                header: {
+                    title: "VPC Traffic Mirroring: Phân Tích Lưu Lượng Mạng",
+                    subtitle: "Giám sát và Phân tích Mạng Không Gây Gián Đoạn"
+                },
+                overview: {
+                    title: "1. Giới Thiệu Tính Năng",
+                    p1: "**VPC Traffic Mirroring** là một tính năng bảo mật mạnh mẽ được thiết kế để **thu thập và kiểm tra** lưu lượng mạng bên trong một **Virtual Private Cloud (VPC)** mà **không làm gián đoạn** hoạt động bình thường của nó.",
+                    p2: "Ý tưởng chính là chuyển hướng một bản sao của lưu lượng mạng tới các **thiết bị bảo mật** (security appliances) mà chúng ta quản lý để phân tích chi tiết."
+                },
+                process: {
+                    title: "2. Mô Hình Hoạt Động Của Traffic Mirroring",
+                    source_title: "NGUỒN (SOURCE)",
+                    source_desc: "EC2 Instance / ENI",
+                    target_title: "ĐÍCH (TARGET)",
+                    target_desc: "NLB / Security Appliance",
+                    mirror_label: "Traffic Duplication",
+                    original_flow_title: "Luồng Gốc (Original Flow)",
+                    original_flow_p: "Lưu lượng truy cập **Internet Inbound/Outbound** tiếp tục đi đến EC2 Instance như bình thường. Hiệu suất của Instance **không bị ảnh hưởng**.",
+                    mirrored_flow_title: "Luồng Sao Chép (Mirrored Flow)",
+                    mirrored_flow_p: "Một **bản sao (duplicate)** chính xác của các gói tin được gửi đến Network Load Balancer (NLB) để phân tích, cho phép **giám sát liên tục**."
+                },
+                config: {
+                    title: "3. Cấu Hình & Tính Linh Hoạt",
+                    source_target_title: "<i class=\"fas fa-sliders-h mr-2\"></i> Nguồn & Đích (Source & Target)",
+                    source_label: "Nguồn (Source):",
+                    source_item: "**Elastic Network Interfaces (ENIs)** của EC2.",
+                    source_multi: "Hỗ trợ **nhiều nguồn ENI** đến cùng một đích.",
+                    target_label: "Đích (Target):",
+                    target_item1: "ENI riêng (Dedicated ENI).",
+                    target_item2: "**Network Load Balancer (NLB)** (thường được dùng cho các nhóm bảo mật Auto Scaling).",
+                    filter_title: "<i class=\"fas fa-filter mr-2\"></i> Bộ Lọc Lưu Lượng (Filters)",
+                    filter_p1: "Bộ lọc là **Tùy chọn (Optional)** nhưng rất quan trọng để giảm thiểu dữ liệu sao chép và **tiết kiệm chi phí**.",
+                    filter_use: "Có thể lọc theo:",
+                    filter_item1: "**Giao thức (Protocol)** (TCP, UDP, ICMP).",
+                    filter_item2: "**Cổng nguồn/đích (Source/Destination Port)**.",
+                    filter_item3: "**Dải CIDR** nguồn/đích.",
+                    usecase_title: "<i class=\"fas fa-link mr-2\"></i> Yêu Cầu & Trường Hợp Sử Dụng",
+                    requirements_label: "Yêu Cầu Kết Nối:",
+                    requirements_p1: "Nguồn và Đích phải ở **cùng VPC** hoặc trong các VPC được kết nối qua **VPC Peering**.",
+                    usecase_label: "Các Trường Hợp Sử Dụng Phổ Biến:",
+                    usecase_item1: "**Content Inspection** (Kiểm tra nội dung).",
+                    usecase_item2: "**Threat Monitoring** (Giám sát mối đe dọa).",
+                    usecase_item3: "**Network Troubleshooting** (Khắc phục sự cố mạng)."
+                },
+                checklist: {
+                    title: "TÓM TẮT CÁC ĐIỂM CHÍNH",
+                    p1: "**Mục đích:** Thu thập và kiểm tra lưu lượng mạng một cách **không gây gián đoạn (non-intrusive)**.",
+                    p2: "**Thành phần:** Lưu lượng từ **ENI nguồn** được sao chép đến **NLB** hoặc **ENI đích**.",
+                    p3: "**Linh hoạt:** Có thể áp dụng **bộ lọc** để chỉ thu thập lưu lượng **cụ thể**, giảm chi phí và khối lượng dữ liệu.",
+                    p4: "**Phạm vi:** Hoạt động trong cùng VPC hoặc **giữa các VPC** được kết nối qua VPC Peering."
+                }
+            },
+            en: {
+                header: {
+                    title: "VPC Traffic Mirroring: Network Traffic Analysis",
+                    subtitle: "Non-Intrusive Network Monitoring and Inspection"
+                },
+                overview: {
+                    title: "1. Feature Introduction",
+                    p1: "**VPC Traffic Mirroring** is a powerful security feature designed to **capture and inspect** network traffic within a **Virtual Private Cloud (VPC)** without **disrupting** its normal operations.",
+                    p2: "The main idea is to route a copy of the network traffic to **security appliances** that we manage for detailed analysis."
+                },
+                process: {
+                    title: "2. The Traffic Mirroring Operation Model",
+                    source_title: "SOURCE",
+                    source_desc: "EC2 Instance / ENI",
+                    target_title: "TARGET",
+                    target_desc: "NLB / Security Appliance",
+                    mirror_label: "Traffic Duplication",
+                    original_flow_title: "Original Flow",
+                    original_flow_p: "The **Inbound/Outbound Internet traffic** continues to flow to the EC2 Instance normally. The Instance's performance **is not affected**.",
+                    mirrored_flow_title: "Mirrored Flow",
+                    mirrored_flow_p: "An exact **duplicate** of the packets is sent to the Network Load Balancer (NLB) for analysis, enabling **continuous monitoring**."
+                },
+                config: {
+                    title: "3. Configuration & Flexibility",
+                    source_target_title: "<i class=\"fas fa-sliders-h mr-2\"></i> Source & Target",
+                    source_label: "Source:",
+                    source_item: "**Elastic Network Interfaces (ENIs)** of EC2.",
+                    source_multi: "Supports **multiple ENI sources** to a single target.",
+                    target_label: "Target:",
+                    target_item1: "Dedicated ENI.",
+                    target_item2: "**Network Load Balancer (NLB)** (commonly used for Auto Scaling security groups).",
+                    filter_title: "<i class=\"fas fa-filter mr-2\"></i> Traffic Filters",
+                    filter_p1: "Filters are **Optional** but are crucial for minimizing copied data and **saving costs**.",
+                    filter_use: "Filtering options include:",
+                    filter_item1: "**Protocol** (TCP, UDP, ICMP).",
+                    filter_item2: "**Source/Destination Port**.",
+                    filter_item3: "Source/Destination **CIDR range**.",
+                    usecase_title: "<i class=\"fas fa-link mr-2\"></i> Requirements & Use Cases",
+                    requirements_label: "Connectivity Requirement:",
+                    requirements_p1: "Source and Target must be in the **same VPC** or in VPCs connected via **VPC Peering**.",
+                    usecase_label: "Common Use Cases:",
+                    usecase_item1: "**Content Inspection**.",
+                    usecase_item2: "**Threat Monitoring**.",
+                    usecase_item3: "**Network Troubleshooting**."
+                },
+                checklist: {
+                    title: "KEY TAKEAWAYS SUMMARY",
+                    p1: "**Purpose:** Capture and inspect network traffic in a **non-intrusive** manner.",
+                    p2: "**Components:** Traffic from the **source ENI** is mirrored to the **NLB** or **target ENI**.",
+                    p3: "**Flexibility:** **Filters** can be applied to capture **specific** traffic, reducing cost and data volume.",
+                    p4: "**Scope:** Works within the same VPC or **across VPCs** with VPC Peering enabled."
+                }
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default language
+
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+
+        function getNestedTranslation(obj, path) {
+            return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+        }
+
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const translatedText = getNestedTranslation(translations[currentLanguage], key);
+                if (translatedText) {
+                    // Sử dụng innerHTML để hiển thị đúng các thẻ HTML như <strong> và <i>
+                    element.innerHTML = translatedText;
+                }
+            });
+            document.querySelector('html').setAttribute('lang', currentLanguage);
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            // Sử dụng màu Lime cho nút active (Theme bảo mật)
+            const activeClass = 'bg-lime-600 text-white';
+            const inactiveClass = 'bg-gray-200 text-gray-700';
+
+            if (currentLanguage === 'vi') {
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            } else {
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

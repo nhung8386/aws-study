@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">Tổng Quan về AWS Network Firewall</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fd; /* Light Slate/Indigo - Security Theme */
+            color: #1f2937; /* Gray 800 */
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .header-title {
+            color: #4338ca; /* Indigo 700 */
+            border-bottom: 4px solid #a5b4fc; /* Indigo 300 */
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            height: 100%;
+            border: 1px solid #c7d2fe; /* Light Indigo border */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 20px -5px rgba(0, 0, 0, 0.15);
+        }
+        .section-header {
+            color: #4f46e5; /* Indigo 600 */
+            font-weight: 800;
+        }
+        
+        /* Styling cho <strong> để hiển thị in đậm và nổi bật */
+        .content-card strong, .takeaways-list strong {
+            font-weight: 800;
+            color: #10b981; /* Emerald 500 - Highlight Security Terms */
+        }
+
+        .icon-box {
+            background-color: #e0e7ff; /* Indigo 100 */
+            color: #6366f1; /* Indigo 500 */
+            width: 3.5rem;
+            height: 3.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-4 md:p-10">
+        <header class="text-center mb-12 relative">
+            <h1 class="text-4xl md:text-5xl font-extrabold header-title inline-block pb-1" data-i18n="header.title">
+                <i class="fas fa-shield-alt mr-3"></i> Tổng Quan về AWS Network Firewall
+            </h1>
+            <p class="text-lg text-gray-500 mt-2" data-i18n="header.subtitle">Bảo vệ toàn bộ VPC từ Tầng 3 đến Tầng 7.</p>
+
+            <!-- Language Toggle Buttons -->
+            <div class="absolute top-0 right-0 mt-4 mr-4 flex space-x-2">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-md bg-indigo-600 text-white font-semibold text-sm lang-button">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-md bg-gray-200 text-gray-700 font-semibold text-sm lang-button">EN</button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Introduction -->
+            <section id="introduction" class="mb-10">
+                <div class="card p-6 bg-white shadow-xl content-card">
+                    <h2 class="text-3xl section-header mb-4" data-i18n="intro.title">Tổng Quan về Các Tùy Chọn Bảo Vệ Mạng</h2>
+                    <p data-i18n="intro.p1" class="text-lg mb-4">
+                        Cho đến nay, chúng ta đã khám phá một số cách để bảo vệ mạng của bạn trên AWS. Chúng bao gồm <strong>Network Access Control Lists (NACLs)</strong>, <strong>Amazon VPC security groups</strong> và <strong>AWS WAF</strong> (bảo vệ chống lại các yêu cầu HTTP độc hại). Ngoài ra, <strong>AWS Shield</strong> và <strong>Shield Advanced</strong> cung cấp khả năng bảo vệ chống lại các cuộc tấn công <strong>DDoS</strong>. <strong>AWS Firewall Manager</strong> giúp quản lý các quy tắc cho WAF, Shield và các dịch vụ khác trên nhiều tài khoản.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Network Firewall Core -->
+            <section id="network-firewall-core" class="mb-10">
+                <h2 class="text-3xl section-header mb-6"><i class="fas fa-network-wired mr-2"></i> <span data-i18n="core.title">Giới Thiệu AWS Network Firewall</span></h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- What it is -->
+                    <div class="card content-card border-l-4 border-indigo-400">
+                        <div class="icon-box"><i class="fas fa-hand-rock text-xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-indigo-700" data-i18n="core1.title">Bảo Vệ Toàn Diện</h3>
+                        <p data-i18n="core1.p1">
+                            AWS Network Firewall được thiết kế để bảo vệ <strong>toàn bộ VPC</strong> của bạn bằng một bức tường lửa bao quanh nó hoàn toàn. Nó cung cấp sự bảo vệ từ <strong>tầng 3</strong> đến <strong>tầng 7</strong>.
+                        </p>
+                        <p data-i18n="core1.p2" class="text-sm italic text-gray-500">
+                            Điều này có nghĩa là bạn có thể kiểm tra bất kỳ loại lưu lượng nào ở bất kỳ hướng nào.
+                        </p>
+                    </div>
+
+                    <!-- Traffic Coverage -->
+                    <div class="card content-card border-l-4 border-indigo-400">
+                        <div class="icon-box"><i class="fas fa-arrows-alt-h text-xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-indigo-700" data-i18n="core2.title">Phạm Vi Lưu Lượng</h3>
+                        <p data-i18n="core2.p1">
+                            Tường lửa bảo vệ tất cả lưu lượng đi vào và đi ra giữa:
+                        </p>
+                        <ul class="list-disc ml-5 space-y-1 text-sm">
+                            <li data-i18n="core2.li1">VPC và Internet (Inbound/Outbound)</li>
+                            <li data-i18n="core2.li2">Các <strong>VPC ngang hàng (peered VPCs)</strong>.</li>
+                            <li data-i18n="core2.li3">Kết nối <strong>Direct Connect</strong> và <strong>Site-to-Site VPN</strong>.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Architecture and Management -->
+            <section id="architecture-management" class="mb-10">
+                <h2 class="text-3xl section-header mb-6"><i class="fas fa-cogs mr-2"></i> <span data-i18n="arch.title">Kiến Trúc và Quản Lý</span></h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Architecture -->
+                    <div class="card content-card border-l-4 border-emerald-500">
+                        <div class="icon-box"><i class="fas fa-server text-xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-emerald-700" data-i18n="arch1.title">Kiến Trúc AWS-Managed</h3>
+                        <p data-i18n="arch1.p1">
+                            Nội bộ, AWS Network Firewall sử dụng <strong>AWS Gateway Load Balancer (GLB)</strong>. Thay vì thiết lập các thiết bị bên thứ ba để kiểm tra lưu lượng, AWS quản lý các thiết bị riêng của mình cho mục đích này.
+                        </p>
+                        <p data-i18n="arch1.p2" class="text-sm italic text-gray-500">
+                            Điều này cho phép bạn có các quy tắc tường lửa riêng trong khi dựa vào cơ sở hạ tầng được AWS quản lý hoàn toàn.
+                        </p>
+                    </div>
+
+                    <!-- Central Management -->
+                    <div class="card content-card border-l-4 border-emerald-500">
+                        <div class="icon-box"><i class="fas fa-bezier-curve text-xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-emerald-700" data-i18n="arch2.title">Quản Lý Tập Trung</h3>
+                        <p data-i18n="arch2.p1">
+                            Các quy tắc tường lửa này có thể được quản lý tập trung trên <strong>nhiều tài khoản</strong> và <strong>nhiều VPC</strong> bằng cách sử dụng dịch vụ <strong>AWS Firewall Manager</strong>.
+                        </p>
+                        <p data-i18n="arch2.p2" class="text-sm italic text-gray-500">
+                            Hỗ trợ hàng nghìn quy tắc ở cấp độ VPC.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Fine-Grained Control and Logging -->
+            <section id="control-logging" class="mb-10">
+                <h2 class="text-3xl section-header mb-6"><i class="fas fa-filter mr-2"></i> <span data-i18n="control.title">Kiểm Soát Chi Tiết và Ghi Nhật Ký</span></h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Fine-Grained Control -->
+                    <div class="card content-card border-l-4 border-pink-400">
+                        <div class="icon-box"><i class="fas fa-fingerprint text-xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-pink-700" data-i18n="control1.title">Bộ Lọc Tinh Vi</h3>
+                        <p data-i18n="control1.p1">
+                            Bạn có thể lọc lưu lượng truy cập theo <strong>địa chỉ IP</strong> và <strong>cổng</strong>, hỗ trợ hàng chục nghìn IP. Hỗ trợ các bộ lọc nâng cao:
+                        </p>
+                        <ul class="list-disc ml-5 space-y-1 text-sm">
+                            <li data-i18n="control1.li1">Lọc <strong>giao thức</strong> (ví dụ: vô hiệu hóa SMB outbound).</li>
+                            <li data-i18n="control1.li2">Lọc <strong>cấp độ miền (Domain-level filtering)</strong>.</li>
+                            <li data-i18n="control1.li3">Đối sánh mẫu chung với <strong>biểu thức chính quy (regular expressions)</strong>.</li>
+                        </ul>
+                        <p data-i18n="control1.p4" class="mt-3">
+                            Bạn có thể cấu hình tường lửa để cho phép (<strong>allow</strong>), loại bỏ (<strong>drop</strong>), hoặc cảnh báo (<strong>alert</strong>) đối với lưu lượng truy cập khớp với quy tắc.
+                        </p>
+                    </div>
+
+                    <!-- Intrusion Prevention and Logging -->
+                    <div class="card content-card border-l-4 border-pink-400">
+                        <div class="icon-box"><i class="fas fa-book-reader text-xl"></i></div>
+                        <h3 class="font-bold text-xl mb-3 text-pink-700" data-i18n="control2.title">Ngăn Chặn Xâm Nhập & Ghi Nhật Ký</h3>
+                        <p data-i18n="control2.p1">
+                            Network Firewall bao gồm khả năng kiểm tra luồng chủ động (<strong>active flow inspection</strong>), cung cấp các tính năng ngăn chặn xâm nhập (<strong>Intrusion Prevention</strong>).
+                        </p>
+                        <p data-i18n="control2.p2">
+                            Tất cả các kết quả khớp quy tắc có thể được gửi đến:
+                        </p>
+                        <ul class="list-disc ml-5 space-y-1 text-sm">
+                            <li><strong>Amazon S3</strong></li>
+                            <li><strong>CloudWatch Logs</strong></li>
+                            <li><strong>Kinesis Data Firehose</strong></li>
+                        </ul>
+                        <p data-i18n="control2.p3" class="mt-3 text-sm italic text-gray-500">
+                            Điều này giúp phân tích và giám sát chuyên sâu.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="my-10 border-gray-300">
+
+            <!-- Final Takeaways -->
+            <section id="final-takeaways" class="text-center">
+                <h2 class="text-3xl font-extrabold text-indigo-700 inline-block pb-1 mb-6" data-i18n="final.title"><i class="fas fa-check-circle mr-2"></i> ĐIỂM QUAN TRỌNG CẦN NHỚ</h2>
+                <div class="card takeaways-list mx-auto max-w-4xl p-6 bg-indigo-50 border-2 border-indigo-400">
+                    <ul class="space-y-4 text-left list-disc pl-5">
+                        <li data-i18n="final.p1"><strong>AWS Network Firewall</strong> bảo vệ <strong>toàn bộ VPC</strong> với khả năng kiểm tra lưu lượng từ <strong>tầng 3</strong> đến <strong>tầng 7</strong>.</li>
+                        <li data-i18n="final.p2">Nó hỗ trợ kiểm tra lưu lượng theo <strong>mọi hướng</strong>: VPC sang VPC, Outbound ra Internet, Inbound từ Internet, Direct Connect, và Site-to-Site VPN.</li>
+                        <li data-i18n="final.p3">Kiến trúc sử dụng <strong>AWS Gateway Load Balancer</strong> với các thiết bị do <strong>AWS quản lý</strong>, loại bỏ nhu cầu về thiết bị bên thứ ba.</li>
+                        <li data-i18n="final.p4">Kiểm soát chi tiết bằng cách lọc theo <strong>IP, cổng, giao thức, miền</strong> và <strong>đối sánh mẫu</strong>, với các hành động <strong>allow, drop, hoặc alert</strong>.</li>
+                        <li data-i18n="final.p5"><strong>AWS Firewall Manager</strong> cho phép quản lý tập trung các quy tắc trên <strong>nhiều tài khoản</strong> và <strong>VPC</strong>.</li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const translations = {
+            vi: {
+                header: {
+                    title: "Tổng Quan về AWS Network Firewall",
+                    subtitle: "Bảo vệ toàn bộ VPC từ Tầng 3 đến Tầng 7."
+                },
+                intro: {
+                    title: "Tổng Quan về Các Tùy Chọn Bảo Vệ Mạng",
+                    p1: "Cho đến nay, chúng ta đã khám phá một số cách để bảo vệ mạng của bạn trên AWS. Chúng bao gồm <strong>Network Access Control Lists (NACLs)</strong>, <strong>Amazon VPC security groups</strong> và <strong>AWS WAF</strong> (bảo vệ chống lại các yêu cầu HTTP độc hại). Ngoài ra, <strong>AWS Shield</strong> và <strong>Shield Advanced</strong> cung cấp khả năng bảo vệ chống lại các cuộc tấn công <strong>DDoS</strong>. <strong>AWS Firewall Manager</strong> giúp quản lý các quy tắc cho WAF, Shield và các dịch vụ khác trên nhiều tài khoản."
+                },
+                core: {
+                    title: "Giới Thiệu AWS Network Firewall"
+                },
+                core1: {
+                    title: "Bảo Vệ Toàn Diện",
+                    p1: "AWS Network Firewall được thiết kế để bảo vệ <strong>toàn bộ VPC</strong> của bạn bằng một bức tường lửa bao quanh nó hoàn toàn. Nó cung cấp sự bảo vệ từ <strong>tầng 3</strong> đến <strong>tầng 7</strong>. Điều này có nghĩa là bạn có thể kiểm tra bất kỳ loại lưu lượng nào ở bất kỳ hướng nào, bao gồm lưu lượng VPC sang VPC, lưu lượng outbound ra internet, lưu lượng inbound từ internet, và lưu lượng đến và đi từ kết nối Direct Connect và Site-to-Site VPN.",
+                    p2: "Điều này có nghĩa là bạn có thể kiểm tra bất kỳ loại lưu lượng nào ở bất kỳ hướng nào."
+                },
+                core2: {
+                    title: "Phạm Vi Lưu Lượng",
+                    p1: "Tường lửa bảo vệ tất cả lưu lượng đi vào và đi ra giữa:",
+                    li1: "VPC và Internet (Inbound/Outbound)",
+                    li2: "Các <strong>VPC ngang hàng (peered VPCs)</strong>.",
+                    li3: "Kết nối <strong>Direct Connect</strong> và <strong>Site-to-Site VPN</strong>.",
+                },
+                arch: {
+                    title: "Kiến Trúc và Quản Lý"
+                },
+                arch1: {
+                    title: "Kiến Trúc AWS-Managed",
+                    p1: "Nội bộ, AWS Network Firewall sử dụng <strong>AWS Gateway Load Balancer (GLB)</strong>. Thay vì thiết lập các thiết bị bên thứ ba để kiểm tra lưu lượng, AWS quản lý các thiết bị riêng của mình cho mục đích này.",
+                    p2: "Điều này cho phép bạn có các quy tắc tường lửa riêng trong khi dựa vào cơ sở hạ tầng được AWS quản lý hoàn toàn."
+                },
+                arch2: {
+                    title: "Quản Lý Tập Trung",
+                    p1: "Các quy tắc tường lửa này có thể được quản lý tập trung trên <strong>nhiều tài khoản</strong> và <strong>nhiều VPC</strong> bằng cách sử dụng dịch vụ <strong>AWS Firewall Manager</strong>.",
+                    p2: "Hỗ trợ hàng nghìn quy tắc ở cấp độ VPC."
+                },
+                control: {
+                    title: "Kiểm Soát Chi Tiết và Ghi Nhật Ký"
+                },
+                control1: {
+                    title: "Bộ Lọc Tinh Vi",
+                    p1: "Bạn có thể lọc lưu lượng truy cập theo <strong>địa chỉ IP</strong> và <strong>cổng</strong>, hỗ trợ hàng chục nghìn IP. Hỗ trợ các bộ lọc nâng cao:",
+                    li1: "Lọc <strong>giao thức</strong> (ví dụ: bạn có thể vô hiệu hóa giao thức SMB cho giao tiếp outbound).",
+                    li2: "Lọc <strong>cấp độ miền (Domain-level filtering)</strong> (ví dụ: chỉ cho phép lưu lượng outbound đến miền công ty của bạn).",
+                    li3: "Đối sánh mẫu chung với <strong>biểu thức chính quy (regular expressions)</strong>.",
+                    p4: "Bạn có thể cấu hình tường lửa để cho phép (<strong>allow</strong>), loại bỏ (<strong>drop</strong>), hoặc cảnh báo (<strong>alert</strong>) đối với lưu lượng truy cập khớp với quy tắc."
+                },
+                control2: {
+                    title: "Ngăn Chặn Xâm Nhập & Ghi Nhật Ký",
+                    p1: "Network Firewall bao gồm khả năng kiểm tra luồng chủ động (<strong>active flow inspection</strong>), cung cấp các tính năng ngăn chặn xâm nhập (<strong>Intrusion Prevention</strong>) tương tự như GLB nhưng được AWS quản lý hoàn toàn.",
+                    p2: "Tất cả các kết quả khớp quy tắc có thể được gửi đến:",
+                    p3: "Điều này giúp phân tích và giám sát chuyên sâu."
+                },
+                final: {
+                    title: "ĐIỂM QUAN TRỌNG CẦN NHỚ",
+                    p1: "<strong>AWS Network Firewall</strong> bảo vệ <strong>toàn bộ VPC</strong> với khả năng kiểm tra lưu lượng từ <strong>tầng 3</strong> đến <strong>tầng 7</strong>.",
+                    p2: "Nó hỗ trợ kiểm tra lưu lượng theo <strong>mọi hướng</strong>: VPC sang VPC, Outbound ra Internet, Inbound từ Internet, Direct Connect, và Site-to-Site VPN.",
+                    p3: "Kiến trúc sử dụng <strong>AWS Gateway Load Balancer</strong> với các thiết bị do <strong>AWS quản lý</strong>, loại bỏ nhu cầu về thiết bị bên thứ ba.",
+                    p4: "Kiểm soát chi tiết bằng cách lọc theo <strong>IP, cổng, giao thức, miền</strong> và <strong>đối sánh mẫu</strong>, với các hành động <strong>allow, drop, hoặc alert</strong>.",
+                    p5: "<strong>AWS Firewall Manager</strong> cho phép quản lý tập trung các quy tắc trên <strong>nhiều tài khoản</strong> và <strong>VPC</strong>."
+                }
+            },
+            en: {
+                header: {
+                    title: "AWS Network Firewall Overview",
+                    subtitle: "Protecting the entire VPC from Layer 3 through Layer 7."
+                },
+                intro: {
+                    title: "Overview of AWS Network Protection Options",
+                    p1: "So far, we have explored several ways to protect your network on AWS. These include <strong>Network Access Control Lists (NACLs)</strong>, <strong>Amazon VPC security groups</strong>, and <strong>AWS WAF</strong> (protecting against malicious HTTP requests). Additionally, <strong>AWS Shield</strong> and <strong>Shield Advanced</strong> provide protection against <strong>Distributed Denial of Service (DDoS)</strong> attacks. <strong>AWS Firewall Manager</strong> helps manage rules for WAF, Shield, and other services across multiple accounts."
+                },
+                core: {
+                    title: "Introducing AWS Network Firewall"
+                },
+                core1: {
+                    title: "Comprehensive Protection",
+                    p1: "AWS Network Firewall is designed to protect your <strong>entire VPC</strong> with a firewall that surrounds it completely. It provides protection from <strong>layer 3</strong> through <strong>layer 7</strong>. This means you can inspect any kind of traffic in any direction, including VPC to VPC traffic, outbound traffic to the internet, inbound traffic from the internet, and traffic to and from Direct Connect and Site-to-Site VPN connections.",
+                    p2: "This means you can inspect any kind of traffic in any direction."
+                },
+                core2: {
+                    title: "Traffic Coverage",
+                    p1: "The firewall protects all traffic coming in and out of:",
+                    li1: "VPC and the Internet (Inbound/Outbound)",
+                    li2: "<strong>Peered VPCs</strong>.",
+                    li3: "<strong>Direct Connect</strong> and <strong>Site-to-Site VPN</strong> connections.",
+                },
+                arch: {
+                    title: "Architecture and Management"
+                },
+                arch1: {
+                    title: "AWS-Managed Architecture",
+                    p1: "Internally, AWS Network Firewall uses the <strong>AWS Gateway Load Balancer (GLB)</strong>. Instead of setting up third-party appliances to inspect traffic, AWS manages its own appliances for this purpose.",
+                    p2: "This allows you to have your own firewall rules while relying on AWS-managed infrastructure."
+                },
+                arch2: {
+                    title: "Centralized Management",
+                    p1: "These firewall rules can also be centrally managed across <strong>multiple accounts</strong> and <strong>many VPCs</strong> using the <strong>AWS Firewall Manager</strong> service.",
+                    p2: "Supports thousands of rules at the VPC level."
+                },
+                control: {
+                    title: "Fine-Grained Control and Logging"
+                },
+                control1: {
+                    title: "Sophisticated Filtering",
+                    p1: "You can filter traffic by <strong>IP address</strong> and <strong>port</strong>, supporting tens of thousands of IPs. Advanced filters supported:",
+                    li1: "<strong>Protocol filtering</strong> (e.g., you can disable the SMB protocol for outbound communication).",
+                    li2: "<strong>Domain-level filtering</strong> (e.g., allow outbound traffic only to your corporate domain).",
+                    li3: "General pattern matching with <strong>regular expressions</strong>.",
+                    p4: "You can configure the firewall to <strong>allow</strong>, <strong>drop</strong>, or <strong>alert</strong> on traffic that matches the rules you have set up."
+                },
+                control2: {
+                    title: "Intrusion Prevention & Logging",
+                    p1: "AWS Network Firewall includes <strong>active flow inspection</strong>, providing <strong>Intrusion Prevention</strong> capabilities similar to those available with the Gateway Load Balancer, but fully managed by AWS.",
+                    p2: "All rule matches can be sent to:",
+                    p3: "This allows for further analysis and monitoring."
+                },
+                final: {
+                    title: "KEY TAKEAWAYS",
+                    p1: "<strong>AWS Network Firewall</strong> protects <strong>entire VPCs</strong> with sophisticated, <strong>layer 3 to layer 7</strong> traffic inspection.",
+                    p2: "It supports inspection of traffic in <strong>all directions</strong>: VPC to VPC, outbound to internet, inbound from internet, Direct Connect, and Site-to-Site VPN.",
+                    p3: "The architecture uses <strong>AWS Gateway Load Balancer</strong> with <strong>AWS-managed appliances</strong>, eliminating the need for third-party devices.",
+                    p4: "Fine-grained control is available with filtering by <strong>IP, port, protocol, domain, and pattern matching</strong>, with options to <strong>allow, drop, or alert</strong> on traffic.",
+                    p5: "<strong>AWS Firewall Manager</strong> enables centralized management of firewall rules across <strong>multiple accounts</strong> and <strong>VPCs</strong>."
+                }
+            }
+        };
+
+        let currentLanguage = 'vi';
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+
+        function getNestedTranslation(obj, path) {
+            // Helper function to safely retrieve nested object properties
+            return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+        }
+
+        function updateContent() {
+            // Update all elements with the current language content
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const translatedText = getNestedTranslation(translations[currentLanguage], key);
+                if (translatedText) {
+                    // Use innerHTML to render the <strong> tags correctly
+                    element.innerHTML = translatedText;
+                }
+            });
+            document.querySelector('html').setAttribute('lang', currentLanguage);
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            // Highlight the active language button
+            const activeClass = 'bg-indigo-600 text-white';
+            const inactiveClass = 'bg-gray-200 text-gray-700';
+
+            if (currentLanguage === 'vi') {
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            } else {
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${activeClass}`;
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm lang-button ${inactiveClass}`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

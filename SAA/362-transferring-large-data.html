@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">Chuyển Dữ liệu Lớn vào AWS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fffbeb; /* Amber 50 - Speed/Efficiency Theme */
+            color: #1c1917; /* Stone 900 */
+        }
+        .header-bg {
+            background-color: #d97706; /* Amber 600 */
+        }
+        .highlight-text {
+            color: #b45309; /* Amber 700 */
+        }
+        .card {
+            background-color: white;
+            border-left: 5px solid #fbbf24; /* Amber 400 */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: 100%;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15);
+        }
+        .icon-box {
+            color: #d97706;
+        }
+        .key-feature strong {
+            font-weight: 800;
+            color: #b91c1c; /* Red 700 for emphasis on numbers/speed */
+        }
+        .toggle-active {
+            background-color: #d97706 !important;
+            color: white !important;
+        }
+        .toggle-inactive {
+            background-color: #e5e7eb; /* Gray 200 */
+            color: #4b5563; /* Gray 600 */
+        }
+    </style>
+</head>
+<body>
+    <header class="header-bg shadow-xl">
+        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 class="text-3xl font-extrabold text-white" data-i18n="header.title">
+                <i class="fas fa-truck-moving mr-3"></i> Chuyển Dữ liệu Lớn vào AWS
+            </h1>
+            <!-- Language Toggles -->
+            <div class="flex space-x-2 p-1 bg-white rounded-full shadow-md">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-full font-semibold text-sm transition toggle-active">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-full font-semibold text-sm transition toggle-inactive">EN</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+
+        <!-- Scenario Section -->
+        <section class="mb-12 p-6 bg-white shadow-xl rounded-xl border-t-4 border-amber-600 key-feature">
+            <h2 class="text-2xl font-bold highlight-text mb-4" data-i18n="scenario.title">
+                <strong class="font-bold">Kịch bản: Chuyển 200 Terabyte</strong>
+            </h2>
+            <p class="text-lg text-gray-700" data-i18n="scenario.p1">
+                Giả sử bạn cần chuyển <strong class="font-bold">200 Terabytes</strong> dữ liệu vào đám mây với kết nối Internet hiện có là <strong class="font-bold">100 Mbps</strong>.
+            </p>
+        </section>
+
+        <!-- Transfer Options -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-extrabold highlight-text mb-8 pb-3 border-b-2 border-amber-200" data-i18n="options.title">
+                <i class="fas fa-network-wired mr-3"></i> Các Tùy chọn Chuyển Dữ liệu Chính
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                <!-- Option 1: Public Internet / VPN -->
+                <div class="card p-6 rounded-xl key-feature">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-cloud"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="options.o1.title">1. Internet Công cộng / VPN</h3>
+                    <p class="text-gray-600 text-sm mb-3" data-i18n="options.o1.body">
+                        Sử dụng Internet công cộng hoặc <strong class="font-bold">Site-to-Site VPN</strong>. Lợi thế là <strong class="font-bold">thiết lập tức thì</strong>.
+                    </p>
+                    <div class="mt-4 p-3 bg-red-100 rounded-md">
+                        <strong class="text-red-700 block mb-1" data-i18n="options.o1.time_label">Thời gian Chuyển (Ước tính):</strong>
+                        <span class="text-lg text-red-900 font-extrabold" data-i18n="options.o1.time_value">~185 ngày</span>
+                        <p class="text-xs text-red-700 mt-1" data-i18n="options.o1.note">Gần nửa năm – có thể không thực tế.</p>
+                    </div>
+                </div>
+
+                <!-- Option 2: AWS Direct Connect -->
+                <div class="card p-6 rounded-xl key-feature">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-sitemap"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="options.o2.title">2. <strong class="font-bold">AWS Direct Connect</strong> (1 Gbps)</h3>
+                    <p class="text-gray-600 text-sm mb-3" data-i18n="options.o2.body">
+                        Sử dụng đường truyền riêng <strong class="font-bold">1 Gbps</strong>. Cần khoảng <strong class="font-bold">một tháng</strong> để thiết lập kết nối lần đầu.
+                    </p>
+                    <div class="mt-4 p-3 bg-yellow-100 rounded-md">
+                        <strong class="text-yellow-700 block mb-1" data-i18n="options.o2.time_label">Thời gian Chuyển (Ước tính):</strong>
+                        <span class="text-lg text-yellow-900 font-extrabold" data-i18n="options.o2.time_value">~18.5 ngày</span>
+                        <p class="text-xs text-yellow-700 mt-1" data-i18n="options.o2.note">Nhanh hơn 10 lần, nhưng vẫn mất thời gian.</p>
+                    </div>
+                </div>
+
+                <!-- Option 3: AWS Snowball -->
+                <div class="card p-6 rounded-xl key-feature border-left-8 border-green-500">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-box-open"></i></div>
+                    <h3 class="text-xl font-semibold mb-2 text-green-700" data-i18n="options.o3.title">3. <strong class="font-bold">AWS Snowball</strong></h3>
+                    <p class="text-gray-600 text-sm mb-3" data-i18n="options.o3.body">
+                        Giải pháp <strong class="font-bold">vận chuyển vật lý</strong>. Bao gồm giao hàng, tải dữ liệu, vận chuyển ngược lại AWS và chuyển dữ liệu.
+                    </p>
+                    <div class="mt-4 p-3 bg-green-100 rounded-md">
+                        <strong class="text-green-700 block mb-1" data-i18n="options.o3.time_label">Thời gian Chuyển (Tổng thể):</strong>
+                        <span class="text-lg text-green-900 font-extrabold" data-i18n="options.o3.time_value">~1 tuần</span>
+                        <p class="text-xs text-green-700 mt-1" data-i18n="options.o3.note">Giải pháp nhanh nhất cho dữ liệu lớn (one-off).</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Ongoing Replication -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-extrabold highlight-text mb-8 pb-3 border-b-2 border-amber-200" data-i18n="ongoing.title">
+                <i class="fas fa-sync-alt mr-3"></i> Tùy chọn Nhân bản Dữ liệu Liên tục
+            </h2>
+            <p class="text-lg text-gray-700 mb-6" data-i18n="ongoing.p1">
+                Đối với <strong class="font-bold">nhân bản dữ liệu liên tục</strong> thay vì chuyển một lần, các tùy chọn phù hợp hơn bao gồm:
+            </p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 key-feature">
+                <div class="p-4 bg-white rounded-lg shadow flex items-center space-x-3"><div class="icon-box text-xl"><i class="fas fa-shield-alt"></i></div><span data-i18n="ongoing.l1">Site-to-Site <strong class="font-bold">VPN</strong></span></div>
+                <div class="p-4 bg-white rounded-lg shadow flex items-center space-x-3"><div class="icon-box text-xl"><i class="fas fa-link"></i></div><span data-i18n="ongoing.l2">AWS <strong class="font-bold">Direct Connect</strong></span></div>
+                <div class="p-4 bg-white rounded-lg shadow flex items-center space-x-3"><div class="icon-box text-xl"><i class="fas fa-database"></i></div><span data-i18n="ongoing.l3">AWS <strong class="font-bold">DMS</strong></span></div>
+                <div class="p-4 bg-white rounded-lg shadow flex items-center space-x-3"><div class="icon-box text-xl"><i class="fas fa-hdd"></i></div><span data-i18n="ongoing.l4">AWS <strong class="font-bold">DataSync</strong></span></div>
+            </div>
+        </section>
+
+        <!-- Summary & Exam Relevance -->
+        <section class="p-6 bg-amber-100 rounded-xl shadow-md border-t-4 border-amber-600 key-feature">
+            <h2 class="text-2xl font-bold highlight-text mb-4" data-i18n="summary.title">
+                <i class="fas fa-check-double mr-2"></i> Tóm tắt & Ứng dụng Bài kiểm tra
+            </h2>
+            <ul class="space-y-3 text-lg list-none pl-0 key-feature">
+                <li class="flex items-start">
+                    <span class="text-amber-600 mr-3 mt-1"><i class="fas fa-bullseye"></i></span>
+                    <span data-i18n="summary.l1">Sử dụng <strong class="font-bold">AWS Snowball</strong> cho việc chuyển <strong class="font-bold">dữ liệu lớn một lần</strong> (one-off large data transfers).</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-amber-600 mr-3 mt-1"><i class="fas fa-bullseye"></i></span>
+                    <span data-i18n="summary.l2"><strong class="font-bold">VPN</strong> và <strong class="font-bold">Direct Connect</strong> phù hợp cho nhân bản liên tục với khối lượng dữ liệu nhỏ hơn hoặc khi đã có kết nối tốc độ cao.</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-amber-600 mr-3 mt-1"><i class="fas fa-bullseye"></i></span>
+                    <span data-i18n="summary.l3">Bạn cần xác định phương pháp <strong class="font-bold">dễ nhất, nhanh nhất hoặc đáng tin cậy nhất</strong> dựa trên kích thước dữ liệu và ràng buộc về thời gian.</span>
+                </li>
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        // --- Translation Data ---
+        const translations = {
+            'vi': {
+                'header.title': 'Chuyển Dữ liệu Lớn vào AWS',
+                
+                'scenario.title': '<strong class="font-bold">Kịch bản: Chuyển 200 Terabyte</strong>',
+                'scenario.p1': 'Giả sử bạn cần chuyển <strong class="font-bold">200 Terabytes</strong> dữ liệu vào đám mây với kết nối Internet hiện có là <strong class="font-bold">100 Mbps</strong>.',
+
+                'options.title': 'Các Tùy chọn Chuyển Dữ liệu Chính',
+                'options.o1.title': '1. Internet Công cộng / VPN',
+                'options.o1.body': 'Sử dụng Internet công cộng trực tiếp hoặc <strong class="font-bold">Site-to-Site VPN</strong>. Lợi thế là <strong class="font-bold">thiết lập tức thì</strong> và tận dụng kết nối hiện có.',
+                'options.o1.time_label': 'Thời gian Chuyển (Ước tính):',
+                'options.o1.time_value': '~185 ngày',
+                'options.o1.note': 'Gần nửa năm – có thể không thực tế tùy thuộc vào trường hợp sử dụng.',
+
+                'options.o2.title': '2. <strong class="font-bold">AWS Direct Connect</strong> (1 Gbps)',
+                'options.o2.body': 'Sử dụng đường truyền riêng <strong class="font-bold">1 Gbps</strong>. Cần khoảng <strong class="font-bold">một tháng</strong> để thiết lập kết nối lần đầu nếu chưa từng sử dụng.',
+                'options.o2.time_label': 'Thời gian Chuyển (Ước tính):',
+                'options.o2.time_value': '~18.5 ngày',
+                'options.o2.note': 'Nhanh hơn đáng kể nhưng vẫn tương đối dài.',
+
+                'options.o3.title': '3. <strong class="font-bold">AWS Snowball</strong>',
+                'options.o3.body': 'Giải pháp <strong class="font-bold">vận chuyển vật lý</strong>. Toàn bộ quá trình từ đặt hàng, giao hàng, tải dữ liệu, vận chuyển ngược lại AWS và chuyển dữ liệu.',
+                'options.o3.time_label': 'Thời gian Chuyển (Tổng thể):',
+                'options.o3.time_value': '~1 tuần',
+                'options.o3.note': 'Giải pháp nhanh nhất cho dữ liệu lớn một lần.',
+                
+                'ongoing.title': 'Tùy chọn Nhân bản Dữ liệu Liên tục',
+                'ongoing.p1': 'Đối với <strong class="font-bold">nhân bản dữ liệu liên tục</strong> thay vì chuyển một lần, các tùy chọn phù hợp hơn bao gồm:',
+                'ongoing.l1': 'Site-to-Site <strong class="font-bold">VPN</strong>',
+                'ongoing.l2': 'AWS <strong class="font-bold">Direct Connect</strong>',
+                'ongoing.l3': 'AWS <strong class="font-bold">DMS</strong> (Database Migration Service)',
+                'ongoing.l4': 'AWS <strong class="font-bold">DataSync</strong>',
+                
+                'summary.title': 'Tóm tắt & Ứng dụng Bài kiểm tra',
+                'summary.l1': 'Sử dụng <strong class="font-bold">AWS Snowball</strong> cho việc chuyển <strong class="font-bold">dữ liệu lớn một lần</strong> (one-off large data transfers).',
+                'summary.l2': '<strong class="font-bold">VPN</strong> và <strong class="font-bold">Direct Connect</strong> phù hợp cho nhân bản liên tục với khối lượng dữ liệu nhỏ hơn.',
+                'summary.l3': 'Bạn cần xác định phương pháp <strong class="font-bold">dễ nhất, nhanh nhất hoặc đáng tin cậy nhất</strong> dựa trên kích thước dữ liệu và ràng buộc về thời gian.'
+            },
+            'en': {
+                'header.title': 'Transferring Large Datasets into AWS',
+
+                'scenario.title': '<strong class="font-bold">Scenario: Transferring 200 Terabytes</strong>',
+                'scenario.p1': 'Consider the task of transferring <strong class="font-bold">200 Terabytes</strong> of data into the cloud using an existing internet connection of <strong class="font-bold">100 Mbps</strong>.',
+
+                'options.title': 'The Main Data Transfer Options',
+                'options.o1.title': '1. Public Internet / VPN',
+                'options.o1.body': 'Uses the public internet directly or a <strong class="font-bold">Site-to-Site VPN</strong>. The advantage is that it is <strong class="font-bold">immediate to set up</strong> and leverages the existing connection right away.',
+                'options.o1.time_label': 'Transfer Time (Estimated):',
+                'options.o1.time_value': '~185 days',
+                'options.o1.note': 'Almost half a year – which may be impractical depending on the use case.',
+
+                'options.o2.title': '2. <strong class="font-bold">AWS Direct Connect</strong> (1 Gbps)',
+                'options.o2.body': 'Uses a provisioned <strong class="font-bold">1 Gbps</strong> line. Requires a one-time setup that can take about <strong class="font-bold">a month</strong> if not used before.',
+                'options.o2.time_label': 'Transfer Time (Estimated):',
+                'options.o2.time_value': '~18.5 days',
+                'options.o2.note': 'Significantly quicker, but still relatively long.',
+
+                'options.o3.title': '3. <strong class="font-bold">AWS Snowball</strong>',
+                'options.o3.body': 'A physical data transport solution. The process includes delivery, loading data, shipping back to AWS, and data transfer.',
+                'options.o3.time_label': 'Transfer Time (End-to-End):',
+                'options.o3.time_value': '~1 week',
+                'options.o3.note': 'The fastest solution for one-off large data transfers.',
+                
+                'ongoing.title': 'Ongoing Data Replication Options',
+                'ongoing.p1': 'For <strong class="font-bold">ongoing data replication</strong> rather than one-off transfers, suitable options include:',
+                'ongoing.l1': 'Site-to-Site <strong class="font-bold">VPN</strong>',
+                'ongoing.l2': 'AWS <strong class="font-bold">Direct Connect</strong>',
+                'ongoing.l3': 'AWS <strong class="font-bold">DMS</strong> (Database Migration Service)',
+                'ongoing.l4': 'AWS <strong class="font-bold">DataSync</strong>',
+
+                'summary.title': 'Summary & Exam Relevance',
+                'summary.l1': 'Use <strong class="font-bold">AWS Snowball</strong> for <strong class="font-bold">one-off large data transfers</strong>, as it significantly speeds up the initial migration.',
+                'summary.l2': '<strong class="font-bold">VPN</strong> and <strong class="font-bold">Direct Connect</strong> are appropriate for ongoing replication with smaller data volumes.',
+                'summary.l3': 'You must determine the <strong class="font-bold">easiest, fastest, or most reliable</strong> way to transfer data based on the dataset size and time constraints.'
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+        const activeClass = 'toggle-active';
+        const inactiveClass = 'toggle-inactive';
+
+        // Helper function to update content
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const content = translations[currentLanguage][key];
+                if (content) {
+                    // Use innerHTML to allow for strong/bold tags within the content
+                    element.innerHTML = content;
+                }
+            });
+            
+            // Update the main document language attribute
+            document.documentElement.lang = currentLanguage;
+            
+            // Update toggle button styles
+            updateLanguageButtons();
+        }
+
+        // Function to update button styles
+        function updateLanguageButtons() {
+            if (currentLanguage === 'vi') {
+                langToggleVi.classList.add(...activeClass.split(' '));
+                langToggleVi.classList.remove(...inactiveClass.split(' '));
+                langToggleEn.classList.add(...inactiveClass.split(' '));
+                langToggleEn.classList.remove(...activeClass.split(' '));
+            } else {
+                langToggleEn.classList.add(...activeClass.split(' '));
+                langToggleEn.classList.remove(...inactiveClass.split(' '));
+                langToggleVi.classList.add(...inactiveClass.split(' '));
+                langToggleVi.classList.remove(...activeClass.split(' '));
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize content with default language
+            updateContent();
+
+            // Language toggle event listeners
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>
