@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">AWS RDS - Kích Hoạt Lambda và Thông Báo Sự Kiện</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #d946ef; /* Fuchsia 500 - Data Integration */
+            --accent-color: #f59e0b;  /* Amber 500 - Notifications */
+            --text-color: #1f2937;
+            --background-color: #fdf2f8; /* Pink 50 / Background */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .header-bg {
+            background-color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .content-card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+        }
+        .concept-box {
+            border: 2px solid var(--accent-color);
+            background-color: #fffbeb; /* Amber 50 */
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+        }
+        b {
+            font-weight: 700 !important;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-link mr-3 text-white"></i>
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Data-Level Event Processing (RDS Invokes Lambda) -->
+        <section class="content-card border-t-4 border-primary-color">
+            <h2 id="section1Title" class="text-3xl font-extrabold text-primary-color mb-4 border-b-2 pb-2 border-primary-color/50"></h2>
+            
+            <p id="section1Intro" class="text-lg text-gray-700 leading-relaxed mb-4"></p>
+            
+            <div class="space-y-4 text-gray-700 leading-relaxed">
+                <p id="section1Example"></p>
+                <p id="section1Setup" class="p-4 bg-primary-color/10 rounded-lg text-gray-700 border-l-4 border-primary-color"></p>
+            </div>
+            
+            <h3 id="requirementsTitle" class="text-2xl font-bold text-primary-color mt-8 mb-4 flex items-center"><i class="fas fa-lock mr-3"></i> </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="p-4 bg-gray-100 rounded-lg">
+                    <b id="req1Title" class="text-lg block mb-1"></b>
+                    <p id="req1Detail" class="text-sm"></p>
+                </div>
+                <div class="p-4 bg-gray-100 rounded-lg">
+                    <b id="req2Title" class="text-lg block mb-1"></b>
+                    <p id="req2Detail" class="text-sm"></p>
+                </div>
+            </div>
+            
+        </section>
+
+        <!-- Section 2: Instance-Level Event Notifications (RDS Events) -->
+        <section class="content-card border-l-4 border-accent-color">
+            <h2 id="section2Title" class="text-3xl font-extrabold text-accent-color mb-4 flex items-center"><i class="fas fa-bell mr-3"></i> </h2>
+            <div class="concept-box">
+                <h3 id="conceptWarning" class="text-xl font-bold text-accent-color mb-2"></h3>
+                <p id="conceptDifference" class="text-gray-700 leading-relaxed"></p>
+            </div>
+            
+            <div class="mt-6 space-y-4 text-gray-700 leading-relaxed">
+                <p id="section2Content"></p>
+                <p id="section2Subscriptions"></p>
+            </div>
+            
+
+            <h3 id="deliveryMethodsTitle" class="text-2xl font-bold text-accent-color mt-8 mb-4 flex items-center"><i class="fas fa-exchange-alt mr-3"></i> </h3>
+            <ul id="deliveryMethods" class="list-disc ml-6 space-y-2 text-gray-700">
+                <!-- Delivery methods populated by JS -->
+            </ul>
+
+            <p id="finalReminder" class="mt-6 p-3 bg-red-100 text-red-700 font-semibold rounded-lg border-l-4 border-red-500"></p>
+        </section>
+
+        <!-- Section 3: Key Takeaways -->
+        <section class="p-8 bg-primary-color/10 rounded-xl shadow-lg">
+            <h2 id="section3Title" class="text-3xl font-extrabold text-primary-color mb-8 text-center"><i class="fas fa-brain mr-2"></i> </h2>
+            <ul id="takeawaysContainer" class="space-y-4">
+                <!-- Takeaways will be populated by JS -->
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        // Content Translations using <b> for bolding.
+        const content = {
+            'vi': {
+                pageTitle: 'AWS RDS - Kích Hoạt Lambda và Thông Báo Sự Kiện',
+                introTitle: 'Tích Hợp Giữa RDS, Aurora và Lambda',
+                section1Title: 'Kích Hoạt Lambda để Xử Lý Sự Kiện Dữ Liệu',
+                section1Intro: 'Có một sự tích hợp chặt chẽ cho phép <b>kích hoạt các hàm Lambda trực tiếp</b> từ instance database của bạn để xử lý các sự kiện dữ liệu xảy ra bên trong database.',
+                section1Example: 'Tính năng này được hỗ trợ bởi <b>RDS for PostgreSQL</b> và <b>Aurora MySQL</b>. Ví dụ: Khi người dùng chèn dữ liệu sự kiện vào bảng đăng ký, RDS có thể được cấu hình để gọi trực tiếp hàm Lambda của bạn để gửi email chào mừng.',
+                section1Setup: 'Thiết lập này <b>phải được cấu hình từ bên trong database</b> bằng cách kết nối với nó; nó <b>không được cấu hình thông qua AWS console</b>.',
+                requirementsTitle: 'Yêu Cầu về Kết Nối và Quyền Hạn',
+                req1Title: '1. Kết Nối Mạng (Network Connectivity):',
+                req1Detail: 'Cần đảm bảo lưu lượng truy cập từ RDS đến Lambda được cho phép (ví dụ: Lambda trên internet công cộng, sử dụng NAT Gateway, hoặc VPC endpoints).',
+                req2Title: '2. Quyền Hạn IAM (IAM Permissions):',
+                req2Detail: 'Instance RDS phải có chính sách IAM (IAM policy) phù hợp cho phép nó <b>kích hoạt hàm Lambda</b>.',
+                
+                // RDS Event Notifications
+                section2Title: 'Thông Báo Sự Kiện RDS (RDS Event Notifications)',
+                conceptWarning: 'Cảnh Báo: Đừng Nhầm Lẫn!',
+                conceptDifference: 'Khả năng kích hoạt Lambda ở trên <b>hoàn toàn khác</b> với việc sử dụng Thông báo Sự kiện RDS. Thông báo Sự kiện RDS cung cấp thông tin về <b>chính instance database</b>, chứ không phải dữ liệu bên trong database.',
+                section2Content: 'Bạn có thể đăng ký các sự kiện liên quan đến <b>instance database, database snapshots, parameter groups, security groups,</b> v.v. Các sự kiện này được gửi gần như theo thời gian thực (trễ tối đa năm phút).',
+                section2Subscriptions: 'Các thông báo này có thể được gửi đến <b>SNS</b> hoặc được chặn tại <b>EventBridge</b>.',
+                deliveryMethodsTitle: 'Phương Thức Phân Phối',
+                deliveryMethods: [
+                    'Từ <b>SNS</b>, bạn có thể chuyển tiếp chúng đến hàng đợi SQS hoặc hàm Lambda.',
+                    '<b>EventBridge</b> hỗ trợ nhiều đích đến hơn, bao gồm các hàm Lambda.'
+                ],
+                finalReminder: 'NHẮC NHỞ QUAN TRỌNG: Thông báo Sự kiện RDS <b>không cung cấp thông tin</b> về các sự kiện cấp dữ liệu (data events). Để thu thập các sự kiện cấp dữ liệu, bạn phải sử dụng phương pháp Kích hoạt Lambda được mô tả ở trên.',
+
+                // Key Takeaways
+                section3Title: 'Các Điểm Chính Cần Nắm Vững',
+                takeaways: [
+                    '<b>RDS for PostgreSQL</b> và <b>Aurora MySQL</b> hỗ trợ <b>kích hoạt Lambda trực tiếp</b> từ instance database để xử lý các sự kiện dữ liệu.',
+                    'Thiết lập kích hoạt Lambda từ RDS yêu cầu cấu hình <b>bên trong database</b>, không phải qua AWS console.',
+                    'Kết nối mạng phù hợp và quyền hạn IAM là điều cần thiết để instance RDS kích hoạt hàm Lambda.',
+                    'Thông báo Sự kiện RDS (Event Notifications) cung cấp thông tin về các sự kiện <b>cấp instance</b> database chứ <b>không bao gồm</b> các sự kiện cấp dữ liệu (data-level events).'
+                ]
+            },
+            'en': {
+                pageTitle: 'AWS RDS - Invoking Lambda & Event Notifications',
+                introTitle: 'Integration Between RDS, Aurora, and Lambda',
+                section1Title: 'Invoking Lambda to Process Data Events',
+                section1Intro: 'There is a tight integration that allows <b>invoking Lambda functions directly</b> from your database instance to process data events occurring within your database.',
+                section1Example: 'This feature is supported by <b>RDS for PostgreSQL</b> and <b>Aurora MySQL</b>. For instance, when a user inserts event data into your registration table, RDS can be configured to directly invoke your Lambda function to send a welcome email.',
+                section1Setup: 'This setup <b>must be configured from within the database</b> by connecting to it; it is <b>not configured through the AWS console</b>.',
+                requirementsTitle: 'Networking and Permissions Requirements',
+                req1Title: '1. Network Connectivity:',
+                req1Detail: 'Inbound traffic from the RDS database instance to the Lambda function must be allowed (e.g., Lambda on the public internet, using a NAT Gateway, or VPC endpoints).',
+                req2Title: '2. IAM Permissions:',
+                req2Detail: 'The database instance must have a proper IAM policy allowing it to <b>invoke the Lambda function</b>.',
+
+                // RDS Event Notifications
+                section2Title: 'RDS Event Notifications',
+                conceptWarning: 'Warning: Do Not Confuse!',
+                conceptDifference: 'This Lambda invocation capability is <b>completely different</b> from using RDS event notifications. RDS event notifications provide information about the <b>database instance itself</b>, not the data within the database.',
+                section2Content: 'You can subscribe to events related to your <b>database instance, database snapshots, parameter groups, security groups,</b> etc. These events are delivered in near real-time (up to five minutes of delay).',
+                section2Subscriptions: 'These notifications can be sent to <b>SNS</b> or intercepted in <b>EventBridge</b>.',
+                deliveryMethodsTitle: 'Delivery Methods',
+                deliveryMethods: [
+                    'From <b>SNS</b>, you can forward them to an SQS queue or a Lambda function.',
+                    '<b>EventBridge</b> supports many destinations, including Lambda functions.'
+                ],
+                finalReminder: 'CRITICAL REMINDER: RDS Event Notifications <b>do not provide information</b> about data-level events themselves. To capture data-level events, you must use the Lambda invocation method described above.',
+
+                // Key Takeaways
+                section3Title: 'Key Takeaways Summary',
+                takeaways: [
+                    '<b>RDS for PostgreSQL</b> and <b>Aurora MySQL</b> support <b>invoking Lambda functions directly</b> from database instances to process data events.',
+                    'Setting up Lambda invocation from RDS requires configuration <b>within the database</b>, not the AWS console.',
+                    'Proper network connectivity and IAM permissions are essential for RDS instances to invoke Lambda functions.',
+                    'RDS event notifications provide information about database <b>instance events</b> but <b>do not include</b> data-level events.'
+                ]
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        function updateContent() {
+            const langData = content[currentLanguage];
+            document.title = langData.pageTitle;
+            document.documentElement.lang = currentLanguage;
+
+            document.getElementById('langToggleVi').textContent = 'VI';
+            document.getElementById('langToggleEn').textContent = 'EN';
+            
+            document.getElementById('introTitle').innerHTML = `${langData.introTitle} <i class="fas fa-link mr-3 text-white"></i>`;
+            document.getElementById('section1Title').textContent = langData.section1Title;
+            document.getElementById('section1Intro').innerHTML = langData.section1Intro; 
+            document.getElementById('section1Example').innerHTML = langData.section1Example;
+            document.getElementById('section1Setup').innerHTML = langData.section1Setup;
+
+            // Requirements
+            document.getElementById('requirementsTitle').innerHTML = `${langData.requirementsTitle} <i class="fas fa-lock ml-3"></i>`;
+            document.getElementById('req1Title').innerHTML = langData.req1Title;
+            document.getElementById('req1Detail').textContent = langData.req1Detail;
+            document.getElementById('req2Title').innerHTML = langData.req2Title;
+            document.getElementById('req2Detail').textContent = langData.req2Detail;
+            
+            // Event Notifications
+            document.getElementById('section2Title').innerHTML = `${langData.section2Title} <i class="fas fa-bell ml-3"></i>`;
+            document.getElementById('conceptWarning').textContent = langData.conceptWarning;
+            document.getElementById('conceptDifference').innerHTML = langData.conceptDifference;
+            document.getElementById('section2Content').innerHTML = langData.section2Content;
+            document.getElementById('section2Subscriptions').innerHTML = langData.section2Subscriptions;
+
+            document.getElementById('deliveryMethodsTitle').innerHTML = `${langData.deliveryMethodsTitle} <i class="fas fa-exchange-alt ml-3"></i>`;
+            const deliveryMethodsContainer = document.getElementById('deliveryMethods');
+            deliveryMethodsContainer.innerHTML = '';
+            langData.deliveryMethods.forEach(method => {
+                deliveryMethodsContainer.innerHTML += `<li>${method}</li>`;
+            });
+
+            document.getElementById('finalReminder').innerHTML = langData.finalReminder;
+            
+            // Key Takeaways
+            document.getElementById('section3Title').innerHTML = `${langData.section3Title} <i class="fas fa-brain ml-2"></i>`;
+
+            // Update Key Takeaways
+            const takeawaysContainer = document.getElementById('takeawaysContainer');
+            takeawaysContainer.innerHTML = '';
+            langData.takeaways.forEach(t => {
+                const item = `
+                    <li class="flex items-start space-x-3 text-gray-700 p-3 bg-white rounded-lg shadow-sm">
+                        <i class="fas fa-check-circle text-lg text-primary-color mt-1 flex-shrink-0"></i>
+                        <span class="text-base leading-relaxed">${t}</span>
+                    </li>
+                `;
+                takeawaysContainer.innerHTML += item;
+            });
+
+            // Update Language Toggle Buttons
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            const langToggleVi = document.getElementById('langToggleVi');
+            const langToggleEn = document.getElementById('langToggleEn');
+
+            const activeClass = 'bg-accent-color';
+            const inactiveClass = 'text-white hover:bg-white/30';
+
+            langToggleVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'vi' ? activeClass : inactiveClass}`;
+            langToggleEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            document.getElementById('langToggleVi').addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            document.getElementById('langToggleEn').addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

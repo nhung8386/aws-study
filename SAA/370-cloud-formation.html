@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">CloudFormation - Tóm Tắt Dễ Nhớ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #2563eb; /* Blue 600 - Main Theme */
+            --accent-color: #10b981;  /* Emerald 500 - Highlight */
+            --background-color: #f0f9ff; /* Sky 50 */
+            --card-bg: white;
+            --text-color: #1e293b;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .header-bg {
+            background-color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .section-title {
+            color: var(--primary-color);
+            font-weight: 800;
+            letter-spacing: -0.025em;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.15);
+        }
+        .icon-box {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            width: 3rem;
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        .key-concept {
+            color: var(--accent-color);
+            font-weight: 700;
+        }
+        /* Custom Bolding */
+        b {
+            font-weight: 700 !important;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-cubes mr-3 text-accent-color"></i>
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30">VI</button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30">EN</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Banner: What is CloudFormation? -->
+        <section class="p-8 md:p-12 rounded-2xl shadow-xl bg-white border-b-8 border-accent-color text-center">
+            <h2 id="section1Title" class="text-4xl section-title mb-4"></h2>
+            <p id="section1Definition" class="text-xl text-gray-700 max-w-3xl mx-auto"></p>
+            <div id="section1Example" class="mt-6 text-lg text-gray-600 p-4 bg-sky-100 rounded-lg border-l-4 border-sky-500"></div>
+        </section>
+
+        <!-- Section 2: Key Benefits (4 Cards) -->
+        <section>
+            <h2 id="section2Title" class="text-3xl section-title mb-8 text-center"><i class="fas fa-star mr-2 text-yellow-500"></i></h2>
+            <div id="benefitsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Benefits will be populated by JS -->
+            </div>
+        </section>
+
+        <!-- Section 3: How it Works (Declarative Power) -->
+        <section class="p-8 bg-primary-color/10 rounded-2xl shadow-inner">
+            <h2 id="section3Title" class="text-3xl font-extrabold text-primary-color mb-6"><i class="fas fa-laptop-code mr-3"></i></h2>
+            <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-8 text-lg text-gray-700">
+                <div class="flex-shrink-0 icon-box bg-red-500">
+                    <i class="fas fa-sitemap"></i>
+                </div>
+                <p id="section3Content" class="md:w-3/4"></p>
+            </div>
+        </section>
+
+        <!-- Section 4 & 5: Advanced Features -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="card bg-white border-l-4 border-yellow-500">
+                <h3 id="section4Title" class="text-xl font-bold text-gray-800 mb-3 flex items-center"><i class="fas fa-recycle mr-2 text-yellow-500"></i></h3>
+                <p id="section4Content" class="text-sm text-gray-600"></p>
+            </div>
+            <div class="card bg-white border-l-4 border-green-500">
+                <h3 id="section5Title" class="text-xl font-bold text-gray-800 mb-3 flex items-center"><i class="fas fa-binoculars mr-2 text-green-500"></i></h3>
+                <p id="section5Content" class="text-sm text-gray-600"></p>
+            </div>
+        </section>
+
+        <!-- Key Takeaways -->
+        <section class="p-8 bg-gray-800 rounded-2xl shadow-2xl">
+            <h2 id="section6Title" class="text-3xl font-extrabold text-accent-color mb-8 text-center"><i class="fas fa-key mr-2"></i> </h2>
+            <div id="takeawaysContainer" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                <!-- Takeaways will be populated by JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-6 text-sm text-gray-500 bg-white border-t">
+        IaC: Triển khai, Quản lý và Lặp lại.
+    </footer>
+
+    <script>
+        // Content Translations with <b> for bolding
+        const content = {
+            'vi': {
+                pageTitle: 'CloudFormation - Tóm Tắt Dễ Nhớ',
+                introTitle: 'CloudFormation: Cơ Sở Hạ Tầng Dưới Dạng Mã',
+                section1Title: 'CloudFormation Là Gì?',
+                section1Definition: 'Là công nghệ AWS cung cấp cách thức <b>khai báo</b> để định nghĩa và triển khai cơ sở hạ tầng ở mọi quy mô.',
+                section1Example: '<b>Ví dụ:</b> Bạn khai báo muốn có SG + 2 EC2 + S3 + Load Balancer. CloudFormation tự động tạo chúng theo <b>đúng thứ tự</b>.',
+                section2Title: '4 Lợi Ích Cốt Lõi',
+                benefits: [
+                    { icon: 'fas fa-code', title: 'Infrastructure as Code (IaC)', desc: 'Tất cả cơ sở hạ tầng là mã. Loại bỏ việc tạo tài nguyên <b>thủ công</b> (manual creation).' },
+                    { icon: 'fas fa-clipboard-check', title: 'Code Review', desc: 'Mọi thay đổi trên AWS đều phải qua quy trình xem xét mã. Đảm bảo <b>thực tiễn vận hành tốt</b>.' },
+                    { icon: 'fas fa-dollar-sign', title: 'Ưu Thế Chi Phí', desc: 'Tài nguyên được gắn thẻ (tag) tương tự. Giúp <b>ước tính chi phí dễ dàng</b> và chính xác.' },
+                    { icon: 'fas fa-redo-alt', title: 'Chiến Lược Tiết Kiệm', desc: 'Tự động <b>xóa</b> (5:00 PM) và <b>tạo lại</b> (8:00 AM) tài nguyên ngoài giờ làm việc để tiết kiệm chi phí.' },
+                ],
+                section3Title: 'Nguyên Lý Hoạt Động',
+                section3Content: 'Sử dụng <b>Lập trình Khai báo</b> (Declarative Programming). Bạn KHÔNG cần phải lo lắng về <b>thứ tự</b> tạo tài nguyên (ví dụ: DynamoDB hay EC2 trước). Template đủ thông minh để tự xác định trình tự chính xác.',
+                section4Title: 'Tận Dụng & Lặp Lại',
+                section4Content: 'KHÔNG cần phát minh lại. Tận dụng <b>template có sẵn</b> và tài liệu phong phú. Hỗ trợ <b>hầu hết mọi tài nguyên AWS</b>. Có thể dùng <b>tài nguyên tùy chỉnh</b> (Custom Resource) cho các trường hợp ngoại lệ.',
+                section5Title: 'Trực Quan Hóa (Visualization)',
+                section5Content: 'Dịch vụ <b>Infrastructure Composer</b> giúp hình dung template. Xem được tất cả các tài nguyên (ALB, DB, Security Group...) và <b>mối quan hệ liên kết</b> giữa các thành phần. Rất hữu ích cho sơ đồ kiến trúc.',
+                section6Title: 'Điểm Thi Quan Trọng & Tóm Tắt',
+                takeaways: [
+                    '<b>Kỳ thi AWS:</b> Dùng khi cần <b>lặp lại kiến trúc</b> ở nhiều Môi trường, Khu vực (Region) hoặc Tài khoản AWS khác nhau.',
+                    'Cung cấp cách <b>khai báo</b> để định nghĩa và triển khai <b>cơ sở hạ tầng dưới dạng mã</b> (IaC).',
+                    'Tự động tạo tài nguyên theo <b>đúng thứ tự</b>.',
+                    'IaC giúp <b>xem xét mã</b>, <b>ước tính chi phí</b> và <b>quản lý tự động</b>.'
+                ]
+            },
+            'en': {
+                pageTitle: 'CloudFormation - Easy Summary',
+                introTitle: 'CloudFormation: Infrastructure as Code',
+                section1Title: 'What is CloudFormation?',
+                section1Definition: 'It is a crucial AWS technology that provides a <b>declarative</b> way to define and deploy infrastructure at any scale.',
+                section1Example: '<b>Example:</b> You declare you want an SG + 2 EC2s + S3 + Load Balancer. CloudFormation automatically creates them in the <b>correct order</b>.',
+                section2Title: '4 Core Benefits',
+                benefits: [
+                    { icon: 'fas fa-code', title: 'Infrastructure as Code (IaC)', desc: 'All your infrastructure is code. Eliminates <b>manual creation</b> of resources.' },
+                    { icon: 'fas fa-clipboard-check', title: 'Code Review', desc: 'Any AWS changes must be reviewed through code review. Ensures <b>great operational practice</b>.' },
+                    { icon: 'fas fa-dollar-sign', title: 'Cost Advantage', desc: 'Resources receive similar tags within a stack. Allows easy and accurate <b>cost estimation</b>.' },
+                    { icon: 'fas fa-redo-alt', title: 'Saving Strategy', desc: 'Automate <b>deletion</b> (5:00 PM) and <b>recreation</b> (8:00 AM) of resources during off-hours to save costs.' },
+                ],
+                section3Title: 'The Declarative Power',
+                section3Content: 'It uses <b>Declarative Programming</b>. You do NOT need to worry about the <b>order</b> of resource creation (e.g., DynamoDB or EC2 first). The template is intelligent enough to determine the correct sequence automatically.',
+                section4Title: 'Leveraging and Reusing',
+                section4Content: 'You DON\'T reinvent the wheel. Leverage <b>existing templates</b> and documentation. Supports <b>almost all AWS resources</b>. Use a <b>Custom Resource</b> for unsupported exceptions.',
+                section5Title: 'Visualization',
+                section5Content: 'The <b>Infrastructure Composer</b> service helps visualize the template. See all resources (ALB, DB, Security Groups...) and the <b>linking relationships</b> between components. Very helpful for architecture diagrams.',
+                section6Title: 'Key Exam Points & Summary',
+                takeaways: [
+                    '<b>AWS Exam:</b> Used when you need to <b>repeat an architecture</b> across different Environments, Regions, or AWS Accounts.',
+                    'Provides a <b>declarative</b> way to define and deploy <b>AWS infrastructure as code</b> (IaC).',
+                    'Automates resource creation in the <b>correct order</b>.',
+                    'IaC enables <b>code review</b>, <b>cost estimation</b>, and <b>automated management</b>.'
+                ]
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        function updateContent() {
+            const langData = content[currentLanguage];
+            document.title = langData.pageTitle;
+            document.documentElement.lang = currentLanguage;
+
+            document.getElementById('introTitle').innerHTML = `${langData.introTitle} <i class="fas fa-cubes ml-2 text-accent-color"></i>`;
+            document.getElementById('section1Title').innerHTML = langData.section1Title;
+            document.getElementById('section1Definition').innerHTML = langData.section1Definition;
+            document.getElementById('section1Example').innerHTML = langData.section1Example;
+            document.getElementById('section2Title').innerHTML = langData.section2Title;
+            document.getElementById('section3Title').innerHTML = langData.section3Title;
+            document.getElementById('section3Content').innerHTML = langData.section3Content;
+            document.getElementById('section4Title').innerHTML = langData.section4Title;
+            document.getElementById('section4Content').innerHTML = langData.section4Content;
+            document.getElementById('section5Title').innerHTML = langData.section5Title;
+            document.getElementById('section5Content').innerHTML = langData.section5Content;
+            document.getElementById('section6Title').innerHTML = langData.section6Title;
+
+            // Update Language Toggle Buttons
+            updateLanguageButtons();
+
+            // Update Benefits
+            const benefitsContainer = document.getElementById('benefitsContainer');
+            benefitsContainer.innerHTML = '';
+            langData.benefits.forEach(b => {
+                const card = `
+                    <div class="card p-6 shadow-lg flex flex-col items-center text-center space-y-3">
+                        <div class="icon-box">
+                            <i class="${b.icon}"></i>
+                        </div>
+                        <h3 class="font-bold text-lg text-primary-color">${b.title}</h3>
+                        <p class="text-xs text-gray-600">${b.desc}</p>
+                    </div>
+                `;
+                benefitsContainer.innerHTML += card;
+            });
+
+            // Update Key Takeaways
+            const takeawaysContainer = document.getElementById('takeawaysContainer');
+            takeawaysContainer.innerHTML = '';
+            langData.takeaways.forEach(t => {
+                const item = `
+                    <div class="flex items-start space-x-3 text-gray-200">
+                        <i class="fas fa-code-branch text-lg text-accent-color mt-1 flex-shrink-0"></i>
+                        <span class="text-sm leading-relaxed">${t}</span>
+                    </div>
+                `;
+                takeawaysContainer.innerHTML += item;
+            });
+        }
+
+        function updateLanguageButtons() {
+            const langToggleVi = document.getElementById('langToggleVi');
+            const langToggleEn = document.getElementById('langToggleEn');
+
+            const activeClass = 'lang-toggle-active';
+            const inactiveClass = 'text-white hover:bg-white/30';
+
+            langToggleVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'vi' ? activeClass : inactiveClass}`;
+            langToggleEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            document.getElementById('langToggleVi').addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            document.getElementById('langToggleEn').addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

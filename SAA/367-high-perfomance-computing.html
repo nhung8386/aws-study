@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">Điện toán Hiệu năng Cao (HPC) trên AWS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f3ff; /* Violet 50 - HPC Theme */
+            color: #312e81; /* Indigo 900 */
+        }
+        .header-bg {
+            background-color: #4338ca; /* Indigo 600 */
+        }
+        .highlight-text {
+            color: #6366f1; /* Indigo 500 */
+        }
+        .card {
+            background-color: white;
+            border-top: 5px solid #818cf8; /* Indigo 400 */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: 100%;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15);
+        }
+        .icon-box {
+            color: #6366f1;
+        }
+        .key-feature strong {
+            font-weight: 800;
+            color: #1e3a8a; /* Blue 800 for core services */
+        }
+        .toggle-active {
+            background-color: #6366f1 !important;
+            color: white !important;
+        }
+        .toggle-inactive {
+            background-color: #e5e7eb; /* Gray 200 */
+            color: #4b5563; /* Gray 600 */
+        }
+        .storage-feature {
+            background-color: #e0e7ff; /* Indigo 100 */
+            border-left: 4px solid #4338ca;
+        }
+    </style>
+</head>
+<body>
+    <header class="header-bg shadow-xl">
+        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 class="text-3xl font-extrabold text-white" data-i18n="header.title">
+                <i class="fas fa-microchip mr-3"></i> Điện toán Hiệu năng Cao (HPC) trên AWS
+            </h1>
+            <!-- Language Toggles -->
+            <div class="flex space-x-2 p-1 bg-white rounded-full shadow-md">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-full font-semibold text-sm transition toggle-active">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-full font-semibold text-sm transition toggle-inactive">EN</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+
+        <!-- HPC Introduction -->
+        <section class="mb-12 p-6 bg-white shadow-xl rounded-xl border-t-8 border-indigo-700 key-feature">
+            <h2 class="text-2xl font-bold highlight-text mb-3" data-i18n="intro.title">
+                <i class="fas fa-rocket mr-2"></i> Giới thiệu về HPC
+            </h2>
+            <p class="text-gray-700 text-lg" data-i18n="intro.body">
+                <strong class="font-bold">HPC (High Performance Computing)</strong> tận dụng <strong class="font-bold">sự linh hoạt</strong> của đám mây để tạo ra số lượng tài nguyên lớn ngay lập tức. Mục đích là để <strong class="font-bold">tăng tốc thời gian ra kết quả</strong> bằng cách bổ sung thêm tài nguyên, và bạn <strong class="font-bold">chỉ phải trả tiền cho những gì đã sử dụng</strong>. Sau khi hoàn thành, bạn có thể xóa toàn bộ hạ tầng.
+            </p>
+            <div class="mt-4 p-3 bg-indigo-100 rounded-lg">
+                <strong class="text-indigo-700 block mb-1" data-i18n="intro.use_cases.title">Ứng dụng bao gồm:</strong>
+                <span class="text-sm text-indigo-900" data-i18n="intro.use_cases.list">Genomics, mô hình hóa rủi ro tài chính, dự báo thời tiết, <strong class="font-bold">Machine Learning</strong>, Deep Learning, v.v.</span>
+            </div>
+        </section>
+
+        <!-- Data Management -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-extrabold highlight-text mb-8 pb-3 border-b-2 border-indigo-200" data-i18n="data_management.title">
+                <i class="fas fa-cloud-upload-alt mr-3"></i> Quản lý & Chuyển dữ liệu
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Direct Connect -->
+                <div class="card p-6 rounded-xl key-feature">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-link"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="data_management.c1.title"><strong class="font-bold">Direct Connect</strong></h3>
+                    <p class="text-gray-600 text-sm mb-3" data-i18n="data_management.c1.body">
+                        Di chuyển hàng Gigabyte/giây dữ liệu vào đám mây qua mạng <strong class="font-bold">riêng tư, bảo mật</strong>.
+                    </p>
+                </div>
+
+                <!-- Snowball / Snowmobile -->
+                <div class="card p-6 rounded-xl key-feature">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-truck"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="data_management.c2.title"><strong class="font-bold">Snowball</strong> & <strong class="font-bold">Snowmobile</strong></h3>
+                    <p class="text-gray-600 text-sm mb-3" data-i18n="data_management.c2.body">
+                        Chuyển hàng Petabyte dữ liệu bằng đường vật lý, lý tưởng cho các lần chuyển <strong class="font-bold">lớn hoặc một lần</strong>.
+                    </p>
+                </div>
+
+                <!-- DataSync -->
+                <div class="card p-6 rounded-xl key-feature">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-sync-alt"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="data_management.c3.title"><strong class="font-bold">DataSync</strong></h3>
+                    <p class="text-gray-600 text-sm mb-3" data-i18n="data_management.c3.body">
+                        Sử dụng agent để di chuyển lượng lớn dữ liệu giữa các hệ thống tệp <strong class="font-bold">On-Premise</strong> (FS/SMB) và AWS Storage (S3, EFS, FSx).
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Compute and Networking -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-extrabold highlight-text mb-8 pb-3 border-b-2 border-indigo-200" data-i18n="compute_network.title">
+                <i class="fas fa-bolt mr-3"></i> Tính toán & Mạng lưới Hiệu suất cao
+            </h2>
+
+            <!-- Compute Optimizations -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="card p-6 rounded-xl key-feature">
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="compute_network.c1.title">Tối ưu hóa Tài nguyên Tính toán</h3>
+                    <ul class="list-disc list-inside space-y-1 text-gray-600 text-sm">
+                        <li data-i18n="compute_network.c1.l1">Instances: Chọn loại <strong class="font-bold">CPU-optimized</strong> hoặc <strong class="font-bold">GPU-optimized</strong>.</li>
+                        <li data-i18n="compute_network.c1.l2">Chi phí: Sử dụng <strong class="font-bold">Spot Instances</strong> và <strong class="font-bold">Spot Fleets</strong> để tiết kiệm chi phí lớn.</li>
+                        <li data-i18n="compute_network.c1.l3">Scaling: Dùng <strong class="font-bold">Auto Scaling</strong> để tự động hóa mở rộng dựa trên nhu cầu tính toán.</li>
+                    </ul>
+                </div>
+                <div class="card p-6 rounded-xl key-feature">
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="compute_network.c2.title">Cluster <strong class="font-bold">Placement Groups</strong></h3>
+                    <p class="text-gray-600 text-sm mb-3" data-i18n="compute_network.c2.body">
+                        Bắt buộc đối với các Instance cần <strong class="font-bold">giao tiếp phân tán</strong>. Cung cấp <strong class="font-bold">độ trễ thấp</strong> và thông lượng mạng cao (ví dụ: 10 Gbps) trên cùng một rack trong AZ.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Enhanced Networking -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- ENA -->
+                <div class="card p-6 rounded-xl key-feature">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-ethernet"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="compute_network.c3.title">Enhanced Networking: <strong class="font-bold">ENA</strong></h3>
+                    <p class="text-gray-600 text-sm mb-3" data-i18n="compute_network.c3.body">
+                        <strong class="font-bold">Elastic Network Adapter</strong>. Tốc độ mạng lên tới <strong class="font-bold">100 Gbps</strong>. Cung cấp băng thông, PPS cao hơn và độ trễ thấp hơn.
+                    </p>
+                </div>
+
+                <!-- Intel VF -->
+                <div class="card p-6 rounded-xl key-feature">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-minus"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="compute_network.c4.title">Legacy: <strong class="font-bold">Intel 82599 VF</strong></h3>
+                    <p class="text-gray-600 text-sm mb-3" data-i18n="compute_network.c4.body">
+                        Tùy chọn kế thừa, cung cấp tốc độ lên đến <strong class="font-bold">10 Gbps</strong>. Cả ENA và Intel VF đều cung cấp Enhanced Networking (SR-IOV).
+                    </p>
+                </div>
+                
+                <!-- EFA -->
+                <div class="card p-6 rounded-xl key-feature">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-splotch"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="compute_network.c5.title">Tối ưu HPC: <strong class="font-bold">EFA</strong></h3>
+                    <p class="text-gray-600 text-sm mb-3" data-i18n="compute_network.c5.body">
+                        <strong class="font-bold">Elastic Fabric Adapter</strong>. ENA nâng cao dành riêng cho HPC (chỉ Linux). Sử dụng <strong class="font-bold">MPI(Message Passing Interface)</strong> để <strong class="font-bold">bỏ qua OS</strong>, giảm độ trễ tối đa cho các workloads giao tiếp chặt chẽ (tightly coupled).
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Storage Options -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-extrabold highlight-text mb-8 pb-3 border-b-2 border-indigo-200" data-i18n="storage.title">
+                <i class="fas fa-hdd mr-3"></i> Tùy chọn Lưu trữ cho HPC
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                <!-- Instance-Attached -->
+                <div class="p-6 rounded-xl storage-feature key-feature">
+                    <h3 class="text-xl font-semibold text-indigo-700 mb-2" data-i18n="storage.c1.title">Lưu trữ Gắn kèm Instance</h3>
+                    <ul class="list-disc list-inside space-y-1 text-gray-800 text-sm">
+                        <li data-i18n="storage.c1.l1"><strong class="font-bold">EBS (io2 Block Express)</strong>: Có thể mở rộng lên tới 256.000 IOPS.</li>
+                        <li data-i18n="storage.c1.l2"><strong class="font-bold">Instance Store</strong>: Hàng triệu IOPS, độ trễ thấp nhất; <strong class="font-bold">dữ liệu bị mất</strong> khi Instance bị mất.</li>
+                    </ul>
+                </div>
+
+                <!-- Network Storage -->
+                <div class="p-6 rounded-xl storage-feature key-feature">
+                    <h3 class="text-xl font-semibold text-indigo-700 mb-2" data-i18n="storage.c2.title">Lưu trữ Mạng</h3>
+                    <ul class="list-disc list-inside space-y-1 text-gray-800 text-sm">
+                        <li data-i18n="storage.c2.l1"><strong class="font-bold">Amazon S3</strong>: Lưu trữ blob lớn, <strong class="font-bold">không phải hệ thống tệp</strong>.</li>
+                        <li data-i18n="storage.c2.l2"><strong class="font-bold">Amazon EFS</strong>: IOPS mở rộng dựa trên kích thước, hỗ trợ Provisioned IOPS.</li>
+                    </ul>
+                </div>
+
+                <!-- HPC-Optimized -->
+                <div class="p-6 rounded-xl storage-feature key-feature">
+                    <h3 class="text-xl font-semibold text-indigo-700 mb-2" data-i18n="storage.c3.title">Hệ thống Tệp Tối ưu HPC</h3>
+                    <ul class="list-disc list-inside space-y-1 text-gray-800 text-sm">
+                        <li data-i18n="storage.c3.l1"><strong class="font-bold">FSx for Lustre</strong>: Dành riêng cho HPC (Linux), cung cấp <strong class="font-bold">hàng triệu IOPS</strong>.</li>
+                        <li data-i18n="storage.c3.l2">Được hỗ trợ bởi <strong class="font-bold">S3</strong> ở backend.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Automation and Orchestration -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-extrabold highlight-text mb-8 pb-3 border-b-2 border-indigo-200" data-i18n="automation.title">
+                <i class="fas fa-cogs mr-3"></i> Tự động hóa & Điều phối (Orchestration)
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- AWS Batch -->
+                <div class="card p-6 rounded-xl key-feature">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-tasks"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="automation.c1.title"><strong class="font-bold">AWS Batch</strong></h3>
+                    <ul class="list-disc list-inside space-y-1 text-gray-600 text-sm">
+                        <li data-i18n="automation.c1.l1">Dịch vụ quản lý để thực hiện các job song song <strong class="font-bold">đa nút (multi-node)</strong>.</li>
+                        <li data-i18n="automation.c1.l2">Đơn giản hóa việc lên lịch và khởi chạy EC2 Instances theo nhu cầu.</li>
+                    </ul>
+                </div>
+
+                <!-- AWS ParallelCluster -->
+                <div class="card p-6 rounded-xl key-feature">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-cubes"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="automation.c2.title"><strong class="font-bold">AWS ParallelCluster</strong></h3>
+                    <ul class="list-disc list-inside space-y-1 text-gray-600 text-sm">
+                        <li data-i18n="automation.c2.l1">Công cụ <strong class="font-bold">nguồn mở</strong> để triển khai HPC trên AWS (cấu hình bằng file văn bản).</li>
+                        <li data-i18n="automation.c2.l2">Tự động hóa việc tạo VPC, Subnet, loại Cluster và Instance.</li>
+                        <li data-i18n="automation.c2.l3">Hỗ trợ kích hoạt <strong class="font-bold">EFA</strong> qua tham số cấu hình để tối ưu hóa mạng.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Takeaways -->
+        <section class="p-6 bg-indigo-100 rounded-xl shadow-md border-t-4 border-indigo-600">
+            <h2 class="text-2xl font-bold highlight-text mb-4" data-i18n="takeaways.title">
+                <i class="fas fa-key mr-2"></i> Tóm tắt Chính
+            </h2>
+            <ul class="space-y-3 text-lg list-none pl-0 key-feature">
+                <li class="flex items-start">
+                    <span class="text-indigo-600 mr-3 mt-1"><i class="fas fa-angle-right"></i></span>
+                    <span data-i18n="takeaways.l1"> <strong class="font-bold">HPC</strong> là sự kết hợp của nhiều dịch vụ để mở rộng tài nguyên tính toán nhanh chóng.</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-indigo-600 mr-3 mt-1"><i class="fas fa-angle-right"></i></span>
+                    <span data-i18n="takeaways.l2"> <strong class="font-bold">ENA</strong> (100 Gbps) và <strong class="font-bold">EFA</strong> (tối ưu hóa MPI, bỏ qua OS) là các tính năng mạng quan trọng.</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-indigo-600 mr-3 mt-1"><i class="fas fa-angle-right"></i></span>
+                    <span data-i18n="takeaways.l3"> <strong class="font-bold">FSx for Lustre</strong> là hệ thống tệp dành riêng cho HPC.</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-indigo-600 mr-3 mt-1"><i class="fas fa-angle-right"></i></span>
+                    <span data-i18n="takeaways.l4"> <strong class="font-bold">AWS Batch</strong> và <strong class="font-bold">AWS ParallelCluster</strong> giúp tự động hóa việc quản lý và triển khai Cluster.</span>
+                </li>
+            </ul>
+        </section>
+    </main>
+
+    <script>
+        // --- Translation Data ---
+        const translations = {
+            'vi': {
+                'header.title': 'Điện toán Hiệu năng Cao (HPC) trên AWS',
+                
+                'intro.title': 'Giới thiệu về HPC',
+                'intro.body': '<strong>HPC (High Performance Computing)</strong> tận dụng <strong>sự linh hoạt</strong> của đám mây để tạo ra số lượng tài nguyên lớn ngay lập tức. Mục đích là để <strong>tăng tốc thời gian ra kết quả</strong> bằng cách bổ sung thêm tài nguyên, và bạn <strong>chỉ phải trả tiền cho những gì đã sử dụng</strong>. Sau khi hoàn thành, bạn có thể xóa toàn bộ hạ tầng.',
+                'intro.use_cases.title': 'Ứng dụng bao gồm:',
+                'intro.use_cases.list': 'Genomics, mô hình hóa rủi ro tài chính, dự báo thời tiết, <strong>Machine Learning</strong>, Deep Learning, v.v.',
+
+                'data_management.title': 'Quản lý & Chuyển dữ liệu',
+                'data_management.c1.title': '<strong>Direct Connect</strong>',
+                'data_management.c1.body': 'Di chuyển hàng Gigabyte/giây dữ liệu vào đám mây qua mạng <strong>riêng tư, bảo mật</strong>.',
+                'data_management.c2.title': '<strong>Snowball</strong> & <strong>Snowmobile</strong>',
+                'data_management.c2.body': 'Chuyển hàng Petabyte dữ liệu bằng đường vật lý, lý tưởng cho các lần chuyển <strong>lớn hoặc một lần</strong>.',
+                'data_management.c3.title': '<strong>DataSync</strong>',
+                'data_management.c3.body': 'Sử dụng agent để di chuyển lượng lớn dữ liệu giữa các hệ thống tệp <strong>On-Premise</strong> (FS/SMB) và AWS Storage (S3, EFS, FSx).',
+
+                'compute_network.title': 'Tính toán & Mạng lưới Hiệu suất cao',
+                'compute_network.c1.title': 'Tối ưu hóa Tài nguyên Tính toán',
+                'compute_network.c1.l1': 'Instances: Chọn loại <strong>CPU-optimized</strong> hoặc <strong>GPU-optimized</strong>.',
+                'compute_network.c1.l2': 'Chi phí: Sử dụng <strong>Spot Instances</strong> và <strong>Spot Fleets</strong> để tiết kiệm chi phí lớn.',
+                'compute_network.c1.l3': 'Scaling: Dùng <strong>Auto Scaling</strong> để tự động hóa mở rộng dựa trên nhu cầu tính toán.',
+                'compute_network.c2.title': 'Cluster <strong>Placement Groups</strong>',
+                'compute_network.c2.body': 'Bắt buộc đối với các Instance cần <strong>giao tiếp phân tán</strong>. Cung cấp <strong>độ trễ thấp</strong> và thông lượng mạng cao (ví dụ: 10 Gbps) trên cùng một rack trong AZ.',
+                'compute_network.c3.title': 'Enhanced Networking: <strong>ENA</strong>',
+                'compute_network.c3.body': '<strong>Elastic Network Adapter</strong>. Tốc độ mạng lên tới <strong>100 Gbps</strong>. Cung cấp băng thông, PPS cao hơn và độ trễ thấp hơn.',
+                'compute_network.c4.title': 'Legacy: <strong>Intel 82599 VF</strong>',
+                'compute_network.c4.body': 'Tùy chọn kế thừa, cung cấp tốc độ lên đến <strong>10 Gbps</strong>. Cả ENA và Intel VF đều cung cấp Enhanced Networking (SR-IOV).',
+                'compute_network.c5.title': 'Tối ưu HPC: <strong>EFA</strong>',
+                'compute_network.c5.body': '<strong>Elastic Fabric Adapter</strong>. ENA nâng cao dành riêng cho HPC (chỉ Linux). Sử dụng <strong>MPI</strong> để <strong>bỏ qua OS</strong>, giảm độ trễ tối đa cho các workloads giao tiếp chặt chẽ (tightly coupled).',
+
+                'storage.title': 'Tùy chọn Lưu trữ cho HPC',
+                'storage.c1.title': 'Lưu trữ Gắn kèm Instance',
+                'storage.c1.l1': '<strong>EBS (io2 Block Express)</strong>: Có thể mở rộng lên tới 256.000 IOPS.',
+                'storage.c1.l2': '<strong>Instance Store</strong>: Hàng triệu IOPS, độ trễ thấp nhất; <strong>dữ liệu bị mất</strong> khi Instance bị mất.',
+                'storage.c2.title': 'Lưu trữ Mạng',
+                'storage.c2.l1': '<strong>Amazon S3</strong>: Lưu trữ blob lớn, <strong>không phải hệ thống tệp</strong>.',
+                'storage.c2.l2': '<strong>Amazon EFS</strong>: IOPS mở rộng dựa trên kích thước, hỗ trợ Provisioned IOPS.',
+                'storage.c3.title': 'Hệ thống Tệp Tối ưu HPC',
+                'storage.c3.l1': '<strong>FSx for Lustre</strong>: Dành riêng cho HPC (Linux), cung cấp <strong>hàng triệu IOPS</strong>.',
+                'storage.c3.l2': 'Được hỗ trợ bởi <strong>S3</strong> ở backend.',
+
+                'automation.title': 'Tự động hóa & Điều phối (Orchestration)',
+                'automation.c1.title': '<strong>AWS Batch</strong>',
+                'automation.c1.l1': 'Dịch vụ quản lý để thực hiện các job song song <strong>đa nút (multi-node)</strong>.',
+                'automation.c1.l2': 'Đơn giản hóa việc lên lịch và khởi chạy EC2 Instances theo nhu cầu.',
+                'automation.c2.title': '<strong>AWS ParallelCluster</strong>',
+                'automation.c2.l1': 'Công cụ <strong>nguồn mở</strong> để triển khai HPC trên AWS (cấu hình bằng file văn bản).',
+                'automation.c2.l2': 'Tự động hóa việc tạo VPC, Subnet, loại Cluster và Instance.',
+                'automation.c2.l3': 'Hỗ trợ kích hoạt <strong>EFA</strong> qua tham số cấu hình để tối ưu hóa mạng.',
+
+                'takeaways.title': 'Tóm tắt Chính',
+                'takeaways.l1': ' <strong>HPC</strong> là sự kết hợp của nhiều dịch vụ để mở rộng tài nguyên tính toán nhanh chóng.',
+                'takeaways.l2': ' <strong>ENA</strong> (100 Gbps) và <strong>EFA</strong> (tối ưu hóa MPI, bỏ qua OS) là các tính năng mạng quan trọng.',
+                'takeaways.l3': ' <strong>FSx for Lustre</strong> là hệ thống tệp dành riêng cho HPC.',
+                'takeaways.l4': ' <strong>AWS Batch</strong> và <strong>AWS ParallelCluster</strong> giúp tự động hóa việc quản lý và triển khai Cluster.'
+            },
+            'en': {
+                'header.title': 'High Performance Computing (HPC) on AWS',
+                
+                'intro.title': 'Introduction to HPC',
+                'intro.body': '<strong>HPC (High Performance Computing)</strong> leverages the cloud\'s <strong>flexibility</strong> to create a very high number of resources in no time. The goal is to <strong>speed up the time to results</strong> by adding more resources, and you <strong>only pay for what you have used</strong>. Once you are done, you can destroy the entire infrastructure.',
+                'intro.use_cases.title': 'Use Cases include:',
+                'intro.use_cases.list': 'Genomics, financial risk modeling, weather prediction, <strong>Machine Learning</strong>, Deep Learning, and so on.',
+
+                'data_management.title': 'Data Management & Transfer',
+                'data_management.c1.title': '<strong>Direct Connect</strong>',
+                'data_management.c1.body': 'Moves gigabytes per second of data into the cloud over a private, <strong>secure network</strong>.',
+                'data_management.c2.title': '<strong>Snowball</strong> & <strong>Snowmobile</strong>',
+                'data_management.c2.body': 'Move petabytes of data physically, typically for <strong>large or one-off transfers</strong>.',
+                'data_management.c3.title': '<strong>DataSync</strong>',
+                'data_management.c3.body': 'Requires an agent to move large amounts of data between <strong>On-Premises</strong> file systems (FS/SMB) and AWS Storage (S3, EFS, FSx).',
+
+                'compute_network.title': 'High Performance Compute & Networking',
+                'compute_network.c1.title': 'Compute Resource Optimization',
+                'compute_network.c1.l1': 'Instances: Choose <strong>CPU-optimized</strong> or <strong>GPU-optimized</strong> types.',
+                'compute_network.c1.l2': 'Cost: Use <strong>Spot Instances</strong> and <strong>Spot Fleets</strong> for huge cost savings.',
+                'compute_network.c1.l3': 'Scaling: Use <strong>Auto Scaling</strong> to automatically scale fleets based on computation needs.',
+                'compute_network.c2.title': 'Cluster <strong>Placement Groups</strong>',
+                'compute_network.c2.body': 'Mandatory for Instances needing <strong>distributed computation</strong>. Provides <strong>low latency</strong> and high network throughput (e.g., 10 Gbps) on the same rack in the AZ.',
+                'compute_network.c3.title': 'Enhanced Networking: <strong>ENA</strong>',
+                'compute_network.c3.body': '<strong>Elastic Network Adapter</strong>. Delivers network speeds up to <strong>100 Gbps</strong>. Provides higher bandwidth, PPS, and lower latency.',
+                'compute_network.c4.title': 'Legacy: <strong>Intel 82599 VF</strong>',
+                'compute_network.c4.body': 'The legacy option, providing up to <strong>10 Gbps</strong>. Both ENA and Intel VF provide Enhanced Networking (SR-IOV).',
+                'compute_network.c5.title': 'HPC Optimized: <strong>EFA</strong>',
+                'compute_network.c5.body': '<strong>Elastic Fabric Adapter</strong>. An improved ENA dedicated for HPC (Linux only). Uses <strong>MPI</strong> to <strong>bypass the OS</strong> for even lower latency in tightly coupled workloads.',
+
+                'storage.title': 'Storage Options for HPC',
+                'storage.c1.title': 'Instance-Attached Storage',
+                'storage.c1.l1': '<strong>EBS (io2 Block Express)</strong>: Can scale up to 256,000 IOPS.',
+                'storage.c1.l2': '<strong>Instance Store</strong>: Millions of IOPS, lowest latency; <strong>data loss</strong> if the instance is lost.',
+                'storage.c2.title': 'Network Storage',
+                'storage.c2.l1': '<strong>Amazon S3</strong>: Stores large blobs of data, <strong>not a file system</strong>.',
+                'storage.c2.l2': '<strong>Amazon EFS</strong>: IOPS scale based on size, with an option for Provisioned IOPS.',
+                'storage.c3.title': 'HPC-Optimized File System',
+                'storage.c3.l1': '<strong>FSx for Lustre</strong>: Dedicated for HPC (Linux) clusters, provides <strong>millions of IOPS</strong>.',
+                'storage.c3.l2': 'Backed by <strong>S3</strong> in the backend.',
+
+                'automation.title': 'Automation and Orchestration',
+                'automation.c1.title': '<strong>AWS Batch</strong>',
+                'automation.c1.l1': 'A managed service to perform <strong>multi-node</strong> parallel jobs.',
+                'automation.c1.l2': 'Simplifies scheduling and launching EC2 Instances as needed.',
+                'automation.c2.title': '<strong>AWS ParallelCluster</strong>',
+                'automation.c2.l1': 'An <strong>open-source</strong> tool to deploy HPC on AWS (configured using text files).',
+                'automation.c2.l2': 'Automates the creation of VPC, Subnets, cluster types, and instance types.',
+                'automation.c2.l3': 'Supports enabling <strong>EFA</strong> via configuration parameters to optimize networking.',
+
+                'takeaways.title': 'Key Takeaways',
+                'takeaways.l1': ' <strong>HPC</strong> is a combination of services to rapidly scale compute resources.',
+                'takeaways.l2': ' <strong>ENA</strong> (100 Gbps) and <strong>EFA</strong> (MPI optimized, OS bypass) are key networking features.',
+                'takeaways.l3': ' <strong>FSx for Lustre</strong> is the dedicated file system for HPC.',
+                'takeaways.l4': ' <strong>AWS Batch</strong> and <strong>AWS ParallelCluster</strong> automate cluster management and job execution.'
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+        const activeClass = 'toggle-active';
+        const inactiveClass = 'toggle-inactive';
+
+        // Helper function to update content
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const content = translations[currentLanguage][key];
+                if (content) {
+                    // Use innerHTML to allow for strong/bold tags within the content
+                    element.innerHTML = content;
+                }
+            });
+            
+            // Update the main document language attribute
+            document.documentElement.lang = currentLanguage;
+            
+            // Update toggle button styles
+            updateLanguageButtons();
+        }
+
+        // Function to update button styles
+        function updateLanguageButtons() {
+            if (currentLanguage === 'vi') {
+                langToggleVi.classList.add(...activeClass.split(' '));
+                langToggleVi.classList.remove(...inactiveClass.split(' '));
+                langToggleEn.classList.add(...inactiveClass.split(' '));
+                langToggleEn.classList.remove(...activeClass.split(' '));
+            } else {
+                langToggleEn.classList.add(...activeClass.split(' '));
+                langToggleEn.classList.remove(...inactiveClass.split(' '));
+                langToggleVi.classList.add(...inactiveClass.split(' '));
+                langToggleVi.classList.remove(...activeClass.split(' '));
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize content with default language
+            updateContent();
+
+            // Language toggle event listeners
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

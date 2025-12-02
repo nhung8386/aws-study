@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Các Ví Dụ Kiến Trúc Tham Khảo AWS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #4f46e5; /* Indigo 600 - Depth/Insight */
+            --accent-color: #6366f1;  /* Indigo 500 - Exploration */
+            --secondary-color: #9333ea; /* Purple 600 - Solutions */
+            --background-color: #f5f3ff; /* Indigo 50 */
+            --text-color: #1f2937;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .header-bg {
+            background-color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .section-title {
+            color: var(--secondary-color);
+            font-weight: 800;
+            border-bottom: 3px solid var(--secondary-color);
+        }
+        .resource-card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-top: 5px solid;
+            transition: all 0.3s ease-in-out;
+        }
+        .architecture-center {
+            border-top-color: var(--accent-color);
+        }
+        .solutions-library {
+            border-top-color: var(--secondary-color);
+        }
+        .cta-button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        .cta-button:hover {
+            background-color: var(--accent-color);
+        }
+        b {
+            font-weight: 700 !important;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-layer-group mr-3 text-white"></i>
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Introduction -->
+        <section class="p-8 rounded-xl bg-white shadow-xl border-b-4 border-accent-color">
+            <h2 id="section1Title" class="text-3xl font-extrabold text-primary-color mb-4"></h2>
+            <p id="section1Definition" class="text-lg text-gray-700 leading-relaxed"></p>
+            <p id="introContext" class="mt-4 p-3 bg-blue-50 border-l-4 border-accent-color font-semibold text-sm text-gray-700"></p>
+        </section>
+        
+        <!-- Section 2: Two Key Resources -->
+        <section>
+            <h2 id="section2Title" class="text-3xl section-title mb-8 text-center"><i class="fas fa-compass mr-2"></i> </h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <!-- Resource 1: Architecture Center -->
+                <div id="archCenterCard" class="resource-card architecture-center">
+                    <h3 id="archCenterTitle" class="text-2xl font-bold text-accent-color mb-3 flex items-center"><i class="fas fa-sitemap mr-3"></i> </h3>
+                    <p id="archCenterDesc" class="text-gray-600 mb-4"></p>
+                    <div id="archCenterFeatures" class="space-y-2 text-sm">
+                        <p class="font-bold text-gray-700" id="archCenterKeyFeaturesTitle"></p>
+                        <ul id="archCenterFeatureList" class="space-y-1 text-gray-700 list-disc pl-5">
+                            <!-- Features populated by JS -->
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Resource 2: Solutions Library -->
+                <div id="solutionsLibraryCard" class="resource-card solutions-library">
+                    <h3 id="solutionsLibraryTitle" class="text-2xl font-bold text-secondary-color mb-3 flex items-center"><i class="fas fa-puzzle-piece mr-3"></i> </h3>
+                    <p id="solutionsLibraryDesc" class="text-gray-600 mb-4"></p>
+                    <div id="solutionsLibraryFeatures" class="space-y-2 text-sm">
+                        <p class="font-bold text-gray-700" id="solutionsLibraryKeyFeaturesTitle"></p>
+                        <ul id="solutionsLibraryFeatureList" class="space-y-1 text-gray-700 list-disc pl-5">
+                            <!-- Features populated by JS -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 3: Value Proposition -->
+        <section class="bg-primary-color p-8 rounded-2xl shadow-2xl">
+            <h2 id="section3Title" class="text-3xl font-extrabold mb-6 text-center"><i class="fas fa-graduation-cap mr-2"></i> </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="text-center p-4 bg-primary-color/80 rounded-lg">
+                    <i class="fas fa-file-pdf text-4xl text-secondary-color mb-3"></i>
+                    <p id="value1" class="font-semibold"></p>
+                </div>
+                <div class="text-center p-4 bg-primary-color/80 rounded-lg">
+                    <i class="fas fa-code-branch text-4xl text-secondary-color mb-3"></i>
+                    <p id="value2" class="font-semibold"></p>
+                </div>
+                <div class="text-center p-4 bg-primary-color/80 rounded-lg">
+                    <i class="fas fa-chart-line text-4xl text-secondary-color mb-3"></i>
+                    <p id="value3" class="font-semibold"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Key Takeaways -->
+        <section class="p-8 bg-gray-100 rounded-xl shadow-lg">
+            <h2 id="section4Title" class="text-3xl font-extrabold text-accent-color mb-8 text-center"><i class="fas fa-check-circle mr-2"></i> </h2>
+            <ul id="takeawaysContainer" class="space-y-4">
+                <!-- Takeaways will be populated by JS -->
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        // Content Translations using <b> for bolding.
+        const content = {
+            'vi': {
+                pageTitle: 'Các Ví Dụ Kiến Trúc Tham Khảo AWS',
+                introTitle: 'Các Ví Dụ về Kiến Trúc - AWS Certified Solutions Architect Associate',
+                section1Title: 'Quan Điểm Kiến Trúc Tổng Quan',
+                section1Definition: 'Chúng ta đã khám phá các kiến trúc xoay quanh các dịch vụ AWS cổ điển như EC2, ELB, RDS và ElastiCache, cũng như kiến trúc Serverless, Cloud-Native với S3, Lambda, DynamoDB, CloudFront, API Gateway, và nhiều dịch vụ khác.',
+                introContext: 'Để thực sự vượt trội, bạn cần xem các kiến trúc giải pháp thực tế. Có hai tài nguyên tuyệt vời của AWS mà tôi muốn giới thiệu:',
+                
+                // Two Key Resources
+                section2Title: 'Hai Tài Nguyên Kiến Trúc Vàng',
+                
+                archCenterTitle: '1. AWS Architecture Center',
+                archCenterDesc: 'Đây là nơi bạn có thể tìm thấy các ví dụ và sơ đồ kiến trúc tham khảo. Nó bao gồm các tài liệu về Well-Architected Framework.',
+                archCenterKeyFeaturesTitle: 'Giá trị cốt lõi:',
+                archCenterFeatures: [
+                    'Hơn <b>2.000</b> sơ đồ kiến trúc có thể duyệt qua.',
+                    'Có bộ lọc để chọn các kiến trúc cụ thể theo ngành hoặc công nghệ.',
+                    'Tài liệu chi tiết (PDF/HTML), bao gồm cả <b>sơ đồ kiến trúc</b> và <b>giải thích chuyên sâu</b>.'
+                ],
+                
+                solutionsLibraryTitle: '2. AWS Solutions Library',
+                solutionsLibraryDesc: 'Thư viện này cung cấp các giải pháp đã được kiểm duyệt (vetted solutions) và hướng dẫn cho các trường hợp sử dụng kinh doanh và kỹ thuật thực tế.',
+                solutionsLibraryKeyFeaturesTitle: 'Giá trị cốt lõi:',
+                solutionsLibraryFeatures: [
+                    'Cung cấp <b>CloudFormation Templates</b> để triển khai ngay các giải pháp.',
+                    'Bao gồm các giải pháp cho các ngành công nghiệp và công nghệ cụ thể (ví dụ: Live Streaming on AWS).',
+                    'Bạn có thể <b>khởi chạy giải pháp trực tiếp</b> trong AWS Console và truy cập mã nguồn GitHub.'
+                ],
+                
+                // Value Proposition
+                section3Title: 'Lợi Ích Của Việc Sử Dụng Các Tài Nguyên Này',
+                value1: 'Tìm tài liệu rất chi tiết, dễ dàng nghiên cứu sâu về các thiết kế phức tạp.',
+                value2: 'Sử dụng các mẫu CloudFormation có sẵn để triển khai kiến trúc thế giới thực một cách hiệu quả.',
+                value3: 'Nâng cao kỹ năng Kiến trúc sư Giải pháp bằng cách học hỏi từ các thiết kế đã được chứng minh của AWS.',
+
+                // Key Takeaways
+                section4Title: 'Tóm Tắt & Điểm Chính',
+                takeaways: [
+                    '<b>AWS Architecture Center</b> cung cấp hơn <b>2.000</b> ví dụ và sơ đồ kiến trúc tham khảo.',
+                    '<b>AWS Solutions Library</b> cung cấp các giải pháp đã được kiểm duyệt kèm theo sơ đồ kiến trúc và <b>CloudFormation templates</b> để triển khai.',
+                    'Các tài nguyên này bao gồm các giải thích chi tiết, thực tiễn tốt nhất và hướng dẫn triển khai để nâng cao kỹ năng kiến trúc sư giải pháp.',
+                    'Sử dụng các tài nguyên này giúp <b>thu hẹp khoảng cách</b> giữa việc học và triển khai kiến trúc giải pháp thực tế.'
+                ]
+            },
+            'en': {
+                pageTitle: 'AWS Architectural Reference Examples',
+                introTitle: 'Examples of Architecture - AWS Certified Solutions Architect Associate',
+                section1Title: 'Architectural Perspective Overview',
+                section1Definition: 'We have explored architectures around classic AWS services such as EC2, ELB, RDS, and ElastiCache, as well as serverless, more cloud-native architectures using S3, Lambda, DynamoDB, CloudFront, API Gateway, and more.',
+                introContext: 'To truly excel, you need to see real-world solution architectures. There are two excellent AWS resources I recommend to bridge this gap:',
+                
+                // Two Key Resources
+                section2Title: 'Two Golden Architectural Resources',
+                
+                archCenterTitle: '1. AWS Architecture Center',
+                archCenterDesc: 'This is where you can find reference architecture examples and diagrams. It includes documentation surrounding the Well-Architected Framework.',
+                archCenterKeyFeaturesTitle: 'Core Value:',
+                archCenterFeatures: [
+                    'Over <b>2,000</b> architecture diagrams available for browsing.',
+                    'Filters allow selecting specific architectures by industry or technology.',
+                    'Detailed documentation (PDF/HTML), including <b>architecture diagrams</b> and <b>deep explanations</b>.'
+                ],
+                
+                solutionsLibraryTitle: '2. AWS Solutions Library',
+                solutionsLibraryDesc: 'This library provides vetted solutions and guidance for business and technical use cases.',
+                solutionsLibraryKeyFeaturesTitle: 'Core Value:',
+                solutionsLibraryFeatures: [
+                    'Provides <b>CloudFormation Templates</b> to immediately implement the solutions.',
+                    'Includes solutions for specific industries and technologies (e.g., Live Streaming on AWS).',
+                    'You can <b>launch the solution directly</b> in the AWS Console and access GitHub source code.'
+                ],
+                
+                // Value Proposition
+                section3Title: 'The Value of Using These Resources',
+                value1: 'Find very detailed documentation, making it easy to deep-dive into complex designs.',
+                value2: 'Utilize ready-made CloudFormation templates to deploy real-world architectures efficiently.',
+                value3: 'Advance your Solution Architect skills by learning from AWS-proven designs.',
+
+                // Key Takeaways
+                section4Title: 'Summary & Key Takeaways',
+                takeaways: [
+                    'The <b>AWS Architecture Center</b> provides over <b>2,000</b> reference architecture examples and diagrams.',
+                    'The <b>AWS Solutions Library</b> offers vetted solutions with architecture diagrams and <b>CloudFormation templates</b> for implementation.',
+                    'These resources include detailed explanations, best practices, and deployment guides to enhance solution architect skills.',
+                    'Utilizing these resources helps <b>bridge the gap</b> between learning and real-world solution architecture deployment.'
+                ]
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        function updateContent() {
+            const langData = content[currentLanguage];
+            document.title = langData.pageTitle;
+            document.documentElement.lang = currentLanguage;
+
+            document.getElementById('langToggleVi').textContent = 'VI';
+            document.getElementById('langToggleEn').textContent = 'EN';
+            
+            document.getElementById('introTitle').innerHTML = `${langData.introTitle} <i class="fas fa-layer-group mr-3 text-white"></i>`;
+            document.getElementById('section1Title').textContent = langData.section1Title;
+            document.getElementById('section1Definition').innerHTML = langData.section1Definition; 
+            document.getElementById('introContext').innerHTML = langData.introContext;
+
+            // Two Key Resources
+            document.getElementById('section2Title').innerHTML = `${langData.section2Title} <i class="fas fa-compass ml-2"></i>`;
+            
+            // Architecture Center
+            document.getElementById('archCenterTitle').innerHTML = `${langData.archCenterTitle} <i class="fas fa-sitemap mr-3"></i>`;
+            document.getElementById('archCenterDesc').textContent = langData.archCenterDesc;
+            document.getElementById('archCenterKeyFeaturesTitle').textContent = langData.archCenterKeyFeaturesTitle;
+            
+            const archCenterFeatureList = document.getElementById('archCenterFeatureList');
+            archCenterFeatureList.innerHTML = '';
+            langData.archCenterFeatures.forEach(feature => {
+                archCenterFeatureList.innerHTML += `<li>${feature}</li>`;
+            });
+
+            // Solutions Library
+            document.getElementById('solutionsLibraryTitle').innerHTML = `${langData.solutionsLibraryTitle} <i class="fas fa-puzzle-piece mr-3"></i>`;
+            document.getElementById('solutionsLibraryDesc').textContent = langData.solutionsLibraryDesc;
+            document.getElementById('solutionsLibraryKeyFeaturesTitle').textContent = langData.solutionsLibraryKeyFeaturesTitle;
+            
+            const solutionsLibraryFeatureList = document.getElementById('solutionsLibraryFeatureList');
+            solutionsLibraryFeatureList.innerHTML = '';
+            langData.solutionsLibraryFeatures.forEach(feature => {
+                solutionsLibraryFeatureList.innerHTML += `<li>${feature}</li>`;
+            });
+
+            // Value Proposition
+            document.getElementById('section3Title').innerHTML = `${langData.section3Title} <i class="fas fa-graduation-cap ml-2"></i>`;
+            document.getElementById('value1').textContent = langData.value1;
+            document.getElementById('value2').textContent = langData.value2;
+            document.getElementById('value3').textContent = langData.value3;
+
+            // Key Takeaways
+            document.getElementById('section4Title').innerHTML = `${langData.section4Title} <i class="fas fa-check-circle ml-2"></i>`;
+
+            // Update Language Toggle Buttons
+            updateLanguageButtons();
+
+            // Update Key Takeaways
+            const takeawaysContainer = document.getElementById('takeawaysContainer');
+            takeawaysContainer.innerHTML = '';
+            langData.takeaways.forEach(t => {
+                const item = `
+                    <li class="flex items-start space-x-3 text-gray-700 p-3 bg-white rounded-lg shadow-sm">
+                        <i class="fas fa-lightbulb text-lg text-primary-color mt-1 flex-shrink-0"></i>
+                        <span class="text-base leading-relaxed">${t}</span>
+                    </li>
+                `;
+                takeawaysContainer.innerHTML += item;
+            });
+        }
+
+        function updateLanguageButtons() {
+            const langToggleVi = document.getElementById('langToggleVi');
+            const langToggleEn = document.getElementById('langToggleEn');
+
+            const activeClass = 'bg-secondary-color';
+            const inactiveClass = 'text-white hover:bg-white/30';
+
+            langToggleVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'vi' ? activeClass : inactiveClass}`;
+            langToggleEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            document.getElementById('langToggleVi').addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            document.getElementById('langToggleEn').addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

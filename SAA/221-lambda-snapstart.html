@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">AWS Lambda - SnapStart (Tăng Tốc Khởi Động)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #10b981; /* Emerald 500 - Performance */
+            --accent-color: #f59e0b;  /* Amber 500 - Speed/Warning Mitigation */
+            --text-color: #1f2937;
+            --background-color: #ecfdf5; /* Emerald 50 */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .header-bg {
+            background-color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .content-card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .highlight-box {
+            background-color: var(--primary-color)/10;
+            border-left: 5px solid var(--primary-color);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            color: var(--text-color);
+        }
+        .workflow-step {
+            padding: 1rem;
+            background-color: #f7fee7; /* Lime 50 */
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px dashed #a3e635; /* Lime 400 */
+        }
+        b {
+            font-weight: 700 !important;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-rocket mr-3 text-white"></i>
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Introduction and Core Benefit -->
+        <section class="content-card border-t-4 border-primary-color">
+            <h2 id="section1Title" class="text-3xl font-extrabold text-primary-color mb-4 border-b-2 pb-2 border-primary-color/50"></h2>
+            <p id="section1Definition" class="text-lg text-gray-700 leading-relaxed"></p>
+
+            <div class="mt-6 highlight-box">
+                <p class="text-xl font-bold text-primary-color mb-2 flex items-center">
+                    <i class="fas fa-bolt mr-2 text-accent-color"></i> <span id="benefitTitle"></span>
+                </p>
+                <p id="benefitDetail" class="text-lg"></p>
+            </div>
+        </section>
+
+        <!-- Section 2: Function Lifecycle Comparison -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+            <!-- Without SnapStart -->
+            <div class="content-card border-l-4 border-accent-color">
+                <h3 id="withoutSnapTitle" class="text-2xl font-bold text-accent-color mb-4 flex items-center"><i class="fas fa-stopwatch mr-3"></i> </h3>
+                <p id="withoutSnapContent" class="text-gray-700 leading-relaxed mb-4"></p>
+                
+                <div class="mt-4 space-y-2">
+                    <p class="workflow-step"><b>1. Initialize Phase</b></p>
+                    <p class="workflow-step"><b>2. Invoke Phase</b></p>
+                    <p class="workflow-step"><b>3. Shutdown Phase</b></p>
+                </div>
+            </div>
+
+            <!-- With SnapStart -->
+            <div class="content-card border-l-4 border-primary-color">
+                <h3 id="withSnapTitle" class="text-2xl font-bold text-primary-color mb-4 flex items-center"><i class="fas fa-camera-retro mr-3"></i> </h3>
+                <p id="withSnapContent" class="text-gray-700 leading-relaxed mb-4"></p>
+                
+                <div class="mt-4 space-y-2">
+                    <p class="workflow-step bg-primary-color/20 border-primary-color"><b>1. Preinitialized (Snapshot)</b> <i class="fas fa-check float-right text-primary-color"></i></p>
+                    <p class="workflow-step"><b>2. Invoke Phase</b></p>
+                    <p class="workflow-step"><b>3. Shutdown Phase</b></p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 3: SnapStart Workflow -->
+        <section class="content-card border-t-4 border-accent-color">
+            <h2 id="section3Title" class="text-3xl font-extrabold text-primary-color mb-6 flex items-center"><i class="fas fa-cogs mr-3"></i> </h2>
+            <div id="snapStartWorkflow" class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <!-- Workflow steps will be populated by JS -->
+            </div>
+        </section>
+
+        <!-- Section 4: Key Takeaways -->
+        <section class="p-8 bg-primary-color/10 rounded-xl shadow-lg">
+            <h2 id="section4Title" class="text-3xl font-extrabold text-primary-color mb-8 text-center"><i class="fas fa-award mr-2"></i> </h2>
+            <ul id="takeawaysContainer" class="space-y-4">
+                <!-- Takeaways will be populated by JS -->
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        // Content Translations using <b> for bolding.
+        const content = {
+            'vi': {
+                pageTitle: 'AWS Lambda - SnapStart (Tăng Tốc Khởi Động)',
+                introTitle: 'Giới Thiệu về Lambda SnapStart',
+                section1Title: 'Tăng Tốc Hiệu Suất 10x Miễn Phí',
+                section1Definition: '<b>Lambda SnapStart</b> là một tính năng giúp cải thiện hiệu suất hàm Lambda của bạn lên đến <b>10 lần</b> mà không phải trả thêm chi phí. Nó hỗ trợ các runtime <b>Java, Python và .NET</b>.',
+                benefitTitle: 'Tối ưu hóa Khởi động Lạnh (Cold Start)',
+                benefitDetail: 'SnapStart giải quyết vấn đề Khởi động Lạnh, đặc biệt đối với các hàm Java cần nhiều thời gian để khởi tạo môi trường toàn bộ.',
+
+                // Without SnapStart
+                withoutSnapTitle: 'Vòng Đời Chức Năng (Không SnapStart)',
+                withoutSnapContent: 'Khi SnapStart bị tắt, hàm Lambda của bạn được gọi và trải qua ba giai đoạn: Giai đoạn <b>Initialize</b> (Khởi tạo), Giai đoạn <b>Invoke</b> (Gọi hàm), và Giai đoạn <b>Shutdown</b> (Tắt). Giai đoạn khởi tạo có thể mất thời gian đáng kể.',
+                
+                // With SnapStart
+                withSnapTitle: 'Tối Ưu Hóa Hiệu Suất (Với SnapStart)',
+                withSnapContent: 'Khi bạn sử dụng SnapStart, hàm được <b>khởi tạo trước (preinitialized)</b>. Sau khi khởi tạo trước, nó có thể trực tiếp chuyển sang giai đoạn Invoke (Gọi hàm) và sau đó là Shutdown, bỏ qua bước khởi tạo kéo dài trong quá trình gọi hàm.',
+                
+                // SnapStart Workflow
+                section3Title: 'Quy Trình Hoạt Động của SnapStart',
+                snapStartWorkflow: [
+                    { icon: 'fas fa-upload', title: '1. Xuất Bản Phiên Bản Mới', detail: 'Khi bạn xuất bản một phiên bản mới của hàm Lambda, Lambda tự động khởi tạo hàm.' },
+                    { icon: 'fas fa-hdd', title: '2. Tạo Ảnh Chụp (Snapshot)', detail: 'Một ảnh chụp (snapshot) về trạng thái bộ nhớ và đĩa được tạo ra.' },
+                    { icon: 'fas fa-forward', title: '3. Truy Cập Độ Trễ Thấp', detail: 'Ảnh chụp này được sử dụng để truy cập độ trễ thấp, cho phép hàm đi thẳng vào giai đoạn Invoke (Gọi hàm).' }
+                ],
+
+                // Key Takeaways
+                section4Title: 'Tóm Tắt Các Điểm Chính Cần Nhớ',
+                takeaways: [
+                    '<b>Lambda SnapStart</b> cải thiện hiệu suất hàm Lambda lên đến <b>10 lần</b> mà <b>không mất thêm chi phí</b>.',
+                    'Không có SnapStart, các hàm trải qua các giai đoạn <b>initialize, invoke, và shutdown</b>; khởi tạo có thể mất nhiều thời gian.',
+                    'SnapStart <b>khởi tạo trước</b> hàm và <b>tạo snapshot</b> bộ nhớ/đĩa khi xuất bản phiên bản mới.',
+                    'Ảnh chụp này cho phép truy cập độ trễ thấp bằng cách cho phép hàm trực tiếp vào giai đoạn <b>invoke</b>.'
+                ]
+            },
+            'en': {
+                pageTitle: 'AWS Lambda - SnapStart (Cold Start Acceleration)',
+                introTitle: 'Introduction to Lambda SnapStart',
+                section1Title: 'Up to 10x Performance Improvement at No Extra Cost',
+                section1Definition: '<b>Lambda SnapStart</b> is a feature that improves your Lambda function performance up to <b>10x</b> at no extra cost. It supports <b>Java, Python, and .NET</b> runtimes.',
+                benefitTitle: 'Cold Start Optimization',
+                benefitDetail: 'SnapStart addresses the Cold Start problem, especially for Java functions that require significant time to initialize their entire environment.',
+
+                // Without SnapStart
+                withoutSnapTitle: 'Function Lifecycle (Without SnapStart)',
+                withoutSnapContent: 'When SnapStart is disabled, your Lambda function is invoked and goes through three phases: <b>Initialize</b> phase, <b>Invoke</b> phase, and <b>Shutdown</b> phase. The initialization phase can take significant time.',
+                
+                // With SnapStart
+                withSnapTitle: 'Performance Optimization (With SnapStart)',
+                withSnapStartContent: 'When you use SnapStart, the function is <b>preinitialized</b>. Once preinitialized, it can directly enter the invoke phase and proceed to shutdown, skipping the lengthy initialization step during invocation.',
+                
+                // SnapStart Workflow
+                section3Title: 'SnapStart Workflow',
+                snapStartWorkflow: [
+                    { icon: 'fas fa-upload', title: '1. Publish New Version', detail: 'When you publish a new version of your Lambda function, Lambda automatically initializes the function.' },
+                    { icon: 'fas fa-hdd', title: '2. Take Snapshot', detail: 'A snapshot of the memory and disk state is taken.' },
+                    { icon: 'fas fa-forward', title: '3. Low Latency Access', detail: 'This snapshot is used for low latency access, allowing the function to go directly into the Invoke phase.' }
+                ],
+
+                // Key Takeaways
+                section4Title: 'Key Takeaways Summary',
+                takeaways: [
+                    '<b>Lambda SnapStart</b> improves Lambda function performance up to <b>10x</b> at <b>no extra cost</b>.',
+                    'Without SnapStart, Lambda functions go through <b>initialize, invoke, and shutdown</b> phases, with initialization potentially taking significant time.',
+                    'SnapStart <b>preinitializes</b> the function and takes a <b>snapshot</b> of memory and disk state upon publishing a new version.',
+                    'This snapshot enables low latency access by allowing the function to directly enter the <b>invoke</b> phase.'
+                ]
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        function updateContent() {
+            const langData = content[currentLanguage];
+            document.title = langData.pageTitle;
+            document.documentElement.lang = currentLanguage;
+
+            document.getElementById('langToggleVi').textContent = 'VI';
+            document.getElementById('langToggleEn').textContent = 'EN';
+            
+            document.getElementById('introTitle').innerHTML = `${langData.introTitle} <i class="fas fa-rocket mr-3 text-white"></i>`;
+            document.getElementById('section1Title').textContent = langData.section1Title;
+            document.getElementById('section1Definition').innerHTML = langData.section1Definition; 
+            document.getElementById('benefitTitle').textContent = langData.benefitTitle;
+            document.getElementById('benefitDetail').innerHTML = langData.benefitDetail;
+
+            // Without SnapStart
+            document.getElementById('withoutSnapTitle').innerHTML = `${langData.withoutSnapTitle} <i class="fas fa-stopwatch ml-3"></i>`;
+            document.getElementById('withoutSnapContent').innerHTML = langData.withoutSnapContent;
+            
+            // With SnapStart
+            document.getElementById('withSnapTitle').innerHTML = `${langData.withSnapTitle} <i class="fas fa-camera-retro ml-3"></i>`;
+            document.getElementById('withSnapContent').innerHTML = langData.withSnapContent;
+
+            // SnapStart Workflow
+            document.getElementById('section3Title').innerHTML = `${langData.section3Title} <i class="fas fa-cogs ml-3"></i>`;
+            const workflowContainer = document.getElementById('snapStartWorkflow');
+            workflowContainer.innerHTML = '';
+            langData.snapStartWorkflow.forEach((step, index) => {
+                workflowContainer.innerHTML += `
+                    <div class="p-6 bg-white rounded-lg shadow-md border-b-4 border-accent-color">
+                        <i class="${step.icon} text-4xl text-accent-color mb-3"></i>
+                        <p class="font-bold text-lg text-text-color mb-2">${step.title}</p>
+                        <p class="text-sm text-gray-600">${step.detail}</p>
+                    </div>
+                `;
+            });
+            
+            // Key Takeaways
+            document.getElementById('section4Title').innerHTML = `${langData.section4Title} <i class="fas fa-award ml-2"></i>`;
+
+            // Update Key Takeaways
+            const takeawaysContainer = document.getElementById('takeawaysContainer');
+            takeawaysContainer.innerHTML = '';
+            langData.takeaways.forEach(t => {
+                const item = `
+                    <li class="flex items-start space-x-3 text-gray-700 p-3 bg-white rounded-lg shadow-sm">
+                        <i class="fas fa-star text-lg text-primary-color mt-1 flex-shrink-0"></i>
+                        <span class="text-base leading-relaxed">${t}</span>
+                    </li>
+                `;
+                takeawaysContainer.innerHTML += item;
+            });
+
+            // Update Language Toggle Buttons
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            const langToggleVi = document.getElementById('langToggleVi');
+            const langToggleEn = document.getElementById('langToggleEn');
+
+            const activeClass = 'bg-accent-color';
+            const inactiveClass = 'text-white hover:bg-white/30';
+
+            langToggleVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'vi' ? activeClass : inactiveClass}`;
+            langToggleEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            document.getElementById('langToggleVi').addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            document.getElementById('langToggleEn').addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

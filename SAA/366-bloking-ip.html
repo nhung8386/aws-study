@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">Chặn Địa chỉ IP trong AWS: Các Lớp Phòng thủ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0fdf4; /* Emerald 50 - Security Theme */
+            color: #1c3d5a; /* Blue Gray 800 */
+        }
+        .header-bg {
+            background-color: #065f46; /* Emerald 800 */
+        }
+        .highlight-text {
+            color: #059669; /* Emerald 600 */
+        }
+        .card {
+            background-color: white;
+            border-top: 5px solid #34d399; /* Emerald 400 */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: 100%;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15);
+        }
+        .icon-box {
+            color: #059669;
+        }
+        .key-feature strong {
+            font-weight: 800;
+            color: #10b981; /* Emerald 500 for key security terms */
+        }
+        .toggle-active {
+            background-color: #059669 !important;
+            color: white !important;
+        }
+        .toggle-inactive {
+            background-color: #e5e7eb; /* Gray 200 */
+            color: #4b5563; /* Gray 600 */
+        }
+    </style>
+</head>
+<body>
+    <header class="header-bg shadow-xl">
+        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 class="text-3xl font-extrabold text-white" data-i18n="header.title">
+                <i class="fas fa-shield-alt mr-3"></i> Chặn Địa chỉ IP trong AWS
+            </h1>
+            <!-- Language Toggles -->
+            <div class="flex space-x-2 p-1 bg-white rounded-full shadow-md">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-full font-semibold text-sm transition toggle-active">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-full font-semibold text-sm transition toggle-inactive">EN</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+
+        <!-- Defense Layers Section -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-extrabold highlight-text mb-8 pb-3 border-b-2 border-emerald-200" data-i18n="defense_layers.title">
+                <i class="fas fa-lock mr-3"></i> Các Lớp Phòng thủ Cơ bản (EC2 Đơn lẻ)
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                <!-- NACL -->
+                <div class="card p-6 rounded-xl key-feature">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-network-wired"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="defense_layers.c1.title">Tầng 1: <strong class="font-bold">Network ACL (NACL)</strong></h3>
+                    <p class="text-gray-600 text-sm mb-3" data-i18n="defense_layers.c1.body">
+                        Phòng thủ đầu tiên ở cấp <strong class="font-bold">Subnet</strong>. Cho phép các quy tắc <strong class="font-bold">ALLOW</strong> hoặc <strong class="font-bold">DENY</strong> <strong class="font-bold">minh bạch</strong>, áp dụng cho cả lưu lượng vào và ra.
+                    </p>
+                </div>
+
+                <!-- Security Group -->
+                <div class="card p-6 rounded-xl key-feature">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-user-shield"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="defense_layers.c2.title">Tầng 2: <strong class="font-bold">Security Group (SG)</strong></h3>
+                    <p class="text-gray-600 text-sm mb-3" data-i18n="defense_layers.c2.body">
+                        Phòng thủ ở cấp <strong class="font-bold">Instance</strong>. Chỉ hỗ trợ quy tắc <strong class="font-bold">ALLOW</strong> (trạng thái). Lý tưởng để giới hạn truy cập chỉ cho <strong class="font-bold">các IP đã biết</strong>.
+                    </p>
+                </div>
+
+                <!-- EC2 Firewall -->
+                <div class="card p-6 rounded-xl key-feature">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-fire-extinguisher"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="defense_layers.c3.title">Tầng 3 (Tùy chọn): Firewall trên <strong class="font-bold">EC2</strong></h3>
+                    <p class="text-gray-600 text-sm mb-3" data-i18n="defense_layers.c3.body">
+                        Phần mềm tường lửa <strong class="font-bold">trên Instance</strong> để kiểm soát chi tiết hơn. Cần cân nhắc <strong class="font-bold">chi phí CPU</strong> và ảnh hưởng hiệu suất.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ALB Architecture Section -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-extrabold highlight-text mb-8 pb-3 border-b-2 border-emerald-200" data-i18n="alb_arch.title">
+                <i class="fas fa-route mr-3"></i> Tích hợp với Load Balancer (ALB & NLB)
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- ALB Security -->
+                <div class="card p-6 rounded-xl key-feature">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-balance-scale"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="alb_arch.c1.title">Bảo mật tại <strong class="font-bold">Application Load Balancer (ALB)</strong></h3>
+                    <p class="text-gray-600 text-sm mb-3" data-i18n="alb_arch.c1.body">
+                        ALB thực hiện <strong class="font-bold">ngắt kết nối</strong> (Connection Termination). Client kết nối đến ALB, ALB kết nối đến EC2. EC2 có thể đặt trong <strong class="font-bold">Private Subnet</strong>.
+                    </p>
+                    <div class="mt-4 p-3 bg-emerald-50 rounded-md">
+                        <strong class="text-emerald-700 block mb-1" data-i18n="alb_arch.c1.sg_tip">Thiết lập SG cho EC2:</strong>
+                        <span class="text-sm text-emerald-900" data-i18n="alb_arch.c1.sg_value">Chỉ <strong class="font-bold">cho phép kết nối</strong> từ Security Group của ALB.</span>
+                    </div>
+                </div>
+
+                <!-- WAF Integration -->
+                <div class="card p-6 rounded-xl key-feature">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-filter"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="alb_arch.c2.title">Lớp Ứng dụng: <strong class="font-bold">AWS WAF</strong></h3>
+                    <p class="text-gray-600 text-sm mb-3" data-i18n="alb_arch.c2.body">
+                        Tích hợp <strong class="font-bold">AWS WAF</strong> với ALB để cung cấp khả năng <strong class="font-bold">lọc IP nâng cao</strong>, kiểm soát yêu cầu và các cơ chế phòng thủ khác.
+                    </p>
+                    <div class="mt-4 p-3 bg-red-50 rounded-md">
+                        <strong class="text-red-700 block mb-1" data-i18n="alb_arch.c2.nlb_note">Lưu ý NLB:</strong>
+                        <span class="text-sm text-red-900" data-i18n="alb_arch.c2.nlb_value">Quy tắc bảo mật tương tự áp dụng khi sử dụng <strong class="font-bold">Network Load Balancer (NLB)</strong>.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CloudFront and Geo Restriction -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-extrabold highlight-text mb-8 pb-3 border-b-2 border-emerald-200" data-i18n="cloudfront_waf.title">
+                <i class="fas fa-cloud-sun mr-3"></i> Bảo mật Tầng Edge (CloudFront)
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <!-- CloudFront IP Path -->
+                <div class="card p-6 rounded-xl key-feature">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-map-signs"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="cloudfront_waf.c1.title">Đường đi Lưu lượng với <strong class="font-bold">CloudFront</strong></h3>
+                    <p class="text-gray-600 text-sm mb-3" data-i18n="cloudfront_waf.c1.body">
+                        Client truy cập CloudFront, và CloudFront gửi lưu lượng từ <strong class="font-bold">IP công cộng</strong> của các Edge Location đến ALB của bạn.
+                    </p>
+                    <div class="mt-4 p-3 bg-yellow-50 rounded-md">
+                        <strong class="text-yellow-700 block mb-1" data-i18n="cloudfront_waf.c1.nacl_warning">CẢNH BÁO NACL:</strong>
+                        <span class="text-sm text-yellow-900" data-i18n="cloudfront_waf.c1.nacl_value">NACL <strong class="font-bold">không hiệu quả</strong> để lọc IP Client, vì IP gốc đã bị che bởi CloudFront.</span>
+                    </div>
+                </div>
+
+                <!-- WAF & Geo Restriction -->
+                <div class="card p-6 rounded-xl key-feature">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-globe-americas"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="cloudfront_waf.c2.title"><strong class="font-bold">WAF</strong> và <strong class="font-bold">Geo Restriction</strong></h3>
+                    <p class="text-gray-600 text-sm mb-3" data-i18n="cloudfront_waf.c2.body">
+                        Sử dụng <strong class="font-bold">AWS WAF</strong> tích hợp tại <strong class="font-bold">CloudFront</strong> để lọc IP Client và các tính năng tường lửa khác.
+                    </p>
+                    <ul class="mt-4 p-3 bg-emerald-50 rounded-md text-sm text-emerald-900 list-disc list-inside">
+                        <li data-i18n="cloudfront_waf.c2.l1">SG của ALB phải cho phép <strong class="font-bold">chỉ các IP công cộng của CloudFront</strong>.</li>
+                        <li data-i18n="cloudfront_waf.c2.l2">Sử dụng <strong class="font-bold">Geo Restriction</strong> để chặn truy cập từ toàn bộ quốc gia đang tấn công.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Summary -->
+        <section class="p-6 bg-emerald-100 rounded-xl shadow-md border-t-4 border-emerald-600">
+            <h2 class="text-2xl font-bold highlight-text mb-4" data-i18n="summary.title">
+                <i class="fas fa-check-circle mr-2"></i> Tóm tắt Chính
+            </h2>
+            <ul class="space-y-3 text-lg list-none pl-0 key-feature">
+                <li class="flex items-start">
+                    <span class="text-emerald-600 mr-3 mt-1"><i class="fas fa-angle-right"></i></span>
+                    <span data-i18n="summary.l1"> <strong class="font-bold">Network ACLs</strong> là lớp phòng thủ đầu tiên, cho phép quy tắc <strong class="font-bold">DENY</strong> rõ ràng ở cấp Subnet.</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-emerald-600 mr-3 mt-1"><i class="fas fa-angle-right"></i></span>
+                    <span data-i18n="summary.l2"> <strong class="font-bold">Security Groups</strong> chỉ cho phép quy tắc <strong class="font-bold">ALLOW</strong>, hoạt động ở cấp Instance.</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-emerald-600 mr-3 mt-1"><i class="fas fa-angle-right"></i></span>
+                    <span data-i18n="summary.l3"> <strong class="font-bold">ALB</strong> + <strong class="font-bold">Private Subnet EC2</strong> là kiến trúc bảo mật tốt hơn.</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-emerald-600 mr-3 mt-1"><i class="fas fa-angle-right"></i></span>
+                    <span data-i18n="summary.l4"> <strong class="font-bold">AWS WAF</strong> là công cụ mạnh mẽ để lọc IP và Geo-Restriction, đặc biệt khi sử dụng <strong class="font-bold">CloudFront</strong>.</span>
+                </li>
+            </ul>
+        </section>
+    </main>
+
+    <script>
+        // --- Translation Data ---
+        const translations = {
+            'vi': {
+                'header.title': 'Chặn Địa chỉ IP trong AWS: Các Lớp Phòng thủ',
+                
+                'defense_layers.title': 'Các Lớp Phòng thủ Cơ bản (EC2 Đơn lẻ)',
+                'defense_layers.c1.title': 'Tầng 1: <strong class="font-bold">Network ACL (NACL)</strong>',
+                'defense_layers.c1.body': 'Phòng thủ đầu tiên ở cấp <strong class="font-bold">Subnet</strong>. Cho phép các quy tắc <strong class="font-bold">ALLOW</strong> hoặc <strong class="font-bold">DENY</strong> <strong class="font-bold">minh bạch</strong>, áp dụng cho cả lưu lượng vào và ra.',
+                'defense_layers.c2.title': 'Tầng 2: <strong class="font-bold">Security Group (SG)</strong>',
+                'defense_layers.c2.body': 'Phòng thủ ở cấp <strong class="font-bold">Instance</strong>. Chỉ hỗ trợ quy tắc <strong class="font-bold">ALLOW</strong> (trạng thái). Lý tưởng để giới hạn truy cập chỉ cho <strong class="font-bold">các IP đã biết</strong>.',
+                'defense_layers.c3.title': 'Tầng 3 (Tùy chọn): Firewall trên <strong class="font-bold">EC2</strong>',
+                'defense_layers.c3.body': 'Phần mềm tường lửa <strong class="font-bold">trên Instance</strong> để kiểm soát chi tiết hơn. Cần cân nhắc <strong class="font-bold">chi phí CPU</strong> và ảnh hưởng hiệu suất.',
+
+                'alb_arch.title': 'Tích hợp với Load Balancer (ALB & NLB)',
+                'alb_arch.c1.title': 'Bảo mật tại <strong class="font-bold">Application Load Balancer (ALB)</strong>',
+                'alb_arch.c1.body': 'ALB thực hiện <strong class="font-bold">ngắt kết nối</strong> (Connection Termination). Client kết nối đến ALB, ALB kết nối đến EC2. EC2 có thể đặt trong <strong class="font-bold">Private Subnet</strong>.',
+                'alb_arch.c1.sg_tip': 'Thiết lập SG cho EC2:',
+                'alb_arch.c1.sg_value': 'Chỉ <strong class="font-bold">cho phép kết nối</strong> từ Security Group của ALB.',
+                'alb_arch.c2.title': 'Lớp Ứng dụng: <strong class="font-bold">AWS WAF</strong>',
+                'alb_arch.c2.body': 'Tích hợp <strong class="font-bold">AWS WAF</strong> với ALB để cung cấp khả năng <strong class="font-bold">lọc IP nâng cao</strong>, kiểm soát yêu cầu và các cơ chế phòng thủ khác.',
+                'alb_arch.c2.nlb_note': 'Lưu ý NLB:',
+                'alb_arch.c2.nlb_value': 'Quy tắc bảo mật tương tự áp dụng khi sử dụng <strong class="font-bold">Network Load Balancer (NLB)</strong>.',
+
+                'cloudfront_waf.title': 'Bảo mật Tầng Edge (CloudFront)',
+                'cloudfront_waf.c1.title': 'Đường đi Lưu lượng với <strong class="font-bold">CloudFront</strong>',
+                'cloudfront_waf.c1.body': 'Client truy cập CloudFront, và CloudFront gửi lưu lượng từ <strong class="font-bold">IP công cộng</strong> của các Edge Location đến ALB của bạn.',
+                'cloudfront_waf.c1.nacl_warning': 'CẢNH BÁO NACL:',
+                'cloudfront_waf.c1.nacl_value': 'NACL <strong class="font-bold">không hiệu quả</strong> để lọc IP Client, vì IP gốc đã bị che bởi CloudFront.',
+                'cloudfront_waf.c2.title': '<strong class="font-bold">WAF</strong> và <strong class="font-bold">Geo Restriction</strong>',
+                'cloudfront_waf.c2.body': 'Sử dụng <strong class="font-bold">AWS WAF</strong> tích hợp tại <strong class="font-bold">CloudFront</strong> để lọc IP Client và các tính năng tường lửa khác.',
+                'cloudfront_waf.c2.l1': 'SG của ALB phải cho phép <strong class="font-bold">chỉ các IP công cộng của CloudFront</strong>.',
+                'cloudfront_waf.c2.l2': 'Sử dụng <strong class="font-bold">Geo Restriction</strong> để chặn truy cập từ toàn bộ quốc gia đang tấn công.',
+
+                'summary.title': 'Tóm tắt Chính',
+                'summary.l1': ' <strong class="font-bold">Network ACLs</strong> là lớp phòng thủ đầu tiên, cho phép quy tắc <strong class="font-bold">DENY</strong> rõ ràng ở cấp Subnet.',
+                'summary.l2': ' <strong class="font-bold">Security Groups</strong> chỉ cho phép quy tắc <strong class="font-bold">ALLOW</strong>, hoạt động ở cấp Instance.',
+                'summary.l3': ' <strong class="font-bold">ALB</strong> + <strong class="font-bold">Private Subnet EC2</strong> là kiến trúc bảo mật tốt hơn.',
+                'summary.l4': ' <strong class="font-bold">AWS WAF</strong> là công cụ mạnh mẽ để lọc IP và Geo-Restriction, đặc biệt khi sử dụng <strong class="font-bold">CloudFront</strong>.'
+            },
+            'en': {
+                'header.title': 'Blocking IP Addresses in AWS: Defense Layers',
+                
+                'defense_layers.title': 'Fundamental Defense Layers (Standalone EC2)',
+                'defense_layers.c1.title': 'Layer 1: <strong class="font-bold">Network ACL (NACL)</strong>',
+                'defense_layers.c1.body': 'Primary defense at the <strong class="font-bold">Subnet</strong> level. Allows <strong class="font-bold">explicit ALLOW</strong> or <strong class="font-bold">DENY</strong> rules, applied to both inbound and outbound traffic.',
+                'defense_layers.c2.title': 'Layer 2: <strong class="font-bold">Security Group (SG)</strong>',
+                'defense_layers.c2.body': 'Instance-level defense. Only supports <strong class="font-bold">ALLOW</strong> rules (stateful). Ideal for limiting access to <strong class="font-bold">known IP addresses</strong>.',
+                'defense_layers.c3.title': 'Layer 3 (Optional): Firewall on <strong class="font-bold">EC2</strong>',
+                'defense_layers.c3.body': 'On-<strong class="font-bold">Instance</strong> firewall software for more granular control. Requires consideration of <strong class="font-bold">CPU cost</strong> and performance impact.',
+
+                'alb_arch.title': 'Integration with Load Balancers (ALB & NLB)',
+                'alb_arch.c1.title': 'Security at the <strong class="font-bold">Application Load Balancer (ALB)</strong>',
+                'alb_arch.c1.body': 'ALB performs <strong class="font-bold">Connection Termination</strong>. Client connects to ALB, ALB connects to EC2. EC2 can reside in a <strong class="font-bold">Private Subnet</strong>.',
+                'alb_arch.c1.sg_tip': 'EC2 SG Configuration:',
+                'alb_arch.c1.sg_value': 'Must <strong class="font-bold">only allow connections</strong> from the ALB\'s Security Group.',
+                'alb_arch.c2.title': 'Application Layer: <strong class="font-bold">AWS WAF</strong>',
+                'alb_arch.c2.body': 'Integrate <strong class="font-bold">AWS WAF</strong> with ALB to provide <strong class="font-bold">advanced IP filtering</strong>, request control, and other defense mechanisms.',
+                'alb_arch.c2.nlb_note': 'NLB Note:',
+                'alb_arch.c2.nlb_value': 'Similar security considerations apply when using a <strong class="font-bold">Network Load Balancer (NLB)</strong>.',
+
+                'cloudfront_waf.title': 'Edge Layer Security (CloudFront)',
+                'cloudfront_waf.c1.title': 'Traffic Path with <strong class="font-bold">CloudFront</strong>',
+                'cloudfront_waf.c1.body': 'Client accesses CloudFront, and CloudFront forwards traffic from its Edge Location <strong class="font-bold">public IPs</strong> directly to your ALB.',
+                'cloudfront_waf.c1.nacl_warning': 'NACL WARNING:',
+                'cloudfront_waf.c1.nacl_value': 'NACL is <strong class="font-bold">ineffective</strong> for filtering Client IP, as the original IP is masked by CloudFront.',
+                'cloudfront_waf.c2.title': '<strong class="font-bold">WAF</strong> and <strong class="font-bold">Geo Restriction</strong>',
+                'cloudfront_waf.c2.body': 'Use <strong class="font-bold">AWS WAF</strong> integrated at <strong class="font-bold">CloudFront</strong> to perform client IP filtering and other firewall features.',
+                'cloudfront_waf.c2.l1': 'ALB\'s SG must allow <strong class="font-bold">only CloudFront public IPs</strong>.',
+                'cloudfront_waf.c2.l2': 'Use <strong class="font-bold">Geo Restriction</strong> to block access from entire attacking countries.',
+
+                'summary.title': 'Key Takeaways',
+                'summary.l1': ' <strong class="font-bold">Network ACLs</strong> are the first line of defense, allowing explicit <strong class="font-bold">DENY</strong> rules at the Subnet level.',
+                'summary.l2': ' <strong class="font-bold">Security Groups</strong> only allow <strong class="font-bold">ALLOW</strong> rules, operating at the Instance level.',
+                'summary.l3': ' <strong class="font-bold">ALB</strong> + <strong class="font-bold">Private Subnet EC2</strong> is a better security architecture.',
+                'summary.l4': ' <strong class="font-bold">AWS WAF</strong> is a powerful tool for IP filtering and Geo-Restriction, especially when using <strong class="font-bold">CloudFront</strong>.'
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+        const activeClass = 'toggle-active';
+        const inactiveClass = 'toggle-inactive';
+
+        // Helper function to update content
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const content = translations[currentLanguage][key];
+                if (content) {
+                    // Use innerHTML to allow for strong/bold tags within the content
+                    element.innerHTML = content;
+                }
+            });
+            
+            // Update the main document language attribute
+            document.documentElement.lang = currentLanguage;
+            
+            // Update toggle button styles
+            updateLanguageButtons();
+        }
+
+        // Function to update button styles
+        function updateLanguageButtons() {
+            if (currentLanguage === 'vi') {
+                langToggleVi.classList.add(...activeClass.split(' '));
+                langToggleVi.classList.remove(...inactiveClass.split(' '));
+                langToggleEn.classList.add(...inactiveClass.split(' '));
+                langToggleEn.classList.remove(...activeClass.split(' '));
+            } else {
+                langToggleEn.classList.add(...activeClass.split(' '));
+                langToggleEn.classList.remove(...inactiveClass.split(' '));
+                langToggleVi.classList.add(...inactiveClass.split(' '));
+                langToggleVi.classList.remove(...activeClass.split(' '));
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize content with default language
+            updateContent();
+
+            // Language toggle event listeners
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

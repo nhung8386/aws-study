@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">AWS Lambda - Mạng trong VPC và RDS Proxy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #9333ea; /* Violet 600 - Security/VPC */
+            --accent-color: #14b8a6;  /* Teal 500 - Connectivity/Proxy */
+            --text-color: #1f2937;
+            --background-color: #f5f3ff; /* Violet 50 */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .header-bg {
+            background-color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .content-card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+        }
+        .proxy-feature {
+            background-color: #ecfdf5; /* Teal 50 */
+            border-left: 4px solid var(--accent-color);
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+        b {
+            font-weight: 700 !important;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-network-wired mr-3 text-white"></i>
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Default Lambda Networking -->
+        <section class="content-card border-t-4 border-primary-color">
+            <h2 id="section1Title" class="text-3xl font-extrabold text-primary-color mb-4 border-b-2 pb-2 border-primary-color/50"></h2>
+            <div class="space-y-4 text-gray-700 leading-relaxed">
+                <p id="section1Default" class="text-lg"></p>
+                <p id="section1Example"></p>
+            </div>
+            
+        </section>
+
+        <!-- Section 2: Launching Lambda inside VPC (Private Access) -->
+        <section class="content-card border-l-4 border-primary-color">
+            <h2 id="section2Title" class="text-3xl font-extrabold text-primary-color mb-4 flex items-center"><i class="fas fa-shield-alt mr-3"></i> </h2>
+            <p id="section2Intro" class="text-lg text-gray-700 leading-relaxed mb-4"></p>
+            <p id="section2Setup" class="p-4 bg-primary-color/10 rounded-lg text-gray-700"></p>
+            <p id="section2Result" class="mt-4 text-gray-700 leading-relaxed"></p>
+        </section>
+
+        <!-- Section 3: Lambda with RDS Proxy -->
+        <section class="content-card border-t-4 border-accent-color">
+            <h2 id="section3Title" class="text-3xl font-extrabold text-accent-color mb-6 flex items-center"><i class="fas fa-database mr-3"></i> </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 id="proxyProblemTitle" class="text-xl font-bold text-red-600 mb-2"></h3>
+                    <p id="proxyProblemContent" class="text-gray-700 leading-relaxed mb-4"></p>
+                    
+                    <h3 id="proxySolutionTitle" class="text-xl font-bold text-accent-color mb-2"></h3>
+                    <p id="proxySolutionContent" class="text-gray-700 leading-relaxed"></p>
+                    
+                </div>
+
+                <div>
+                    <h3 id="proxyBenefitsTitle" class="text-xl font-bold text-primary-color mb-4"></h3>
+                    <div class="space-y-3">
+                        <div class="proxy-feature"><b id="benefit1Title"></b> <span id="benefit1Detail"></span></div>
+                        <div class="proxy-feature"><b id="benefit2Title"></b> <span id="benefit2Detail"></span></div>
+                        <div class="proxy-feature"><b id="benefit3Title"></b> <span id="benefit3Detail"></span></div>
+                    </div>
+                    <p id="proxyVPCRequirement" class="mt-4 p-3 bg-yellow-100 text-yellow-800 font-semibold rounded-lg border-l-4 border-yellow-500"></p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Section 4: Key Takeaways -->
+        <section class="p-8 bg-primary-color/10 rounded-xl shadow-lg">
+            <h2 id="section4Title" class="text-3xl font-extrabold text-primary-color mb-8 text-center"><i class="fas fa-map-marked-alt mr-2"></i> </h2>
+            <ul id="takeawaysContainer" class="space-y-4">
+                <!-- Takeaways will be populated by JS -->
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        // Content Translations using <b> for bolding.
+        const content = {
+            'vi': {
+                pageTitle: 'AWS Lambda - Mạng trong VPC và RDS Proxy',
+                introTitle: 'Kiến Thức Cơ Bản về Mạng Lambda',
+                section1Title: 'Triển Khai Mặc Định (Ngoài VPC)',
+                section1Default: 'Theo mặc định, khi bạn khởi chạy hàm AWS Lambda, chúng được khởi chạy <b>bên ngoài Virtual Private Cloud (VPC)</b> của riêng bạn. Thay vào đó, chúng chạy trong một VPC do AWS sở hữu. Do đó, các hàm Lambda này <b>không có quyền truy cập</b> vào các tài nguyên bên trong VPC của bạn.',
+                section1Example: 'Ví dụ: Cấu hình mặc định hoạt động tốt nếu hàm của bạn cần truy cập bất kỳ API công cộng nào trên internet hoặc các dịch vụ AWS công cộng như <b>DynamoDB</b>.',
+                
+                section2Title: 'Khởi Chạy Lambda trong VPC (Truy Cập Nội Bộ)',
+                section2Intro: 'Nếu bạn có một tài nguyên riêng tư, chẳng hạn như cơ sở dữ liệu RDS riêng tư, kết nối sẽ không hoạt động trừ khi bạn đưa Lambda vào VPC của mình.',
+                section2Setup: 'Để khởi chạy Lambda trong VPC của bạn, bạn phải chỉ định <b>VPC ID</b>, các <b>Subnet</b> bạn muốn hàm chạy, và đính kèm một <b>Security Group</b>. Thiết lập này tạo ra một Giao diện Mạng Đàn hồi (Elastic Network Interface - ENI) trong các Subnet đã chỉ định, cho phép Lambda truy cập các tài nguyên riêng tư.',
+                section2Result: 'Cách tiếp cận này cho phép hàm Lambda của bạn có kết nối riêng tư (private connectivity) với mọi thứ bên trong VPC của bạn một cách an toàn.',
+
+                // RDS Proxy
+                section3Title: 'Sử Dụng Lambda với RDS Proxy',
+                proxyProblemTitle: 'Vấn Đề: Quản lý Kết nối Database',
+                proxyProblemContent: 'Nếu nhiều hàm Lambda xuất hiện và biến mất theo thời gian, chúng có thể mở quá nhiều kết nối đến cơ sở dữ liệu RDS, gây quá tải (overwhelm) cho database, dẫn đến timeout.',
+                proxySolutionTitle: 'Giải Pháp: RDS Proxy',
+                proxySolutionContent: 'Bạn có thể khởi chạy <b>RDS Proxy</b>. Proxy quản lý và gộp (pool) các kết nối, giảm số lượng kết nối trực tiếp đến RDS. Các hàm Lambda kết nối với RDS Proxy, sau đó Proxy kết nối với database instance.',
+                proxyBenefitsTitle: 'Lợi Ích Của RDS Proxy',
+                benefit1Title: 'Khả Năng Mở Rộng Cải Thiện:',
+                benefit1Detail: 'Nó gộp và chia sẻ các kết nối database một cách hiệu quả.',
+                benefit2Title: 'Tính Sẵn Có Nâng Cao:',
+                benefit2Detail: 'Trong trường hợp failover, nó giảm thời gian failover khoảng 66% và bảo toàn các kết nối.',
+                benefit3Title: 'Bắt Buộc Xác Thực IAM:',
+                benefit3Detail: 'Bạn có thể bắt buộc xác thực IAM ở cấp độ Proxy và lưu trữ thông tin đăng nhập trong <b>AWS Secrets Manager</b>.',
+                proxyVPCRequirement: 'QUAN TRỌNG: Để kết nối với RDS Proxy, các hàm Lambda <b>phải được khởi chạy bên trong VPC</b>, vì RDS Proxy không bao giờ được truy cập công khai (publicly accessible).',
+
+                // Key Takeaways
+                section4Title: 'Tóm Tắt Các Điểm Chính Cần Nhớ',
+                takeaways: [
+                    'Theo mặc định, hàm Lambda chạy <b>bên ngoài VPC</b>, hạn chế quyền truy cập vào các tài nguyên riêng tư (private resources).',
+                    'Để truy cập các tài nguyên riêng tư như RDS, hàm Lambda phải được khởi chạy <b>bên trong VPC</b> với Subnet và Security Group được chỉ định.',
+                    'Sử dụng <b>RDS Proxy</b> giúp cải thiện khả năng mở rộng, tính sẵn có và cho phép bắt buộc xác thực IAM.',
+                    'Hàm Lambda <b>phải nằm trong VPC</b> để kết nối với RDS Proxy, vì Proxy không thể truy cập công khai.'
+                ]
+            },
+            'en': {
+                pageTitle: 'AWS Lambda - VPC Networking and RDS Proxy',
+                introTitle: 'Lambda Networking Fundamentals',
+                section1Title: 'Default Deployment (Outside VPC)',
+                section1Default: 'By default, when you launch your AWS Lambda functions, they are launched <b>outside of your own Virtual Private Cloud (VPC)</b>. They run within an AWS-owned VPC. Consequently, these Lambda functions <b>do not have access</b> to resources inside your VPC.',
+                section1Example: 'For example: The default configuration works well if your function needs to access any public API on the internet or public AWS services like <b>DynamoDB</b>.',
+                
+                section2Title: 'Launching Lambda in VPC (Private Access)',
+                section2Intro: 'If you have a private resource, such as a private RDS database, the connectivity will not work unless you bring Lambda into your VPC.',
+                section2Setup: 'To launch Lambda in your VPC, you must specify your <b>VPC ID</b>, the <b>Subnets</b> where you want the function to run, and attach a <b>Security Group</b>. This setup creates an Elastic Network Interface (ENI) in your specified subnets, enabling your Lambda function to access private resources.',
+                section2Result: 'This approach allows your Lambda function to have <b>private connectivity</b> to anything within your VPC securely.',
+
+                // RDS Proxy
+                section3Title: 'Using Lambda with RDS Proxy',
+                proxyProblemTitle: 'The Problem: Database Connection Management',
+                proxyProblemContent: 'If many Lambda functions appear and disappear over time, they may open too many connections to the RDS database, which can overwhelm the database, leading to timeouts.',
+                proxySolutionTitle: 'The Solution: RDS Proxy',
+                proxySolutionContent: 'You can launch an <b>RDS Proxy</b>. The proxy manages and pools connections, reducing the number of direct connections to RDS. Lambda functions connect to the RDS proxy, which in turn connects to the database instance.',
+                proxyBenefitsTitle: 'Benefits of RDS Proxy',
+                benefit1Title: 'Improved Scalability:',
+                benefit1Detail: 'It pools and shares database connections efficiently.',
+                benefit2Title: 'Enhanced Availability:',
+                benefit2Detail: 'In case of a failover, it reduces failover time by approximately 66% and preserves connections.',
+                benefit3Title: 'IAM Authentication Enforcement:',
+                benefit3Detail: 'You can enforce IAM authentication at the Proxy level and store credentials securely in <b>AWS Secrets Manager</b>.',
+                proxyVPCRequirement: 'CRITICAL: For Lambda functions to connect to your RDS proxy, they <b>must be launched inside your VPC</b>, as the RDS proxy is never publicly accessible.',
+
+                // Key Takeaways
+                section4Title: 'Key Takeaways Summary',
+                takeaways: [
+                    'By default, Lambda functions run <b>outside your VPC</b>, limiting access to private resources.',
+                    'To access private resources like RDS, Lambda functions must be launched <b>within your VPC</b> with specified Subnets and Security Groups.',
+                    'Using an <b>RDS Proxy</b> improves scalability, availability, and allows IAM authentication enforcement.',
+                    'Lambda functions <b>must reside in the VPC</b> to connect to the RDS Proxy, as the Proxy is not publicly accessible.'
+                ]
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        function updateContent() {
+            const langData = content[currentLanguage];
+            document.title = langData.pageTitle;
+            document.documentElement.lang = currentLanguage;
+
+            document.getElementById('langToggleVi').textContent = 'VI';
+            document.getElementById('langToggleEn').textContent = 'EN';
+            
+            document.getElementById('introTitle').innerHTML = `${langData.introTitle} <i class="fas fa-network-wired mr-3 text-white"></i>`;
+            document.getElementById('section1Title').textContent = langData.section1Title;
+            document.getElementById('section1Default').innerHTML = langData.section1Default; 
+            document.getElementById('section1Example').innerHTML = langData.section1Example;
+
+            // VPC Introduction
+            document.getElementById('section2Title').innerHTML = `${langData.section2Title} <i class="fas fa-shield-alt ml-3"></i>`;
+            document.getElementById('section2Intro').innerHTML = langData.section2Intro;
+            document.getElementById('section2Setup').innerHTML = langData.section2Setup;
+            document.getElementById('section2Result').innerHTML = langData.section2Result;
+            
+            // RDS Proxy
+            document.getElementById('section3Title').innerHTML = `${langData.section3Title} <i class="fas fa-database ml-3"></i>`;
+            document.getElementById('proxyProblemTitle').textContent = langData.proxyProblemTitle;
+            document.getElementById('proxyProblemContent').innerHTML = langData.proxyProblemContent;
+            document.getElementById('proxySolutionTitle').textContent = langData.proxySolutionTitle;
+            document.getElementById('proxySolutionContent').innerHTML = langData.proxySolutionContent;
+            document.getElementById('proxyBenefitsTitle').textContent = langData.proxyBenefitsTitle;
+            
+            document.getElementById('benefit1Title').innerHTML = langData.benefit1Title;
+            document.getElementById('benefit1Detail').textContent = langData.benefit1Detail;
+            document.getElementById('benefit2Title').innerHTML = langData.benefit2Title;
+            document.getElementById('benefit2Detail').textContent = langData.benefit2Detail;
+            document.getElementById('benefit3Title').innerHTML = langData.benefit3Title;
+            document.getElementById('benefit3Detail').textContent = langData.benefit3Detail;
+
+            document.getElementById('proxyVPCRequirement').innerHTML = langData.proxyVPCRequirement;
+            
+            // Key Takeaways
+            document.getElementById('section4Title').innerHTML = `${langData.section4Title} <i class="fas fa-map-marked-alt ml-2"></i>`;
+
+            // Update Key Takeaways
+            const takeawaysContainer = document.getElementById('takeawaysContainer');
+            takeawaysContainer.innerHTML = '';
+            langData.takeaways.forEach(t => {
+                const item = `
+                    <li class="flex items-start space-x-3 text-gray-700 p-3 bg-white rounded-lg shadow-sm">
+                        <i class="fas fa-route text-lg text-primary-color mt-1 flex-shrink-0"></i>
+                        <span class="text-base leading-relaxed">${t}</span>
+                    </li>
+                `;
+                takeawaysContainer.innerHTML += item;
+            });
+
+            // Update Language Toggle Buttons
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            const langToggleVi = document.getElementById('langToggleVi');
+            const langToggleEn = document.getElementById('langToggleEn');
+
+            const activeClass = 'bg-accent-color';
+            const inactiveClass = 'text-white hover:bg-white/30';
+
+            langToggleVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'vi' ? activeClass : inactiveClass}`;
+            langToggleEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            document.getElementById('langToggleVi').addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            document.getElementById('langToggleEn').addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

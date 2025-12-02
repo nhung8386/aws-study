@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Amazon AppFlow - Dịch Vụ Tích Hợp Dữ Liệu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #3b82f6; /* Blue 500 - Flow/Connection */
+            --accent-color: #1e3a8a;  /* Blue 800 - Stability/Depth */
+            --background-color: #eff6ff; /* Blue 50 */
+            --text-color: #1f2937;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .header-bg {
+            background-color: var(--accent-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .section-title {
+            color: var(--primary-color);
+            font-weight: 800;
+            border-bottom: 3px solid var(--primary-color);
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .flow-line {
+            background-color: var(--primary-color);
+            height: 3px;
+            margin: 1.5rem 0;
+        }
+        b {
+            font-weight: 700 !important;
+        }
+        .feature-item {
+            display: flex;
+            align-items: center;
+            background-color: #f0f9ff; /* Blue 50 */
+            border-left: 4px solid var(--primary-color);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-plug mr-3 text-white"></i>
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Introduction and Core Definition -->
+        <section class="card p-8 shadow-xl bg-white border-b-4 border-primary-color">
+            <h2 id="section1Title" class="text-3xl section-title mb-4 pb-2"></h2>
+            <p id="section1Definition" class="text-lg text-gray-700 leading-relaxed"></p>
+            <p id="section1Benefit" class="mt-4 text-accent-color font-semibold"></p>
+        </section>
+        
+        <!-- Section 2: Supported Data Sources & Destinations -->
+        <section>
+            <h2 id="section2Title" class="text-3xl font-extrabold text-accent-color text-center mb-8"><i class="fas fa-exchange-alt mr-2"></i> </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Data Sources -->
+                <div class="card space-y-4 border-t-4 border-primary-color">
+                    <h3 id="sourcesTitle" class="text-2xl font-bold text-primary-color flex items-center"><i class="fas fa-cloud-upload-alt mr-2"></i> </h3>
+                    <p id="sourcesDesc" class="text-gray-700"></p>
+                    <div class="mt-4 p-4 rounded-lg bg-red-50 border-l-4 border-red-500 text-sm">
+                         <p id="examNote" class="font-medium"></p>
+                    </div>
+                </div>
+
+                <!-- Data Destinations -->
+                <div class="card space-y-4 border-t-4 border-accent-color">
+                    <h3 id="destinationsTitle" class="text-2xl font-bold text-accent-color flex items-center"><i class="fas fa-database mr-2"></i> </h3>
+                    <p id="destinationsDesc" class="text-gray-700"></p>
+                    <ul id="destinationsList" class="mt-4 space-y-2 list-disc ml-5 text-sm text-gray-600">
+                        <!-- Destinations populated by JS -->
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 3: Integration Control and Features -->
+        <section class="card bg-white border-l-4 border-r-4 border-primary-color">
+            <h2 id="section3Title" class="text-3xl section-title mb-6 pb-2 text-center"><i class="fas fa-cogs mr-2"></i> </h2>
+            
+            <div class="space-y-4">
+                <div class="feature-item">
+                    <i class="fas fa-clock text-xl mr-3 text-primary-color"></i>
+                    <p id="schedulingFeature"></p>
+                </div>
+                
+                <div class="feature-item">
+                    <i class="fas fa-filter text-xl mr-3 text-primary-color"></i>
+                    <p id="transformationFeature"></p>
+                </div>
+                
+                <div class="feature-item">
+                    <i class="fas fa-lock text-xl mr-3 text-primary-color"></i>
+                    <p id="securityFeature"></p>
+                </div>
+            </div>
+            <p id="interfaceOverview" class="mt-6 text-sm text-gray-500 italic"></p>
+        </section>
+
+        <!-- Section 4: Key Takeaways -->
+        <section class="p-8 bg-accent-color rounded-2xl shadow-2xl">
+            <h2 id="section4Title" class="text-3xl font-extrabold mb-8 text-center"><i class="fas fa-check-circle mr-2 text-primary-color"></i> </h2>
+            <ul id="takeawaysContainer" class="space-y-4">
+                <!-- Takeaways will be populated by JS -->
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        // Content Translations using <b> for bolding.
+        const content = {
+            'vi': {
+                pageTitle: 'Amazon AppFlow - Dịch Vụ Tích Hợp Dữ Liệu',
+                introTitle: 'Amazon AppFlow',
+                section1Title: 'Giới Thiệu: Dịch Vụ Tích Hợp Dữ Liệu',
+                section1Definition: '<b>Amazon AppFlow</b> là dịch vụ tích hợp được <b>quản lý hoàn toàn</b>, cho phép bạn truyền dữ liệu giữa các ứng dụng <b>Software-as-a-Service (SaaS)</b> và AWS. Các tích hợp này thường khó thực hiện, nhưng với AppFlow, chúng trở nên <b>rất dễ dàng</b>.',
+                section1Benefit: 'Ý tưởng cốt lõi là bạn không phải tốn thời gian viết mã tích hợp; thay vào đó, bạn tận dụng ngay các API này và sử dụng dữ liệu trong tài khoản AWS của mình.',
+                
+                // Sources & Destinations
+                section2Title: 'Nguồn và Đích Dữ Liệu',
+                sourcesTitle: 'Nguồn Dữ Liệu Được Hỗ Trợ (Sources)',
+                sourcesDesc: 'Các nguồn dữ liệu có thể bao gồm: <b>Salesforce</b>, <b>SAP</b>, <b>Zendesk</b>, <b>Slack</b> và <b>ServiceNow</b>.',
+                examNote: 'Lưu ý: Salesforce là một nguồn dữ liệu đặc biệt quan trọng và thường xuất hiện trong các bài kiểm tra chứng chỉ.',
+                
+                destinationsTitle: 'Đích Dữ Liệu Được Hỗ Trợ (Destinations)',
+                destinationsDesc: 'Bạn có thể gửi dữ liệu tới các đích như <b>Amazon S3</b>, <b>Amazon Redshift</b> hoặc thậm chí các mục tiêu không phải của AWS như <b>Snowflake</b> và <b>Salesforce</b> (AppFlow cũng hỗ trợ Salesforce như là một đích đến).',
+                destinationsList: [
+                    'Amazon S3 (Kho lưu trữ đối tượng)',
+                    'Amazon Redshift (Kho dữ liệu)',
+                    'Snowflake (Mục tiêu ngoài AWS)',
+                    'Salesforce (Mục tiêu ngoài AWS)'
+                ],
+                
+                // Control and Features
+                section3Title: 'Kiểm Soát và Tính Năng Dòng Dữ Liệu',
+                schedulingFeature: '<b>Lên lịch và Kích hoạt:</b> AppFlow có thể chạy theo lịch trình, phản hồi lại các sự kiện cụ thể, hoặc theo nhu cầu (on demand).',
+                transformationFeature: '<b>Biến đổi và Xác thực:</b> AppFlow có khả năng biến đổi dữ liệu như <b>lọc (filtering)</b> và <b>xác thực (validation)</b>.',
+                securityFeature: '<b>Bảo mật:</b> Dữ liệu được <b>mã hóa</b> khi truyền qua internet công cộng hoặc có thể truyền tải riêng tư bằng <b>PrivateLink</b>.',
+                interfaceOverview: 'Trong giao diện AppFlow, bạn chỉ cần chọn Nguồn (ví dụ: Salesforce) và gửi dữ liệu tới Đích (ví dụ: Redshift hoặc S3).',
+
+                // Key Takeaways
+                section4Title: 'Tóm Tắt & Điểm Chính',
+                takeaways: [
+                    '<b>Amazon AppFlow</b>: Dịch vụ tích hợp <b>quản lý hoàn toàn</b>, cho phép truyền dữ liệu giữa <b>SaaS</b> và <b>AWS</b>.',
+                    'Hỗ trợ các Nguồn dữ liệu quan trọng như <b>Salesforce</b>, SAP, Zendesk, Slack, và ServiceNow.',
+                    'Đích đến bao gồm <b>Amazon S3</b>, <b>Amazon Redshift</b>, và các mục tiêu ngoài AWS như Snowflake.',
+                    'AppFlow cho phép <b>lên lịch</b>, kích hoạt theo <b>sự kiện</b> hoặc theo <b>yêu cầu</b>, cùng với tính năng <b>biến đổi dữ liệu</b> và <b>mã hóa</b> (bao gồm PrivateLink).'
+                ]
+            },
+            'en': {
+                pageTitle: 'Amazon AppFlow - Data Integration Service',
+                introTitle: 'Amazon AppFlow',
+                section1Title: 'Introduction: The Data Integration Service',
+                section1Definition: '<b>Amazon AppFlow</b> is a <b>fully managed</b> integration service that enables you to transfer data between <b>Software-as-a-Service (SaaS)</b> applications and AWS. These integrations are typically difficult to write, but with AppFlow, they become <b>very easy</b>.',
+                section1Benefit: 'The core idea is that you do not spend time writing the integration yourself; instead, you leverage these APIs immediately and enjoy the data within your own AWS accounts.',
+                
+                // Sources & Destinations
+                section2Title: 'Data Sources and Destinations',
+                sourcesTitle: 'Supported Data Sources (Sources)',
+                sourcesDesc: 'Sources of data could include: <b>Salesforce</b>, <b>SAP</b>, <b>Zendesk</b>, <b>Slack</b>, and <b>ServiceNow</b>.',
+                examNote: 'Note: Salesforce is particularly notable as it may appear in certification exams.',
+                
+                destinationsTitle: 'Supported Data Destinations (Destinations)',
+                destinationsDesc: 'You can send data to destinations such as <b>Amazon S3</b>, <b>Amazon Redshift</b>, or even non-AWS targets like <b>Snowflake</b> and <b>Salesforce</b> (AppFlow also supports Salesforce as a destination).',
+                destinationsList: [
+                    'Amazon S3 (Object Storage)',
+                    'Amazon Redshift (Data Warehouse)',
+                    'Snowflake (Non-AWS Target)',
+                    'Salesforce (Non-AWS Target)'
+                ],
+                
+                // Control and Features
+                section3Title: 'Flow Control and Features',
+                schedulingFeature: '<b>Scheduling and Triggers:</b> AppFlow can be configured to run on a schedule, in response to specific events, or on demand.',
+                transformationFeature: '<b>Transformation and Validation:</b> AppFlow includes data transformation capabilities such as <b>filtering</b> and <b>validation</b>.',
+                securityFeature: '<b>Security:</b> Data is <b>encrypted</b> when transferred over the public internet, or you can transfer it privately using <b>PrivateLink</b>.',
+                interfaceOverview: 'In the AppFlow interface, you select a Source (e.g., Salesforce) and send the data to a Destination (e.g., Redshift or S3).',
+
+                // Key Takeaways
+                section4Title: 'Summary & Key Takeaways',
+                takeaways: [
+                    '<b>Amazon AppFlow</b>: A <b>fully managed</b> integration service that enables data transfer between <b>SaaS</b> applications and <b>AWS</b>.',
+                    'Supports key data Sources like <b>Salesforce</b>, SAP, Zendesk, Slack, and ServiceNow.',
+                    'Destinations include <b>Amazon S3</b>, <b>Amazon Redshift</b>, and non-AWS targets like Snowflake.',
+                    'AppFlow allows <b>scheduling</b>, <b>event-driven</b>, or <b>on-demand</b> transfers, with built-in data <b>transformation</b> and <b>encryption</b> options including PrivateLink.'
+                ]
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        function updateContent() {
+            const langData = content[currentLanguage];
+            document.title = langData.pageTitle;
+            document.documentElement.lang = currentLanguage;
+
+            document.getElementById('langToggleVi').textContent = 'VI';
+            document.getElementById('langToggleEn').textContent = 'EN';
+            
+            document.getElementById('introTitle').innerHTML = `${langData.introTitle} <i class="fas fa-plug mr-3 text-white"></i>`;
+            document.getElementById('section1Title').textContent = langData.section1Title;
+            document.getElementById('section1Definition').innerHTML = langData.section1Definition; 
+            document.getElementById('section1Benefit').textContent = langData.section1Benefit;
+
+            // Sources & Destinations
+            document.getElementById('section2Title').innerHTML = `${langData.section2Title} <i class="fas fa-exchange-alt ml-2"></i>`;
+            document.getElementById('sourcesTitle').innerHTML = `${langData.sourcesTitle} <i class="fas fa-cloud-upload-alt ml-2"></i>`;
+            document.getElementById('sourcesDesc').innerHTML = langData.sourcesDesc; 
+            document.getElementById('examNote').innerHTML = langData.examNote;
+
+            document.getElementById('destinationsTitle').innerHTML = `${langData.destinationsTitle} <i class="fas fa-database ml-2"></i>`;
+            document.getElementById('destinationsDesc').innerHTML = langData.destinationsDesc;
+            
+            const destinationsList = document.getElementById('destinationsList');
+            destinationsList.innerHTML = '';
+            langData.destinationsList.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                destinationsList.appendChild(li);
+            });
+
+            // Control and Features
+            document.getElementById('section3Title').innerHTML = `${langData.section3Title} <i class="fas fa-cogs ml-2"></i>`;
+            document.getElementById('schedulingFeature').innerHTML = langData.schedulingFeature;
+            document.getElementById('transformationFeature').innerHTML = langData.transformationFeature;
+            document.getElementById('securityFeature').innerHTML = langData.securityFeature;
+            document.getElementById('interfaceOverview').textContent = langData.interfaceOverview;
+
+            // Key Takeaways
+            document.getElementById('section4Title').innerHTML = `${langData.section4Title} <i class="fas fa-check-circle ml-2 text-primary-color"></i>`;
+
+            // Update Language Toggle Buttons
+            updateLanguageButtons();
+
+            // Update Key Takeaways
+            const takeawaysContainer = document.getElementById('takeawaysContainer');
+            takeawaysContainer.innerHTML = '';
+            langData.takeaways.forEach(t => {
+                const item = `
+                    <li class="flex items-start space-x-3 p-3 bg-accent-color rounded-lg">
+                        <i class="fas fa-chevron-right text-lg text-primary-color mt-1 flex-shrink-0"></i>
+                        <span class="text-base leading-relaxed">${t}</span>
+                    </li>
+                `;
+                takeawaysContainer.innerHTML += item;
+            });
+        }
+
+        function updateLanguageButtons() {
+            const langToggleVi = document.getElementById('langToggleVi');
+            const langToggleEn = document.getElementById('langToggleEn');
+
+            const activeClass = 'bg-primary-color';
+            const inactiveClass = 'text-white hover:bg-white/30';
+
+            langToggleVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'vi' ? activeClass : inactiveClass}`;
+            langToggleEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            document.getElementById('langToggleVi').addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            document.getElementById('langToggleEn').addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

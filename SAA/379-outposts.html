@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">AWS Outposts - Mở Rộng Cloud On-Premises</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #10b981; /* Emerald 500 - Seamless Connection/Growth */
+            --accent-color: #3b82f6;  /* Blue 500 - Cloud/Technology */
+            --background-color: #ecfdf5; /* Emerald 50 */
+            --text-color: #1f2937;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .header-bg {
+            background-color: var(--accent-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .section-title {
+            color: var(--accent-color);
+            font-weight: 800;
+            border-bottom: 3px solid var(--primary-color);
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .hybrid-box {
+            background-color: #e0f2f1; /* Teal 100 */
+            border-right: 5px solid var(--primary-color);
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+        b {
+            font-weight: 700 !important;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-server mr-3 text-primary-color"></i>
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Introduction to Hybrid Cloud & Problem -->
+        <section class="card p-8 shadow-xl bg-white border-b-4 border-accent-color">
+            <h2 id="section1Title" class="text-3xl section-title mb-4 pb-2"></h2>
+            
+            <h3 id="hybridTitle" class="text-2xl font-bold text-gray-800 mt-6 mb-3"></h3>
+            <p id="hybridDefinition" class="text-lg text-gray-700 leading-relaxed"></p>
+            
+            <div class="mt-6 hybrid-box">
+                <p id="complexityNote" class="text-sm font-semibold text-gray-800"></p>
+                <p id="complexityDetail" class="text-sm text-gray-600 mt-1"></p>
+            </div>
+        </section>
+        
+        <!-- Section 2: What are Outposts? -->
+        <section>
+            <h2 id="section2Title" class="text-3xl font-extrabold text-primary-color text-center mb-8"><i class="fas fa-cloud-upload-alt mr-2"></i> </h2>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Definition -->
+                <div class="card space-y-4 lg:col-span-2 border-l-4 border-accent-color">
+                    <h3 id="outpostDefinitionTitle" class="text-2xl font-bold text-accent-color flex items-center"><i class="fas fa-cube mr-2"></i> </h3>
+                    <p id="outpostDefinitionDesc" class="text-gray-700 leading-relaxed"></p>
+                    <p id="outpostSetup" class="text-gray-600 italic border-l-2 pl-3 mt-3 border-primary-color"></p>
+                </div>
+
+                <!-- Responsibility Note -->
+                <div class="card space-y-4 lg:col-span-1 border-t-4 border-red-500 bg-red-50">
+                    <h3 id="responsibilityTitle" class="text-2xl font-bold text-red-700 flex items-center"><i class="fas fa-shield-alt mr-2"></i> </h3>
+                    <p id="responsibilityNote" class="text-red-800 text-sm font-medium"></p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 3: Benefits and Supported Services -->
+        <section>
+            <h2 id="section3Title" class="text-3xl section-title mb-6 pb-2 text-center"><i class="fas fa-cogs mr-2"></i> </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Benefits -->
+                <div class="card bg-green-50 space-y-4">
+                    <h4 id="benefitsTitle" class="text-xl font-bold text-primary-color mb-3"></h4>
+                    <ul class="list-none space-y-3">
+                        <li id="benefit1" class="flex items-start text-gray-700"><i class="fas fa-clock text-accent-color mr-3 mt-1 flex-shrink-0"></i></li>
+                        <li id="benefit2" class="flex items-start text-gray-700"><i class="fas fa-database text-accent-color mr-3 mt-1 flex-shrink-0"></i></li>
+                        <li id="benefit3" class="flex items-start text-gray-700"><i class="fas fa-map-marker-alt text-accent-color mr-3 mt-1 flex-shrink-0"></i></li>
+                        <li id="benefit4" class="flex items-start text-gray-700"><i class="fas fa-exchange-alt text-accent-color mr-3 mt-1 flex-shrink-0"></i></li>
+                        <li id="benefit5" class="flex items-start text-gray-700"><i class="fas fa-hands-helping text-accent-color mr-3 mt-1 flex-shrink-0"></i></li>
+                    </ul>
+                </div>
+
+                <!-- Services -->
+                <div class="card bg-blue-50 space-y-4">
+                    <h4 id="servicesTitle" class="text-xl font-bold text-accent-color mb-3"></h4>
+                    <p id="servicesIntro" class="text-gray-700 text-sm"></p>
+                    <div class="flex flex-wrap gap-2 mt-4">
+                        <span id="service1" class="bg-accent-color px-3 py-1 rounded-full font-semibold"></span>
+                        <span id="service2" class="bg-accent-color px-3 py-1 rounded-full font-semibold"></span>
+                        <span id="service3" class="bg-accent-color px-3 py-1 rounded-full font-semibold"></span>
+                        <span id="service4" class="bg-accent-color px-3 py-1 rounded-full font-semibold"></span>
+                        <span id="service5" class="bg-accent-color px-3 py-1 rounded-full font-semibold"></span>
+                        <span id="service6" class="bg-accent-color px-3 py-1 rounded-full font-semibold"></span>
+                        <span id="service7" class="bg-accent-color px-3 py-1 rounded-full font-semibold"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Key Takeaways -->
+        <section class="p-8 bg-gray-800 rounded-2xl shadow-2xl">
+            <h2 id="section4Title" class="text-3xl font-extrabold text-primary-color mb-8 text-center"><i class="fas fa-certificate mr-2 text-accent-color"></i> </h2>
+            <ul id="takeawaysContainer" class="space-y-4">
+                <!-- Takeaways will be populated by JS -->
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        // Content Translations using <b> for bolding.
+        const content = {
+            'vi': {
+                pageTitle: 'AWS Outposts - Mở Rộng Cloud On-Premises',
+                introTitle: 'AWS Outposts',
+                section1Title: 'Giới Thiệu: Điện Toán Đám Mây Lai (Hybrid Cloud)',
+                hybridTitle: 'Định Nghĩa Hybrid Cloud',
+                hybridDefinition: '<b>Hybrid Cloud</b> là mô hình doanh nghiệp duy trì cả cơ sở hạ tầng <b>On-premises</b> (tại chỗ) cùng với cơ sở hạ tầng <b>Cloud</b> (điện toán đám mây).',
+                complexityNote: 'Vấn đề phức tạp: Việc quản lý hệ thống yêu cầu hai cách tiếp cận riêng biệt, dẫn đến việc phải sử dụng <b>hai bộ kỹ năng và API khác nhau</b>.',
+                complexityDetail: 'Một cho Cloud (sử dụng Console, CLI, API của AWS) và một cho On-premises.',
+                
+                // What are Outposts?
+                section2Title: 'AWS Outposts là Gì?',
+                outpostDefinitionTitle: 'Định Nghĩa và Mục Đích',
+                outpostDefinitionDesc: '<b>AWS Outposts</b> là các giá đỡ máy chủ (server racks) cung cấp <b>cơ sở hạ tầng, dịch vụ, API và công cụ AWS giống hệt</b> như trong cloud, nhưng được lắp đặt <b>trực tiếp tại trung tâm dữ liệu On-premises</b> của bạn.',
+                outpostSetup: 'AWS chịu trách nhiệm thiết lập và quản lý các rack Outposts này, cho phép bạn mở rộng các dịch vụ AWS cục bộ.',
+                
+                responsibilityTitle: 'Lưu Ý về Bảo Mật Vật Lý',
+                responsibilityNote: 'Bạn chịu trách nhiệm về <b>bảo mật vật lý</b> của các rack Outposts, vì chúng được đặt bên trong trung tâm dữ liệu của riêng bạn.',
+
+                // Benefits and Services
+                section3Title: 'Lợi Ích Cốt Lõi và Các Dịch Vụ Được Hỗ Trợ',
+                benefitsTitle: 'Lợi Ích Chính',
+                benefit1: 'Truy cập <b>độ trễ thấp (Low latency)</b> đến các hệ thống On-premises hiện có.',
+                benefit2: 'Xử lý dữ liệu cục bộ (Local data processing), dữ liệu <b>không bao giờ rời khỏi</b> hệ thống On-premises.',
+                benefit3: '<b>Lưu trú dữ liệu (Data residency)</b>, đảm bảo dữ liệu ở lại trong trung tâm dữ liệu của bạn.',
+                benefit4: 'Đường dẫn di chuyển (migration) được đơn giản hóa: từ On-premises đến Outposts, sau đó lên Cloud.',
+                benefit5: 'Dịch vụ được <b>AWS quản lý hoàn toàn</b> (Fully managed service).',
+
+                servicesTitle: 'Các Dịch Vụ AWS Có Sẵn',
+                servicesIntro: 'Với Outposts, bạn có thể khởi chạy nhiều dịch vụ AWS phổ biến như:',
+                service1: 'Amazon EC2',
+                service2: 'Amazon EBS',
+                service3: 'Amazon S3',
+                service4: 'Amazon EKS',
+                service5: 'Amazon ECS',
+                service6: 'Amazon RDS',
+                service7: 'Amazon EMR',
+
+                // Key Takeaways
+                section4Title: 'Tóm Tắt & Điểm Chính cho Kỳ Thi',
+                takeaways: [
+                    '<b>AWS Outposts</b> là giải pháp cách mạng để mở rộng <b>Cloud trực tiếp</b> vào cơ sở hạ tầng <b>On-premises</b> của bạn.',
+                    'Outposts racks là các giá đỡ máy chủ <b>được AWS quản lý</b>, nhưng được đặt bên trong trung tâm dữ liệu của khách hàng.',
+                    'Lợi ích chính: <b>Độ trễ thấp</b>, <b>Xử lý dữ liệu cục bộ</b>, <b>Lưu trú dữ liệu</b> và <b>Di chuyển dễ dàng</b>.',
+                    'Sử dụng <b>cùng API, công cụ, và dịch vụ AWS</b> như trong Cloud, loại bỏ sự phức tạp của Hybrid Cloud truyền thống.'
+                ]
+            },
+            'en': {
+                pageTitle: 'AWS Outposts - Extending the Cloud On-Premises',
+                introTitle: 'AWS Outposts',
+                section1Title: 'Introduction: The Hybrid Cloud',
+                hybridTitle: 'Hybrid Cloud Definition',
+                hybridDefinition: '<b>Hybrid Cloud</b> refers to businesses that maintain both <b>on-premises</b> infrastructure alongside <b>cloud</b> infrastructure.',
+                complexityNote: 'The complexity: Managing systems requires two separate approaches, leading to the use of <b>two different skill sets and APIs</b>.',
+                complexityDetail: 'One for the Cloud (using the AWS console, CLI, and APIs) and another dedicated to on-premises infrastructure.',
+                
+                // What are Outposts?
+                section2Title: 'What are AWS Outposts?',
+                outpostDefinitionTitle: 'Definition and Purpose',
+                outpostDefinitionDesc: '<b>AWS Outposts</b> are server racks that provide the <b>same AWS infrastructure, services, APIs, and tools</b> to build applications on-premises just like in the cloud.',
+                outpostSetup: 'AWS sets up and manages these Outpost racks, which are servers installed within your on-premises infrastructure, allowing you to benefit from AWS services locally.',
+                
+                responsibilityTitle: 'Physical Security Note',
+                responsibilityNote: 'You are responsible for the <b>physical security</b> of the rack itself, since it is physically located within your own corporate data center.',
+
+                // Benefits and Services
+                section3Title: 'Core Benefits and Supported Services',
+                benefitsTitle: 'Key Benefits',
+                benefit1: '<b>Low latency</b> access to existing on-premises systems.',
+                benefit2: '<b>Local data processing</b>, so data may never leave your on-premises system.',
+                benefit3: '<b>Data residency</b>, ensuring data remains within your own data centers.',
+                benefit4: 'Simplified migration path: from On-premises to Outposts, and then from Outposts to the cloud.',
+                benefit5: 'The service is <b>Fully managed by AWS</b>.',
+
+                servicesTitle: 'Available AWS Services',
+                servicesIntro: 'Currently, with Outposts, you can launch many popular AWS services such as:',
+                service1: 'Amazon EC2',
+                service2: 'Amazon EBS',
+                service3: 'Amazon S3',
+                service4: 'Amazon EKS',
+                service5: 'Amazon ECS',
+                service6: 'Amazon RDS',
+                service7: 'Amazon EMR',
+
+                // Key Takeaways
+                section4Title: 'Summary & Key Takeaways for Exams',
+                takeaways: [
+                    '<b>AWS Outposts</b> enables hybrid cloud by providing <b>AWS infrastructure directly</b> on-premises.',
+                    'Outposts racks are server racks <b>managed by AWS</b>, installed within the customer’s data center.',
+                    'Key benefits include <b>Low Latency</b>, <b>Local Data Processing</b>, <b>Data Residency</b>, and <b>Easy Migration</b>.',
+                    'It uses the <b>same AWS APIs, tools, and services</b> as the cloud, simplifying traditional Hybrid Cloud complexity.'
+                ]
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        function updateContent() {
+            const langData = content[currentLanguage];
+            document.title = langData.pageTitle;
+            document.documentElement.lang = currentLanguage;
+
+            document.getElementById('langToggleVi').textContent = 'VI';
+            document.getElementById('langToggleEn').textContent = 'EN';
+            
+            document.getElementById('introTitle').innerHTML = `${langData.introTitle} <i class="fas fa-server mr-3 text-primary-color"></i>`;
+            document.getElementById('section1Title').textContent = langData.section1Title;
+            document.getElementById('hybridTitle').textContent = langData.hybridTitle;
+            document.getElementById('hybridDefinition').innerHTML = langData.hybridDefinition;
+            document.getElementById('complexityNote').innerHTML = langData.complexityNote;
+            document.getElementById('complexityDetail').textContent = langData.complexityDetail;
+            
+            // What are Outposts?
+            document.getElementById('section2Title').innerHTML = `${langData.section2Title} <i class="fas fa-cloud-upload-alt ml-2"></i>`;
+            document.getElementById('outpostDefinitionTitle').innerHTML = `${langData.outpostDefinitionTitle} <i class="fas fa-cube ml-2"></i>`;
+            document.getElementById('outpostDefinitionDesc').innerHTML = langData.outpostDefinitionDesc;
+            document.getElementById('outpostSetup').textContent = langData.outpostSetup;
+            
+            document.getElementById('responsibilityTitle').innerHTML = `${langData.responsibilityTitle} <i class="fas fa-shield-alt ml-2"></i>`;
+            document.getElementById('responsibilityNote').innerHTML = langData.responsibilityNote;
+
+            // Benefits and Services
+            document.getElementById('section3Title').innerHTML = `${langData.section3Title} <i class="fas fa-cogs ml-2"></i>`;
+            document.getElementById('benefitsTitle').textContent = langData.benefitsTitle;
+            document.getElementById('benefit1').innerHTML = `${langData.benefit1}`;
+            document.getElementById('benefit2').innerHTML = `${langData.benefit2}`;
+            document.getElementById('benefit3').innerHTML = `${langData.benefit3}`;
+            document.getElementById('benefit4').innerHTML = `${langData.benefit4}`;
+            document.getElementById('benefit5').innerHTML = `${langData.benefit5}`;
+
+            document.getElementById('servicesTitle').textContent = langData.servicesTitle;
+            document.getElementById('servicesIntro').textContent = langData.servicesIntro;
+            document.getElementById('service1').textContent = langData.service1;
+            document.getElementById('service2').textContent = langData.service2;
+            document.getElementById('service3').textContent = langData.service3;
+            document.getElementById('service4').textContent = langData.service4;
+            document.getElementById('service5').textContent = langData.service5;
+            document.getElementById('service6').textContent = langData.service6;
+            document.getElementById('service7').textContent = langData.service7;
+
+            // Key Takeaways
+            document.getElementById('section4Title').innerHTML = `${langData.section4Title} <i class="fas fa-certificate ml-2 text-accent-color"></i>`;
+
+            // Update Language Toggle Buttons
+            updateLanguageButtons();
+
+            // Update Key Takeaways
+            const takeawaysContainer = document.getElementById('takeawaysContainer');
+            takeawaysContainer.innerHTML = '';
+            langData.takeaways.forEach(t => {
+                const item = `
+                    <li class="flex items-start space-x-3 text-gray-200 p-3 bg-gray-700 rounded-lg">
+                        <i class="fas fa-check-circle text-lg text-primary-color mt-1 flex-shrink-0"></i>
+                        <span class="text-base leading-relaxed">${t}</span>
+                    </li>
+                `;
+                takeawaysContainer.innerHTML += item;
+            });
+        }
+
+        function updateLanguageButtons() {
+            const langToggleVi = document.getElementById('langToggleVi');
+            const langToggleEn = document.getElementById('langToggleEn');
+
+            const activeClass = 'bg-primary-color';
+            const inactiveClass = 'text-white hover:bg-white/30';
+
+            langToggleVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'vi' ? activeClass : inactiveClass}`;
+            langToggleEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            document.getElementById('langToggleVi').addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            document.getElementById('langToggleEn').addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

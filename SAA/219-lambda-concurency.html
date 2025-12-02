@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">AWS Lambda - Độ Đồng Thời và Điều Tiết</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #3b82f6; /* Blue 500 - Control */
+            --accent-color: #f97316;  /* Orange 600 - Alert/Throttling */
+            --text-color: #1f2937;
+            --background-color: #eff6ff; /* Blue 50 */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .header-bg {
+            background-color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .content-card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+        }
+        .throttling-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background-color: #fff7ed; /* Orange 50 */
+            border-left: 5px solid var(--accent-color);
+        }
+        .throttling-icon {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            flex-shrink: 0;
+            margin-right: 1rem;
+        }
+        b {
+            font-weight: 700 !important;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-gauge-high mr-3 text-white"></i>
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Concurrency and Throttling -->
+        <section class="content-card border-t-4 border-primary-color">
+            <h2 id="section1Title" class="text-3xl font-extrabold text-primary-color mb-4 border-b-2 pb-2 border-primary-color/50"></h2>
+            <p id="section1Definition" class="text-lg text-gray-700 leading-relaxed"></p>
+
+            <div class="mt-6 p-4 bg-primary-color/10 rounded-lg">
+                <p id="concurrencyLimitNote" class="font-semibold text-gray-700"></p>
+                <p id="concurrencyLimitRequest" class="text-sm text-gray-600 mt-2"></p>
+            </div>
+        </section>
+
+        <!-- Section 2: Reserved Concurrency and Throttling Behavior -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- Reserved Concurrency -->
+            <div class="content-card col-span-1 lg:col-span-2">
+                <h3 id="reservedTitle" class="text-2xl font-bold text-accent-color mb-4 flex items-center"><i class="fas fa-lock mr-3"></i> </h3>
+                <p id="reservedContent" class="text-gray-700 leading-relaxed mb-4"></p>
+                <!-- Image Tag for Reserved Concurrency -->
+                [Image of AWS Lambda Reserved Concurrency Diagram]
+            </div>
+
+            <!-- Throttling Behavior -->
+            <div class="content-card col-span-1">
+                <h3 id="throttlingTitle" class="text-2xl font-bold text-accent-color mb-4 flex items-center"><i class="fas fa-bell mr-3"></i> </h3>
+                <div class="space-y-4">
+                    <div class="throttling-item">
+                        <i class="throttling-icon fas fa-sync-alt"></i>
+                        <div>
+                            <b id="syncTitle" class="text-text-color"></b>
+                            <p id="syncDetail" class="text-gray-600 text-sm"></p>
+                        </div>
+                    </div>
+                    <div class="throttling-item">
+                        <i class="throttling-icon fas fa-reply-all"></i>
+                        <div>
+                            <b id="asyncTitle" class="text-text-color"></b>
+                            <p id="asyncDetail" class="text-gray-600 text-sm"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Impact of Unrestricted Concurrency -->
+        <section class="content-card border-l-4 border-accent-color">
+            <h2 id="section3Title" class="text-3xl font-extrabold text-primary-color mb-4 flex items-center"><i class="fas fa-share-alt mr-3"></i> </h2>
+            <p id="section3Content" class="text-gray-700 leading-relaxed"></p>
+            <p id="section3KeyPoint" class="mt-4 p-3 bg-red-100 text-red-800 font-semibold rounded-lg border-l-4 border-red-500"></p>
+        </section>
+
+        <!-- Section 4: Cold Starts and Provisioned Concurrency -->
+        <section class="content-card border-t-4 border-accent-color">
+            <h2 id="section4Title" class="text-3xl font-extrabold text-primary-color mb-4 flex items-center"><i class="fas fa-temperature-low mr-3"></i> </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Cold Starts -->
+                <div>
+                    <h3 id="coldStartTitle" class="text-xl font-bold text-accent-color mb-2"></h3>
+                    <p id="coldStartContent" class="text-gray-700 leading-relaxed mb-4"></p>
+                </div>
+
+                <!-- Provisioned Concurrency -->
+                <div>
+                    <h3 id="provisionedTitle" class="text-xl font-bold text-primary-color mb-2"></h3>
+                    <p id="provisionedContent" class="text-gray-700 leading-relaxed"></p>
+                    <p id="vpcImprovement" class="text-sm text-gray-600 mt-2 italic"></p>
+                </div>
+            </div>
+             <!-- Image Tag for Provisioned Concurrency -->
+             
+        </section>
+
+
+        <!-- Section 5: Key Takeaways -->
+        <section class="p-8 bg-primary-color/10 rounded-xl shadow-lg">
+            <h2 id="section5Title" class="text-3xl font-extrabold text-primary-color mb-8 text-center"><i class="fas fa-graduation-cap mr-2"></i> </h2>
+            <ul id="takeawaysContainer" class="space-y-4">
+                <!-- Takeaways will be populated by JS -->
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        // Content Translations using <b> for bolding.
+        const content = {
+            'vi': {
+                pageTitle: 'AWS Lambda - Độ Đồng Thời và Điều Tiết',
+                introTitle: 'Độ Đồng Thời (Concurrency) và Điều Tiết (Throttling) của Lambda',
+                section1Title: 'Mở Rộng Quy Mô và Kiểm Soát Độ Đồng Thời',
+                section1Definition: 'Khi chúng ta gọi (invoke) hàm Lambda thường xuyên hơn, số lượng các lần thực thi đồng thời (concurrent executions) tăng lên. Lambda được thiết kế để mở rộng quy mô rất nhanh chóng và hiệu quả. Ví dụ, ở tốc độ gọi thấp, bạn có thể chỉ có hai lần thực thi đồng thời, nhưng ở quy mô cao, Lambda có thể xử lý tối đa <b>1000 lần thực thi đồng thời</b> xử lý các sự kiện cùng lúc.',
+                concurrencyLimitNote: 'Để quản lý việc mở rộng quy mô này, bạn nên giới hạn số lượng lần thực thi đồng thời mà một hàm Lambda có thể có. Điều này được thực hiện bằng cách đặt <b>giới hạn độ đồng thời dự trữ (reserved concurrency limit)</b> ở cấp độ hàm.',
+                concurrencyLimitRequest: 'Nếu bạn yêu cầu hơn 1000 lần thực thi đồng thời, bạn có thể yêu cầu tăng giới hạn bằng cách mở một support ticket với AWS.',
+
+                // Reserved Concurrency and Throttling Behavior
+                reservedTitle: 'Giới Hạn Đồng Thời Dự Trữ (Reserved Concurrency)',
+                reservedContent: 'Giả sử bạn chỉ định một hàm Lambda có thể có tối đa 50 lần thực thi đồng thời. Bất kỳ lệnh gọi nào vượt quá giới hạn này sẽ kích hoạt cơ chế điều tiết (throttling).  Độ đồng thời dự trữ (Reserved Concurrency) giúp bạn đảm bảo rằng các hàm quan trọng sẽ <b>luôn có sẵn</b> một số lượng instance nhất định, tránh bị các hàm khác chiếm hết giới hạn tài khoản (Account-wide limit).',
+                throttlingTitle: 'Hành Vi Điều Tiết (Throttling Behavior)',
+                syncTitle: 'Gọi Đồng bộ (Synchronous):',
+                syncDetail: 'Nếu bị điều tiết, hàm Lambda trả về lỗi điều tiết với <b>mã trạng thái 429</b>.',
+                asyncTitle: 'Gọi Bất đồng bộ (Asynchronous):',
+                asyncDetail: 'Lambda tự động thử lại (retry) lệnh gọi và cuối cùng gửi sự kiện đến <b>Dead Letter Queue (DLQ)</b> nếu việc thử lại thất bại.',
+
+                // Unrestricted Concurrency
+                section3Title: 'Tác Động của Độ Đồng Thời Không Giới Hạn',
+                section3Content: 'Nếu bạn không đặt bất kỳ giới hạn độ đồng thời dự trữ nào trên các hàm Lambda của mình, giới hạn độ đồng thời sẽ áp dụng cho <b>toàn bộ tài khoản (account-wide)</b>. Nếu một sự kiện lưu lượng truy cập cao (ví dụ: một chương trình khuyến mãi lớn) khiến một hàm Lambda mở rộng quy mô lên tới 1000 lần thực thi đồng thời, nó có thể tiêu thụ hết độ đồng thời có sẵn, khiến các hàm khác bị điều tiết.',
+                section3KeyPoint: 'Điểm mấu chốt là: <b>Giới hạn độ đồng thời được chia sẻ trên TẤT CẢ các hàm trong tài khoản AWS của bạn.</b> Việc quản lý độ đồng thời là rất quan trọng để tránh điều tiết ngoài ý muốn.',
+
+                // Cold Starts and Provisioned Concurrency
+                section4Title: 'Khởi động Lạnh (Cold Starts) và Đồng Thời Dự phòng (Provisioned Concurrency)',
+                coldStartTitle: 'Khởi động Lạnh (Cold Starts)',
+                coldStartContent: 'Khởi động lạnh xảy ra khi một instance hàm Lambda mới được tạo. Trong thời gian này, mã của bạn được tải và mã khởi tạo bên ngoài handler chạy. Nếu quá trình khởi tạo kéo dài (ví dụ: tải nhiều dependency, thiết lập kết nối cơ sở dữ liệu), nó có thể gây ra <b>độ trễ cao hơn</b> (higher latency) cho yêu cầu đầu tiên.',
+                provisionedTitle: 'Độ Đồng Thời Dự phòng (Provisioned Concurrency)',
+                provisionedContent: 'Để giảm thiểu khởi động lạnh, bạn có thể sử dụng <b>Độ Đồng Thời Dự phòng (Provisioned Concurrency)</b>. Tính năng này <b>phân bổ trước</b> các instance Lambda trước khi các lệnh gọi xảy ra, đảm bảo rằng không xảy ra khởi động lạnh và tất cả các lệnh gọi đều có độ trễ thấp hơn.  Tính năng này có thể được quản lý bằng Application Auto Scaling để duy trì sự sẵn sàng.',
+                vpcImprovement: 'Cải tiến hiệu suất khởi động lạnh VPC: AWS đã phát hành các cải tiến vào cuối năm 2019 giúp giảm đáng kể thời gian khởi động lạnh cho các hàm Lambda bên trong VPC.',
+
+                // Key Takeaways
+                section5Title: 'Tóm Tắt Các Điểm Chính Cần Nhớ',
+                takeaways: [
+                    'Hàm Lambda có thể mở rộng lên hàng nghìn lần thực thi đồng thời, nhưng giới hạn độ đồng thời là cần thiết để quản lý tài nguyên và tránh điều tiết.',
+                    '<b>Reserved concurrency</b> có thể được đặt cho mỗi hàm để giới hạn số lần thực thi đồng thời và ngăn một hàm chiếm hết độ đồng thời.',
+                    'Hành vi điều tiết khác nhau giữa gọi <b>đồng bộ (lỗi 429)</b> và <b>bất đồng bộ (tự động thử lại và DLQ)</b>.',
+                    '<b>Provisioned concurrency</b> phân bổ trước các instance Lambda để giảm độ trễ khởi động lạnh, cải thiện hiệu suất cho các ứng dụng nhạy cảm về độ trễ.'
+                ]
+            },
+            'en': {
+                pageTitle: 'AWS Lambda - Concurrency and Throttling',
+                introTitle: 'Lambda Concurrency and Throttling',
+                section1Title: 'Scaling and Concurrency Control',
+                section1Definition: 'As we invoke our Lambda functions more frequently, the number of concurrent executions increases. Lambda is designed to scale very quickly and efficiently. For example, at low invocation rates, you might have only two concurrent executions, but at high scales, Lambda can handle up to <b>1000 concurrent executions</b> processing events simultaneously.',
+                concurrencyLimitNote: 'To manage this scaling, it is recommended to limit the number of concurrent executions a Lambda function can have. This is done by setting a <b>reserved concurrency limit</b> at the function level.',
+                concurrencyLimitRequest: 'If you require more than 1000 concurrent executions, you can request a limit increase by opening a support ticket with AWS.',
+
+                // Reserved Concurrency and Throttling Behavior
+                reservedTitle: 'Reserved Concurrency',
+                reservedContent: 'For instance, you can specify that a Lambda function can have up to 50 concurrent executions. Any invocation beyond this limit triggers throttling.  Reserved Concurrency helps you ensure that critical functions <b>always have a certain number of instances available</b>, preventing other functions from consuming the entire account limit.',
+                throttlingTitle: 'Throttling Behavior',
+                syncTitle: 'Synchronous Invocations:',
+                syncDetail: 'If throttled, the Lambda function returns a throttle error with <b>status code 429</b>.',
+                asyncTitle: 'Asynchronous Invocations:',
+                asyncDetail: 'Lambda automatically retries the invocation and eventually sends the event to a <b>Dead Letter Queue (DLQ)</b> if retries fail.',
+
+                // Unrestricted Concurrency
+                section3Title: 'Impact of Unrestricted Concurrency',
+                section3Content: 'If you do not set any reserved concurrency limits on your Lambda functions, the concurrency limit applies <b>account-wide</b>. If a high-traffic event (like a large promotion) causes one Lambda function to scale up to 1000 concurrent executions, it may consume all available concurrency, causing other functions to be throttled.',
+                section3KeyPoint: 'The key point is: <b>Concurrency limits are shared across ALL functions in your AWS account.</b> It is crucial to manage concurrency carefully to avoid unintended throttling.',
+
+                // Cold Starts and Provisioned Concurrency
+                section4Title: 'Cold Starts and Provisioned Concurrency',
+                coldStartTitle: 'Cold Starts',
+                coldStartContent: 'A cold start occurs when a new Lambda function instance is created. During this time, your code is loaded and initialization code outside the handler runs. If your initialization is extensive, this process can take significant time, causing <b>higher latency</b> for the first request served by the new instance.',
+                provisionedTitle: 'Provisioned Concurrency',
+                provisionedContent: 'To mitigate cold starts, you can use <b>Provisioned Concurrency</b>. This feature <b>pre-allocates</b> Lambda instances before invocations occur, ensuring that cold starts do not happen and all invocations have lower latency.  Provisioned concurrency can be managed using Application Auto Scaling to maintain readiness.',
+                vpcImprovement: 'VPC Cold Start Performance Improvements: AWS released improvements in late 2019 that dramatically reduced cold start times for Lambda functions inside a VPC.',
+
+                // Key Takeaways
+                section5Title: 'Key Takeaways Summary',
+                takeaways: [
+                    'Lambda functions can scale to thousands of concurrent executions, but concurrency limits are essential to manage resource usage and avoid throttling.',
+                    '<b>Reserved concurrency</b> limits can be set per function to cap the number of concurrent executions and prevent one function from consuming all concurrency.',
+                    'Throttling behavior differs between <b>synchronous (error 429)</b> and <b>asynchronous invocations (automatic retries and DLQ)</b>.',
+                    '<b>Provisioned concurrency</b> pre-allocates Lambda instances to reduce cold start latency, improving performance for latency-sensitive applications.'
+                ]
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        function updateContent() {
+            const langData = content[currentLanguage];
+            document.title = langData.pageTitle;
+            document.documentElement.lang = currentLanguage;
+
+            document.getElementById('langToggleVi').textContent = 'VI';
+            document.getElementById('langToggleEn').textContent = 'EN';
+            
+            document.getElementById('introTitle').innerHTML = `${langData.introTitle} <i class="fas fa-gauge-high mr-3 text-white"></i>`;
+            document.getElementById('section1Title').textContent = langData.section1Title;
+            document.getElementById('section1Definition').innerHTML = langData.section1Definition; 
+            document.getElementById('concurrencyLimitNote').innerHTML = langData.concurrencyLimitNote;
+            document.getElementById('concurrencyLimitRequest').innerHTML = langData.concurrencyLimitRequest;
+
+            // Reserved Concurrency and Throttling Behavior
+            document.getElementById('reservedTitle').innerHTML = `${langData.reservedTitle} <i class="fas fa-lock ml-3"></i>`;
+            document.getElementById('reservedContent').innerHTML = langData.reservedContent;
+            document.getElementById('throttlingTitle').innerHTML = `${langData.throttlingTitle} <i class="fas fa-bell ml-3"></i>`;
+            document.getElementById('syncTitle').innerHTML = langData.syncTitle;
+            document.getElementById('syncDetail').innerHTML = langData.syncDetail;
+            document.getElementById('asyncTitle').innerHTML = langData.asyncTitle;
+            document.getElementById('asyncDetail').innerHTML = langData.asyncDetail;
+
+            // Unrestricted Concurrency
+            document.getElementById('section3Title').innerHTML = `${langData.section3Title} <i class="fas fa-share-alt ml-3"></i>`;
+            document.getElementById('section3Content').innerHTML = langData.section3Content;
+            document.getElementById('section3KeyPoint').innerHTML = langData.section3KeyPoint;
+
+            // Cold Starts and Provisioned Concurrency
+            document.getElementById('section4Title').innerHTML = `${langData.section4Title} <i class="fas fa-temperature-low ml-3"></i>`;
+            document.getElementById('coldStartTitle').textContent = langData.coldStartTitle;
+            document.getElementById('coldStartContent').innerHTML = langData.coldStartContent;
+            document.getElementById('provisionedTitle').textContent = langData.provisionedTitle;
+            document.getElementById('provisionedContent').innerHTML = langData.provisionedContent;
+            document.getElementById('vpcImprovement').innerHTML = langData.vpcImprovement;
+            
+            // Key Takeaways
+            document.getElementById('section5Title').innerHTML = `${langData.section5Title} <i class="fas fa-graduation-cap ml-2"></i>`;
+
+            // Update Key Takeaways
+            const takeawaysContainer = document.getElementById('takeawaysContainer');
+            takeawaysContainer.innerHTML = '';
+            langData.takeaways.forEach(t => {
+                const item = `
+                    <li class="flex items-start space-x-3 text-gray-700 p-3 bg-white rounded-lg shadow-sm">
+                        <i class="fas fa-check-circle text-lg text-primary-color mt-1 flex-shrink-0"></i>
+                        <span class="text-base leading-relaxed">${t}</span>
+                    </li>
+                `;
+                takeawaysContainer.innerHTML += item;
+            });
+
+            // Update Language Toggle Buttons
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            const langToggleVi = document.getElementById('langToggleVi');
+            const langToggleEn = document.getElementById('langToggleEn');
+
+            const activeClass = 'bg-accent-color';
+            const inactiveClass = 'text-white hover:bg-white/30';
+
+            langToggleVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'vi' ? activeClass : inactiveClass}`;
+            langToggleEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            document.getElementById('langToggleVi').addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            document.getElementById('langToggleEn').addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

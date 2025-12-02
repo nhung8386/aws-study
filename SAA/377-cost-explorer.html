@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">AWS Cost Explorer - Phân Tích & Quản Lý Chi Phí</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #f59e0b; /* Amber 500 - Finance/Warning */
+            --accent-color: #10b981;  /* Emerald 500 - Savings/Growth */
+            --background-color: #fffbeb; /* Yellow 50 */
+            --text-color: #1f2937;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .header-bg {
+            background-color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .section-title {
+            color: var(--primary-color);
+            font-weight: 800;
+            border-bottom: 3px solid var(--accent-color);
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .feature-box {
+            background-color: #fef3c7; /* Amber 100 */
+            border-left: 5px solid var(--primary-color);
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+        b {
+            font-weight: 700 !important;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-chart-line mr-3 text-accent-color"></i>
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Introduction and Core Function -->
+        <section class="card p-8 shadow-xl bg-white border-b-4 border-primary-color">
+            <h2 id="section1Title" class="text-3xl section-title mb-4 pb-2"></h2>
+            <p id="section1Definition" class="text-lg text-gray-700 leading-relaxed"></p>
+            <div class="mt-4 p-4 rounded-lg bg-green-50 border border-green-200 flex items-center">
+                 <i class="fas fa-eye text-accent-color mr-3 text-xl"></i>
+                 <p id="granularityNote" class="text-gray-700 text-base font-medium"></p>
+            </div>
+        </section>
+        
+        <!-- Section 2: Key Features - Savings & Forecasting -->
+        <section>
+            <h2 id="section2Title" class="text-3xl font-extrabold text-accent-color text-center mb-8"><i class="fas fa-piggy-bank mr-2"></i> </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Savings Plans -->
+                <div class="card space-y-4 border-t-4 border-accent-color">
+                    <h3 id="savingsPlanTitle" class="text-2xl font-bold text-accent-color flex items-center"><i class="fas fa-hand-holding-usd mr-2"></i> </h3>
+                    <p id="savingsPlanDesc" class="text-gray-700"></p>
+                    <div class="feature-box">
+                        <p id="savingsPlanRecommendation" class="text-sm font-semibold"></p>
+                        <p id="savingsPlanImpact" class="text-sm text-gray-600 mt-1"></p>
+                    </div>
+                </div>
+
+                <!-- Usage Forecasting -->
+                <div class="card space-y-4 border-t-4 border-primary-color">
+                    <h3 id="forecastingTitle" class="text-2xl font-bold text-primary-color flex items-center"><i class="fas fa-chart-area mr-2"></i> </h3>
+                    <p id="forecastingDesc" class="text-gray-700"></p>
+                    <div class="feature-box">
+                         <p id="forecastingDetails" class="text-sm font-semibold"></p>
+                         <p id="forecastingBenefit" class="text-sm text-gray-600 mt-1"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 3: Example Views & Optimization -->
+        <section>
+            <h2 id="section3Title" class="text-3xl section-title mb-6 pb-2 text-center"><i class="fas fa-search-dollar mr-2"></i> </h2>
+            
+            <div class="space-y-6">
+                <!-- Monthly Cost View -->
+                <div class="card bg-yellow-50">
+                    <h4 id="monthlyCostViewTitle" class="text-xl font-bold text-gray-800 mb-2"></h4>
+                    <p id="monthlyCostViewDesc" class="text-gray-700"></p>
+                    <p id="monthlyCostViewInsight" class="mt-3 p-3 bg-white border-l-4 border-primary-color text-sm text-gray-600 italic"></p>
+                </div>
+
+                <!-- Hourly & Resource View -->
+                <div class="card bg-yellow-50">
+                    <h4 id="hourlyResourceViewTitle" class="text-xl font-bold text-gray-800 mb-2"></h4>
+                    <p id="hourlyResourceViewDesc" class="text-gray-700"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Summary for Exam -->
+        <section class="p-8 bg-gray-800 rounded-2xl shadow-2xl">
+            <h2 id="section4Title" class="text-3xl font-extrabold text-accent-color mb-8 text-center"><i class="fas fa-graduation-cap mr-2 text-primary-color"></i> </h2>
+            <ul id="takeawaysContainer" class="space-y-4">
+                <!-- Takeaways will be populated by JS -->
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        // Content Translations using <b> for bolding.
+        const content = {
+            'vi': {
+                pageTitle: 'AWS Cost Explorer - Phân Tích & Quản Lý Chi Phí',
+                introTitle: 'AWS Cost Explorer',
+                section1Title: 'Giới Thiệu: Trực Quan Hóa Chi Phí',
+                section1Definition: '<b>AWS Cost Explorer</b> là dịch vụ thanh toán được thiết kế để giúp bạn <b>trực quan hóa</b>, <b>hiểu rõ</b>, và <b>quản lý</b> chi phí cùng việc sử dụng tài nguyên AWS theo thời gian.',
+                granularityNote: 'Nó cho phép phân tích dữ liệu ở nhiều mức độ chi tiết: từ tổng chi phí trên tất cả các tài khoản, đến mức độ <b>hàng tháng</b>, <b>hàng giờ</b>, hoặc <b>từng tài nguyên</b>.',
+                
+                // Savings & Forecasting
+                section2Title: 'Tiết Kiệm và Dự Báo Chi Phí',
+                savingsPlanTitle: 'Gợi Ý Kế Hoạch Tiết Kiệm (Savings Plans)',
+                savingsPlanDesc: 'Cost Explorer hỗ trợ <b>tiết kiệm chi phí</b> bằng cách cung cấp các <b>gợi ý tối ưu</b> cho Savings Plans (một giải pháp thay thế cho Reserved Instances) dựa trên mô hình sử dụng thực tế của bạn.',
+                savingsPlanRecommendation: 'Gợi ý hiển thị chi tiêu hàng tháng ước tính và <b>tiềm năng tiết kiệm</b>.',
+                savingsPlanImpact: 'Giúp bạn dễ dàng quyết định các lựa chọn giảm chi phí và <b>hạ giá hóa đơn</b>.',
+                forecastingTitle: 'Dự Báo Sử Dụng',
+                forecastingDesc: 'Dịch vụ này có thể <b>dự báo việc sử dụng</b> và chi phí của bạn trong tương lai, lên đến <b>12 tháng</b>, dựa trên dữ liệu sử dụng trước đó.',
+                forecastingDetails: 'Cung cấp dự báo kèm theo <b>khoảng tin cậy</b> (confidence intervals) để hỗ trợ lập ngân sách.',
+                forecastingBenefit: 'Tính năng này cực kỳ hữu ích cho việc <b>lập kế hoạch tài chính</b> và ngân sách dài hạn.',
+
+                // Example Views
+                section3Title: 'Các Chế Độ Xem Chính để Tối Ưu Hóa',
+                monthlyCostViewTitle: 'Chi Phí Hàng Tháng theo Dịch Vụ AWS',
+                monthlyCostViewDesc: 'Chế độ xem này cho thấy chi phí thay đổi như thế nào theo từng dịch vụ. Bạn có thể nhanh chóng nhận ra các dịch vụ hoặc loại instance (ví dụ: t2.large) nào đang đắt hơn.',
+                monthlyCostViewInsight: 'Cung cấp insight để đặt câu hỏi: Instance này có được sử dụng tối đa không? Kích thước có phù hợp không?',
+                hourlyResourceViewTitle: 'Chi Phí Hàng Giờ và Mức Độ Tài Nguyên',
+                hourlyResourceViewDesc: 'Chế độ xem chi tiết nhất, cung cấp thông tin tài nguyên ở cấp độ <b>từng instance</b> và sự thay đổi chi phí <b>theo giờ</b>, giúp bạn hiểu rõ hơn về hóa đơn của mình.',
+
+                // Key Takeaways
+                section4Title: 'Tóm Tắt & Điểm Quan Trọng cho Kỳ Thi',
+                takeaways: [
+                    '<b>AWS Cost Explorer</b> là dịch vụ <b>Thanh toán</b> duy nhất thường được kiểm tra trong kỳ thi.',
+                    'Chức năng cốt lõi: <b>Trực quan hóa, hiểu rõ, quản lý</b> chi phí và usage.',
+                    'Cung cấp báo cáo tùy chỉnh ở nhiều mức độ chi tiết (<b>tháng, giờ, tài nguyên</b>).',
+                    'Hai chức năng chính liên quan đến tiết kiệm: <b>Đề xuất Savings Plans</b> và <b>Dự báo usage 12 tháng</b>.'
+                ]
+            },
+            'en': {
+                pageTitle: 'AWS Cost Explorer - Cost Analysis & Management',
+                introTitle: 'AWS Cost Explorer',
+                section1Title: 'Introduction to Cost Visualization',
+                section1Definition: '<b>AWS Cost Explorer</b> is a billing service designed to help you <b>visualize</b>, <b>understand</b>, and <b>manage</b> your AWS costs and usage over time.',
+                granularityNote: 'It enables custom reports that analyze your cost and usage data effectively at various granularities: from total cost across all accounts, down to <b>monthly</b>, <b>hourly</b>, or <b>resource-level</b> detail.',
+                
+                // Savings & Forecasting
+                section2Title: 'Cost Savings and Forecasting',
+                savingsPlanTitle: 'Savings Plans Recommendations',
+                savingsPlanDesc: 'Cost Explorer assists in <b>cost savings</b> by allowing you to choose an <b>optimal Savings Plan</b> (an alternative to reserved instances) based on your historical usage patterns.',
+                savingsPlanRecommendation: 'Recommendations are presented with estimated monthly spend and <b>potential savings</b>.',
+                savingsPlanImpact: 'Making it easier to decide on cost-saving options and <b>lower your bill prices</b>.',
+                forecastingTitle: 'Usage Forecasting',
+                forecastingDesc: 'The service can <b>forecast your usage</b> and costs up to <b>12 months</b> into the future based on previous usage data.',
+                forecastingDetails: 'It provides a forecast along with <b>confidence intervals</b>, estimating how much you are expected to pay in upcoming months.',
+                forecastingBenefit: 'This feature is helpful for <b>budgeting</b> and long-term financial planning.',
+
+                // Example Views
+                section3Title: 'Key Views for Optimization',
+                monthlyCostViewTitle: 'Monthly Cost by AWS Service',
+                monthlyCostViewDesc: 'This view shows how costs vary by service. You might observe that some instances, based on their instance type, are more expensive than others.',
+                monthlyCostViewInsight: 'Prompts questions like: Are these instances maximally utilized? Are they the right size?',
+                hourlyResourceViewTitle: 'Hourly and Resource Level Cost',
+                hourlyResourceViewDesc: 'The most detailed view, providing instance-level resource information and cost over time, allowing you to see <b>hourly cost changes</b> and gain a better breakdown and understanding of your bill.',
+
+                // Key Takeaways
+                section4Title: 'Summary for Exam Readiness',
+                takeaways: [
+                    '<b>AWS Cost Explorer</b> is typically the <b>only Billing service</b> tested on the certification exam.',
+                    'Core function: <b>Visualize, understand, and manage</b> AWS costs and usage.',
+                    'Allows creation of custom reports at various granularities (<b>monthly, hourly, resource</b>).',
+                    'Two main cost-saving features: <b>Savings Plans recommendations</b> and <b>12-month usage forecasting</b>.'
+                ]
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        function updateContent() {
+            const langData = content[currentLanguage];
+            document.title = langData.pageTitle;
+            document.documentElement.lang = currentLanguage;
+
+            document.getElementById('langToggleVi').textContent = 'VI';
+            document.getElementById('langToggleEn').textContent = 'EN';
+            
+            document.getElementById('introTitle').innerHTML = `${langData.introTitle} <i class="fas fa-chart-line mr-3 text-accent-color"></i>`;
+            document.getElementById('section1Title').textContent = langData.section1Title;
+            document.getElementById('section1Definition').innerHTML = langData.section1Definition;
+            document.getElementById('granularityNote').innerHTML = langData.granularityNote;
+            
+            // Savings & Forecasting
+            document.getElementById('section2Title').innerHTML = `${langData.section2Title} <i class="fas fa-piggy-bank ml-2"></i>`;
+            document.getElementById('savingsPlanTitle').innerHTML = `${langData.savingsPlanTitle} <i class="fas fa-hand-holding-usd ml-2"></i>`;
+            document.getElementById('savingsPlanDesc').innerHTML = langData.savingsPlanDesc;
+            document.getElementById('savingsPlanRecommendation').innerHTML = langData.savingsPlanRecommendation;
+            document.getElementById('savingsPlanImpact').innerHTML = langData.savingsPlanImpact;
+            
+            document.getElementById('forecastingTitle').innerHTML = `${langData.forecastingTitle} <i class="fas fa-chart-area ml-2"></i>`;
+            document.getElementById('forecastingDesc').innerHTML = langData.forecastingDesc;
+            document.getElementById('forecastingDetails').innerHTML = langData.forecastingDetails;
+            document.getElementById('forecastingBenefit').innerHTML = langData.forecastingBenefit;
+
+            // Example Views
+            document.getElementById('section3Title').innerHTML = `${langData.section3Title} <i class="fas fa-search-dollar ml-2"></i>`;
+            document.getElementById('monthlyCostViewTitle').textContent = langData.monthlyCostViewTitle;
+            document.getElementById('monthlyCostViewDesc').textContent = langData.monthlyCostViewDesc;
+            document.getElementById('monthlyCostViewInsight').innerHTML = langData.monthlyCostViewInsight;
+            document.getElementById('hourlyResourceViewTitle').textContent = langData.hourlyResourceViewTitle;
+            document.getElementById('hourlyResourceViewDesc').innerHTML = langData.hourlyResourceViewDesc;
+
+            // Key Takeaways
+            document.getElementById('section4Title').innerHTML = `${langData.section4Title} <i class="fas fa-graduation-cap ml-2 text-primary-color"></i>`;
+
+            // Update Language Toggle Buttons
+            updateLanguageButtons();
+
+            // Update Key Takeaways
+            const takeawaysContainer = document.getElementById('takeawaysContainer');
+            takeawaysContainer.innerHTML = '';
+            langData.takeaways.forEach(t => {
+                const item = `
+                    <li class="flex items-start space-x-3 text-gray-200 p-3 bg-gray-700 rounded-lg">
+                        <i class="fas fa-check-circle text-lg text-accent-color mt-1 flex-shrink-0"></i>
+                        <span class="text-base leading-relaxed">${t}</span>
+                    </li>
+                `;
+                takeawaysContainer.innerHTML += item;
+            });
+        }
+
+        function updateLanguageButtons() {
+            const langToggleVi = document.getElementById('langToggleVi');
+            const langToggleEn = document.getElementById('langToggleEn');
+
+            const activeClass = 'bg-accent-color';
+            const inactiveClass = 'text-white hover:bg-white/30';
+
+            langToggleVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'vi' ? activeClass : inactiveClass}`;
+            langToggleEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            document.getElementById('langToggleVi').addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            document.getElementById('langToggleEn').addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

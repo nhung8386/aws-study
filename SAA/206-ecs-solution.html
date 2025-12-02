@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Amazon ECS - Các Mô Hình Kiến Trúc Giải Pháp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #06b6d4; /* Cyan 500 - Connectivity */
+            --accent-color: #2563eb;  /* Blue 600 - Architecture */
+            --text-color: #1f2937;
+            --background-color: #f0f9ff; /* Blue 50 */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .header-bg {
+            background-color: var(--accent-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .architecture-card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid var(--primary-color);
+        }
+        .feature-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px dashed #e5e7eb;
+        }
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+        .image-placeholder {
+            min-height: 150px;
+            background-color: #e0f2fe; /* Blue 100 */
+            border: 2px dashed var(--accent-color);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-style: italic;
+            text-align: center;
+            color: var(--accent-color);
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+        b {
+            font-weight: 700 !important;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-cubes mr-3 text-white"></i>
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Introduction -->
+        <section class="p-8 bg-white rounded-xl shadow-xl">
+            <h2 id="section1Title" class="text-3xl font-extrabold text-accent-color mb-4 border-b-2 pb-2 border-primary-color"></h2>
+            <p id="section1Definition" class="text-lg text-gray-700 leading-relaxed"></p>
+        </section>
+
+        <!-- Architectures Grid -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- Architecture 1: ECS Tasks Invoked by Event Bridge (S3 Event) -->
+            <div id="arch1Card" class="architecture-card">
+                <h3 id="arch1Title" class="text-2xl font-bold text-primary-color mb-3 flex items-center"><i class="fas fa-upload mr-3"></i></h3>
+                <p id="arch1Description" class="text-gray-700 leading-relaxed"></p>
+                <div id="arch1Image" class="image-placeholder"></div>
+                <div class="mt-4 p-3 bg-gray-50 rounded-lg">
+                    <b id="arch1Use" class="text-accent-color block mb-1"></b>
+                </div>
+            </div>
+
+            <!-- Architecture 2: Event Bridge Scheduled ECS Tasks -->
+            <div id="arch2Card" class="architecture-card">
+                <h3 id="arch2Title" class="text-2xl font-bold text-primary-color mb-3 flex items-center"><i class="fas fa-clock mr-3"></i></h3>
+                <p id="arch2Description" class="text-gray-700 leading-relaxed"></p>
+                <div id="arch2Image" class="image-placeholder"></div>
+                <div class="mt-4 p-3 bg-gray-50 rounded-lg">
+                    <b id="arch2Use" class="text-accent-color block mb-1"></b>
+                </div>
+            </div>
+            
+            <!-- Architecture 3: ECS Service Processing Messages from SQS Queue -->
+            <div id="arch3Card" class="architecture-card">
+                <h3 id="arch3Title" class="text-2xl font-bold text-primary-color mb-3 flex items-center"><i class="fas fa-exchange-alt mr-3"></i></h3>
+                <p id="arch3Description" class="text-gray-700 leading-relaxed"></p>
+                <div id="arch3Image" class="image-placeholder"></div>
+                <div class="mt-4 p-3 bg-gray-50 rounded-lg">
+                    <b id="arch3Use" class="text-accent-color block mb-1"></b>
+                </div>
+            </div>
+
+            <!-- Architecture 4: Event Bridge Monitoring ECS Task Lifecycle Events -->
+            <div id="arch4Card" class="architecture-card">
+                <h3 id="arch4Title" class="text-2xl font-bold text-primary-color mb-3 flex items-center"><i class="fas fa-bell mr-3"></i></h3>
+                <p id="arch4Description" class="text-gray-700 leading-relaxed"></p>
+                <div id="arch4Image" class="image-placeholder"></div>
+                <div class="mt-4 p-3 bg-gray-50 rounded-lg">
+                    <b id="arch4Use" class="text-accent-color block mb-1"></b>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Key Takeaways -->
+        <section class="p-8 bg-primary-color/10 rounded-xl shadow-lg">
+            <h2 id="section5Title" class="text-3xl font-extrabold text-primary-color mb-8 text-center"><i class="fas fa-thumbtack mr-2"></i> </h2>
+            <ul id="takeawaysContainer" class="space-y-4">
+                <!-- Takeaways will be populated by JS -->
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        // Content Translations using <b> for bolding.
+        const content = {
+            'vi': {
+                pageTitle: 'Amazon ECS - Các Mô Hình Kiến Trúc Giải Pháp',
+                introTitle: 'Các Mô Hình Kiến Trúc Giải Pháp Amazon ECS',
+                section1Title: 'Giới Thiệu về Kiến Trúc Giải Pháp ECS',
+                section1Definition: 'Trong phần này, chúng ta sẽ thảo luận về một số mô hình kiến trúc giải pháp phổ biến và mạnh mẽ mà bạn có thể xây dựng bằng cách tích hợp <b>Amazon ECS</b> (dùng Fargate) với các dịch vụ AWS khác như <b>EventBridge</b>, <b>S3</b>, <b>SQS</b> và <b>DynamoDB</b>.',
+                
+                // Arch 1: Event-Driven Processing
+                arch1Title: 'ECS Task được Kích hoạt bởi EventBridge (Sự kiện S3)',
+                arch1Description: 'Người dùng tải đối tượng lên <b>S3 Bucket</b>. Sự kiện này được gửi đến <b>Amazon EventBridge</b>. EventBridge có Rule được cấu hình để chạy các <b>ECS Task</b> (trên Fargate) một cách linh hoạt. Task này, nhờ có <b>ECS Task Role</b>, có thể truy xuất đối tượng, xử lý, và gửi kết quả vào <b>Amazon DynamoDB</b>.',
+                arch1ImageText: '',
+                arch1Use: 'Ứng dụng: Tạo giải pháp serverless để xử lý ảnh hoặc đối tượng ngay lập tức sau khi tải lên.',
+                
+                // Arch 2: Scheduled Batch Processing
+                arch2Title: 'ECS Task được Lên Lịch bởi EventBridge',
+                arch2Description: 'Sử dụng tính năng lên lịch của <b>EventBridge</b>. Một Rule được cấu hình để kích hoạt (ví dụ: mỗi giờ). Rule này chạy các <b>ECS Task</b> mới trong cụm Fargate. Task có thể thực hiện <b>Batch Processing</b> (xử lý theo lô) trên các tệp trong S3, nhờ vào quyền truy cập từ <b>ECS Task Role</b>.',
+                arch2ImageText: '',
+                arch2Use: 'Ứng dụng: Thực hiện xử lý dữ liệu định kỳ (hourly batch processing) hoàn toàn serverless.',
+
+                // Arch 3: SQS Queue Consumption with Auto-Scaling
+                arch3Title: 'ECS Service Xử lý Tin nhắn từ Hàng đợi SQS',
+                arch3Description: 'Một <b>ECS Service</b> chạy các Task liên tục kéo tin nhắn từ <b>SQS Queue</b> để xử lý. Tính năng <b>ECS Service Auto Scaling</b> được bật. Số lượng ECS Task sẽ tự động điều chỉnh theo <b>số lượng tin nhắn</b> đang chờ trong hàng đợi SQS, đảm bảo khả năng xử lý đàn hồi.',
+                arch3ImageText: '',
+                arch3Use: 'Ứng dụng: Xây dựng hệ thống xử lý tác vụ bất đồng bộ, có khả năng mở rộng dựa trên nhu cầu thực tế.',
+
+                // Arch 4: Monitoring Task Lifecycle
+                arch4Title: 'EventBridge Giám sát Sự kiện Vòng đời ECS Task',
+                arch4Description: 'EventBridge có thể chặn bất kỳ sự kiện nào xảy ra trong cụm ECS của bạn. Ví dụ: sự kiện thay đổi trạng thái Task (như "stopped"). Sự kiện này bao gồm <b>lý do dừng</b> và có thể được chuyển đến một mục tiêu khác, chẳng hạn như gửi cảnh báo qua <b>SNS Topic</b> (và sau đó là Email) cho quản trị viên.',
+                arch4ImageText: '',
+                arch4Use: 'Ứng dụng: Theo dõi hiệu quả vòng đời container, cảnh báo khi Task bị lỗi hoặc thoát bất thường.',
+                
+                // Key Takeaways
+                section5Title: 'Điểm Chính Cần Nhớ',
+                takeaways: [
+                    '<b>Amazon ECS tasks</b> có thể được kích hoạt bởi <b>Amazon Event Bridge</b> dựa trên các sự kiện S3, cho phép xử lý serverless.',
+                    'Lên lịch Event Bridge cho phép chạy ECS Task định kỳ, chẳng hạn như xử lý theo lô (batch processing) hàng giờ với <b>Fargate</b>.',
+                    'ECS Service có thể xử lý tin nhắn từ <b>SQS Queues</b> với khả năng tự động mở rộng (auto-scaling) dựa trên độ dài hàng đợi.',
+                    'Event Bridge có thể giám sát các sự kiện vòng đời của ECS Task, cho phép gửi cảnh báo qua <b>SNS</b> khi trạng thái Task thay đổi.'
+                ]
+            },
+            'en': {
+                pageTitle: 'Amazon ECS - Solutions Architectures',
+                introTitle: 'Amazon ECS Solution Architectures',
+                section1Title: 'Introduction to ECS Solution Architectures',
+                section1Definition: 'In this section, we discuss several powerful solution architectures you can build by integrating <b>Amazon ECS</b> (using Fargate) with other AWS services like <b>EventBridge</b>, <b>S3</b>, <b>SQS</b>, and <b>DynamoDB</b>.',
+                
+                // Arch 1: Event-Driven Processing
+                arch1Title: 'ECS Tasks Invoked by Event Bridge (S3 Event)',
+                arch1Description: 'Users upload objects into <b>S3 Buckets</b>, which are integrated with <b>Amazon Event Bridge</b>. Event Bridge has a rule configured to dynamically run <b>ECS Tasks</b> (on Fargate). The Task, thanks to the <b>ECS Task Role</b>, can retrieve the objects, process them, and send the results into <b>Amazon DynamoDB</b>.',
+                arch1ImageText: '',
+                arch1Use: 'Use Case: Creates a serverless solution to process images or objects immediately upon upload.',
+
+                // Arch 2: Scheduled Batch Processing
+                arch2Title: 'Event Bridge Scheduled ECS Tasks',
+                arch2Description: 'Uses <b>Event Bridge schedules</b>. A rule is configured to trigger (e.g., every hour). This rule runs new <b>ECS Tasks</b> in the Fargate cluster. The Task can perform <b>Batch Processing</b> on files in S3, enabled by the access provided by the <b>ECS Task Role</b>.',
+                arch2ImageText: '',
+                arch2Use: 'Use Case: Enables scheduled, fully serverless batch processing operations.',
+
+                // Arch 3: SQS Queue Consumption with Auto-Scaling
+                arch3Title: 'ECS Service Processing Messages from SQS Queue',
+                arch3Description: 'An <b>ECS Service</b> runs Tasks that continuously pull messages from an <b>SQS Queue</b> for processing. <b>ECS Service Auto Scaling</b> is enabled. The number of ECS Tasks scales automatically with the <b>number of messages</b> in the SQS queue, ensuring elastic processing capacity.',
+                arch3ImageText: '',
+                arch3Use: 'Use Case: Building asynchronous task processing systems that scale based on real-time demand.',
+
+                // Arch 4: Monitoring Task Lifecycle
+                arch4Title: 'Event Bridge Monitoring ECS Task Lifecycle Events',
+                arch4Description: 'Event Bridge can intercept events from within your ECS cluster. For example, a Task state change event (like "stopped"). This event includes the <b>stopped reason</b> and can trigger a target, such as alerting an <b>SNS Topic</b> (and subsequently Email) to administrators.',
+                arch4ImageText: '',
+                arch4Use: 'Use Case: Effectively monitoring container lifecycle, alerting on failed or abnormal task exits.',
+                
+                // Key Takeaways
+                section5Title: 'Key Takeaways',
+                takeaways: [
+                    '<b>Amazon ECS tasks</b> can be triggered by <b>Amazon Event Bridge</b> based on S3 bucket events, enabling serverless processing.',
+                    'Event Bridge schedules allow running ECS tasks periodically, such as hourly batch processing with <b>Fargate</b>.',
+                    'ECS services can process messages from <b>SQS Queues</b> with auto-scaling based on queue length.',
+                    'Event Bridge can monitor ECS task lifecycle events, enabling alerts via <b>SNS</b> for task state changes.'
+                ]
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        function updateContent() {
+            const langData = content[currentLanguage];
+            document.title = langData.pageTitle;
+            document.documentElement.lang = currentLanguage;
+
+            document.getElementById('langToggleVi').textContent = 'VI';
+            document.getElementById('langToggleEn').textContent = 'EN';
+            
+            document.getElementById('introTitle').innerHTML = `${langData.introTitle} <i class="fas fa-cubes mr-3 text-white"></i>`;
+            document.getElementById('section1Title').textContent = langData.section1Title;
+            document.getElementById('section1Definition').innerHTML = langData.section1Definition; 
+
+            // Arch 1
+            document.getElementById('arch1Title').innerHTML = `${langData.arch1Title} <i class="fas fa-upload mr-3"></i>`;
+            document.getElementById('arch1Description').innerHTML = langData.arch1Description;
+            document.getElementById('arch1Image').textContent = langData.arch1ImageText;
+            document.getElementById('arch1Use').innerHTML = langData.arch1Use;
+
+            // Arch 2
+            document.getElementById('arch2Title').innerHTML = `${langData.arch2Title} <i class="fas fa-clock mr-3"></i>`;
+            document.getElementById('arch2Description').innerHTML = langData.arch2Description;
+            document.getElementById('arch2Image').textContent = langData.arch2ImageText;
+            document.getElementById('arch2Use').innerHTML = langData.arch2Use;
+            
+            // Arch 3
+            document.getElementById('arch3Title').innerHTML = `${langData.arch3Title} <i class="fas fa-exchange-alt mr-3"></i>`;
+            document.getElementById('arch3Description').innerHTML = langData.arch3Description;
+            document.getElementById('arch3Image').textContent = langData.arch3ImageText;
+            document.getElementById('arch3Use').innerHTML = langData.arch3Use;
+
+            // Arch 4
+            document.getElementById('arch4Title').innerHTML = `${langData.arch4Title} <i class="fas fa-bell mr-3"></i>`;
+            document.getElementById('arch4Description').innerHTML = langData.arch4Description;
+            document.getElementById('arch4Image').textContent = langData.arch4ImageText;
+            document.getElementById('arch4Use').innerHTML = langData.arch4Use;
+
+            // Key Takeaways
+            document.getElementById('section5Title').innerHTML = `${langData.section5Title} <i class="fas fa-thumbtack ml-2 text-primary-color"></i>`;
+
+            // Update Key Takeaways
+            const takeawaysContainer = document.getElementById('takeawaysContainer');
+            takeawaysContainer.innerHTML = '';
+            langData.takeaways.forEach(t => {
+                const item = `
+                    <li class="flex items-start space-x-3 text-gray-700 p-3 bg-white rounded-lg shadow-sm">
+                        <i class="fas fa-check-square text-lg text-accent-color mt-1 flex-shrink-0"></i>
+                        <span class="text-base leading-relaxed">${t}</span>
+                    </li>
+                `;
+                takeawaysContainer.innerHTML += item;
+            });
+
+            // Update Language Toggle Buttons
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            const langToggleVi = document.getElementById('langToggleVi');
+            const langToggleEn = document.getElementById('langToggleEn');
+
+            const activeClass = 'bg-primary-color';
+            const inactiveClass = 'text-white hover:bg-white/30';
+
+            langToggleVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'vi' ? activeClass : inactiveClass}`;
+            langToggleEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            document.getElementById('langToggleVi').addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            document.getElementById('langToggleEn').addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

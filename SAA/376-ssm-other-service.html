@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">SSM - Các Dịch Vụ Bổ Sung: Tự Động Hóa và Quản Lý</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #f97316; /* Orange 500 - Automation/Energy */
+            --accent-color: #10b981;  /* Emerald 500 - Success/Compliance */
+            --background-color: #fff7ed; /* Orange 50 */
+            --text-color: #1f2937;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .header-bg {
+            background-color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .section-title {
+            color: var(--primary-color);
+            font-weight: 800;
+            border-bottom: 3px solid var(--accent-color);
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .feature-icon {
+            color: var(--primary-color);
+            font-size: 2rem;
+            flex-shrink: 0;
+            margin-right: 1rem;
+        }
+        .flow-step {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            background-color: #fef3c7; /* Amber 100 */
+            color: #78350f; /* Amber 900 */
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        b {
+            font-weight: 700 !important;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-sitemap mr-3 text-accent-color"></i>
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Overview and Core Idea -->
+        <section class="card p-8 shadow-xl bg-white border-b-4 border-primary-color">
+            <h2 id="section1Title" class="text-3xl section-title mb-4 pb-2"></h2>
+            <p id="section1Definition" class="text-lg text-gray-700 leading-relaxed"></p>
+        </section>
+        
+        <!-- Section 2: Run Command -->
+        <section>
+            <h2 id="runCommandTitle" class="text-3xl font-extrabold text-accent-color mb-6"><i class="fas fa-terminal mr-2"></i> </h2>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2 card">
+                    <h3 id="runCommandSubtitle" class="text-xl font-bold text-gray-800 mb-3"></h3>
+                    <p id="runCommandContent" class="text-base text-gray-700 mb-4"></p>
+                    <div class="flex flex-wrap gap-2 mt-4">
+                        <span id="runCommandFlow1" class="flow-step"><i class="fas fa-server mr-2"></i> </span>
+                        <i class="fas fa-arrow-right text-primary-color hidden sm:block"></i>
+                        <span id="runCommandFlow2" class="flow-step"><i class="fas fa-file-code mr-2"></i> </span>
+                        <i class="fas fa-arrow-right text-primary-color hidden sm:block"></i>
+                        <span id="runCommandFlow3" class="flow-step"><i class="fas fa-cloud-upload-alt mr-2"></i> </span>
+                    </div>
+                </div>
+                <div class="card bg-orange-50 border-l-4 border-primary-color space-y-3">
+                    <h4 class="font-bold text-lg text-primary-color flex items-center"><i class="fas fa-bell mr-2"></i> Auditing & Logging</h4>
+                    <p id="runCommandOutput" class="text-sm text-gray-700"></p>
+                    <p id="runCommandAudit" class="text-sm text-gray-700"></p>
+                    <p id="runCommandTrigger" class="text-sm text-gray-700"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Patch Manager & Maintenance Windows -->
+        <section>
+            <h2 id="patchMaintTitle" class="text-3xl font-extrabold text-accent-color mb-6 text-center"><i class="fas fa-wrench mr-2"></i> </h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Patch Manager Card -->
+                <div class="card bg-green-50 border-t-4 border-accent-color">
+                    <h3 id="patchManagerTitle" class="text-2xl font-bold text-accent-color mb-3 flex items-center"><i class="fas fa-paint-roller mr-2"></i> </h3>
+                    <p id="patchManagerContent" class="text-base text-gray-700 mb-4"></p>
+                    <ul class="list-disc ml-5 text-sm text-gray-600 space-y-1">
+                        <li id="patchManagerUse1"></li>
+                        <li id="patchManagerUse2"></li>
+                        <li id="patchManagerUse3"></li>
+                    </ul>
+                </div>
+
+                <!-- Maintenance Windows Card -->
+                <div class="card bg-blue-50 border-t-4 border-primary-color">
+                    <h3 id="maintenanceTitle" class="text-2xl font-bold text-primary-color mb-3 flex items-center"><i class="fas fa-calendar-alt mr-2"></i> </h3>
+                    <p id="maintenanceContent" class="text-base text-gray-700 mb-4"></p>
+                    <ul class="list-disc ml-5 text-sm text-gray-600 space-y-1">
+                        <li id="maintenanceSpec1"></li>
+                        <li id="maintenanceSpec2"></li>
+                        <li id="maintenanceSpec3"></li>
+                        <li id="maintenanceSpec4"></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Automation -->
+        <section>
+            <h2 id="automationTitle" class="text-3xl font-extrabold text-accent-color mb-6"><i class="fas fa-robot mr-2"></i> </h2>
+            <div class="card bg-gray-100">
+                <p id="automationContent" class="text-base text-gray-700 mb-4"></p>
+                <h4 id="automationRunbooks" class="font-bold text-lg text-primary-color mt-4 mb-2"></h4>
+                <p id="automationRunbooksDesc" class="text-sm text-gray-700 mb-4"></p>
+                <div id="automationTriggers" class="flex flex-wrap gap-2">
+                    <span class="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-xs font-semibold">Console/SDK/CLI</span>
+                    <span class="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-xs font-semibold"><i class="fas fa-bolt mr-1"></i> EventBridge</span>
+                    <span class="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-xs font-semibold"><i class="fas fa-calendar-alt mr-1"></i> Maintenance Windows</span>
+                    <span class="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-xs font-semibold"><i class="fas fa-cogs mr-1"></i> AWS Config</span>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Section 5: Key Takeaways -->
+        <section class="p-8 bg-gray-900 rounded-2xl shadow-2xl">
+            <h2 id="section5Title" class="text-3xl font-extrabold text-white mb-8 text-center"><i class="fas fa-star mr-2 text-accent-color"></i> </h2>
+            <ul id="takeawaysContainer" class="space-y-4">
+                <!-- Takeaways will be populated by JS -->
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        // Content Translations using <b> for bolding.
+        const content = {
+            'vi': {
+                pageTitle: 'SSM - Các Dịch Vụ Bổ Sung: Tự Động Hóa và Quản Lý',
+                introTitle: 'SSM - Các Dịch Vụ Bổ Sung',
+                section1Title: 'Tổng Quan về Các Dịch Vụ Quản Lý Hệ Thống Khác',
+                section1Definition: 'Ngoài Session Manager, Systems Manager còn có nhiều dịch vụ khác giúp bạn tự động hóa việc quản lý và duy trì các instance (EC2 hoặc on-premises). Hãy nhớ <b>ý tưởng chung</b> của từng dịch vụ, ngay cả khi bạn không nắm rõ mọi chi tiết.',
+
+                // Run Command
+                runCommandTitle: 'Run Command: Thực Thi Lệnh Từ Xa',
+                runCommandSubtitle: 'Thực Thi Lệnh/Script trên Nhiều Instance',
+                runCommandContent: 'Run Command được sử dụng để thực thi một document (ví dụ: script hoặc lệnh đơn lẻ) trên <b>nhiều instance</b> cùng lúc, sử dụng Resource Groups. Nó hoạt động mà <b>không cần SSH</b>, thông qua SSM Agent đã cài đặt trên các instance.',
+                runCommandFlow1: 'Managed Instances (Có SSM Agent)',
+                runCommandFlow2: 'Thực thi Command Document',
+                runCommandFlow3: 'Kết quả được trả về',
+                runCommandOutput: '<b>Output:</b> Kết quả lệnh có thể được gửi tới <b>Amazon S3</b> hoặc <b>CloudWatch Logs</b>.',
+                runCommandAudit: '<b>Kiểm toán:</b> Tích hợp đầy đủ với <b>IAM</b> (bảo mật) và <b>CloudTrail</b> (theo dõi ai đã chạy lệnh nào).',
+                runCommandTrigger: '<b>Kích hoạt:</b> Có thể kích hoạt thủ công, hoặc tự động qua <b>Amazon EventBridge</b>.',
+
+                // Patch Manager & Maintenance Windows
+                patchMaintTitle: 'Patch Manager & Maintenance Windows: Duy Trì Sự Tuân Thủ',
+                patchManagerTitle: 'Patch Manager: Tự Động Hóa Cập Nhật',
+                patchManagerContent: 'Patch Manager tự động hóa việc vá lỗi (patching) cho các instance. Nó áp dụng các cập nhật <b>hệ điều hành (OS)</b>, cập nhật ứng dụng và các bản vá bảo mật.',
+                patchManagerUse1: 'Sử dụng run command document tên là <b>AWS-RunPatchBaseline</b> để vá lỗi.',
+                patchManagerUse2: 'Hỗ trợ vá lỗi theo yêu cầu (on-demand) hoặc <b>theo lịch trình</b>.',
+                patchManagerUse3: 'Quét instance để tạo <b>báo cáo tuân thủ bản vá (compliance reports)</b>.',
+                
+                maintenanceTitle: 'Maintenance Windows: Định Nghĩa Lịch Trình',
+                maintenanceContent: 'Maintenance Windows xác định <b>lịch trình</b> để thực hiện các hành động trên instance (ví dụ: vá lỗi, cập nhật driver, cài đặt phần mềm).',
+                maintenanceSpec1: '<b>Schedule:</b> Lịch trình kích hoạt.',
+                maintenanceSpec2: '<b>Duration:</b> Khoảng thời gian thực thi.',
+                maintenanceSpec3: '<b>Target Instances:</b> Các instance mục tiêu.',
+                maintenanceSpec4: '<b>Tasks:</b> Các tác vụ sẽ được thực hiện (ví dụ: chạy Patch Manager).',
+
+                // Automation
+                automationTitle: 'Automation: Đơn Giản Hóa Tác Vụ',
+                automationContent: 'Automation đơn giản hóa các tác vụ bảo trì và triển khai phổ biến trên EC2 hoặc các tài nguyên AWS khác (ví dụ: khởi động lại instance, tạo AMI, chụp snapshot EBS/RDS).',
+                automationRunbooks: 'Sử Dụng Runbooks',
+                automationRunbooksDesc: 'Automation sử dụng <b>runbooks</b>, là các document SSM đại diện cho các hành động được xác định trước trên tài nguyên AWS. Runbooks có thể được kích hoạt để khắc phục sự cố tự động.',
+                automationTriggers: 'Kích Hoạt Tự Động',
+
+                // Key Takeaways
+                section5Title: 'Điểm Chính (Key Takeaways)',
+                takeaways: [
+                    '<b>Run Command:</b> Thực thi script/lệnh trên nhiều instance <b>không cần SSH</b>. Output gửi tới S3/CloudWatch, thông báo trạng thái qua SNS.',
+                    '<b>Patch Manager:</b> Tự động hóa vá lỗi OS/Ứng dụng. Có thể vá theo yêu cầu hoặc theo lịch trình (dùng Maintenance Windows).',
+                    '<b>Maintenance Windows:</b> Định nghĩa <b>lịch trình, thời lượng, mục tiêu, và tác vụ</b> cho các hoạt động bảo trì.',
+                    '<b>Automation:</b> Đơn giản hóa tác vụ bằng <b>runbooks</b>. Có thể được kích hoạt bởi <b>AWS Config</b> để tự động khắc phục sự cố.'
+                ]
+            },
+            'en': {
+                pageTitle: 'SSM - Additional Services: Automation and Management',
+                introTitle: 'SSM - Additional Services',
+                section1Title: 'Overview of Additional Systems Manager Services',
+                section1Definition: 'Beyond Session Manager, Systems Manager offers several other services that help you automate the management and maintenance of your instances (EC2 or on-premises). Just remember the <b>general idea</b> of these services, even if you don\'t grasp every detail.',
+
+                // Run Command
+                runCommandTitle: 'Run Command: Remote Execution',
+                runCommandSubtitle: 'Execute Commands/Scripts on Multiple Instances',
+                runCommandContent: 'Run Command is used to execute a document (such as a script or a single command) on <b>multiple instances</b> simultaneously, using Resource Groups. It operates <b>without the need for SSH</b>, running commands through the installed SSM Agent on the instances.',
+                runCommandFlow1: 'Managed Instances (with SSM Agent)',
+                runCommandFlow2: 'Execute Command Document',
+                runCommandFlow3: 'Output is Returned',
+                runCommandOutput: '<b>Output:</b> Command output can be sent to <b>Amazon S3</b> or <b>CloudWatch Logs</b>.',
+                runCommandAudit: '<b>Auditing:</b> Full integration with <b>IAM</b> (security) and <b>CloudTrail</b> (tracking who ran which commands).',
+                runCommandTrigger: '<b>Trigger:</b> Can be run manually, or automatically via <b>Amazon EventBridge</b>.',
+
+                // Patch Manager & Maintenance Windows
+                patchMaintTitle: 'Patch Manager & Maintenance Windows: Maintaining Compliance',
+                patchManagerTitle: 'Patch Manager: Automated Updates',
+                patchManagerContent: 'Patch Manager automates the process of patching managed instances. It applies <b>operating system (OS)</b> updates, application updates, and security updates.',
+                patchManagerUse1: 'Uses the run command document named <b>AWS-RunPatchBaseline</b> for patching.',
+                patchManagerUse2: 'Supports patching on-demand or <b>scheduled patching</b>.',
+                patchManagerUse3: 'Scans instances to generate <b>patch compliance reports</b>.',
+                
+                maintenanceTitle: 'Maintenance Windows: Defining Schedules',
+                maintenanceContent: 'Maintenance Windows define <b>schedules</b> for performing actions on your instances (e.g., OS patching, driver updates, software installation).',
+                maintenanceSpec1: '<b>Schedule:</b> When it will be triggered.',
+                maintenanceSpec2: '<b>Duration:</b> How long it will run.',
+                maintenanceSpec3: '<b>Target Instances:</b> The instances it applies to.',
+                maintenanceSpec4: '<b>Tasks:</b> The actions that will be executed (e.g., running Patch Manager).',
+
+                // Automation
+                automationTitle: 'Automation: Simplifying Tasks',
+                automationContent: 'Automation simplifies common maintenance and deployment tasks on EC2 instances or other AWS resources (e.g., restarting instances, creating AMIs, taking EBS/RDS snapshots).',
+                automationRunbooks: 'Utilizing Runbooks',
+                automationRunbooksDesc: 'Automation uses <b>runbooks</b>, which are SSM documents representing predefined actions on AWS resources. Runbooks can be executed for automatic remediation.',
+                automationTriggers: 'Automation Triggers',
+
+                // Key Takeaways
+                section5Title: 'Key Takeaways',
+                takeaways: [
+                    '<b>Run Command:</b> Executes scripts/commands on multiple instances <b>without SSH</b>. Output goes to S3/CloudWatch, status via SNS.',
+                    '<b>Patch Manager:</b> Automates OS/Application patching. Can be on-demand or scheduled (using Maintenance Windows).',
+                    '<b>Maintenance Windows:</b> Define the <b>schedule, duration, targets, and tasks</b> for maintenance activities.',
+                    '<b>Automation:</b> Simplifies tasks using <b>runbooks</b>. Can be triggered by <b>AWS Config</b> for automatic remediation.'
+                ]
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        function updateContent() {
+            const langData = content[currentLanguage];
+            document.title = langData.pageTitle;
+            document.documentElement.lang = currentLanguage;
+
+            document.getElementById('langToggleVi').textContent = 'VI';
+            document.getElementById('langToggleEn').textContent = 'EN';
+            
+            document.getElementById('introTitle').innerHTML = `${langData.introTitle} <i class="fas fa-sitemap mr-3 text-accent-color"></i>`;
+            document.getElementById('section1Title').textContent = langData.section1Title;
+            document.getElementById('section1Definition').innerHTML = langData.section1Definition;
+            
+            // Run Command
+            document.getElementById('runCommandTitle').innerHTML = `${langData.runCommandTitle} <i class="fas fa-terminal ml-2"></i>`;
+            document.getElementById('runCommandSubtitle').textContent = langData.runCommandSubtitle;
+            document.getElementById('runCommandContent').innerHTML = langData.runCommandContent;
+            document.getElementById('runCommandFlow1').innerHTML = `<i class="fas fa-server mr-2"></i> ${langData.runCommandFlow1}`;
+            document.getElementById('runCommandFlow2').innerHTML = `<i class="fas fa-file-code mr-2"></i> ${langData.runCommandFlow2}`;
+            document.getElementById('runCommandFlow3').innerHTML = `<i class="fas fa-cloud-upload-alt mr-2"></i> ${langData.runCommandFlow3}`;
+            document.getElementById('runCommandOutput').innerHTML = langData.runCommandOutput;
+            document.getElementById('runCommandAudit').innerHTML = langData.runCommandAudit;
+            document.getElementById('runCommandTrigger').innerHTML = langData.runCommandTrigger;
+
+            // Patch Manager & Maintenance Windows
+            document.getElementById('patchMaintTitle').innerHTML = `${langData.patchMaintTitle} <i class="fas fa-wrench ml-2"></i>`;
+            document.getElementById('patchManagerTitle').innerHTML = `${langData.patchManagerTitle} <i class="fas fa-paint-roller ml-2"></i>`;
+            document.getElementById('patchManagerContent').innerHTML = langData.patchManagerContent;
+            document.getElementById('patchManagerUse1').innerHTML = langData.patchManagerUse1;
+            document.getElementById('patchManagerUse2').innerHTML = langData.patchManagerUse2;
+            document.getElementById('patchManagerUse3').innerHTML = langData.patchManagerUse3;
+
+            document.getElementById('maintenanceTitle').innerHTML = `${langData.maintenanceTitle} <i class="fas fa-calendar-alt ml-2"></i>`;
+            document.getElementById('maintenanceContent').innerHTML = langData.maintenanceContent;
+            document.getElementById('maintenanceSpec1').innerHTML = langData.maintenanceSpec1;
+            document.getElementById('maintenanceSpec2').innerHTML = langData.maintenanceSpec2;
+            document.getElementById('maintenanceSpec3').innerHTML = langData.maintenanceSpec3;
+            document.getElementById('maintenanceSpec4').innerHTML = langData.maintenanceSpec4;
+
+            // Automation
+            document.getElementById('automationTitle').innerHTML = `${langData.automationTitle} <i class="fas fa-robot ml-2"></i>`;
+            document.getElementById('automationContent').innerHTML = langData.automationContent;
+            document.getElementById('automationRunbooks').textContent = langData.automationRunbooks;
+            document.getElementById('automationRunbooksDesc').innerHTML = langData.automationRunbooksDesc;
+
+            // Key Takeaways
+            document.getElementById('section5Title').innerHTML = `${langData.section5Title} <i class="fas fa-star ml-2 text-accent-color"></i>`;
+
+            // Update Language Toggle Buttons
+            updateLanguageButtons();
+
+            // Update Key Takeaways
+            const takeawaysContainer = document.getElementById('takeawaysContainer');
+            takeawaysContainer.innerHTML = '';
+            langData.takeaways.forEach(t => {
+                const item = `
+                    <li class="flex items-start space-x-3 text-gray-200 p-3 bg-gray-700 rounded-lg">
+                        <i class="fas fa-check-circle text-lg text-accent-color mt-1 flex-shrink-0"></i>
+                        <span class="text-base leading-relaxed">${t}</span>
+                    </li>
+                `;
+                takeawaysContainer.innerHTML += item;
+            });
+        }
+
+        function updateLanguageButtons() {
+            const langToggleVi = document.getElementById('langToggleVi');
+            const langToggleEn = document.getElementById('langToggleEn');
+
+            const activeClass = 'bg-accent-color';
+            const inactiveClass = 'text-white hover:bg-white/30';
+
+            langToggleVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'vi' ? activeClass : inactiveClass}`;
+            langToggleEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            document.getElementById('langToggleVi').addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            document.getElementById('langToggleEn').addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

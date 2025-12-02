@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">AWS Web Application Firewall (WAF)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #dc2626; /* Red 600 - Fire/Security */
+            --secondary-color: #f59e0b; /* Amber 500 - Warning/Protection */
+            --background-color: #fef2f2; /* Red 50 */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: #1f2937;
+        }
+        .header-bg {
+            background-color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid var(--primary-color);
+            transition: border-color 0.3s;
+        }
+        .card:hover {
+            border-left-color: var(--secondary-color);
+        }
+        .feature-icon {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-right: 1rem;
+        }
+        /* Mandatory Bolding Replacement: Using <b> tag */
+        b {
+            font-weight: 700 !important;
+            color: var(--primary-color);
+        }
+        .highlight-text {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+        .deployment-target {
+            background-color: #fefce8; /* Yellow 50 */
+            border: 1px solid #fde68a; /* Yellow 300 */
+            color: #b45309; /* Amber 800 */
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-shield-alt mr-3"></i> AWS WAF
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Introduction & Layer 7 Focus -->
+        <section class="card space-y-4">
+            <h2 id="section1Title" class="text-3xl font-extrabold text-gray-800 border-b pb-2 mb-4"></h2>
+            
+            <p id="section1Intro" class="text-lg text-gray-700 leading-relaxed"></p>
+            
+            <div id="layer7Focus" class="p-4 mt-4 bg-red-100 rounded-lg border-2 border-red-300 text-red-900 font-medium flex items-center">
+                <i class="fas fa-network-wired feature-icon text-red-600"></i>
+                <span id="layer7Text"></span>
+            </div>
+        </section>
+
+        <!-- Section 2: Deployment Targets -->
+        <section class="card space-y-4">
+            <h3 id="deploymentTitle" class="text-2xl font-extrabold text-gray-800 mb-4 flex items-center"><i class="fas fa-server feature-icon"></i> </h3>
+            <p id="deploymentIntro" class="text-gray-700 leading-relaxed"></p>
+            
+            <div id="targetList" class="flex flex-wrap gap-2 mt-4">
+                <!-- Targets Populated by JS -->
+            </div>
+            
+            <p id="examWarning" class="p-3 mt-4 bg-yellow-100 rounded-lg border border-yellow-300 text-yellow-800 font-medium flex items-center">
+                <i class="fas fa-exclamation-triangle mr-3"></i> <span id="examWarningText"></span>
+            </p>
+        </section>
+
+        <!-- Section 3: Web ACLs and Rules -->
+        <section class="card space-y-6">
+            <h3 id="rulesTitle" class="text-2xl font-extrabold text-gray-800 mb-4 flex items-center"><i class="fas fa-list-check feature-icon"></i> </h3>
+            
+            <div id="rulesIntro" class="text-gray-700 leading-relaxed"></div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="p-4 rounded-lg bg-gray-50 border border-gray-200">
+                    <p class="font-bold text-lg text-green-700 flex items-center"><i class="fas fa-fingerprint mr-2"></i> <span id="rule1Title"></span></p>
+                    <p id="rule1Desc" class="text-sm text-gray-600"></p>
+                </div>
+                <div class="p-4 rounded-lg bg-gray-50 border border-gray-200">
+                    <p class="font-bold text-lg text-blue-700 flex items-center"><i class="fas fa-map-marker-alt mr-2"></i> <span id="rule2Title"></span></p>
+                    <p id="rule2Desc" class="text-sm text-gray-600"></p>
+                </div>
+                <div class="p-4 rounded-lg bg-gray-50 border border-gray-200">
+                    <p class="font-bold text-lg text-red-700 flex items-center"><i class="fas fa-stopwatch mr-2"></i> <span id="rule3Title"></span></p>
+                    <p id="rule3Desc" class="text-sm text-gray-600"></p>
+                </div>
+                <div class="p-4 rounded-lg bg-gray-50 border border-gray-200">
+                    <p class="font-bold text-lg text-purple-700 flex items-center"><i class="fas fa-globe-americas mr-2"></i> <span id="scopeTitle"></span></p>
+                    <p id="scopeDesc" class="text-sm text-gray-600"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Use Case: Fixed IP with Global Accelerator -->
+        <section class="card space-y-4">
+            <h3 id="useCaseTitle" class="text-2xl font-extrabold text-gray-800 mb-4 flex items-center"><i class="fas fa-cogs feature-icon"></i> </h3>
+            <p id="useCaseIntro" class="text-lg text-gray-700 leading-relaxed"></p>
+            
+            <div id="useCaseProblem" class="p-3 bg-red-50 rounded-lg border border-red-200 text-red-800 font-medium"></div>
+
+            <p id="useCaseSolution" class="text-gray-700 leading-relaxed"></p>
+
+            <!-- Image Tag for Architecture -->
+            
+
+            <h4 id="architectureTitle" class="text-xl font-bold mt-6"></h4>
+            <ul id="architectureList" class="list-disc list-inside space-y-2 pl-4 text-gray-600">
+                <!-- Architecture steps populated by JS -->
+            </ul>
+        </section>
+
+        <!-- Section 5: Key Takeaways -->
+        <section class="p-8 bg-gray-800 rounded-2xl shadow-2xl text-white">
+            <h2 id="takeawaysTitle" class="text-3xl font-extrabold mb-6 text-center text-secondary-color"><i class="fas fa-key mr-2"></i> </h2>
+            <ul id="takeawaysList" class="space-y-4">
+                <!-- Takeaways populated by JS -->
+            </ul>
+            <p id="conclusionText" class="text-center mt-6 text-gray-300"></p>
+        </section>
+
+    </main>
+
+    <script>
+        const content = {
+            'vi': {
+                pageTitle: 'Tường Lửa Ứng Dụng Web (AWS WAF)',
+                section1Title: 'Giới Thiệu Về AWS WAF',
+                section1Intro: '<b>AWS WAF</b>, Tường Lửa Ứng Dụng Web, được sử dụng để bảo vệ ứng dụng web của bạn khỏi các khai thác web phổ biến ở <b>Tầng 7</b>.',
+                layer7Text: 'Tầng 7 tương ứng với <b>HTTP</b>, vì vậy nó bảo vệ bạn chống lại các khai thác HTTP. So sánh, Tầng 4 là cho các giao thức TCP hoặc UDP.',
+
+                deploymentTitle: 'Mục Tiêu Triển Khai Cho AWS WAF',
+                deploymentIntro: 'Tường Lửa Ứng Dụng Web này có thể được triển khai trên các dịch vụ sau. Điều quan trọng là phải nhớ các mục tiêu này vì bài thi có thể cố gắng đánh lừa bạn:',
+                targets: [
+                    'Application Load Balancer',
+                    'API Gateway',
+                    'CloudFront',
+                    'AppSync GraphQL API',
+                    'Cognito user pools'
+                ],
+                examWarningText: 'KHÔNG THỂ triển khai WAF trên Network Load Balancer (NLB) vì NLB hoạt động ở Tầng 4, trong khi WAF hoạt động ở Tầng 7.',
+
+                rulesTitle: 'Web ACLs và Các Quy Tắc',
+                rulesIntro: 'Sau khi triển khai tường lửa, bạn có thể xác định <b>Web ACLs (Web Access Control Lists)</b> và các quy tắc của chúng. Một tập hợp các quy tắc hợp lý mà bạn có thể thêm vào nhiều Web ACL được gọi là <b>"rule group"</b>.',
+                rule1Title: 'Bộ Lọc Nội Dung (SQLi/XSS)',
+                rule1Desc: 'Sử dụng chuỗi URI, tiêu đề HTTP và nội dung body, bạn có thể bảo vệ khỏi các cuộc tấn công phổ biến nhất như <b>SQL injection</b> và <b>cross-site scripting</b>. IP sets cho phép lọc dựa trên IP (mỗi IP set tối đa 10.000 địa chỉ).',
+                rule2Title: 'Hạn Chế Kích Thước và Vị Trí Địa Lý',
+                rule2Desc: '<b>Size constraints</b> đảm bảo các yêu cầu chỉ có kích thước tối đa nhất định (ví dụ: hai megabyte). <b>Geo match rules</b> cho phép cho phép hoặc chặn các quốc gia cụ thể.',
+                rule3Title: 'Quy Tắc Dựa Trên Tốc Độ (DDoS)',
+                rule3Desc: '<b>Rate-based rules</b> đếm số lần yêu cầu mỗi địa chỉ IP để bảo vệ chống lại <b>DDoS</b>. Ví dụ: ngăn một IP cụ thể gửi hơn 10 yêu cầu mỗi giây.',
+                scopeTitle: 'Phạm Vi Vùng và Toàn Cầu',
+                scopeDesc: 'Web ACLs là <b>cục bộ theo Vùng (Regional)</b>, ngoại trừ đối với CloudFront, nơi chúng được xác định <b>toàn cầu (Globally)</b>.',
+
+                useCaseTitle: 'Trường Hợp Sử Dụng: IP Cố Định với WAF và ALB',
+                useCaseIntro: 'Điều gì sẽ xảy ra nếu bạn muốn có một <b>IP cố định</b> cho ứng dụng của mình khi sử dụng WAF với Application Load Balancer?',
+                useCaseProblem: 'WAF không hỗ trợ Network Load Balancer (Layer 4), vì vậy bạn cần dùng Application Load Balancer (ALB). Tuy nhiên, một Application Load Balancer lại <b>không có IP cố định</b>.',
+                useCaseSolution: 'Để giải quyết vấn đề này, bạn có thể sử dụng <b>AWS Global Accelerator</b> để lấy <b>IP cố định</b> cho ứng dụng của mình và sau đó bật WAF trên ALB.',
+
+                architectureTitle: 'Tổng Quan Kiến Trúc',
+                architectureList: [
+                    'Một Vùng (Region) với Application Load Balancer và các thể hiện EC2.',
+                    'ALB được đặt phía trước bởi <b>Global Accelerator</b> để cung cấp <b>IP cố định</b> cho ứng dụng.',
+                    'Một Tường Lửa Ứng Dụng Web với Web ACL được đính kèm trong cùng Vùng với Application Load Balancer.'
+                ],
+                
+                conclusionText: 'Thiết lập này đạt được kiến trúc mục tiêu là có IP cố định với bảo vệ WAF trên ALB.',
+                takeawaysTitle: 'Điểm Chính Cần Nắm Vững',
+                takeaways: [
+                    '<b>AWS WAF</b> bảo vệ các ứng dụng web ở <b>Tầng 7 (HTTP)</b> chống lại các khai thác web phổ biến.',
+                    'WAF có thể được triển khai trên <b>Application Load Balancer</b>, <b>API Gateway</b>, <b>CloudFront</b>, <b>AppSync GraphQL API</b> và <b>Cognito user pools</b>, nhưng **không** trên Network Load Balancer.',
+                    'Web ACLs cho phép lọc dựa trên IP sets, tiêu đề HTTP, body, chuỗi URI, hạn chế kích thước, geo match và <b>rate-based rules</b>.',
+                    'Để có <b>IP cố định</b> với WAF trên Application Load Balancer, hãy sử dụng <b>AWS Global Accelerator</b> đặt phía trước ALB.'
+                ]
+            },
+            'en': {
+                pageTitle: 'AWS Web Application Firewall (WAF)',
+                section1Title: 'Introduction to AWS WAF',
+                section1Intro: '<b>AWS WAF</b>, the Web Application Firewall, is used to protect your web application from common web exploits at <b>Layer 7</b>.',
+                layer7Text: 'Layer 7 corresponds to <b>HTTP</b>, so it protects you against HTTP exploits. In comparison, Layer 4 is for TCP or UDP protocols.',
+
+                deploymentTitle: 'Deployment Targets for AWS WAF',
+                deploymentIntro: 'This Web Application Firewall can be deployed on the following services. It is important to remember these targets because the exam may try to trick you:',
+                targets: [
+                    'Application Load Balancer',
+                    'API Gateway',
+                    'CloudFront',
+                    'AppSync GraphQL API',
+                    'Cognito user pools'
+                ],
+                examWarningText: 'Deployment of WAF on a Network Load Balancer (NLB) is NOT possible because NLB operates on Layer 4, and WAF is for Layer 7.',
+
+                rulesTitle: 'Web ACLs and Rules',
+                rulesIntro: 'Once you have deployed a firewall, you can define <b>Web ACLs (Web Access Control Lists)</b> and their rules. A reasonable set of rules that you can add to many Web ACLs is referred to as a <b>"rule group"</b>.',
+                rule1Title: 'Content Filtering (SQLi/XSS)',
+                rule1Desc: 'Using URI strings, HTTP headers, and body content, you can protect from the most common attacks such as <b>SQL injection</b> and <b>cross-site scripting</b>. IP sets allow filtering based on IP addresses (up to 10,000 IPs per set).',
+                rule2Title: 'Size Constraints and Geo Match',
+                rule2Desc: '<b>Size constraints</b> allow you to ensure that requests are only up to a certain size (e.g., two megabytes). <b>Geo match rules</b> enable allowing or blocking specific countries.',
+                rule3Title: 'Rate-based Rules (DDoS)',
+                rule3Desc: '<b>Rate-based rules</b> count the occurrences of requests per IP address for <b>DDoS protection</b>. For example, you can prevent a specific IP from sending more than 10 requests per second.',
+                scopeTitle: 'Regional and Global Scope',
+                scopeDesc: 'Web ACLs are <b>regional</b>, except for CloudFront, where they are defined <b>globally</b>. ',
+
+                useCaseTitle: 'Use Case: Fixed IP with WAF and Application Load Balancer',
+                useCaseIntro: 'What if you want to get a <b>fixed IP</b> for your application while using WAF with an Application Load Balancer?',
+                useCaseProblem: 'WAF does not support the Network Load Balancer (Layer 4), so you need the Application Load Balancer (ALB). However, an Application Load Balancer <b>does not have fixed IPs</b>.',
+                useCaseSolution: 'To solve this problem, you can use <b>AWS Global Accelerator</b> to get <b>fixed IPs</b> for your application and then enable WAF on your ALB.',
+                
+                architectureTitle: 'Architecture Overview',
+                architectureList: [
+                    'One region with an Application Load Balancer and EC2 instances.',
+                    'The ALB is fronted by a <b>Global Accelerator</b> to provide <b>fixed IPs</b> for the application.',
+                    'A Web Application Firewall with a Web ACL is attached in the same region as the Application Load Balancer.'
+                ],
+
+                conclusionText: 'This setup achieves the target architecture of having fixed IPs with WAF protection on an ALB.',
+                takeawaysTitle: 'Key Takeaways',
+                takeaways: [
+                    '<b>AWS WAF</b> protects web applications at <b>Layer 7 (HTTP)</b> against common web exploits.',
+                    'WAF can be deployed on <b>Application Load Balancer</b>, <b>API Gateway</b>, <b>CloudFront</b>, <b>AppSync GraphQL API</b>, and <b>Cognito user pools</b>, but **not** on Network Load Balancer.',
+                    'Web ACLs allow filtering based on IP sets, HTTP headers, body, URI strings, size constraints, geo match, and <b>rate-based rules</b>.',
+                    'To obtain <b>fixed IPs</b> with WAF on an Application Load Balancer, use <b>AWS Global Accelerator</b> in front of the ALB.'
+                ]
+            }
+        };
+
+        let currentLang = 'vi';
+
+        function renderContent() {
+            const data = content[currentLang];
+            document.title = data.pageTitle;
+            document.documentElement.lang = currentLang;
+
+            // Header & Language Toggle
+            document.getElementById('introTitle').innerHTML = `<i class="fas fa-shield-alt mr-3"></i> ${data.section1Title.split(' Về ')[0].split(' to ')[0].replace(/\s*\(.*\)/, '')}`;
+            document.getElementById('langToggleVi').textContent = 'VI';
+            document.getElementById('langToggleEn').textContent = 'EN';
+            
+            // Section 1: Intro & Layer 7 Focus
+            document.getElementById('section1Title').textContent = data.section1Title;
+            document.getElementById('section1Intro').innerHTML = data.section1Intro;
+            document.getElementById('layer7Text').innerHTML = data.layer7Text;
+
+            // Section 2: Deployment Targets
+            document.getElementById('deploymentTitle').innerHTML = `<i class="fas fa-server feature-icon"></i> ${data.deploymentTitle}`;
+            document.getElementById('deploymentIntro').innerHTML = data.deploymentIntro;
+            document.getElementById('examWarningText').innerHTML = data.examWarningText;
+            
+            const targetList = document.getElementById('targetList');
+            targetList.innerHTML = data.targets.map(t => `<span class="deployment-target flex items-center"><i class="fas fa-cloud mr-2"></i> ${t}</span>`).join('');
+
+            // Section 3: Web ACLs and Rules
+            document.getElementById('rulesTitle').innerHTML = `<i class="fas fa-list-check feature-icon"></i> ${data.rulesTitle}`;
+            document.getElementById('rulesIntro').innerHTML = data.rulesIntro;
+            document.getElementById('rule1Title').textContent = data.rule1Title;
+            document.getElementById('rule1Desc').innerHTML = data.rule1Desc;
+            document.getElementById('rule2Title').textContent = data.rule2Title;
+            document.getElementById('rule2Desc').innerHTML = data.rule2Desc;
+            document.getElementById('rule3Title').textContent = data.rule3Title;
+            document.getElementById('rule3Desc').innerHTML = data.rule3Desc;
+            document.getElementById('scopeTitle').textContent = data.scopeTitle;
+            document.getElementById('scopeDesc').innerHTML = data.scopeDesc;
+
+            // Section 4: Use Case
+            document.getElementById('useCaseTitle').innerHTML = `<i class="fas fa-cogs feature-icon"></i> ${data.useCaseTitle}`;
+            document.getElementById('useCaseIntro').innerHTML = data.useCaseIntro;
+            document.getElementById('useCaseProblem').innerHTML = `<i class="fas fa-bug mr-2"></i> ${data.useCaseProblem}`;
+            document.getElementById('useCaseSolution').innerHTML = data.useCaseSolution;
+
+            document.getElementById('architectureTitle').textContent = data.architectureTitle;
+            const architectureList = document.getElementById('architectureList');
+            architectureList.innerHTML = data.architectureList.map(item => `<li>${item}</li>`).join('');
+            
+            // Section 5: Key Takeaways
+            document.getElementById('takeawaysTitle').innerHTML = `<i class="fas fa-key mr-2"></i> ${data.takeawaysTitle}`;
+            const takeawaysList = document.getElementById('takeawaysList');
+            takeawaysList.innerHTML = data.takeaways.map(tk => `
+                <li class="flex items-start">
+                    <i class="fas fa-arrow-alt-circle-right text-secondary-color mt-1 mr-3 flex-shrink-0"></i>
+                    <span>${tk}</span>
+                </li>
+            `).join('');
+            document.getElementById('conclusionText').textContent = data.conclusionText;
+            
+            // Update buttons
+            const btnVi = document.getElementById('langToggleVi');
+            const btnEn = document.getElementById('langToggleEn');
+            const activeClass = 'bg-white text-primary-color';
+            const inactiveClass = 'text-white hover:bg-white/30';
+            
+            btnVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLang === 'vi' ? activeClass : inactiveClass}`;
+            btnEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLang === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.getElementById('langToggleVi').addEventListener('click', () => {
+            currentLang = 'vi';
+            renderContent();
+        });
+        document.getElementById('langToggleEn').addEventListener('click', () => {
+            currentLang = 'en';
+            renderContent();
+        });
+
+        // Init
+        document.addEventListener('DOMContentLoaded', renderContent);
+    </script>
+</body>
+</html>

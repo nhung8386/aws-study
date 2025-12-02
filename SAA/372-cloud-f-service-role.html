@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">CloudFormation Service Role - Ủy Quyền An Toàn</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #22c55e; /* Emerald 500 - Security Green */
+            --secondary-color: #0f766e; /* Teal 700 - Accent */
+            --background-color: #f0fdf4; /* Green 50 */
+            --text-color: #1f2937;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .header-bg {
+            background-color: var(--secondary-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .section-title {
+            color: var(--secondary-color);
+            font-weight: 800;
+            border-bottom: 3px solid var(--primary-color);
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            border: 1px solid #d1fae5; /* Green 100 */
+        }
+        .card-diagram {
+            border-left: 5px solid var(--primary-color);
+        }
+        .highlight-code {
+            font-family: monospace;
+            background-color: #e0f2f1; /* Cyan 50 */
+            color: #047857; /* Emerald 700 */
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        b {
+            font-weight: 700 !important;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-2xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-user-shield mr-3 text-primary-color"></i>
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Introduction & Definition -->
+        <section class="card p-8 shadow-xl bg-white">
+            <h2 id="section1Title" class="text-3xl section-title mb-6 pb-2"></h2>
+            <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-8">
+                <div class="icon-box w-16 h-16 rounded-full bg-primary-color flex-shrink-0 flex items-center justify-center text-3xl">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <p id="section1Definition" class="text-lg text-gray-700"></p>
+            </div>
+        </section>
+
+        <!-- Section 2: Security & Least Privilege -->
+        <section>
+            <h2 id="section2Title" class="text-3xl section-title mb-8 pb-2 text-center"><i class="fas fa-lock mr-2"></i> </h2>
+            <div id="securityCardsContainer" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                <!-- Card 1: User Permission -->
+                <div class="card p-6 text-center">
+                    <div class="text-4xl text-blue-500 mb-3"><i class="fas fa-user"></i></div>
+                    <h3 id="card1Title" class="font-bold text-xl mb-2"></h3>
+                    <p id="card1Desc" class="text-sm text-gray-600"></p>
+                </div>
+
+                <!-- Card 2: The Key Permission -->
+                <div class="card p-6 text-center bg-yellow-50 border-yellow-300">
+                    <div class="text-4xl text-yellow-600 mb-3"><i class="fas fa-key"></i></div>
+                    <h3 id="card2Title" class="font-bold text-xl mb-2"></h3>
+                    <p id="card2Desc" class="text-sm text-gray-600"></p>
+                </div>
+
+                <!-- Card 3: Role Permission -->
+                <div class="card p-6 text-center">
+                    <div class="text-4xl text-primary-color mb-3"><i class="fas fa-shield-alt"></i></div>
+                    <h3 id="card3Title" class="font-bold text-xl mb-2"></h3>
+                    <p id="card3Desc" class="text-sm text-gray-600"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: The Delegation Flow (Diagram Concept) -->
+        <section class="card card-diagram p-8 bg-white/80">
+            <h2 id="section3Title" class="text-2xl font-bold mb-4 text-secondary-color"></h2>
+            <div id="section3Flow" class="text-gray-700 text-lg space-y-3"></div>
+            
+            <!-- Visualization -->
+            <div class="mt-8 flex flex-col items-center">
+                <div class="text-center p-4 bg-red-100 border-red-400 rounded-lg text-red-800 font-semibold w-full md:w-2/3">
+                    <p id="flowStep1" class="text-sm mb-2"></p>
+                    <i class="fas fa-arrow-down text-2xl animate-pulse"></i>
+                </div>
+                <div class="text-center p-4 bg-yellow-100 border-yellow-400 rounded-lg text-yellow-800 font-semibold mt-4 w-full md:w-2/3">
+                    <p id="flowStep2" class="text-sm mb-2"></p>
+                    <i class="fas fa-arrow-down text-2xl animate-pulse"></i>
+                </div>
+                <div class="text-center p-4 bg-green-100 border-green-400 rounded-lg text-green-800 font-semibold mt-4 w-full md:w-2/3">
+                    <p id="flowStep3" class="text-sm"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Consequences and Summary -->
+        <section class="mt-12">
+            <h2 id="section4Title" class="text-3xl section-title mb-6 pb-2"><i class="fas fa-exclamation-triangle mr-2 text-yellow-500"></i></h2>
+            <div class="space-y-4 text-lg text-gray-700">
+                <p id="section4Consequence" class="p-4 bg-red-100 rounded-lg border-l-4 border-red-500"></p>
+                <p id="section4Summary"></p>
+            </div>
+        </section>
+
+        <!-- Key Takeaways -->
+        <section class="p-8 bg-gray-800 rounded-2xl shadow-2xl">
+            <h2 id="section5Title" class="text-3xl font-extrabold text-primary-color mb-8 text-center"><i class="fas fa-clipboard-list mr-2"></i> </h2>
+            <ul id="takeawaysContainer" class="space-y-4 list-none text-gray-200">
+                <!-- Takeaways will be populated by JS -->
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        // Content Translations with <b> for bolding
+        const content = {
+            'vi': {
+                pageTitle: 'CloudFormation Service Role - Ủy Quyền An Toàn',
+                introTitle: 'Vai Trò Dịch Vụ CloudFormation (Service Role)',
+                section1Title: 'Ủy Quyền Bảo Mật Là Gì?',
+                section1Definition: 'Service Role là <b>IAM role</b> bạn tạo và dành riêng cho CloudFormation. Nó cho phép CloudFormation thực hiện các thao tác (tạo, cập nhật, xóa) tài nguyên stack <b>thay mặt bạn</b>.',
+                section2Title: 'Nguyên Tắc Least Privilege (Ít Đặc Quyền Nhất)',
+                card1Title: 'Người Dùng (User)',
+                card1Desc: 'Chỉ cần quyền để tương tác với CloudFormation (tạo, cập nhật stack), KHÔNG cần quyền trực tiếp tạo EC2/S3.',
+                card2Title: 'Chìa Khóa Ủy Quyền',
+                card2Desc: 'Người dùng bắt buộc phải có quyền <span class="highlight-code">iam:PassRole</span> để giao phó Service Role cho CloudFormation.',
+                card3Title: 'Vai Trò (Service Role)',
+                card3Desc: 'Chỉ được cấp các quyền cần thiết để tạo tài nguyên cụ thể (Ví dụ: <span class="highlight-code">AmazonS3FullAccess</span>).',
+                section3Title: 'Quy Trình Ủy Quyền (Delegation Flow)',
+                flowStep1: '1. Người dùng chạy CloudFormation Stack và chỉ định Service Role.',
+                flowStep2: '2. CloudFormation kiểm tra quyền <span class="highlight-code">iam:PassRole</span> của Người dùng.',
+                flowStep3: '3. CloudFormation đảm nhận (Assume) Service Role và dùng quyền của Role đó để thao tác với tài nguyên (S3, EC2...).',
+                section4Title: 'Lưu Ý Quan Trọng',
+                section4Consequence: 'Khi bạn chỉ định Service Role, nó <b>GHI ĐÈ</b> (overrides) quyền cá nhân của bạn. Nếu Service Role chỉ có quyền S3, stack sẽ **thất bại** nếu cố gắng tạo tài nguyên khác (ví dụ: EC2).',
+                section4Summary: 'Cơ chế này hỗ trợ nguyên tắc <b>Least Privilege</b> bằng cách hạn chế quyền trực tiếp của người dùng, nhưng vẫn cho phép CloudFormation quản lý hạ tầng một cách an toàn.',
+                section5Title: 'Tóm Tắt Key Takeaways',
+                takeaways: [
+                    'Service Role là **IAM Role chuyên biệt** cho CFN, cho phép CFN quản lý tài nguyên thay mặt người dùng.',
+                    'Người dùng phải có quyền <span class="highlight-code">iam:PassRole</span> để **ủy quyền** cho CFN.',
+                    'Role chỉ nên có **quyền hạn tối thiểu** (Least Privilege) cần thiết cho các tài nguyên trong stack.',
+                    'Việc chỉ định Service Role sẽ **ưu tiên quyền của Role** thay vì quyền cá nhân của người dùng.'
+                ]
+            },
+            'en': {
+                pageTitle: 'CloudFormation Service Role - Secure Delegation',
+                introTitle: 'CloudFormation Service Role',
+                section1Title: 'What is Secure Delegation?',
+                section1Definition: 'A Service Role is an <b>IAM role</b> you create and dedicate to CloudFormation. It allows CloudFormation to perform stack operations (create, update, delete) on stack resources on <b>your behalf</b>.',
+                section2Title: 'Least Privilege Principle',
+                card1Title: 'The User',
+                card1Desc: 'Only needs permissions to interact with CloudFormation (create, update stack), NOT direct permissions to create EC2/S3.',
+                card2Title: 'The Delegation Key',
+                card2Desc: 'The user MUST have the <span class="highlight-code">iam:PassRole</span> permission to delegate the Service Role to CloudFormation.',
+                card3Title: 'The Service Role',
+                card3Desc: 'Should only be granted the necessary permissions to create specific resources (e.g., <span class="highlight-code">AmazonS3FullAccess</span>).',
+                section3Title: 'The Delegation Flow',
+                flowStep1: '1. User executes CloudFormation Stack and specifies the Service Role.',
+                flowStep2: '2. CloudFormation checks the User\'s <span class="highlight-code">iam:PassRole</span> permission.',
+                flowStep3: '3. CloudFormation Assumes the Service Role and uses the Role\'s permissions to interact with resources (S3, EC2...).',
+                section4Title: 'Important Note',
+                section4Consequence: 'When you specify a Service Role, it <b>OVERRIDES</b> your personal permissions. If the Service Role only has S3 permissions, the stack will **fail** if it tries to create other resources (e.g., EC2).',
+                section4Summary: 'This mechanism supports the <b>Least Privilege</b> principle by restricting direct user permissions, while still allowing CloudFormation to manage infrastructure securely.',
+                section5Title: 'Key Takeaways Summary',
+                takeaways: [
+                    'Service Roles are **dedicated IAM Roles** for CFN, allowing CFN to manage resources on behalf of the user.',
+                    'The user must have <span class="highlight-code">iam:PassRole</span> to **delegate authority** to CFN.',
+                    'The Role should only have the **minimum necessary permissions** (Least Privilege) for stack resources.',
+                    'Specifying a Service Role **prioritizes the Role\'s permissions** over the user\'s personal permissions.'
+                ]
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        function updateContent() {
+            const langData = content[currentLanguage];
+            document.title = langData.pageTitle;
+            document.documentElement.lang = currentLanguage;
+
+            document.getElementById('langToggleVi').textContent = 'VI';
+            document.getElementById('langToggleEn').textContent = 'EN';
+            
+            document.getElementById('introTitle').innerHTML = `${langData.introTitle} <i class="fas fa-user-shield ml-2 text-primary-color"></i>`;
+            document.getElementById('section1Title').innerHTML = langData.section1Title;
+            document.getElementById('section1Definition').innerHTML = langData.section1Definition;
+            
+            document.getElementById('section2Title').innerHTML = `${langData.section2Title} <i class="fas fa-lock ml-2"></i>`;
+
+            document.getElementById('card1Title').textContent = langData.card1Title;
+            document.getElementById('card1Desc').innerHTML = langData.card1Desc;
+            document.getElementById('card2Title').textContent = langData.card2Title;
+            document.getElementById('card2Desc').innerHTML = langData.card2Desc;
+            document.getElementById('card3Title').textContent = langData.card3Title;
+            document.getElementById('card3Desc').innerHTML = langData.card3Desc;
+
+            document.getElementById('section3Title').textContent = langData.section3Title;
+            document.getElementById('flowStep1').innerHTML = langData.flowStep1;
+            document.getElementById('flowStep2').innerHTML = langData.flowStep2;
+            document.getElementById('flowStep3').innerHTML = langData.flowStep3;
+
+            document.getElementById('section4Title').innerHTML = `${langData.section4Title} <i class="fas fa-exclamation-triangle ml-2 text-yellow-500"></i>`;
+            document.getElementById('section4Consequence').innerHTML = langData.section4Consequence;
+            document.getElementById('section4Summary').innerHTML = langData.section4Summary;
+            
+            document.getElementById('section5Title').innerHTML = `${langData.section5Title} <i class="fas fa-clipboard-list ml-2"></i>`;
+
+
+            // Update Key Takeaways
+            const takeawaysContainer = document.getElementById('takeawaysContainer');
+            takeawaysContainer.innerHTML = '';
+            langData.takeaways.forEach(t => {
+                const item = `
+                    <li class="flex items-start space-x-3 text-gray-200">
+                        <i class="fas fa-check text-lg text-primary-color mt-1 flex-shrink-0"></i>
+                        <span class="text-base leading-relaxed">${t}</span>
+                    </li>
+                `;
+                takeawaysContainer.innerHTML += item;
+            });
+            
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            const langToggleVi = document.getElementById('langToggleVi');
+            const langToggleEn = document.getElementById('langToggleEn');
+
+            const activeClass = 'bg-primary-color';
+            const inactiveClass = 'text-white hover:bg-white/30';
+
+            langToggleVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'vi' ? activeClass : inactiveClass}`;
+            langToggleEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            document.getElementById('langToggleVi').addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            document.getElementById('langToggleEn').addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

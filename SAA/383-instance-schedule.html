@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Instance Scheduler on AWS - Giải Pháp Tối Ưu Chi Phí</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #f97316; /* Orange 500 - Cost Saving/Efficiency */
+            --accent-color: #92400e;  /* Orange 900 - Reliability/Deep Color */
+            --background-color: #fff7ed; /* Orange 50 */
+            --text-color: #1f2937;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .header-bg {
+            background-color: var(--accent-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .section-title {
+            color: var(--primary-color);
+            font-weight: 800;
+            border-bottom: 3px solid var(--primary-color);
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .dynamodb-tag {
+            background-color: #fbd38d; /* Yellow-Orange */
+            color: #744210;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        .resource-chip {
+            display: inline-flex;
+            align-items: center;
+            background-color: #fed7aa; /* Orange 200 */
+            color: #9a3412; /* Orange 800 */
+            padding: 0.35rem 0.75rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        b {
+            font-weight: 700 !important;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-money-bill-wave mr-3 text-white"></i>
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Introduction and Core Definition -->
+        <section class="card p-8 shadow-xl bg-white border-b-4 border-primary-color">
+            <h2 id="section1Title" class="text-3xl section-title mb-4 pb-2"></h2>
+            <p id="section1Definition" class="text-lg text-gray-700 leading-relaxed"></p>
+            <p id="costSavingNote" class="mt-4 text-accent-color font-semibold border-l-2 pl-3 border-primary-color"></p>
+        </section>
+        
+        <!-- Section 2: Architecture and Supported Resources -->
+        <section>
+            <h2 id="section2Title" class="text-3xl font-extrabold text-accent-color text-center mb-8"><i class="fas fa-sitemap mr-2"></i> </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Architecture -->
+                <div class="card space-y-4 border-t-4 border-primary-color">
+                    <h3 id="architectureTitle" class="text-2xl font-bold text-primary-color flex items-center"><i class="fas fa-cubes mr-2"></i> </h3>
+                    <p id="architectureDesc" class="text-gray-700"></p>
+                    <div class="mt-4 p-4 rounded-lg bg-yellow-50 border-l-4 border-yellow-500 text-sm">
+                         <p id="coreMechanism" class="font-medium"></p>
+                    </div>
+                </div>
+
+                <!-- Supported Resources -->
+                <div class="card space-y-4 border-t-4 border-accent-color">
+                    <h3 id="resourcesTitle" class="text-2xl font-bold text-accent-color flex items-center"><i class="fas fa-server mr-2"></i> </h3>
+                    <p id="resourcesDesc" class="text-gray-700"></p>
+                    <div id="resourcesList" class="mt-4 flex flex-wrap">
+                        <!-- Resources populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 3: Deployment and Scheduling Details -->
+        <section class="bg-white p-8 rounded-xl shadow-lg">
+            <h2 id="section3Title" class="text-3xl section-title mb-6 pb-2 text-center"><i class="fas fa-calendar-alt mr-2"></i> </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- Deployment -->
+                <div class="col-span-1">
+                    <h3 id="deploymentHeader" class="text-xl font-bold text-accent-color mb-3"><i class="fas fa-cloud-upload-alt mr-2"></i> </h3>
+                    <div class="card p-4 border-l-4 border-primary-color">
+                        <p id="deploymentDesc"></p>
+                        <ul id="deploymentSteps" class="mt-3 space-y-1 list-disc ml-5 text-sm text-gray-600">
+                             <!-- Deployment steps populated by JS -->
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Scheduling Parameters -->
+                <div class="col-span-1">
+                    <h3 id="parametersHeader" class="text-xl font-bold text-accent-color mb-3"><i class="fas fa-sliders-h mr-2"></i> </h3>
+                    <div class="card p-4 border-l-4 border-primary-color">
+                        <p id="parametersDesc"></p>
+                        <ul id="parametersList" class="mt-3 space-y-1 list-disc ml-5 text-sm text-gray-600">
+                            <!-- Parameters populated by JS -->
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Schedule Storage -->
+                <div class="col-span-1">
+                    <h3 id="storageHeader" class="text-xl font-bold text-accent-color mb-3"><i class="fas fa-table mr-2"></i> </h3>
+                    <div class="card p-4 border-l-4 border-primary-color">
+                        <p id="storageDesc" class="mb-3"></p>
+                        <p id="storageExample" class="text-sm italic text-gray-500"></p>
+                    </div>
+                </div>
+            </div>
+
+            <p id="taggingNote" class="mt-6 p-3 bg-orange-100 rounded-lg text-sm text-gray-700 border-l-4 border-orange-500"></p>
+        </section>
+
+        <!-- Section 4: Key Takeaways -->
+        <section class="p-8 bg-accent-color rounded-2xl shadow-2xl">
+            <h2 id="section4Title" class="text-3xl font-extrabold mb-8 text-center"><i class="fas fa-check-circle mr-2 text-primary-color"></i> </h2>
+            <ul id="takeawaysContainer" class="space-y-4">
+                <!-- Takeaways will be populated by JS -->
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        // Content Translations using <b> for bolding.
+        const content = {
+            'vi': {
+                pageTitle: 'Instance Scheduler on AWS - Giải Pháp Tối Ưu Chi Phí',
+                introTitle: 'Instance Scheduler on AWS',
+                section1Title: 'Giới Thiệu: Giải Pháp Tối Ưu Chi Phí',
+                section1Definition: '<b>Instance Scheduler on AWS</b> là một giải pháp độc đáo, <b>không phải là dịch vụ độc lập</b>, được triển khai thông qua <b>CloudFormation</b>. Nó cung cấp khả năng tự động bật và tắt các dịch vụ AWS trong tài khoản của bạn để <b>giảm chi phí</b>, có thể lên tới 70%.',
+                costSavingNote: 'Ví dụ: Nếu bạn muốn dừng các EC2 instances của công ty ngoài giờ làm việc, giải pháp này là lý tưởng. Giải pháp này hỗ trợ tài nguyên <b>đa tài khoản</b> và <b>đa khu vực</b>.',
+                
+                // Architecture & Resources
+                section2Title: 'Kiến Trúc và Tài Nguyên Được Hỗ Trợ',
+                architectureTitle: 'Cơ Chế Hoạt Động Cốt Lõi',
+                architectureDesc: 'Tất cả các lịch trình đều được quản lý trong một bảng <b>DynamoDB</b>. Giải pháp này là một giải pháp toàn diện và sẵn sàng cho môi trường sản xuất.',
+                coreMechanism: 'Cơ chế cốt lõi bao gồm một <b>Lambda function</b> tra cứu lịch trình trong DynamoDB và kích hoạt các Lambda function khác để tự động dừng hoặc bật các instances cần thiết.',
+                
+                resourcesTitle: 'Tài Nguyên Được Hỗ Trợ',
+                resourcesDesc: 'Các tài nguyên chính được hỗ trợ cho việc lên lịch dừng/bật là:',
+                resourcesList: [
+                    'EC2 Instances', 'EC2 Auto Scaling Groups', 'RDS Instances',
+                    'RDS Clusters', 'Neptune', 'DocumentDB'
+                ],
+                
+                // Deployment & Scheduling
+                section3Title: 'Triển Khai và Lên Lịch Chi Tiết',
+                deploymentHeader: 'Triển Khai CloudFormation',
+                deploymentDesc: 'Bạn triển khai Instance Scheduler bằng cách sử dụng AWS Management Console để khởi chạy giải pháp, điều này sẽ đưa bạn trực tiếp đến <b>CloudFormation</b> với mẫu được điền sẵn.',
+                deploymentSteps: [
+                    'Sử dụng AWS Console để khởi chạy giải pháp.',
+                    'Giải pháp dẫn bạn đến mẫu CloudFormation đã được điền sẵn URL Amazon S3.',
+                    'Triển khai giải pháp dưới dạng một CloudFormation Stack.'
+                ],
+
+                parametersHeader: 'Thông Số Cấu Hình',
+                parametersDesc: 'Trong quá trình triển khai, bạn có thể cấu hình các thông số quan trọng:',
+                parametersList: [
+                    'Tần suất lịch trình (mặc định 5 phút).',
+                    'Múi giờ mặc định (Default Time Zone).',
+                    'Bật/Tắt tính năng lên lịch.',
+                    'Chỉ định các dịch vụ được bật tính năng lên lịch (EC2, RDS, Neptune, DocumentDB, ASG).'
+                ],
+                
+                storageHeader: 'Lưu Trữ Lịch Trình (DynamoDB)',
+                storageDesc: 'Stack CloudFormation tạo ra một bảng <b>DynamoDB</b> quan trọng, nơi lưu trữ tất cả các lịch trình bạn định nghĩa.',
+                storageExample: 'Các mục trong bảng bao gồm: Tên lịch trình (Schedule Name), Thời gian bắt đầu (Begin Time), Mô tả (Description), Thời gian kết thúc (End Time), v.v. Bạn có thể định nghĩa lịch trình cho giờ làm việc, ngày làm việc, hoặc lịch trình định kỳ (ví dụ: Thứ Hai đầu tiên hàng quý).',
+                
+                taggingNote: 'Lưu ý: Khi các instances được bật hoặc tắt bởi Scheduler, một <b>thẻ (tag)</b> sẽ được tự động thêm vào để mô tả hành động đã thực hiện, bao gồm cả ngày và múi giờ. Có các tùy chọn bổ sung như chụp nhanh (snapshot) RDS khi dừng.',
+
+                // Key Takeaways
+                section4Title: 'Tóm Tắt & Điểm Chính',
+                takeaways: [
+                    '<b>Instance Scheduler on AWS</b>: Một giải pháp triển khai qua <b>CloudFormation</b> để tự động bật/tắt tài nguyên, giúp <b>giảm chi phí</b>.',
+                    'Hỗ trợ <b>EC2 Instances</b>, <b>EC2 Auto Scaling Groups</b>, và <b>RDS Instances/Clusters</b>. Lịch trình được quản lý trong bảng <b>DynamoDB</b>.',
+                    'Giải pháp sử dụng <b>Lambda functions</b> để kiểm tra lịch trình và kích hoạt hành động.',
+                    'Triển khai thông qua CloudFormation Stack với các thông số cấu hình như tần suất, múi giờ và các dịch vụ được kích hoạt.'
+                ]
+            },
+            'en': {
+                pageTitle: 'Instance Scheduler on AWS - Cost Optimization Solution',
+                introTitle: 'Instance Scheduler on AWS',
+                section1Title: 'Introduction: The Cost Optimization Solution',
+                section1Definition: 'The <b>Instance Scheduler on AWS</b> is a unique solution, <b>not a standalone service</b>, deployed through <b>CloudFormation</b>. It provides the capability to automatically start and stop AWS services in your account to <b>reduce costs</b>, potentially by up to 70%.',
+                costSavingNote: 'For example, if you want to stop your company\'s EC2 instances outside business hours, this solution is ideal. This solution supports <b>cross-account</b> and <b>cross-region</b> resources and is production-ready.',
+                
+                // Architecture & Resources
+                section2Title: 'Architecture and Supported Resources',
+                architectureTitle: 'Core Operating Mechanism',
+                architectureDesc: 'All schedules are managed in a <b>DynamoDB</b> table. The solution is comprehensive and production-ready.',
+                coreMechanism: 'The core mechanism involves a <b>Lambda function</b> that looks up the schedule in DynamoDB and triggers other Lambda functions to automatically stop or start the required instances.',
+                
+                resourcesTitle: 'Supported Resources',
+                resourcesDesc: 'The primary resources supported for automated start/stop scheduling are:',
+                resourcesList: [
+                    'EC2 Instances', 'EC2 Auto Scaling Groups', 'RDS Instances',
+                    'RDS Clusters', 'Neptune', 'DocumentDB'
+                ],
+                
+                // Deployment & Scheduling
+                section3Title: 'Deployment and Scheduling Details',
+                deploymentHeader: 'CloudFormation Deployment',
+                deploymentDesc: 'You deploy the Instance Scheduler using the AWS Management Console to launch the solution, which takes you directly to <b>CloudFormation</b> with the pre-filled template.',
+                deploymentSteps: [
+                    'Use the AWS Console to launch the solution.',
+                    'The solution redirects you to the CloudFormation template with the Amazon S3 URL pre-filled.',
+                    'Deploy the solution as a CloudFormation Stack.'
+                ],
+
+                parametersHeader: 'Configurable Parameters',
+                parametersDesc: 'During deployment, you can configure crucial parameters:',
+                parametersList: [
+                    'Schedule frequency (default is every five minutes).',
+                    'Default Time Zone.',
+                    'Scheduling enabled or disabled.',
+                    'Specify enabled services (EC2, RDS, Neptune, DocumentDB, ASG).'
+                ],
+                
+                storageHeader: 'Schedule Storage (DynamoDB)',
+                storageDesc: 'The CloudFormation stack creates a key <b>DynamoDB</b> table where all your schedules are stored.',
+                storageExample: 'Table items include: Schedule Name, Begin Time, Description, End Time, and more. You can define office hours, working days, or recurring schedules (e.g., the first Monday of each quarter).',
+                
+                taggingNote: 'Note: When instances are started or stopped by the scheduler, a <b>tag</b> is automatically added to describe the action taken, including the date and time zone. Additional service-specific options are available, such as taking snapshots of RDS instances upon stopping.',
+
+                // Key Takeaways
+                section4Title: 'Summary & Key Takeaways',
+                takeaways: [
+                    '<b>Instance Scheduler on AWS</b>: A solution deployed via <b>CloudFormation</b> to automatically start and stop resources, helping <b>reduce costs</b>.',
+                    'Supports <b>EC2 Instances</b>, <b>EC2 Auto Scaling Groups</b>, and <b>RDS Instances/Clusters</b>. Schedules are managed in a <b>DynamoDB</b> table.',
+                    'The solution uses <b>Lambda functions</b> to check schedules and trigger start or stop actions on resources.',
+                    'Deployment involves launching a CloudFormation Stack with configurable parameters like frequency, time zone, and enabled services.'
+                ]
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        function updateContent() {
+            const langData = content[currentLanguage];
+            document.title = langData.pageTitle;
+            document.documentElement.lang = currentLanguage;
+
+            document.getElementById('langToggleVi').textContent = 'VI';
+            document.getElementById('langToggleEn').textContent = 'EN';
+            
+            document.getElementById('introTitle').innerHTML = `${langData.introTitle} <i class="fas fa-money-bill-wave mr-3 text-white"></i>`;
+            document.getElementById('section1Title').textContent = langData.section1Title;
+            document.getElementById('section1Definition').innerHTML = langData.section1Definition; 
+            document.getElementById('costSavingNote').innerHTML = langData.costSavingNote;
+
+            // Architecture & Resources
+            document.getElementById('section2Title').innerHTML = `${langData.section2Title} <i class="fas fa-sitemap ml-2"></i>`;
+            document.getElementById('architectureTitle').innerHTML = `${langData.architectureTitle} <i class="fas fa-cubes ml-2"></i>`;
+            document.getElementById('architectureDesc').innerHTML = langData.architectureDesc; 
+            document.getElementById('coreMechanism').innerHTML = langData.coreMechanism;
+
+            document.getElementById('resourcesTitle').innerHTML = `${langData.resourcesTitle} <i class="fas fa-server ml-2"></i>`;
+            document.getElementById('resourcesDesc').textContent = langData.resourcesDesc;
+            
+            // AWS Resources Chips
+            const resourcesListContainer = document.getElementById('resourcesList');
+            resourcesListContainer.innerHTML = '';
+            langData.resourcesList.forEach(resource => {
+                resourcesListContainer.innerHTML += `<span class="resource-chip"><i class="fas fa-microchip mr-2"></i> ${resource}</span>`;
+            });
+
+            // Deployment & Scheduling
+            document.getElementById('section3Title').innerHTML = `${langData.section3Title} <i class="fas fa-calendar-alt ml-2"></i>`;
+            
+            document.getElementById('deploymentHeader').innerHTML = `${langData.deploymentHeader} <i class="fas fa-cloud-upload-alt ml-2"></i>`;
+            document.getElementById('deploymentDesc').innerHTML = langData.deploymentDesc;
+            const deploymentSteps = document.getElementById('deploymentSteps');
+            deploymentSteps.innerHTML = '';
+            langData.deploymentSteps.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                deploymentSteps.appendChild(li);
+            });
+
+            document.getElementById('parametersHeader').innerHTML = `${langData.parametersHeader} <i class="fas fa-sliders-h ml-2"></i>`;
+            document.getElementById('parametersDesc').textContent = langData.parametersDesc;
+            const parametersList = document.getElementById('parametersList');
+            parametersList.innerHTML = '';
+            langData.parametersList.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                parametersList.appendChild(li);
+            });
+
+            document.getElementById('storageHeader').innerHTML = `${langData.storageHeader} <i class="fas fa-table ml-2"></i>`;
+            document.getElementById('storageDesc').innerHTML = langData.storageDesc;
+            document.getElementById('storageExample').textContent = langData.storageExample;
+            
+            document.getElementById('taggingNote').innerHTML = langData.taggingNote;
+
+            // Key Takeaways
+            document.getElementById('section4Title').innerHTML = `${langData.section4Title} <i class="fas fa-check-circle ml-2 text-primary-color"></i>`;
+
+            // Update Language Toggle Buttons
+            updateLanguageButtons();
+
+            // Update Key Takeaways
+            const takeawaysContainer = document.getElementById('takeawaysContainer');
+            takeawaysContainer.innerHTML = '';
+            langData.takeaways.forEach(t => {
+                const item = `
+                    <li class="flex items-start space-x-3 text-white p-3 bg-gray-700/70 rounded-lg">
+                        <i class="fas fa-piggy-bank text-lg text-primary-color mt-1 flex-shrink-0"></i>
+                        <span class="text-base leading-relaxed">${t}</span>
+                    </li>
+                `;
+                takeawaysContainer.innerHTML += item;
+            });
+        }
+
+        function updateLanguageButtons() {
+            const langToggleVi = document.getElementById('langToggleVi');
+            const langToggleEn = document.getElementById('langToggleEn');
+
+            const activeClass = 'bg-primary-color';
+            const inactiveClass = 'text-white hover:bg-white/30';
+
+            langToggleVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'vi' ? activeClass : inactiveClass}`;
+            langToggleEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            document.getElementById('langToggleVi').addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            document.getElementById('langToggleEn').addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

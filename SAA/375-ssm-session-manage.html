@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">SSM Session Manager - Truy Cập Bảo Mật Không Cần Cổng</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #3b82f6; /* Blue 500 - Security */
+            --accent-color: #10b981;  /* Emerald 500 - Success */
+            --background-color: #f8fafc; /* Cool Gray 50 */
+            --text-color: #1f2937;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .header-bg {
+            background-color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .section-title {
+            color: var(--primary-color);
+            font-weight: 800;
+            border-bottom: 3px solid var(--accent-color);
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .feature-icon {
+            color: white;
+            background-color: var(--primary-color);
+            border-radius: 0.5rem;
+            width: 3rem;
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+            margin-right: 1rem;
+        }
+        .badge-style {
+            background-color: #eff6ff; /* Blue 50 */
+            color: #1d4ed8; /* Blue 700 */
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-right: 0.5rem;
+        }
+        b {
+            font-weight: 700 !important;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-terminal mr-3 text-accent-color"></i>
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Core Benefit - No SSH Needed -->
+        <section class="card p-8 shadow-xl bg-white border-b-4 border-primary-color">
+            <h2 id="section1Title" class="text-3xl section-title mb-4 pb-2"></h2>
+            <p id="section1Definition" class="text-lg text-gray-700 leading-relaxed"></p>
+            <div class="mt-4 p-4 rounded-lg bg-red-50 border border-red-200 flex items-center">
+                 <i class="fas fa-lock text-red-500 mr-3 text-xl"></i>
+                 <p id="securityNote" class="text-red-700 text-sm font-medium"></p>
+            </div>
+        </section>
+        
+        <!-- Section 2: Mechanism and Architecture -->
+        <section class="space-y-6">
+            <h2 id="section2Title" class="text-3xl font-extrabold text-accent-color text-center"><i class="fas fa-cogs mr-2"></i> </h2>
+            <div class="card bg-blue-50">
+                <p id="mechanismText" class="text-base text-gray-700 mb-4"></p>
+                <!-- Image Tag for Architecture -->
+                
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <div class="card p-4 flex flex-col items-center border-t-4 border-primary-color">
+                    <i class="fas fa-robot text-2xl text-primary-color mb-2"></i>
+                    <p id="osSupport" class="font-semibold text-gray-700"></p>
+                </div>
+                <div class="card p-4 flex flex-col items-center border-t-4 border-primary-color">
+                    <i class="fas fa-file-invoice text-2xl text-primary-color mb-2"></i>
+                    <p id="auditLogging" class="font-semibold text-gray-700"></p>
+                </div>
+                 <div class="card p-4 flex flex-col items-center border-t-4 border-primary-color">
+                    <i class="fas fa-user-shield text-2xl text-primary-color mb-2"></i>
+                    <p id="iamRequirement" class="font-semibold text-gray-700"></p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 3: Access Comparison Table -->
+        <section>
+            <h2 id="section3Title" class="text-3xl section-title mb-6 pb-2 text-center"><i class="fas fa-sitemap mr-2"></i> </h2>
+            
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white rounded-xl shadow-lg">
+                    <thead>
+                        <tr class="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
+                            <th id="colMethod" class="py-3 px-6 text-left"></th>
+                            <th id="colPort" class="py-3 px-6 text-center"></th>
+                            <th id="colKeys" class="py-3 px-6 text-center"></th>
+                            <th id="colSecurity" class="py-3 px-6 text-center"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="comparisonTableBody" class="text-gray-600 text-sm font-light">
+                        <!-- Table rows populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+            <p id="comparisonSummary" class="text-center mt-6 text-lg font-semibold text-gray-700"></p>
+        </section>
+
+        <!-- Section 4: Key Takeaways -->
+        <section class="p-8 bg-gray-800 rounded-2xl shadow-2xl">
+            <h2 id="section4Title" class="text-3xl font-extrabold text-accent-color mb-8 text-center"><i class="fas fa-check-circle mr-2 text-primary-color"></i> </h2>
+            <ul id="takeawaysContainer" class="space-y-4">
+                <!-- Takeaways will be populated by JS -->
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        // Content Translations using <b> for bolding.
+        const content = {
+            'vi': {
+                pageTitle: 'SSM Session Manager - Truy Cập Bảo Mật Không Cần Cổng',
+                introTitle: 'SSM Session Manager',
+                section1Title: 'Giới Thiệu: Shell Bảo Mật Không Cần SSH',
+                section1Definition: 'SSM Session Manager của Systems Manager cho phép bạn khởi chạy một shell bảo mật trên các instance EC2 và server on-premises mà <b>không cần SSH access</b>, <b>bastion hosts</b>, hoặc <b>SSH keys</b>.',
+                securityNote: 'Điều này có nghĩa là Cổng 22 trên các instance EC2 của bạn có thể <b>đóng</b>, tăng cường bảo mật bằng cách loại bỏ nhu cầu SSH.',
+                section2Title: 'Cơ Chế & Yêu Cầu Thiết Lập',
+                mechanismText: 'Để truy cập Session Manager: Instance EC2 phải được gắn <b>IAM instance profile</b> với policy <b>Amazon SSM managed instance core</b>. Policy này cho phép <b>SSM Agent</b> trên instance kết nối ngược tới dịch vụ SSM.',
+                osSupport: 'Hỗ trợ <b>Linux, macOS, và Windows</b>',
+                auditLogging: 'Gửi log phiên tới <b>Amazon S3</b> hoặc <b>CloudWatch Logs</b> để kiểm toán',
+                iamRequirement: 'Yêu cầu <b>IAM Role</b> với policy <b>Amazon SSM managed instance core</b>',
+                section3Title: 'So Sánh: Các Phương Pháp Truy Cập EC2',
+                colMethod: 'Phương Pháp',
+                colPort: 'Cổng Inbound (22)',
+                colKeys: 'Yêu cầu Keys',
+                colSecurity: 'Bảo mật',
+                comparisonRows: [
+                    { method: '<b>SSH Access</b>', port: 'Cần Mở', keys: 'Cần Keys', security: 'Trung bình' },
+                    { method: '<b>EC2 Instance Connect</b>', port: 'Cần Mở', keys: 'Keys Tạm thời', security: 'Cao' },
+                    { method: '<b>Session Manager</b>', port: '<b>KHÔNG CẦN MỞ</b>', keys: '<b>KHÔNG CẦN</b>', security: '<b>Rất Cao</b>' }
+                ],
+                comparisonSummary: '<b>Session Manager</b> cung cấp bảo mật nâng cao bằng cách loại bỏ hoàn toàn nhu cầu mở Cổng 22 và quản lý SSH keys.',
+                section4Title: 'Điểm Chính (Key Takeaways)',
+                takeaways: [
+                    'SSM Session Manager cho phép truy cập shell bảo mật tới EC2 mà <b>không cần SSH keys</b> hoặc <b>mở Cổng 22</b>.',
+                    'Instance EC2 cần <b>IAM role</b> với policy <b>Amazon SSM managed instance core</b> để giao tiếp với dịch vụ SSM.',
+                    'Session Manager hỗ trợ Linux, macOS, và Windows, và có thể ghi log phiên tới <b>Amazon S3</b> hoặc <b>CloudWatch Logs</b>.',
+                    'Đây là phương pháp truy cập an toàn nhất trong ba cách: SSH, EC2 Instance Connect, và <b>Session Manager</b>.'
+                ]
+            },
+            'en': {
+                pageTitle: 'SSM Session Manager - Secure Access Without Open Ports',
+                introTitle: 'SSM Session Manager',
+                section1Title: 'Introduction: Secure Shell Without SSH',
+                section1Definition: 'The SSM Session Manager feature allows you to start a secure shell on your EC2 instances and on-premises servers without requiring <b>SSH access</b>, <b>bastion hosts</b>, or <b>SSH keys</b>.',
+                securityNote: 'This means that Port 22 on your EC2 instances can remain <b>closed</b>, enhancing security by eliminating the need for SSH to establish a secure shell connection.',
+                section2Title: 'Mechanism & Setup Requirements',
+                mechanismText: 'To enable Session Manager access: The EC2 instance must have an attached <b>IAM instance profile</b> with the <b>Amazon SSM managed instance core policy</b>. This policy allows the <b>SSM Agent</b> on the instance to connect back to the Session Manager service.',
+                osSupport: 'Supports <b>Linux, macOS, and Windows</b>',
+                auditLogging: 'Sends session logs to <b>Amazon S3</b> or <b>CloudWatch Logs</b> for auditing',
+                iamRequirement: 'Requires <b>IAM Role</b> with <b>Amazon SSM managed instance core policy</b>',
+                section3Title: 'Comparison: EC2 Instance Access Methods',
+                colMethod: 'Method',
+                colPort: 'Inbound Port (22)',
+                colKeys: 'Key Requirement',
+                colSecurity: 'Security Level',
+                comparisonRows: [
+                    { method: '<b>SSH Access</b>', port: 'Required', keys: 'Requires Keys', security: 'Medium' },
+                    { method: '<b>EC2 Instance Connect</b>', port: 'Required', keys: 'Temporary Keys', security: 'High' },
+                    { method: '<b>Session Manager</b>', port: '<b>NOT REQUIRED</b>', keys: '<b>NONE</b>', security: '<b>Very High</b>' }
+                ],
+                comparisonSummary: '<b>Session Manager</b> provides enhanced security by completely eliminating the need to open Port 22 and manage SSH keys.',
+                section4Title: 'Key Takeaways',
+                takeaways: [
+                    'SSM Session Manager allows secure shell access to EC2 instances without <b>SSH keys</b> or <b>open Port 22</b>.',
+                    'EC2 instances require an <b>IAM role</b> with the <b>Amazon SSM managed instance core policy</b> to communicate with the SSM service.',
+                    'Session Manager supports Linux, macOS, and Windows instances and can log session data to <b>Amazon S3</b> or <b>CloudWatch Logs</b>.',
+                    'It is the most secure access method among the three: SSH, EC2 Instance Connect, and <b>Session Manager</b>.'
+                ]
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        function updateContent() {
+            const langData = content[currentLanguage];
+            document.title = langData.pageTitle;
+            document.documentElement.lang = currentLanguage;
+
+            document.getElementById('langToggleVi').textContent = 'VI';
+            document.getElementById('langToggleEn').textContent = 'EN';
+            
+            document.getElementById('introTitle').innerHTML = `${langData.introTitle} <i class="fas fa-terminal mr-3 text-accent-color"></i>`;
+            document.getElementById('section1Title').textContent = langData.section1Title;
+            document.getElementById('section1Definition').innerHTML = langData.section1Definition;
+            document.getElementById('securityNote').innerHTML = langData.securityNote;
+            
+            document.getElementById('section2Title').innerHTML = `${langData.section2Title} <i class="fas fa-cogs ml-2"></i>`;
+            document.getElementById('mechanismText').innerHTML = langData.mechanismText;
+            document.getElementById('osSupport').innerHTML = `<span class="badge-style">OS:</span> ${langData.osSupport}`;
+            document.getElementById('auditLogging').innerHTML = `<span class="badge-style">Audit:</span> ${langData.auditLogging}`;
+            document.getElementById('iamRequirement').innerHTML = `<span class="badge-style">Role:</span> ${langData.iamRequirement}`;
+
+            document.getElementById('section3Title').innerHTML = `${langData.section3Title} <i class="fas fa-sitemap ml-2"></i>`;
+            document.getElementById('colMethod').textContent = langData.colMethod;
+            document.getElementById('colPort').textContent = langData.colPort;
+            document.getElementById('colKeys').textContent = langData.colKeys;
+            document.getElementById('colSecurity').textContent = langData.colSecurity;
+            document.getElementById('comparisonSummary').innerHTML = langData.comparisonSummary;
+
+
+            // Update Language Toggle Buttons
+            updateLanguageButtons();
+
+            // Update Comparison Table
+            const comparisonTableBody = document.getElementById('comparisonTableBody');
+            comparisonTableBody.innerHTML = '';
+            langData.comparisonRows.forEach((row, index) => {
+                const isSessionManager = index === 2;
+                const rowClass = isSessionManager ? 'bg-accent-color/10 font-bold text-gray-800' : 'border-b border-gray-200 hover:bg-gray-100';
+                const cellClass = "py-3 px-6 whitespace-nowrap";
+                
+                const item = `
+                    <tr class="${rowClass}">
+                        <td class="${cellClass} text-left">${row.method}</td>
+                        <td class="${cellClass} text-center">${row.port}</td>
+                        <td class="${cellClass} text-center">${row.keys}</td>
+                        <td class="${cellClass} text-center">${row.security}</td>
+                    </tr>
+                `;
+                comparisonTableBody.innerHTML += item;
+            });
+
+            // Update Key Takeaways
+            const takeawaysContainer = document.getElementById('takeawaysContainer');
+            takeawaysContainer.innerHTML = '';
+            langData.takeaways.forEach(t => {
+                const item = `
+                    <li class="flex items-start space-x-3 text-gray-200 p-3 bg-gray-700 rounded-lg">
+                        <i class="fas fa-check-circle text-lg text-accent-color mt-1 flex-shrink-0"></i>
+                        <span class="text-base leading-relaxed">${t}</span>
+                    </li>
+                `;
+                takeawaysContainer.innerHTML += item;
+            });
+        }
+
+        function updateLanguageButtons() {
+            const langToggleVi = document.getElementById('langToggleVi');
+            const langToggleEn = document.getElementById('langToggleEn');
+
+            const activeClass = 'bg-accent-color';
+            const inactiveClass = 'text-white hover:bg-white/30';
+
+            langToggleVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'vi' ? activeClass : inactiveClass}`;
+            langToggleEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            document.getElementById('langToggleVi').addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            document.getElementById('langToggleEn').addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

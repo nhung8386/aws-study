@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Hybrid DNS với Route 53 Resolver</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #f97316; /* Orange 500 - Communication */
+            --accent-color: #2563eb;  /* Blue 600 - Connectivity */
+            --text-color: #1f2937;
+            --background-color: #fff7ed; /* Orange 50 */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .header-bg {
+            background-color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .concept-card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+            border-top: 5px solid var(--accent-color);
+        }
+        .endpoint-highlight {
+            background-color: #eff6ff; /* Blue 50 */
+            border-left: 4px solid var(--accent-color);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+        }
+        .flow-step {
+            border: 1px solid #fed7aa; /* Orange 200 */
+            background-color: #fff7ed; /* Orange 50 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+        b {
+            font-weight: 700 !important;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-network-wired mr-3 text-white"></i>
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Introduction & Default Resolver -->
+        <section class="concept-card p-8 bg-white shadow-xl">
+            <h2 id="section1Title" class="text-3xl font-extrabold text-primary-color mb-4 border-b-2 pb-2 border-accent-color"></h2>
+            <p id="section1Definition" class="text-lg text-gray-700 leading-relaxed"></p>
+            <p id="defaultResolverSummary" class="mt-4 p-3 bg-gray-50 border-l-4 border-gray-300 text-sm text-gray-700"></p>
+        </section>
+        
+        <!-- Section 2: Hybrid DNS Concept -->
+        <section>
+            <h2 id="section2Title" class="text-3xl font-extrabold text-text-color mb-6 text-center"><i class="fas fa-cloud-upload-alt mr-2 text-primary-color"></i> </h2>
+            <div class="concept-card">
+                <p id="hybridConcept" class="text-lg text-gray-700 mb-4"></p>
+                <p id="hybridGoal" class="text-gray-600 italic border-l-4 border-primary-color pl-3"></p>
+            </div>
+        </section>
+        
+        <!-- Section 3: Resolver Endpoints (Inbound & Outbound) -->
+        <section>
+            <h2 id="section3Title" class="text-3xl font-extrabold text-text-color mb-6 text-center"><i class="fas fa-map-pin mr-2 text-accent-color"></i> </h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <!-- Inbound Endpoint -->
+                <div class="p-5 rounded-xl border-2 border-accent-color/50 bg-white shadow-lg">
+                    <h3 id="inboundTitle" class="text-2xl font-bold text-accent-color mb-3 flex items-center"><i class="fas fa-sign-in-alt mr-3"></i> </h3>
+                    <p id="inboundDesc" class="text-gray-600 mb-4"></p>
+                    <div class="space-y-3">
+                        <p class="font-bold text-gray-700" id="inboundFlowTitle"></p>
+                        <div class="flow-step">
+                            <i class="fas fa-server text-lg text-primary-color mr-3"></i>
+                            <span id="inboundStep1"></span>
+                        </div>
+                        <div class="text-center text-primary-color font-bold">
+                            <i class="fas fa-long-arrow-alt-down"></i>
+                        </div>
+                        <div class="flow-step">
+                            <i class="fas fa-shield-alt text-lg text-accent-color mr-3"></i>
+                            <span id="inboundStep2"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Outbound Endpoint -->
+                <div class="p-5 rounded-xl border-2 border-primary-color/50 bg-white shadow-lg">
+                    <h3 id="outboundTitle" class="text-2xl font-bold text-primary-color mb-3 flex items-center"><i class="fas fa-sign-out-alt mr-3"></i> </h3>
+                    <p id="outboundDesc" class="text-gray-600 mb-4"></p>
+                    <div class="space-y-3">
+                        <p class="font-bold text-gray-700" id="outboundFlowTitle"></p>
+                        <div class="flow-step">
+                            <i class="fas fa-cloud text-lg text-accent-color mr-3"></i>
+                            <span id="outboundStep1"></span>
+                        </div>
+                        <div class="text-center text-primary-color font-bold">
+                            <i class="fas fa-long-arrow-alt-down"></i>
+                        </div>
+                        <div class="flow-step">
+                            <i class="fas fa-house-user text-lg text-primary-color mr-3"></i>
+                            <span id="outboundStep2"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <p id="connectivityNote" class="mt-8 text-center text-sm font-semibold text-gray-600">
+                <i class="fas fa-link mr-2 text-primary-color"></i>
+            </p>
+        </section>
+
+        <!-- Section 4: Key Takeaways -->
+        <section class="p-8 bg-accent-color/10 rounded-xl shadow-lg">
+            <h2 id="section4Title" class="text-3xl font-extrabold text-accent-color mb-8 text-center"><i class="fas fa-thumbtack mr-2"></i> </h2>
+            <ul id="takeawaysContainer" class="space-y-4">
+                <!-- Takeaways will be populated by JS -->
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        // Content Translations using <b> for bolding.
+        const content = {
+            'vi': {
+                pageTitle: 'Giải Pháp Hybrid DNS với Route 53 Resolver',
+                introTitle: 'Route 53 Resolvers & Hybrid DNS',
+                section1Title: 'Giới Thiệu Route 53 Resolver',
+                section1Definition: 'Theo mặc định, khi bạn tạo một <b>Route 53 Resolver</b> trong AWS, nó sẽ trả lời các truy vấn DNS cho các tên miền cục bộ liên quan đến các instance EC2 của bạn, các bản ghi trong Private Hosted Zones, cũng như các bản ghi trong Public Name Servers.',
+                defaultResolverSummary: 'Tóm lại: Mọi thứ bạn tạo dưới Route 53 đều được giải quyết <b>trong tài khoản AWS</b> của bạn.',
+                
+                // Hybrid DNS Concept
+                section2Title: 'Khái Niệm Hybrid DNS',
+                hybridConcept: 'Có những tình huống bạn muốn thiết lập một hệ thống <b>Hybrid DNS</b> (DNS Lai). Điều này có nghĩa là bạn muốn Route 53 Resolver cũng có thể giải quyết các truy vấn DNS cho mạng <b>On-Premises</b> (Tại chỗ) của riêng bạn, và ngược lại.',
+                hybridGoal: 'Mục tiêu: Thiết lập kết nối DNS giữa AWS Cloud và mạng On-Premises của bạn để truy vấn hoạt động hai chiều.',
+                
+                // Resolver Endpoints
+                section3Title: 'Điểm Cuối Resolver (Resolver Endpoints)',
+                
+                inboundTitle: '1. Inbound Endpoints (Chiều vào)',
+                inboundDesc: 'Cho phép các DNS Resolver của tài nguyên On-Premises <b>giải quyết tên miền của các tài nguyên AWS</b> (ví dụ: EC2, Private Hosted Zones).',
+                inboundFlowTitle: 'Luồng truy vấn (On-Premise -> AWS):',
+                inboundStep1: 'Máy chủ On-Premise truy vấn tên miền AWS (ví dụ: EC2 instance).',
+                inboundStep2: 'Truy vấn được chuyển tiếp đến <b>Inbound Endpoint</b> (Điểm Cuối Chiều Vào), sau đó tới Route 53 Resolver để phân giải.',
+
+                outboundTitle: '2. Outbound Endpoints (Chiều ra)',
+                outboundDesc: 'Cho phép <b>Route 53 Resolver</b> chuyển tiếp các truy vấn DNS tới các DNS Resolver của mạng On-Premises của bạn.',
+                outboundFlowTitle: 'Luồng truy vấn (AWS -> On-Premise):',
+                outboundStep1: 'Instance EC2 trong AWS truy vấn tên miền On-Premises (ví dụ: web.onpremise.private).',
+                outboundStep2: 'Truy vấn đi qua <b>Outbound Endpoint</b> (Điểm Cuối Chiều Ra) tới DNS Resolver On-Premises để phân giải.',
+                connectivityNote: 'Lưu ý: Bạn phải thiết lập kết nối mạng (VPN hoặc Direct Connect) giữa On-Premises và AWS trước khi sử dụng các Endpoint này.',
+                
+                // Key Takeaways
+                section4Title: 'Tóm Tắt & Điểm Chính',
+                takeaways: [
+                    '<b>Route 53 Resolver</b> mặc định giải quyết các truy vấn DNS <b>nội bộ</b> trong AWS.',
+                    '<b>Hybrid DNS</b> cho phép phân giải DNS giữa AWS Cloud và mạng On-Premises.',
+                    '<b>Inbound Endpoints</b>: Từ On-Premises truy vấn tên miền AWS.',
+                    '<b>Outbound Endpoints</b>: Từ AWS chuyển tiếp truy vấn đến DNS Resolver On-Premises, cho phép phân giải DNS <b>hai chiều</b>.'
+                ]
+            },
+            'en': {
+                pageTitle: 'Hybrid DNS with Route 53 Resolver',
+                introTitle: 'Route 53 Resolvers & Hybrid DNS',
+                section1Title: 'Introduction to Route 53 Resolver',
+                section1Definition: 'By default, when you create a <b>Route 53 Resolver</b> in AWS, it answers DNS queries for local domain names associated with your EC2 instances, records in your Private Hosted Zones, as well as records in your Public Name Servers.',
+                defaultResolverSummary: 'In essence: Everything you create under Route 53 is answered <b>within your AWS account</b>.',
+                
+                // Hybrid DNS Concept
+                section2Title: 'The Hybrid DNS Concept',
+                hybridConcept: 'There are scenarios where you want a <b>Hybrid DNS</b> setup. This means you want the Route 53 Resolver to also resolve DNS queries for your own <b>on-premises network</b>, and vice versa.',
+                hybridGoal: 'Goal: Establish DNS connectivity between your AWS Cloud DNS and the DNS of your on-premises network for two-way query resolution.',
+                
+                // Resolver Endpoints
+                section3Title: 'Resolver Endpoints',
+                
+                inboundTitle: '1. Inbound Endpoints',
+                inboundDesc: 'Allows DNS Resolvers of on-premises resources to <b>resolve domain names of AWS resources</b> (e.g., EC2, Private Hosted Zones).',
+                inboundFlowTitle: 'Query Flow (On-Premise -> AWS):',
+                inboundStep1: 'On-premises server queries an AWS domain name (e.g., EC2 instance).',
+                inboundStep2: 'Query is forwarded to the <b>Inbound Endpoint</b>, then to the Route 53 Resolver for resolution.',
+
+                outboundTitle: '2. Outbound Endpoints',
+                outboundDesc: 'Allows your <b>Route 53 Resolver</b> to forward DNS queries to your on-premises DNS resolver.',
+                outboundFlowTitle: 'Query Flow (AWS -> On-Premise):',
+                outboundStep1: 'EC2 instance in AWS queries an on-premises DNS name (e.g., web.onpremise.private).',
+                outboundStep2: 'Query passes through the <b>Outbound Endpoint</b> to the on-premises DNS Resolver for resolution.',
+                connectivityNote: 'Note: You must establish network connectivity (VPN or Direct Connect) between On-Premises and AWS before using these Endpoints.',
+
+                // Key Takeaways
+                section4Title: 'Summary & Key Takeaways',
+                takeaways: [
+                    'The <b>Route 53 Resolver</b> by default resolves DNS queries <b>locally</b> within AWS.',
+                    '<b>Hybrid DNS</b> enables DNS resolution between AWS Cloud and on-premises networks.',
+                    '<b>Inbound Endpoints</b>: For On-Premises to query AWS domain names.',
+                    '<b>Outbound Endpoints</b>: For AWS to forward queries to On-Premises DNS Resolvers, enabling <b>two-way</b> DNS resolution.'
+                ]
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        function updateContent() {
+            const langData = content[currentLanguage];
+            document.title = langData.pageTitle;
+            document.documentElement.lang = currentLanguage;
+
+            document.getElementById('langToggleVi').textContent = 'VI';
+            document.getElementById('langToggleEn').textContent = 'EN';
+            
+            document.getElementById('introTitle').innerHTML = `${langData.introTitle} <i class="fas fa-network-wired mr-3 text-white"></i>`;
+            document.getElementById('section1Title').textContent = langData.section1Title;
+            document.getElementById('section1Definition').innerHTML = langData.section1Definition; 
+            document.getElementById('defaultResolverSummary').innerHTML = langData.defaultResolverSummary;
+
+            // Hybrid DNS Concept
+            document.getElementById('section2Title').innerHTML = `${langData.section2Title} <i class="fas fa-cloud-upload-alt ml-2 text-primary-color"></i>`;
+            document.getElementById('hybridConcept').innerHTML = langData.hybridConcept;
+            document.getElementById('hybridGoal').innerHTML = langData.hybridGoal;
+
+            // Resolver Endpoints
+            document.getElementById('section3Title').innerHTML = `${langData.section3Title} <i class="fas fa-map-pin ml-2 text-accent-color"></i>`;
+            
+            // Inbound
+            document.getElementById('inboundTitle').innerHTML = `${langData.inboundTitle} <i class="fas fa-sign-in-alt mr-3"></i>`;
+            document.getElementById('inboundDesc').innerHTML = langData.inboundDesc;
+            document.getElementById('inboundFlowTitle').textContent = langData.inboundFlowTitle;
+            document.getElementById('inboundStep1').innerHTML = langData.inboundStep1;
+            document.getElementById('inboundStep2').innerHTML = langData.inboundStep2;
+
+            // Outbound
+            document.getElementById('outboundTitle').innerHTML = `${langData.outboundTitle} <i class="fas fa-sign-out-alt mr-3"></i>`;
+            document.getElementById('outboundDesc').innerHTML = langData.outboundDesc;
+            document.getElementById('outboundFlowTitle').textContent = langData.outboundFlowTitle;
+            document.getElementById('outboundStep1').innerHTML = langData.outboundStep1;
+            document.getElementById('outboundStep2').innerHTML = langData.outboundStep2;
+
+            document.getElementById('connectivityNote').innerHTML = `<i class="fas fa-link mr-2 text-primary-color"></i> ${langData.connectivityNote}`;
+
+            // Key Takeaways
+            document.getElementById('section4Title').innerHTML = `${langData.section4Title} <i class="fas fa-thumbtack ml-2 text-accent-color"></i>`;
+
+            // Update Language Toggle Buttons
+            updateLanguageButtons();
+
+            // Update Key Takeaways
+            const takeawaysContainer = document.getElementById('takeawaysContainer');
+            takeawaysContainer.innerHTML = '';
+            langData.takeaways.forEach(t => {
+                const item = `
+                    <li class="flex items-start space-x-3 text-gray-700 p-3 bg-white rounded-lg shadow-sm">
+                        <i class="fas fa-check-square text-lg text-primary-color mt-1 flex-shrink-0"></i>
+                        <span class="text-base leading-relaxed">${t}</span>
+                    </li>
+                `;
+                takeawaysContainer.innerHTML += item;
+            });
+        }
+
+        function updateLanguageButtons() {
+            const langToggleVi = document.getElementById('langToggleVi');
+            const langToggleEn = document.getElementById('langToggleEn');
+
+            const activeClass = 'bg-accent-color';
+            const inactiveClass = 'text-white hover:bg-white/30';
+
+            langToggleVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'vi' ? activeClass : inactiveClass}`;
+            langToggleEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            document.getElementById('langToggleVi').addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            document.getElementById('langToggleEn').addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

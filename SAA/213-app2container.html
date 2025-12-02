@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">AWS App2Container - Hiện Đại Hóa Ứng Dụng</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #8b5cf6; /* Violet 500 - Transformation */
+            --accent-color: #3730a3;  /* Indigo 800 - Precision */
+            --text-color: #1f2937;
+            --background-color: #f5f3ff; /* Violet 50 */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .header-bg {
+            background-color: var(--accent-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .content-card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid var(--primary-color);
+        }
+        .step-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background-color: #fcfcfc;
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+        }
+        .step-item:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            transform: translateY(-2px);
+        }
+        .step-icon {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            flex-shrink: 0;
+            margin-right: 1rem;
+        }
+        .deployment-option {
+            background-color: #eef2ff;
+            color: var(--accent-color);
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            margin-right: 0.5rem;
+            display: inline-flex;
+            align-items: center;
+        }
+        b {
+            font-weight: 700 !important;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-magic mr-3 text-white"></i>
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Introduction and Purpose -->
+        <section class="content-card">
+            <h2 id="section1Title" class="text-3xl font-extrabold text-primary-color mb-4 border-b-2 pb-2 border-accent-color"></h2>
+            <p id="section1Definition" class="text-lg text-gray-700 leading-relaxed"></p>
+            <p id="section1Purpose" class="mt-4 p-4 bg-primary-color/10 text-gray-700 rounded-lg border-l-4 border-primary-color"></p>
+        </section>
+
+        <!-- Section 2: Workflow Overview -->
+        <section class="content-card">
+            <h2 id="section2Title" class="text-3xl font-extrabold text-accent-color mb-6 flex items-center"><i class="fas fa-list-ol mr-3"></i> </h2>
+            <div id="workflowSteps" class="space-y-3">
+                <!-- Steps will be populated by JS -->
+            </div>
+            <p class="mt-6 text-sm text-gray-600">
+                <i class="fas fa-terminal mr-2 text-primary-color"></i> <span id="workflowNote"></span>
+            </p>
+        </section>
+
+        <!-- Section 3: Output and Deployment -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- Output Artifacts -->
+            <div class="content-card">
+                <h3 id="outputTitle" class="text-2xl font-bold text-accent-color mb-4 flex items-center"><i class="fas fa-archive mr-3"></i></h3>
+                <p id="outputContent" class="text-gray-700 leading-relaxed"></p>
+            </div>
+
+            <!-- Deployment Options -->
+            <div class="content-card">
+                <h3 id="deploymentTitle" class="text-2xl font-bold text-primary-color mb-4 flex items-center"><i class="fas fa-cloud-upload-alt mr-3"></i></h3>
+                <p id="deploymentIntro" class="text-gray-700 leading-relaxed mb-4"></p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="deployment-option"><i class="fas fa-server mr-2"></i> Amazon ECS</span>
+                    <span class="deployment-option"><i class="fas fa-dharmachakra mr-2"></i> Amazon EKS</span>
+                    <span class="deployment-option"><i class="fas fa-rocket mr-2"></i> AWS App Runner</span>
+                    <span class="deployment-option"><i class="fas fa-code-branch mr-2"></i> CI/CD Pipelines</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Key Takeaways -->
+        <section class="p-8 bg-primary-color/10 rounded-xl shadow-lg">
+            <h2 id="section4Title" class="text-3xl font-extrabold text-primary-color mb-8 text-center"><i class="fas fa-thumbtack mr-2"></i> </h2>
+            <ul id="takeawaysContainer" class="space-y-4">
+                <!-- Takeaways will be populated by JS -->
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        // Content Translations using <b> for bolding.
+        const content = {
+            'vi': {
+                pageTitle: 'AWS App2Container - Hiện Đại Hóa Ứng Dụng',
+                introTitle: 'Giới Thiệu về AWS App2Container (A2C)',
+                section1Title: 'Công Cụ CLI Chuyển Đổi cho Java và .NET',
+                section1Definition: '<b>AWS App2Container</b>, viết tắt là <b>A2C</b>, là một công cụ giao diện dòng lệnh (CLI tool) được sử dụng để di chuyển và hiện đại hóa các ứng dụng web <b>Java</b> và <b>.NET</b> thành các container <b>Docker</b>.',
+                section1Purpose: 'Mục đích chính của A2C là tạo điều kiện cho quá trình di chuyển "lift-and-shift". Điều này có nghĩa là các ứng dụng đang chạy tại chỗ (on-premises) trên máy chủ vật lý hoặc máy ảo, có thể được di chuyển lên AWS mà <b>không cần thay đổi mã nguồn</b>.',
+                
+                // Workflow
+                section2Title: 'Tổng Quan Quy Trình Làm Việc A2C',
+                workflowSteps: [
+                    { icon: 'fas fa-search', title: 'Khám phá và Phân tích', detail: 'Sử dụng CLI để khám phá và phân tích ứng dụng nào phù hợp để di chuyển.' },
+                    { icon: 'fas fa-box-open', title: 'Trích xuất và Container hóa', detail: 'Tiến hành trích xuất ứng dụng và đóng gói chúng thành các container Docker.' },
+                    { icon: 'fas fa-file-code', title: 'Tạo Artifact Triển khai', detail: 'Tạo các artifact triển khai, bao gồm <b>CloudFormation templates</b> với các định nghĩa ECS Task và EKS Pod, cùng với cấu hình CI/CD nếu cần.' },
+                    { icon: 'fas fa-deploying', title: 'Triển khai lên AWS', detail: 'Triển khai ứng dụng đã container hóa lên AWS thông qua các dịch vụ container.' }
+                ],
+                workflowNote: 'Các Docker container images được lưu trữ trong <b>Amazon ECR</b> và có thể được triển khai lên ECS, EKS hoặc App Runner.',
+
+                // Output and Deployment
+                outputTitle: 'Artifact Đầu ra',
+                outputContent: 'Sau khi quá trình container hóa kết thúc, A2C tạo ra các <b>CloudFormation templates</b> cho cơ sở hạ tầng mạng và tính toán của bạn. Nó cũng đăng ký các Docker container đã tạo vào <b>Amazon Elastic Container Registry (ECR)</b>.',
+                deploymentTitle: 'Tùy Chọn Triển Khai',
+                deploymentIntro: 'Khi các Docker image đã được lưu trữ trong Amazon ECR, bạn có thể chọn triển khai chúng đến:',
+                
+                // Key Takeaways
+                section4Title: 'Điểm Chính Cần Nhớ',
+                takeaways: [
+                    '<b>AWS App2Container (A2C)</b> là công cụ CLI được thiết kế để di chuyển và hiện đại hóa ứng dụng web <b>Java và .NET</b> thành Docker containers.',
+                    'Nó tạo điều kiện cho di chuyển <b>"lift-and-shift"</b> bằng cách chuyển ứng dụng từ môi trường tại chỗ (on-premises) lên AWS mà <b>không cần thay đổi mã nguồn</b>.',
+                    'A2C tạo ra <b>CloudFormation templates</b> cho tài nguyên tính toán và mạng, đăng ký Docker images trong <b>Amazon ECR</b>, và hỗ trợ triển khai lên ECS, EKS, hoặc App Runner.',
+                    'Công cụ này cũng hỗ trợ các <b>CI/CD pipelines</b> được xây dựng sẵn để hợp lý hóa quy trình triển khai.'
+                ]
+            },
+            'en': {
+                pageTitle: 'AWS App2Container - Application Modernization',
+                introTitle: 'Introduction to AWS App2Container (A2C)',
+                section1Title: 'The Transformation CLI Tool for Java and .NET',
+                section1Definition: '<b>AWS App2Container</b>, abbreviated as <b>A2C</b>, is a command-line interface (CLI) tool used to migrate and modernize <b>Java</b> and <b>.NET</b> web applications into <b>Docker containers</b>.',
+                section1Purpose: 'The primary purpose of A2C is to facilitate a "lift-and-shift" migration. This means applications currently running on-premises on bare metal servers or virtual machines can be migrated to AWS <b>without any code changes</b>.',
+                
+                // Workflow
+                section2Title: 'A2C Workflow Overview',
+                workflowSteps: [
+                    { icon: 'fas fa-search', title: 'Discover and Analyze', detail: 'Using the CLI to discover and analyze which applications are suitable for migration.' },
+                    { icon: 'fas fa-box-open', title: 'Extract and Containerize', detail: 'Extracting the applications and containerizing them into Docker containers.' },
+                    { icon: 'fas fa-file-code', title: 'Generate Deployment Artifacts', detail: 'Generating deployment artifacts, including <b>CloudFormation templates</b> with ECS Task and EKS Pod definitions, and CI/CD configurations if needed.' },
+                    { icon: 'fas fa-deploying', title: 'Deploy to AWS', detail: 'Deploying the containerized applications to AWS using container services.' }
+                ],
+                workflowNote: 'The Docker container images are stored in <b>Amazon ECR</b> and can be deployed to ECS, EKS, or App Runner.',
+
+                // Output and Deployment
+                outputTitle: 'Output Artifacts',
+                outputContent: 'At the end of the containerization process, A2C generates <b>CloudFormation templates</b> for your compute and network infrastructure. It also registers the generated Docker containers into <b>Amazon Elastic Container Registry (ECR)</b>.',
+                deploymentTitle: 'Deployment Options',
+                deploymentIntro: 'Once the Docker images are stored in Amazon ECR, you can choose to deploy them to:',
+                
+                // Key Takeaways
+                section4Title: 'Key Takeaways',
+                takeaways: [
+                    '<b>AWS App2Container (A2C)</b> is a CLI tool designed to migrate and modernize <b>Java and .NET</b> web applications into Docker containers.',
+                    'It facilitates <b>lift-and-shift</b> migrations by moving applications from on-premises environments to AWS <b>without requiring code changes</b>.',
+                    'A2C generates <b>CloudFormation templates</b> for compute and network resources, registers Docker images in <b>Amazon ECR</b>, and supports deployment to ECS, EKS, or App Runner.',
+                    'The tool also supports prebuilt <b>CI/CD pipelines</b> to streamline deployment processes.'
+                ]
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        function updateContent() {
+            const langData = content[currentLanguage];
+            document.title = langData.pageTitle;
+            document.documentElement.lang = currentLanguage;
+
+            document.getElementById('langToggleVi').textContent = 'VI';
+            document.getElementById('langToggleEn').textContent = 'EN';
+            
+            document.getElementById('introTitle').innerHTML = `${langData.introTitle} <i class="fas fa-magic mr-3 text-white"></i>`;
+            document.getElementById('section1Title').textContent = langData.section1Title;
+            document.getElementById('section1Definition').innerHTML = langData.section1Definition; 
+            document.getElementById('section1Purpose').innerHTML = langData.section1Purpose;
+
+            // Workflow
+            document.getElementById('section2Title').innerHTML = `${langData.section2Title} <i class="fas fa-list-ol ml-3"></i>`;
+            const workflowSteps = document.getElementById('workflowSteps');
+            workflowSteps.innerHTML = '';
+            langData.workflowSteps.forEach((step, index) => {
+                workflowSteps.innerHTML += `
+                    <div class="step-item">
+                        <i class="${step.icon} step-icon"></i>
+                        <div>
+                            <b class="text-lg text-text-color">${index + 1}. ${step.title}</b>
+                            <p class="text-gray-600 text-sm">${step.detail}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('workflowNote').innerHTML = langData.workflowNote;
+
+            // Output and Deployment
+            document.getElementById('outputTitle').innerHTML = `${langData.outputTitle} <i class="fas fa-archive ml-3"></i>`;
+            document.getElementById('outputContent').innerHTML = langData.outputContent;
+            document.getElementById('deploymentTitle').innerHTML = `${langData.deploymentTitle} <i class="fas fa-cloud-upload-alt ml-3"></i>`;
+            document.getElementById('deploymentIntro').innerHTML = langData.deploymentIntro;
+            
+            // Key Takeaways
+            document.getElementById('section4Title').innerHTML = `${langData.section4Title} <i class="fas fa-thumbtack ml-2 text-primary-color"></i>`;
+
+            // Update Key Takeaways
+            const takeawaysContainer = document.getElementById('takeawaysContainer');
+            takeawaysContainer.innerHTML = '';
+            langData.takeaways.forEach(t => {
+                const item = `
+                    <li class="flex items-start space-x-3 text-gray-700 p-3 bg-white rounded-lg shadow-sm">
+                        <i class="fas fa-check-square text-lg text-accent-color mt-1 flex-shrink-0"></i>
+                        <span class="text-base leading-relaxed">${t}</span>
+                    </li>
+                `;
+                takeawaysContainer.innerHTML += item;
+            });
+
+            // Update Language Toggle Buttons
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            const langToggleVi = document.getElementById('langToggleVi');
+            const langToggleEn = document.getElementById('langToggleEn');
+
+            const activeClass = 'bg-primary-color';
+            const inactiveClass = 'text-white hover:bg-white/30';
+
+            langToggleVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'vi' ? activeClass : inactiveClass}`;
+            langToggleEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            document.getElementById('langToggleVi').addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            document.getElementById('langToggleEn').addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

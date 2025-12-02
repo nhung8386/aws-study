@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">AWS Trusted Advisor - Đánh Giá Tài Khoản</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #f97316; /* Orange 500 - Alert/Action */
+            --accent-color: #1f2937;  /* Gray 800 - Professionalism */
+            --highlight-color: #fcd34d; /* Yellow 300 - Investigation */
+            --background-color: #fff7ed; /* Orange 50 */
+            --text-color: #1f2937;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .header-bg {
+            background-color: var(--accent-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .section-title {
+            color: var(--primary-color);
+            font-weight: 800;
+            border-bottom: 3px solid var(--primary-color);
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .category-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background-color: #fef3c7; /* Yellow 100 */
+            border-left: 4px solid var(--highlight-color);
+            border-radius: 0.5rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            font-size: 0.95rem;
+        }
+        .access-level {
+            padding: 1rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+        .core {
+            background-color: #fecaca; /* Red 200 */
+            border: 1px solid #dc2626; /* Red 600 */
+        }
+        .full {
+            background-color: #a7f3d0; /* Green 200 */
+            border: 1px solid #059669; /* Green 600 */
+        }
+        b {
+            font-weight: 700 !important;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-shield-alt mr-3 text-white"></i>
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Overview -->
+        <section class="card p-8 shadow-xl bg-white border-b-4 border-primary-color">
+            <h2 id="section1Title" class="text-3xl section-title mb-4 pb-2"></h2>
+            <p id="section1Definition" class="text-lg text-gray-700 leading-relaxed"></p>
+            <div id="checkExamples" class="mt-6 p-4 bg-gray-100 rounded-lg border-l-4 border-accent-color">
+                <h3 id="exampleTitle" class="font-bold text-accent-color mb-2"></h3>
+                <ul id="exampleList" class="space-y-1 text-sm list-disc pl-5">
+                    <!-- Examples populated by JS -->
+                </ul>
+            </div>
+        </section>
+        
+        <!-- Section 2: Six Categories -->
+        <section>
+            <h2 id="section2Title" class="text-3xl section-title mb-8 text-center"><i class="fas fa-list-ul mr-2"></i> </h2>
+            <div class="card p-6 bg-white shadow-lg">
+                <h3 id="categoriesTitle" class="text-2xl font-bold text-accent-color mb-4"></h3>
+                <div id="categoriesList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Categories populated by JS -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 3: Access Levels -->
+        <section class="bg-gray-100 p-8 rounded-xl shadow-lg">
+            <h2 id="section3Title" class="text-3xl font-extrabold text-primary-color mb-6"><i class="fas fa-hand-point-right mr-2"></i> </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Core Checks -->
+                <div class="access-level core">
+                    <h3 id="coreTitle" class="text-xl font-extrabold text-red-700 mb-2 flex items-center"><i class="fas fa-exclamation-triangle mr-2"></i> </h3>
+                    <p id="coreDesc" class="text-gray-700 text-sm"></p>
+                </div>
+                
+                <!-- Full Checks -->
+                <div class="access-level full">
+                    <h3 id="fullTitle" class="text-xl font-extrabold text-green-800 mb-2 flex items-center"><i class="fas fa-certificate mr-2"></i> </h3>
+                    <p id="fullDesc" class="text-gray-700 text-sm"></p>
+                </div>
+            </div>
+            
+            <p id="programmaticAccess" class="mt-6 text-sm text-gray-600 italic border-t pt-4 border-gray-300"></p>
+        </section>
+
+        <!-- Section 4: Console Demonstration Insights -->
+        <section class="card p-8 bg-white shadow-lg">
+            <h2 id="section4Title" class="text-3xl font-extrabold text-accent-color mb-6"><i class="fas fa-laptop-code mr-2"></i> </h2>
+            <div class="space-y-4">
+                <p id="demoIntro" class="text-gray-700"></p>
+                <ul id="demoFindings" class="space-y-3">
+                    <li id="finding1" class="p-3 bg-red-100 border-l-4 border-red-500 rounded-lg text-sm text-gray-700 flex items-start">
+                        <i class="fas fa-bug mr-3 mt-1 text-red-600 flex-shrink-0"></i>
+                        <span></span>
+                    </li>
+                    <li id="finding2" class="p-3 bg-yellow-100 border-l-4 border-yellow-500 rounded-lg text-sm text-gray-700 flex items-start">
+                        <i class="fas fa-exclamation-circle mr-3 mt-1 text-yellow-700 flex-shrink-0"></i>
+                        <span></span>
+                    </li>
+                    <li id="finding3" class="p-3 bg-blue-100 border-l-4 border-blue-500 rounded-lg text-sm text-gray-700 flex items-start">
+                        <i class="fas fa-info-circle mr-3 mt-1 text-blue-600 flex-shrink-0"></i>
+                        <span></span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        
+        <!-- Section 5: Conclusion & Takeaways -->
+        <section class="p-8 bg-primary-color rounded-2xl shadow-2xl">
+            <h2 id="section5Title" class="text-3xl font-extrabold mb-4 text-center"><i class="fas fa-bullseye mr-2"></i> </h2>
+            <p id="finalNote" class="text-lg italic text-orange-200 text-center mb-6"></p>
+            <ul id="takeawaysContainer" class="space-y-4">
+                <!-- Takeaways will be populated by JS -->
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        // Icon mapping for the 6 categories
+        const categoryIcons = {
+            'Cost optimization': 'fas fa-money-bill-wave',
+            'Performance': 'fas fa-rocket',
+            'Security': 'fas fa-lock',
+            'Fault tolerance': 'fas fa-shield-virus',
+            'Service limits': 'fas fa-arrows-alt-h',
+            'Operational excellence': 'fas fa-cogs'
+        };
+
+        // Content Translations using <b> for bolding.
+        const content = {
+            'vi': {
+                pageTitle: 'AWS Trusted Advisor - Đánh Giá Tài Khoản',
+                introTitle: 'Tổng Quan về Trusted Advisor',
+                section1Title: 'Tổng Quan về AWS Trusted Advisor',
+                section1Definition: 'Bạn không cần cài đặt bất cứ thứ gì. Đây là một dịch vụ cung cấp đánh giá cấp cao về tài khoản AWS của bạn, kiểm tra và đưa ra lời khuyên về nhiều vấn đề.',
+                
+                exampleTitle: 'Ví Dụ về Các Kiểm Tra (Checks)',
+                examples: [
+                    'Bạn có EBS public snapshots không?',
+                    'Bạn có RDS public snapshots không?',
+                    'Bạn có đang sử dụng tài khoản <b>root</b> cho các hoạt động thường xuyên không?'
+                ],
+                
+                // Categories
+                section2Title: 'Sáu Danh Mục Kiểm Tra Chính',
+                categoriesTitle: 'Các kiểm tra được nhóm thành sáu danh mục:',
+                categories: [
+                    'Cost optimization', 'Performance', 'Security', 'Fault tolerance', 'Service limits', 'Operational excellence'
+                ],
+
+                // Access Levels
+                section3Title: 'Mức Độ Truy Cập và Gói Hỗ Trợ',
+                coreTitle: 'Bộ Kiểm Tra Cơ Bản (Core Checks)',
+                coreDesc: 'Bộ kiểm tra này được cung cấp cho <b>tất cả các tài khoản</b> AWS, bất kể gói hỗ trợ.',
+                fullTitle: 'Bộ Kiểm Tra Đầy Đủ (Full Checks)',
+                fullDesc: 'Để có quyền truy cập vào <b>toàn bộ bộ kiểm tra</b>, bạn cần có gói hỗ trợ <b>Business</b> hoặc <b>Enterprise</b>.',
+                programmaticAccess: 'Hơn nữa, nếu bạn nâng cấp lên gói Business hoặc Enterprise, bạn sẽ có quyền truy cập lập trình vào Trusted Advisor thông qua <b>AWS Support API</b>.',
+
+                // Demonstration Insights
+                section4Title: 'Minh Họa và Phát Hiện Thực Tế',
+                demoIntro: 'Trong bảng điều khiển Trusted Advisor, bạn sẽ thấy các khuyến nghị. Ví dụ, một số phát hiện quan trọng có thể bao gồm:',
+                demoFindings: [
+                    'Một trong các bucket S3 đang cho phép <b>truy cập toàn cầu</b>. Cần phải xác minh điều này.',
+                    '29 trong số 60 Security Group Rules cho phép <b>truy cập không hạn chế</b> đến một cổng cụ thể (ví dụ: 0.0.0.0/0). Đây là một vấn đề bảo mật cần xem xét.',
+                    'Bạn được nhắc <b>nâng cấp gói hỗ trợ</b> để có được tất cả các kiểm tra về Tối ưu Chi phí, Hiệu năng, Độ chịu lỗi, và Xuất sắc trong Vận hành.'
+                ],
+                
+                // Conclusion & Takeaways
+                section5Title: 'Kết Luận Cuối Cùng',
+                finalNote: 'Trusted Advisor không cung cấp nhiều thông tin nếu bạn không trả phí cho gói hỗ trợ, nhưng tổng quan này là đủ để giúp bạn trả lời các câu hỏi trong kỳ thi.',
+                takeaways: [
+                    '<b>AWS Trusted Advisor</b> cung cấp đánh giá cấp cao về tài khoản AWS của bạn và đề xuất hành động trên nhiều lĩnh vực.',
+                    'Các kiểm tra được nhóm thành <b>sáu danh mục</b>: Tối ưu chi phí, Hiệu năng, Bảo mật, Độ chịu lỗi, Giới hạn dịch vụ, và Xuất sắc trong Vận hành.',
+                    'Tất cả tài khoản đều có <b>Core checks</b>; cần gói <b>Business</b> hoặc <b>Enterprise</b> để có được <b>Full set of checks</b> và quyền truy cập lập trình qua <b>AWS Support API</b>.',
+                    'Trusted Advisor có thể báo cáo về <b>giới hạn dịch vụ</b> và giúp xác định các vấn đề bảo mật như S3 public buckets và unrestricted security group rules.'
+                ]
+            },
+            'en': {
+                pageTitle: 'AWS Trusted Advisor - Account Assessment',
+                introTitle: 'Trusted Advisor Overview',
+                section1Title: 'Overview of AWS Trusted Advisor',
+                section1Definition: 'You do not need to install anything. It is a service that gives you a <b>high-level account assessment</b> on your AWS account. It is going to check for a few things and advise you on them.',
+                
+                exampleTitle: 'Example Checks',
+                examples: [
+                    'Do you have EBS public snapshots?',
+                    'Do you have RDS public snapshots?',
+                    'Are you using the <b>root accounts</b> for your day-to-day operations?'
+                ],
+                
+                // Categories
+                section2Title: 'The Six Core Check Categories',
+                categoriesTitle: 'The checks are grouped into six categories:',
+                categories: [
+                    'Cost optimization', 'Performance', 'Security', 'Fault tolerance', 'Service limits', 'Operational excellence'
+                ],
+
+                // Access Levels
+                section3Title: 'Access Levels and Support Plans',
+                coreTitle: 'Core Checks Set',
+                coreDesc: 'This set of checks is available to <b>all AWS accounts</b>, regardless of the support plan.',
+                fullTitle: 'Full Checks Set',
+                fullDesc: 'To have access to the <b>full set of checks</b>, you need to have a <b>Business</b> or an <b>Enterprise</b> support plan.',
+                programmaticAccess: 'On top of that, if you switch on the Business or Enterprise support plan, you get programmatic access to Trusted Advisor through the <b>AWS Support API</b>.',
+
+                // Demonstration Insights
+                section4Title: 'Demonstration and Practical Findings',
+                demoIntro: 'In the Trusted Advisor console you have recommendations. For example, some key findings might include:',
+                demoFindings: [
+                    'One of your S3 buckets is allowing <b>global access</b>. This needs verification.',
+                    '29 of 60 Security Group Rules allow <b>unrestricted access</b> to a specific port (e.g., 0.0.0.0/0). This is a security risk to review.',
+                    'You are prompted to <b>upgrade your support plan</b> to get all checks for Cost Optimization, Performance, Fault Tolerance, and Operational Excellence.'
+                ],
+                
+                // Conclusion & Takeaways
+                section5Title: 'Final Conclusion',
+                finalNote: 'Trusted Advisor is not very informative when you do not pay for the support plan, but this overview should give you an idea of how it is used and help you answer exam questions.',
+                takeaways: [
+                    '<b>AWS Trusted Advisor</b> provides a high-level assessment of your AWS account and recommends actions across multiple domains.',
+                    'Trusted Advisor checks are grouped into <b>six categories</b>: Cost Optimization, Performance, Security, Fault Tolerance, Service Limits, and Operational Excellence.',
+                    'All accounts get <b>Core checks</b>; the <b>Full set of checks</b> requires a <b>Business</b> or <b>Enterprise</b> plan, which grants programmatic access via the <b>AWS Support API</b>.',
+                    'Trusted Advisor can report on <b>service limits</b> and helps identify security issues such as public S3 buckets and unrestricted security group rules.'
+                ]
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        function updateContent() {
+            const langData = content[currentLanguage];
+            document.title = langData.pageTitle;
+            document.documentElement.lang = currentLanguage;
+
+            document.getElementById('langToggleVi').textContent = 'VI';
+            document.getElementById('langToggleEn').textContent = 'EN';
+            
+            document.getElementById('introTitle').innerHTML = `${langData.introTitle} <i class="fas fa-shield-alt mr-3 text-white"></i>`;
+            document.getElementById('section1Title').textContent = langData.section1Title;
+            document.getElementById('section1Definition').innerHTML = langData.section1Definition; 
+
+            // Examples
+            document.getElementById('exampleTitle').textContent = langData.exampleTitle;
+            const exampleList = document.getElementById('exampleList');
+            exampleList.innerHTML = '';
+            langData.examples.forEach(ex => {
+                exampleList.innerHTML += `<li class="text-gray-700">${ex}</li>`;
+            });
+
+            // Categories
+            document.getElementById('section2Title').innerHTML = `${langData.section2Title} <i class="fas fa-list-ul ml-2"></i>`;
+            document.getElementById('categoriesTitle').textContent = langData.categoriesTitle;
+            
+            const categoriesListContainer = document.getElementById('categoriesList');
+            categoriesListContainer.innerHTML = '';
+            langData.categories.forEach(category => {
+                const iconClass = categoryIcons[category] || 'fas fa-check-circle';
+                categoriesListContainer.innerHTML += `
+                    <div class="category-item">
+                        <i class="${iconClass} mr-3 text-secondary-color"></i>
+                        ${category}
+                    </div>
+                `;
+            });
+
+            // Access Levels
+            document.getElementById('section3Title').innerHTML = `${langData.section3Title} <i class="fas fa-hand-point-right ml-2"></i>`;
+            
+            document.getElementById('coreTitle').innerHTML = `${langData.coreTitle} <i class="fas fa-exclamation-triangle mr-2"></i>`;
+            document.getElementById('coreDesc').innerHTML = langData.coreDesc;
+            
+            document.getElementById('fullTitle').innerHTML = `${langData.fullTitle} <i class="fas fa-certificate mr-2"></i>`;
+            document.getElementById('fullDesc').innerHTML = langData.fullDesc;
+
+            document.getElementById('programmaticAccess').innerHTML = langData.programmaticAccess;
+
+            // Demonstration Insights
+            document.getElementById('section4Title').innerHTML = `${langData.section4Title} <i class="fas fa-laptop-code ml-2"></i>`;
+            document.getElementById('demoIntro').innerHTML = langData.demoIntro;
+            
+            document.getElementById('finding1').querySelector('span').innerHTML = langData.demoFindings[0];
+            document.getElementById('finding2').querySelector('span').innerHTML = langData.demoFindings[1];
+            document.getElementById('finding3').querySelector('span').innerHTML = langData.demoFindings[2];
+
+            // Conclusion & Takeaways
+            document.getElementById('section5Title').innerHTML = `${langData.section5Title} <i class="fas fa-bullseye ml-2"></i>`;
+            document.getElementById('finalNote').innerHTML = langData.finalNote;
+
+            // Update Language Toggle Buttons
+            updateLanguageButtons();
+
+            // Update Key Takeaways
+            const takeawaysContainer = document.getElementById('takeawaysContainer');
+            takeawaysContainer.innerHTML = '';
+            langData.takeaways.forEach(t => {
+                const item = `
+                    <li class="flex items-start space-x-3 p-3 bg-accent-color/80 rounded-lg">
+                        <i class="fas fa-lightbulb text-lg text-highlight-color mt-1 flex-shrink-0"></i>
+                        <span class="text-base leading-relaxed">${t}</span>
+                    </li>
+                `;
+                takeawaysContainer.innerHTML += item;
+            });
+        }
+
+        function updateLanguageButtons() {
+            const langToggleVi = document.getElementById('langToggleVi');
+            const langToggleEn = document.getElementById('langToggleEn');
+
+            const activeClass = 'bg-primary-color';
+            const inactiveClass = 'text-white hover:bg-white/30';
+
+            langToggleVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'vi' ? activeClass : inactiveClass}`;
+            langToggleEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            document.getElementById('langToggleVi').addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            document.getElementById('langToggleEn').addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

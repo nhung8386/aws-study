@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="header.title">Chiến lược Caching trong AWS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fffbeb; /* Amber 50 - Speed/Performance Theme */
+            color: #431407; /* Amber 900 */
+        }
+        .header-bg {
+            background-color: #b45309; /* Amber 700 */
+        }
+        .highlight-text {
+            color: #d97706; /* Amber 600 */
+        }
+        .card {
+            background-color: white;
+            border-top: 5px solid #fbbf24; /* Amber 400 */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: 100%;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15);
+        }
+        .icon-box {
+            color: #d97706;
+        }
+        .key-feature strong {
+            font-weight: 800;
+            color: #dc2626; /* Red 600 for emphasis on trade-offs */
+        }
+        .toggle-active {
+            background-color: #d97706 !important;
+            color: white !important;
+        }
+        .toggle-inactive {
+            background-color: #e5e7eb; /* Gray 200 */
+            color: #4b5563; /* Gray 600 */
+        }
+    </style>
+</head>
+<body>
+    <header class="header-bg shadow-xl">
+        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 class="text-3xl font-extrabold text-white" data-i18n="header.title">
+                <i class="fas fa-tachometer-alt mr-3"></i> Chiến lược Caching trong AWS
+            </h1>
+            <!-- Language Toggles -->
+            <div class="flex space-x-2 p-1 bg-white rounded-full shadow-md">
+                <button id="lang-toggle-vi" class="px-3 py-1 rounded-full font-semibold text-sm transition toggle-active">VI</button>
+                <button id="lang-toggle-en" class="px-3 py-1 rounded-full font-semibold text-sm transition toggle-inactive">EN</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+
+        <!-- Architecture Overview -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-extrabold highlight-text mb-8 pb-3 border-b-2 border-amber-200" data-i18n="section1.title">
+                <i class="fas fa-sitemap mr-3"></i> Tổng quan Kiến trúc Cache Phổ biến
+            </h2>
+
+            <div class="p-6 bg-white shadow-xl rounded-xl border-t-8 border-amber-600 key-feature">
+                <h3 class="text-xl font-semibold highlight-text mb-2" data-i18n="section1.concept.title">Các Lớp Cache Điển hình</h3>
+                <p class="text-gray-700 mt-2 text-lg" data-i18n="section1.concept.body">
+                    Kiến trúc điển hình bao gồm <strong class="font-bold">CloudFront</strong> (Edge Cache) phía trước <strong class="font-bold">API Gateway</strong> (Regional Cache), sau đó đến logic ứng dụng (EC2/Lambda), và cuối cùng là <strong class="font-bold">Application-level Cache</strong> (Redis/Memcached/DAX) và <strong class="font-bold">Database</strong>.
+                </p>
+                <div class="mt-4 p-3 bg-amber-100 rounded-lg border border-amber-300">
+                    <strong class="text-amber-700 block" data-i18n="section1.static_route.title">Tuy nhiên, đừng quên:</strong>
+                    <span data-i18n="section1.static_route.detail">Tuyến nội dung tĩnh (Static Content) thường đi từ <strong class="font-bold">CloudFront</strong> trực tiếp đến <strong class="font-bold">Amazon S3</strong>.</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Caching Layers -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-extrabold highlight-text mb-8 pb-3 border-b-2 border-amber-200" data-i18n="section2.title">
+                <i class="fas fa-layer-group mr-3"></i> Các Tầng Caching trong AWS
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                <!-- Edge Caching -->
+                <div class="card p-6 rounded-xl key-feature">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-globe"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="section2.c1.title">Edge Caching: <strong class="font-bold">CloudFront</strong></h3>
+                    <ul class="list-disc list-inside space-y-1 text-gray-600 text-sm">
+                        <li data-i18n="section2.c1.l1">Cache nội dung <strong class="font-bold">gần người dùng nhất</strong>, mang lại hiệu suất cực nhanh.</li>
+                        <li data-i18n="section2.c1.l2">Nhược điểm: Nội dung có thể <strong class="font-bold">lỗi thời (outdated)</strong>.</li>
+                        <li data-i18n="section2.c1.l3">Giải pháp: Quản lý <strong class="font-bold">Time To Live (TTL)</strong> để làm mới thường xuyên.</li>
+                    </ul>
+                </div>
+
+                <!-- Regional Caching -->
+                <div class="card p-6 rounded-xl key-feature">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-server"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="section2.c2.title">Regional Caching: <strong class="font-bold">API Gateway</strong></h3>
+                    <ul class="list-disc list-inside space-y-1 text-gray-600 text-sm">
+                        <li data-i18n="section2.c2.l1">Cache ở cấp <strong class="font-bold">Vùng (Regional)</strong>, nằm giữa client và logic ứng dụng.</li>
+                        <li data-i18n="section2.c2.l2">Giảm <strong class="font-bold">tải lên backend</strong> (EC2/Lambda).</li>
+                        <li data-i18n="section2.c2.l3">Thậm chí có thể sử dụng mà <strong class="font-bold">không cần CloudFront</strong>.</li>
+                    </ul>
+                </div>
+
+                <!-- Application Caching -->
+                <div class="card p-6 rounded-xl key-feature">
+                    <div class="icon-box text-3xl mb-3"><i class="fas fa-database"></i></div>
+                    <h3 class="text-xl font-semibold mb-2" data-i18n="section2.c3.title">Application Caching: <strong class="font-bold">Redis/Memcached/DAX</strong></h3>
+                    <ul class="list-disc list-inside space-y-1 text-gray-600 text-sm">
+                        <li data-i18n="section2.c3.l1">Sử dụng cache bên ngoài để tránh truy cập <strong class="font-bold">Database</strong> lặp đi lặp lại.</li>
+                        <li data-i18n="section2.c3.l2">Lưu trữ kết quả truy vấn <strong class="font-bold">phức tạp hoặc thường xuyên</strong>.</li>
+                        <li data-i18n="section2.c3.l3">Tăng cường <strong class="font-bold">khả năng đọc (read capacity)</strong> và hiệu suất ứng dụng.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trade-offs and Conclusion -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-extrabold highlight-text mb-8 pb-3 border-b-2 border-amber-200" data-i18n="section3.title">
+                <i class="fas fa-balance-scale-right mr-3"></i> Cân nhắc và Đánh đổi
+            </h2>
+
+            <div class="p-6 bg-white shadow-xl rounded-xl border-t-4 border-red-600 key-feature">
+                <h3 class="text-xl font-semibold text-red-700 mb-3" data-i18n="section3.s1.title">Các Yếu tố Quyết định Chiến lược</h3>
+                <p class="text-gray-700 text-lg mb-4" data-i18n="section3.s1.body">
+                    Cần lưu ý <strong class="font-bold">Amazon S3</strong> và nhiều <strong class="font-bold">Database</strong> không có caching sẵn. Khi di chuyển từ Edge Cache vào Application Cache, <strong class="font-bold">chi phí tính toán và độ trễ thường tăng lên</strong>.
+                </p>
+                <div class="mt-4 p-3 bg-red-50 rounded-lg border border-red-300">
+                    <strong class="text-red-700 block mb-1" data-i18n="section3.s1.questions.title">Câu hỏi Cần Trả lời:</strong>
+                    <ul class="list-none pl-0 text-sm text-red-900 space-y-1">
+                        <li data-i18n="section3.s1.questions.l1">Nội dung <strong class="font-bold">nên được cache ở đâu</strong>?</li>
+                        <li data-i18n="section3.s1.questions.l2"><strong class="font-bold">Cached trong bao lâu</strong> (TTL)?</li>
+                        <li data-i18n="section3.s1.questions.l3">Mức <strong class="font-bold">độ trễ</strong> (latency) nào là chấp nhận được?</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Takeaways -->
+        <section class="p-6 bg-amber-100 rounded-xl shadow-md border-t-4 border-amber-600">
+            <h2 class="text-2xl font-bold highlight-text mb-4" data-i18n="takeaways.title">
+                <i class="fas fa-key mr-2"></i> Tóm tắt Chính
+            </h2>
+            <ul class="space-y-3 text-lg list-none pl-0 key-feature">
+                <li class="flex items-start">
+                    <span class="text-amber-600 mr-3 mt-1"><i class="fas fa-angle-right"></i></span>
+                    <span data-i18n="takeaways.l1">Các chiến lược AWS bao gồm <strong class="font-bold">Edge (CloudFront)</strong>, <strong class="font-bold">Regional (API Gateway)</strong>, và <strong class="font-bold">Application-level (Redis, DAX)</strong>.</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-amber-600 mr-3 mt-1"><i class="fas fa-angle-right"></i></span>
+                    <span data-i18n="takeaways.l2">CloudFront mang lại tốc độ nhưng cần quản lý <strong class="font-bold">TTL</strong> để tránh dữ liệu cũ.</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-amber-600 mr-3 mt-1"><i class="fas fa-angle-right"></i></span>
+                    <span data-i18n="takeaways.l3">Cache API Gateway <strong class="font-bold">giảm tải</strong> cho backend.</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-amber-600 mr-3 mt-1"><i class="fas fa-angle-right"></i></span>
+                    <span data-i18n="takeaways.l4">Cache ứng dụng <strong class="font-bold">giảm áp lực Database</strong> và tăng cường hiệu suất đọc.</span>
+                </li>
+            </ul>
+        </section>
+    </main>
+
+    <script>
+        // --- Translation Data ---
+        const translations = {
+            'vi': {
+                'header.title': 'Chiến lược Caching trong AWS',
+                
+                'section1.title': 'Tổng quan Kiến trúc Cache Phổ biến',
+                'section1.concept.title': 'Các Lớp Cache Điển hình',
+                'section1.concept.body': 'Kiến trúc điển hình bao gồm <strong class="font-bold">CloudFront</strong> (Edge Cache) phía trước <strong class="font-bold">API Gateway</strong> (Regional Cache), sau đó đến logic ứng dụng (EC2/Lambda), và cuối cùng là <strong class="font-bold">Application-level Cache</strong> (Redis/Memcached/DAX) và <strong class="font-bold">Database</strong>.',
+                'section1.static_route.title': 'Tuy nhiên, đừng quên:',
+                'section1.static_route.detail': 'Tuyến nội dung tĩnh (Static Content) thường đi từ <strong class="font-bold">CloudFront</strong> trực tiếp đến <strong class="font-bold">Amazon S3</strong>.',
+
+                'section2.title': 'Các Tầng Caching trong AWS',
+                'section2.c1.title': 'Edge Caching: <strong class="font-bold">CloudFront</strong>',
+                'section2.c1.l1': 'Cache nội dung <strong class="font-bold">gần người dùng nhất</strong>, mang lại hiệu suất cực nhanh.',
+                'section2.c1.l2': 'Nhược điểm: Nội dung có thể <strong class="font-bold">lỗi thời (outdated)</strong>.',
+                'section2.c1.l3': 'Giải pháp: Quản lý <strong class="font-bold">Time To Live (TTL)</strong> để làm mới thường xuyên.',
+
+                'section2.c2.title': 'Regional Caching: <strong class="font-bold">API Gateway</strong>',
+                'section2.c2.l1': 'Cache ở cấp <strong class="font-bold">Vùng (Regional)</strong>, nằm giữa client và logic ứng dụng.',
+                'section2.c2.l2': 'Giảm <strong class="font-bold">tải lên backend</strong> (EC2/Lambda).',
+                'section2.c2.l3': 'Thậm chí có thể sử dụng mà <strong class="font-bold">không cần CloudFront</strong>.',
+
+                'section2.c3.title': 'Application Caching: <strong class="font-bold">Redis/Memcached/DAX</strong>',
+                'section2.c3.l1': 'Sử dụng cache bên ngoài để tránh truy cập <strong class="font-bold">Database</strong> lặp đi lặp lại.',
+                'section2.c3.l2': 'Lưu trữ kết quả truy vấn <strong class="font-bold">phức tạp hoặc thường xuyên</strong>.',
+                'section2.c3.l3': 'Tăng cường <strong class="font-bold">khả năng đọc (read capacity)</strong> và hiệu suất ứng dụng.',
+
+                'section3.title': 'Cân nhắc và Đánh đổi',
+                'section3.s1.title': 'Các Yếu tố Quyết định Chiến lược',
+                'section3.s1.body': 'Cần lưu ý <strong class="font-bold">Amazon S3</strong> và nhiều <strong class="font-bold">Database</strong> không có caching sẵn. Khi di chuyển từ Edge Cache vào Application Cache, <strong class="font-bold">chi phí tính toán và độ trễ thường tăng lên</strong>.',
+                'section3.s1.questions.title': 'Câu hỏi Cần Trả lời:',
+                'section3.s1.questions.l1': 'Nội dung <strong class="font-bold">nên được cache ở đâu</strong>?',
+                'section3.s1.questions.l2': '<strong class="font-bold">Cached trong bao lâu</strong> (TTL)?',
+                'section3.s1.questions.l3': 'Mức <strong class="font-bold">độ trễ</strong> (latency) nào là chấp nhận được?',
+
+                'takeaways.title': 'Tóm tắt Chính',
+                'takeaways.l1': 'Các chiến lược AWS bao gồm <strong class="font-bold">Edge (CloudFront)</strong>, <strong class="font-bold">Regional (API Gateway)</strong>, và <strong class="font-bold">Application-level (Redis, DAX)</strong>.',
+                'takeaways.l2': 'CloudFront mang lại tốc độ nhưng cần quản lý <strong class="font-bold">TTL</strong> để tránh dữ liệu cũ.',
+                'takeaways.l3': 'Cache API Gateway <strong class="font-bold">giảm tải</strong> cho backend.',
+                'takeaways.l4': 'Cache ứng dụng <strong class="font-bold">giảm áp lực Database</strong> và tăng cường hiệu suất đọc.'
+            },
+            'en': {
+                'header.title': 'Caching Strategies in AWS',
+                
+                'section1.title': 'Common Caching Architecture Overview',
+                'section1.concept.title': 'Typical Cache Layers',
+                'section1.concept.body': 'A typical architecture involves <strong class="font-bold">CloudFront</strong> (Edge Cache) in front of <strong class="font-bold">API Gateway</strong> (Regional Cache), which leads to application logic (EC2/Lambda), and finally the <strong class="font-bold">Application-level Cache</strong> (Redis/Memcached/DAX) and <strong class="font-bold">Database</strong>.',
+                'section1.static_route.title': 'Also note:',
+                'section1.static_route.detail': 'The Static Content route usually goes from <strong class="font-bold">CloudFront</strong> directly to <strong class="font-bold">Amazon S3</strong>.',
+
+                'section2.title': 'The Caching Layers in AWS',
+                'section2.c1.title': 'Edge Caching: <strong class="font-bold">CloudFront</strong>',
+                'section2.c1.l1': 'Caches content as <strong class="font-bold">close to users as possible</strong>, providing very fast performance.',
+                'section2.c1.l2': 'Drawback: Cached content might be <strong class="font-bold">outdated</strong>.',
+                'section2.c1.l3': 'Solution: Manage <strong class="font-bold">Time To Live (TTL)</strong> to ensure frequent refreshing.',
+
+                'section2.c2.title': 'Regional Caching: <strong class="font-bold">API Gateway</strong>',
+                'section2.c2.l1': 'Caching at the <strong class="font-bold">Regional</strong> level, sitting between clients and application logic.',
+                'section2.c2.l2': 'Reduces <strong class="font-bold">load on the backend</strong> (EC2/Lambda).',
+                'section2.c2.l3': 'Can even be used <strong class="font-bold">without CloudFront</strong>.',
+
+                'section2.c3.title': 'Application Caching: <strong class="font-bold">Redis/Memcached/DAX</strong>',
+                'section2.c3.l1': 'Uses external caches to avoid repeatedly hitting the <strong class="font-bold">Database</strong>.',
+                'section2.c3.l2': 'Stores results from <strong class="font-bold">complex or frequent</strong> queries.',
+                'section2.c3.l3': 'Augments <strong class="font-bold">read capacity</strong> and application performance.',
+
+                'section3.title': 'Considerations and Trade-offs',
+                'section3.s1.title': 'Factors Determining Strategy',
+                'section3.s1.body': 'It is important to note that <strong class="font-bold">Amazon S3</strong> and many <strong class="font-bold">Databases</strong> lack built-in caching. Moving from Edge Cache to Application Cache generally sees an increase in <strong class="font-bold">computational cost and latency</strong>.',
+                'section3.s1.questions.title': 'Questions to Answer:',
+                'section3.s1.questions.l1': 'Where should the content <strong class="font-bold">be cached</strong>?',
+                'section3.s1.questions.l2': 'How <strong class="font-bold">long should content be cached</strong> (TTL)?',
+                'section3.s1.questions.l3': 'What level of <strong class="font-bold">latency</strong> is acceptable?',
+
+                'takeaways.title': 'Key Takeaways',
+                'takeaways.l1': 'AWS strategies include <strong class="font-bold">Edge (CloudFront)</strong>, <strong class="font-bold">Regional (API Gateway)</strong>, and <strong class="font-bold">Application-level (Redis, DAX)</strong>.',
+                'takeaways.l2': 'CloudFront provides speed but requires <strong class="font-bold">TTL management</strong> to avoid stale data.',
+                'takeaways.l3': 'API Gateway caching <strong class="font-bold">reduces load</strong> on the backend.',
+                'takeaways.l4': 'Application caching <strong class="font-bold">reduces database pressure</strong> and enhances read performance.'
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        const langToggleVi = document.getElementById('lang-toggle-vi');
+        const langToggleEn = document.getElementById('lang-toggle-en');
+        const activeClass = 'toggle-active';
+        const inactiveClass = 'toggle-inactive';
+
+        // Helper function to update content
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const content = translations[currentLanguage][key];
+                if (content) {
+                    // Use innerHTML to allow for strong/bold tags within the content
+                    element.innerHTML = content;
+                }
+            });
+            
+            // Update the main document language attribute
+            document.documentElement.lang = currentLanguage;
+            
+            // Update toggle button styles
+            updateLanguageButtons();
+        }
+
+        // Function to update button styles
+        function updateLanguageButtons() {
+            if (currentLanguage === 'vi') {
+                langToggleVi.classList.add(...activeClass.split(' '));
+                langToggleVi.classList.remove(...inactiveClass.split(' '));
+                langToggleEn.classList.add(...inactiveClass.split(' '));
+                langToggleEn.classList.remove(...activeClass.split(' '));
+            } else {
+                langToggleEn.classList.add(...activeClass.split(' '));
+                langToggleEn.classList.remove(...inactiveClass.split(' '));
+                langToggleVi.classList.add(...inactiveClass.split(' '));
+                langToggleVi.classList.remove(...activeClass.split(' '));
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize content with default language
+            updateContent();
+
+            // Language toggle event listeners
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">AWS App Runner - Triển Khai Web Dễ Dàng</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #f59e0b; /* Amber 500 - Simplicity */
+            --accent-color: #10b981;  /* Emerald 500 - Efficiency */
+            --text-color: #1f2937;
+            --background-color: #fffbeb; /* Amber 50 */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .header-bg {
+            background-color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .content-card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+            border-top: 5px solid var(--accent-color);
+        }
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+        .step-number {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: white;
+            background-color: var(--accent-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-right: 1rem;
+        }
+        b {
+            font-weight: 700 !important;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-rocket mr-3 text-white"></i>
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Introduction -->
+        <section class="content-card">
+            <h2 id="section1Title" class="text-3xl font-extrabold text-primary-color mb-4 border-b-2 pb-2 border-accent-color"></h2>
+            <p id="section1Definition" class="text-lg text-gray-700 leading-relaxed"></p>
+        </section>
+
+        <!-- Section 2: Deployment Process -->
+        <section class="content-card">
+            <h2 id="section2Title" class="text-3xl font-extrabold text-accent-color mb-6 flex items-center"><i class="fas fa-cogs mr-3"></i> </h2>
+            <div class="space-y-4" id="deploymentProcess">
+                <!-- Deployment Steps will be populated by JS -->
+            </div>
+            <p id="deploymentSummary" class="mt-8 p-4 bg-primary-color/10 text-gray-700 rounded-lg border-l-4 border-primary-color"></p>
+        </section>
+
+        <!-- Section 3: Features & Use Cases -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- Features -->
+            <div class="content-card">
+                <h3 id="featuresTitle" class="text-2xl font-bold text-accent-color mb-4 flex items-center"><i class="fas fa-star mr-3"></i></h3>
+                <ul id="featuresList" class="space-y-3 list-none">
+                    <!-- Features will be populated by JS -->
+                </ul>
+            </div>
+
+            <!-- Use Cases -->
+            <div class="content-card">
+                <h3 id="useCasesTitle" class="text-2xl font-bold text-primary-color mb-4 flex items-center"><i class="fas fa-laptop-code mr-3"></i></h3>
+                <p id="useCasesContent" class="text-gray-700 leading-relaxed"></p>
+                <p id="useCasesNote" class="mt-4 text-sm text-gray-500 italic"></p>
+            </div>
+        </section>
+
+        <!-- Section 4: Key Takeaways -->
+        <section class="p-8 bg-accent-color/10 rounded-xl shadow-lg">
+            <h2 id="section4Title" class="text-3xl font-extrabold text-accent-color mb-8 text-center"><i class="fas fa-thumbtack mr-2"></i> </h2>
+            <ul id="takeawaysContainer" class="space-y-4">
+                <!-- Takeaways will be populated by JS -->
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        // Content Translations using <b> for bolding.
+        const content = {
+            'vi': {
+                pageTitle: 'AWS App Runner - Triển Khai Web Dễ Dàng',
+                introTitle: 'Giới Thiệu về AWS App Runner',
+                section1Title: 'AWS App Runner: Dịch Vụ Triển Khai Toàn Diện',
+                section1Definition: '<b>AWS App Runner</b> là một dịch vụ được quản lý toàn bộ (fully managed service) giúp việc triển khai các ứng dụng web và API ở quy mô lớn trở nên dễ dàng. Với dịch vụ này, bất kỳ ai cũng có thể triển khai lên AWS mà <b>không cần kiến thức về cơ sở hạ tầng, container, hay quản lý mã nguồn</b>.',
+                
+                // Deployment Process
+                section2Title: 'Quy Trình Triển Khai Đơn Giản',
+                deploymentSteps: [
+                    { title: 'Cung cấp Mã Nguồn hoặc Image', detail: 'Quá trình triển khai bắt đầu bằng mã nguồn của bạn hoặc một <b>Docker Container Image</b>.' },
+                    { title: 'Cấu hình Cơ bản', detail: 'Bạn thiết lập các cài đặt cơ bản như số lượng vCPUs, phân bổ bộ nhớ (memory) cho container, tùy chọn <b>autoscaling</b>, và kiểm tra sức khỏe (health checks).' },
+                    { title: 'Triển khai Tự động', detail: 'Sau khi cấu hình, App Runner tự động xây dựng (build) và triển khai ứng dụng web. Container được tạo và ứng dụng của bạn có thể truy cập ngay lập tức qua một <b>URL</b>.' }
+                ],
+                deploymentSummary: 'Quá trình này <b>che giấu (abstract)</b> tất cả các chi tiết cơ sở hạ tầng nền tảng khỏi người dùng.',
+                
+                // Features
+                featuresTitle: 'Các Tính Năng và Lợi Ích Cốt Lõi',
+                features: [
+                    '<b>Tự động Mở rộng (Automatic Scaling)</b> để xử lý tải thay đổi.',
+                    '<b>Tính sẵn sàng cao (High Availability)</b> đảm bảo thời gian hoạt động liên tục (uptime).',
+                    '<b>Cân bằng tải (Load Balancing)</b> để phân phối lưu lượng truy cập.',
+                    '<b>Mã hóa (Encryption)</b> để bảo mật ứng dụng của bạn.',
+                    'Truy cập container vào <b>Virtual Private Cloud (VPC)</b>, cho phép kết nối đến cơ sở dữ liệu, caches, và dịch vụ hàng đợi tin nhắn.'
+                ],
+
+                // Use Cases
+                useCasesTitle: 'Trường hợp Ứng dụng Lý tưởng',
+                useCasesContent: 'AWS App Runner lý tưởng để triển khai nhanh chóng các <b>Ứng dụng web</b>, <b>APIs</b>, và <b>Microservices</b>. Nó hỗ trợ triển khai sản xuất nhanh chóng trong khi tuân thủ các thực hành tốt nhất (best practices).',
+                useCasesNote: 'Đây là một dịch vụ đơn giản nhưng mạnh mẽ để tăng tốc độ đưa ứng dụng ra thị trường.',
+
+                // Key Takeaways
+                section4Title: 'Điểm Chính Cần Nhớ',
+                takeaways: [
+                    '<b>AWS App Runner</b> là dịch vụ được quản lý toàn bộ, đơn giản hóa việc triển khai ứng dụng web và API ở quy mô lớn.',
+                    'Người dùng có thể triển khai ứng dụng mà <b>không cần kiến thức về container hay cơ sở hạ tầng</b>.',
+                    'App Runner cung cấp <b>tự động mở rộng</b>, sẵn sàng cao, cân bằng tải, mã hóa và truy cập VPC cho container.',
+                    'Lý tưởng cho việc triển khai sản xuất nhanh chóng của web apps, APIs, và microservices.'
+                ]
+            },
+            'en': {
+                pageTitle: 'AWS App Runner - Simplified Deployment',
+                introTitle: 'Introduction to AWS App Runner',
+                section1Title: 'AWS App Runner: Fully Managed Deployment Service',
+                section1Definition: '<b>AWS App Runner</b> is a fully managed service that makes it easy to deploy web applications and APIs at scale. With this service, anyone can deploy to AWS without requiring knowledge of <b>infrastructure, containers, or source code management</b>.',
+                
+                // Deployment Process
+                section2Title: 'Simplified Deployment Process',
+                deploymentSteps: [
+                    { title: 'Provide Source Code or Image', detail: 'The deployment process begins with your source code or a <b>Docker container image</b>.' },
+                    { title: 'Configure Basic Settings', detail: 'You configure basic settings such as vCPUs, memory allocation for your containers, <b>autoscaling</b> preferences, and health checks.' },
+                    { title: 'Automatic Deployment', detail: 'Once configured, App Runner automatically builds and deploys the web application. The container is created, and your API or web app becomes accessible immediately via a <b>URL</b>.' }
+                ],
+                deploymentSummary: 'This process <b>abstracts</b> all underlying infrastructure details from the user.',
+                
+                // Features
+                featuresTitle: 'Core Features and Benefits',
+                features: [
+                    '<b>Automatic Scaling</b> to handle varying loads.',
+                    '<b>High Availability</b> to ensure uptime.',
+                    '<b>Load Balancing</b> for distributing traffic.',
+                    '<b>Encryption</b> to secure your application.',
+                    'Container access to your <b>Virtual Private Cloud (VPC)</b>, enabling connections to databases, caches, and message queue services.'
+                ],
+
+                // Use Cases
+                useCasesTitle: 'Ideal Use Cases',
+                useCasesContent: 'AWS App Runner is ideal for quickly deploying <b>Web Applications</b>, <b>APIs</b>, and <b>Microservices</b>. It supports rapid production deployment while adhering to best practices.',
+                useCasesNote: 'It is a simple yet powerful service for accelerating time-to-market.',
+
+                // Key Takeaways
+                section4Title: 'Key Takeaways',
+                takeaways: [
+                    '<b>AWS App Runner</b> is a fully managed service that simplifies deploying web applications and APIs at scale.',
+                    'Users can deploy applications without needing knowledge of <b>infrastructure, containers, or source code management</b>.',
+                    'App Runner provides <b>automatic scaling</b>, high availability, load balancing, encryption, and VPC access for containers.',
+                    'It is ideal for rapid production deployment of web apps, APIs, and microservices using best practices.'
+                ]
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        function updateContent() {
+            const langData = content[currentLanguage];
+            document.title = langData.pageTitle;
+            document.documentElement.lang = currentLanguage;
+
+            document.getElementById('langToggleVi').textContent = 'VI';
+            document.getElementById('langToggleEn').textContent = 'EN';
+            
+            document.getElementById('introTitle').innerHTML = `${langData.introTitle} <i class="fas fa-rocket mr-3 text-white"></i>`;
+            document.getElementById('section1Title').textContent = langData.section1Title;
+            document.getElementById('section1Definition').innerHTML = langData.section1Definition; 
+
+            // Deployment Process
+            document.getElementById('section2Title').innerHTML = `${langData.section2Title} <i class="fas fa-cogs ml-3"></i>`;
+            const deploymentProcess = document.getElementById('deploymentProcess');
+            deploymentProcess.innerHTML = '';
+            langData.deploymentSteps.forEach((step, index) => {
+                const stepHtml = `
+                    <div class="step-item">
+                        <div class="step-number">${index + 1}</div>
+                        <div>
+                            <b class="text-lg text-text-color">${step.title}</b>
+                            <p class="text-gray-600 text-sm">${step.detail}</p>
+                        </div>
+                    </div>
+                `;
+                deploymentProcess.innerHTML += stepHtml;
+            });
+            document.getElementById('deploymentSummary').innerHTML = langData.deploymentSummary;
+
+            // Features
+            document.getElementById('featuresTitle').innerHTML = `${langData.featuresTitle} <i class="fas fa-star ml-3"></i>`;
+            const featuresList = document.getElementById('featuresList');
+            featuresList.innerHTML = '';
+            langData.features.forEach(feature => {
+                featuresList.innerHTML += `
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-accent-color mt-1 mr-3 flex-shrink-0"></i>
+                        <span class="text-gray-700">${feature}</span>
+                    </li>
+                `;
+            });
+
+            // Use Cases
+            document.getElementById('useCasesTitle').innerHTML = `${langData.useCasesTitle} <i class="fas fa-laptop-code ml-3"></i>`;
+            document.getElementById('useCasesContent').innerHTML = langData.useCasesContent;
+            document.getElementById('useCasesNote').innerHTML = langData.useCasesNote;
+
+            // Key Takeaways
+            document.getElementById('section4Title').innerHTML = `${langData.section4Title} <i class="fas fa-thumbtack ml-2 text-accent-color"></i>`;
+
+            // Update Key Takeaways
+            const takeawaysContainer = document.getElementById('takeawaysContainer');
+            takeawaysContainer.innerHTML = '';
+            langData.takeaways.forEach(t => {
+                const item = `
+                    <li class="flex items-start space-x-3 text-gray-700 p-3 bg-white rounded-lg shadow-sm">
+                        <i class="fas fa-check-square text-lg text-primary-color mt-1 flex-shrink-0"></i>
+                        <span class="text-base leading-relaxed">${t}</span>
+                    </li>
+                `;
+                takeawaysContainer.innerHTML += item;
+            });
+
+            // Update Language Toggle Buttons
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            const langToggleVi = document.getElementById('langToggleVi');
+            const langToggleEn = document.getElementById('langToggleEn');
+
+            const activeClass = 'bg-accent-color';
+            const inactiveClass = 'text-white hover:bg-white/30';
+
+            langToggleVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'vi' ? activeClass : inactiveClass}`;
+            langToggleEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            document.getElementById('langToggleVi').addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            document.getElementById('langToggleEn').addEventListener('click', () => {
+                currentLanguage = 'en';
+                currentLanguage === 'en' ? 'EN' : 'VI';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

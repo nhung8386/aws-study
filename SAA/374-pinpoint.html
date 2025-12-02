@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Amazon Pinpoint - Trung Tâm Truyền Thông Đa Kênh</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #f97316; /* Orange 500 - Campaign/Energy */
+            --accent-color: #10b981;  /* Emerald 500 - Success/Trust */
+            --background-color: #fff7ed; /* Orange 50 */
+            --text-color: #1f2937;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .header-bg {
+            background-color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .section-title {
+            color: var(--primary-color);
+            font-weight: 800;
+            border-bottom: 2px solid var(--accent-color);
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .channel-icon {
+            color: white;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            width: 3.5rem;
+            height: 3.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            margin-bottom: 0.75rem;
+        }
+        .comparison-badge {
+            font-family: monospace;
+            background-color: #ecfdf5; /* Emerald 50 */
+            color: #059669; /* Emerald 600 */
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        b {
+            font-weight: 700 !important;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-bullseye mr-3 text-accent-color"></i>
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Definition & Scale -->
+        <section class="card p-8 shadow-xl bg-white border-b-4 border-primary-color">
+            <h2 id="section1Title" class="text-3xl section-title mb-4 pb-2"></h2>
+            <p id="section1Definition" class="text-lg text-gray-700"></p>
+        </section>
+
+        <!-- Section 2: Multichannel Support -->
+        <section>
+            <h2 id="section2Title" class="text-3xl font-extrabold text-accent-color mb-8 text-center"><i class="fas fa-layer-group mr-2"></i> </h2>
+            <div id="channelContainer" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
+                <!-- Channels will be populated by JS -->
+            </div>
+        </section>
+
+        <!-- Section 3: Key Use Case - SMS & Personalization -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Card 1: SMS Use Case -->
+            <div class="card bg-orange-50 border-l-4 border-primary-color">
+                <h3 id="smsTitle" class="text-xl font-bold text-gray-800 mb-3 flex items-center"><i class="fas fa-sms mr-2 text-primary-color"></i></h3>
+                <p id="smsContent" class="text-sm text-gray-700"></p>
+            </div>
+            <!-- Card 2: Segmentation & Replies -->
+            <div class="card bg-emerald-50 border-l-4 border-accent-color">
+                <h3 id="personalizationTitle" class="text-xl font-bold text-gray-800 mb-3 flex items-center"><i class="fas fa-bullhorn mr-2 text-accent-color"></i></h3>
+                <p id="personalizationContent" class="text-sm text-gray-700"></p>
+            </div>
+        </section>
+
+        <!-- Section 4: Event Integration and Automation -->
+        <section class="card p-8 bg-gray-800">
+            <h2 id="eventTitle" class="text-3xl font-extrabold text-white mb-6 text-center"><i class="fas fa-bolt mr-3 text-yellow-400"></i> </h2>
+            <p id="eventIntro" class="text-gray-300 text-center mb-6"></p>
+            
+            <div id="eventIntegration" class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8">
+                <div class="text-center">
+                    <span class="text-white font-bold text-lg">Pinpoint Events</span>
+                    <i class="fas fa-arrow-down text-2xl text-primary-color mt-2 md:hidden"></i>
+                    <i class="fas fa-arrow-right text-2xl text-primary-color ml-4 hidden md:inline"></i>
+                </div>
+                
+                <div class="flex flex-wrap justify-center gap-4">
+                    <div class="comparison-badge bg-blue-100 text-blue-700 p-3">Amazon SNS</div>
+                    <div class="comparison-badge bg-pink-100 text-pink-700 p-3">Kinesis Data Firehose</div>
+                    <div class="comparison-badge bg-green-100 text-green-700 p-3">CloudWatch Logs</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: The Key Difference (Pinpoint vs. SNS/SES) -->
+        <section>
+            <h2 id="comparisonTitle" class="text-3xl section-title mb-8 pb-2 text-center"><i class="fas fa-exchange-alt mr-2"></i> </h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Card 1: SNS/SES - Manual Work -->
+                <div class="card p-6 border-2 border-red-300 bg-red-50">
+                    <h3 id="snsSesTitle" class="font-bold text-xl text-red-700 mb-3 flex items-center"><i class="fas fa-robot mr-2"></i> </h3>
+                    <p id="snsSesContent" class="text-sm text-gray-700"></p>
+                </div>
+                
+                <!-- Card 2: Pinpoint - Automated Management -->
+                <div class="card p-6 border-2 border-accent-color bg-green-50">
+                    <h3 id="pinpointTitle" class="font-bold text-xl text-accent-color mb-3 flex items-center"><i class="fas fa-cogs mr-2"></i> </h3>
+                    <p id="pinpointContent" class="text-sm text-gray-700"></p>
+                </div>
+            </div>
+            <p id="conclusionEvolution" class="mt-6 text-center text-lg font-semibold text-gray-700"></p>
+        </section>
+        
+
+        <!-- Key Takeaways -->
+        <section class="p-8 bg-gray-900 rounded-2xl shadow-2xl">
+            <h2 id="section7Title" class="text-3xl font-extrabold text-primary-color mb-8 text-center"><i class="fas fa-bookmark mr-2 text-primary-color"></i> </h2>
+            <ul id="takeawaysContainer" class="space-y-4">
+                <!-- Takeaways will be populated by JS -->
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        // Content Translations using <b> for bolding. No double asterisks allowed.
+        const content = {
+            'vi': {
+                pageTitle: 'Amazon Pinpoint - Trung Tâm Truyền Thông Đa Kênh',
+                introTitle: 'Amazon Pinpoint - Truyền Thông Marketing',
+                section1Title: 'Giới Thiệu: Marketing Đa Kênh',
+                section1Definition: 'Amazon Pinpoint là dịch vụ có <b>khả năng mở rộng</b> được thiết kế cho cả truyền thông marketing <b>gửi đi (outbound)</b> và <b>nhận vào (inbound)</b>. Nó là nền tảng quản lý tập trung cho mọi chiến dịch.',
+                channels: [
+                    { icon: 'fas fa-envelope', title: 'Email' },
+                    { icon: 'fas fa-sms', title: 'SMS' },
+                    { icon: 'fas fa-bell', title: 'Push Notifications' },
+                    { icon: 'fas fa-phone-volume', title: 'Voice Messages' },
+                    { icon: 'fas fa-tablet-alt', title: 'In-App Messaging' }
+                ],
+                section2Title: 'Hỗ Trợ Đa Kênh (Multichannel)',
+                smsTitle: 'SMS: Truyền Thông Giao Dịch và Quy Mô',
+                smsContent: 'SMS là một trong những trường hợp sử dụng chính. Pinpoint cho phép gửi tin nhắn giao dịch (transactional SMS) và tin nhắn hàng loạt, có khả năng mở rộng lên đến <b>hàng tỷ tin nhắn mỗi ngày</b>.',
+                personalizationTitle: 'Cá Nhân Hóa & Phản Hồi',
+                personalizationContent: 'Pinpoint cho phép <b>phân khúc (segmentation)</b> và <b>cá nhân hóa (personalization)</b> nội dung tin nhắn. Đặc biệt, nó hỗ trợ <b>nhận phản hồi</b> (receiving replies) từ khách hàng qua SMS.',
+                eventTitle: 'Tích Hợp Sự Kiện & Tự Động Hóa',
+                eventIntro: 'Mọi sự kiện (gửi thành công, đã giao, phản hồi...) đều được chuyển đến các dịch vụ dưới đây để dễ dàng xây dựng các quy trình tự động hóa:',
+                comparisonTitle: 'Sự Khác Biệt: Pinpoint so với SNS/SES',
+                snsSesTitle: 'SNS/SES: Yêu Cầu Quản Lý Thủ Công',
+                snsSesContent: 'Với SNS hoặc SES, bạn phải tự quản lý <b>đối tượng</b>, <b>nội dung</b> và <b>lịch trình gửi</b> trong ứng dụng của mình. Việc này tốn nhiều công sức và khó mở rộng.',
+                pinpointTitle: 'Pinpoint: Dịch Vụ Marketing Toàn Diện',
+                pinpointContent: 'Pinpoint cho phép bạn tạo <b>mẫu tin nhắn (templates)</b>, <b>lịch trình gửi</b>, <b>phân khúc mục tiêu chuyên sâu</b>, và quản lý <b>toàn bộ chiến dịch (full campaigns)</b>, tất cả đều được Pinpoint quản lý.',
+                conclusionEvolution: 'Hãy coi Pinpoint là bước tiến hóa tiếp theo của SNS và SES khi bạn muốn triển khai dịch vụ truyền thông marketing hoàn chỉnh.',
+                section7Title: 'Key Takeaways (Điểm Chính)',
+                takeaways: [
+                    'Pinpoint là dịch vụ truyền thông marketing <b>có khả năng mở rộng</b> (inbound/outbound).',
+                    'Hỗ trợ <b>đa kênh</b>: Email, SMS, Push Notification, Voice, và In-app messaging.',
+                    'Cho phép <b>phân khúc, cá nhân hóa</b> và khả năng <b>nhận phản hồi</b> từ khách hàng.',
+                    'Điểm khác biệt: Pinpoint quản lý <b>mẫu tin, lịch trình, phân khúc và chiến dịch</b>, còn SNS/SES thì ứng dụng phải tự quản lý.'
+                ]
+            },
+            'en': {
+                pageTitle: 'Amazon Pinpoint - The Multichannel Communication Hub',
+                introTitle: 'Amazon Pinpoint - Marketing Communications',
+                section1Title: 'Introduction: Multichannel Marketing',
+                section1Definition: 'Amazon Pinpoint is a <b>scalable service</b> designed for both <b>inbound</b> and <b>outbound</b> marketing communications. It is the centralized platform for managing all campaigns.',
+                channels: [
+                    { icon: 'fas fa-envelope', title: 'Email' },
+                    { icon: 'fas fa-sms', title: 'SMS' },
+                    { icon: 'fas fa-bell', title: 'Push Notifications' },
+                    { icon: 'fas fa-phone-volume', title: 'Voice Messages' },
+                    { icon: 'fas fa-tablet-alt', title: 'In-App Messaging' }
+                ],
+                section2Title: 'Multichannel Support',
+                smsTitle: 'SMS: Transactional & Scalable Communications',
+                smsContent: 'SMS is one of the primary use cases. Pinpoint allows sending transactional and bulk messages, scaling up to <b>billions of messages per day</b>.',
+                personalizationTitle: 'Personalization & Replies',
+                personalizationContent: 'Pinpoint enables <b>segmentation</b> and <b>personalization</b> of message content. Crucially, it supports <b>receiving replies</b> from customers via SMS.',
+                eventTitle: 'Event Integration and Automation',
+                eventIntro: 'All events (success, delivered, reply received...) are delivered to the services below, making it easy to build any kind of automation on top of Pinpoint:',
+                comparisonTitle: 'The Key Difference: Pinpoint vs. SNS/SES',
+                snsSesTitle: 'SNS/SES: Requires Manual Management',
+                snsSesContent: 'With SNS or SES, you must manage the message\'s <b>audience</b>, <b>content</b>, and <b>delivery schedule</b> yourself within your application. This is laborious and may not scale well.',
+                pinpointTitle: 'Pinpoint: Full-Blown Marketing Service',
+                pinpointContent: 'Pinpoint allows you to create <b>message templates</b>, <b>delivery schedules</b>, <b>highly targeted segments</b>, and manage <b>full campaigns</b>, all handled by the Pinpoint service.',
+                conclusionEvolution: 'Consider Amazon Pinpoint as the next evolution of SNS and SES when you want to implement a full-blown marketing communications service.',
+                section7Title: 'Key Takeaways',
+                takeaways: [
+                    'Pinpoint is a <b>scalable</b> inbound and outbound marketing communication service.',
+                    'It supports <b>multichannel</b> messaging: Email, SMS, Push, Voice, and In-app.',
+                    'Allows <b>segmentation, personalization</b>, and the ability to <b>receive replies</b>.',
+                    'The key difference: Pinpoint manages <b>templates, schedules, segments, and campaigns</b>, while SNS/SES requires app-level management.'
+                ]
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        function updateContent() {
+            const langData = content[currentLanguage];
+            document.title = langData.pageTitle;
+            document.documentElement.lang = currentLanguage;
+
+            document.getElementById('langToggleVi').textContent = 'VI';
+            document.getElementById('langToggleEn').textContent = 'EN';
+            
+            document.getElementById('introTitle').innerHTML = `${langData.introTitle} <i class="fas fa-bullseye ml-2 text-accent-color"></i>`;
+            document.getElementById('section1Title').textContent = langData.section1Title;
+            document.getElementById('section1Definition').innerHTML = langData.section1Definition;
+            document.getElementById('section2Title').innerHTML = `${langData.section2Title} <i class="fas fa-layer-group ml-2"></i>`;
+            document.getElementById('smsTitle').innerHTML = `${langData.smsTitle} <i class="fas fa-sms ml-2 text-primary-color"></i>`;
+            document.getElementById('smsContent').innerHTML = langData.smsContent;
+            document.getElementById('personalizationTitle').innerHTML = `${langData.personalizationTitle} <i class="fas fa-bullhorn ml-2 text-accent-color"></i>`;
+            document.getElementById('personalizationContent').innerHTML = langData.personalizationContent;
+            document.getElementById('eventTitle').innerHTML = `${langData.eventTitle} <i class="fas fa-bolt ml-3 text-yellow-400"></i>`;
+            document.getElementById('eventIntro').textContent = langData.eventIntro;
+            document.getElementById('comparisonTitle').innerHTML = `${langData.comparisonTitle} <i class="fas fa-exchange-alt ml-2"></i>`;
+            document.getElementById('snsSesTitle').innerHTML = `${langData.snsSesTitle} <i class="fas fa-robot ml-2"></i>`;
+            document.getElementById('snsSesContent').innerHTML = langData.snsSesContent;
+            document.getElementById('pinpointTitle').innerHTML = `${langData.pinpointTitle} <i class="fas fa-cogs ml-2"></i>`;
+            document.getElementById('pinpointContent').innerHTML = langData.pinpointContent;
+            document.getElementById('conclusionEvolution').textContent = langData.conclusionEvolution;
+            document.getElementById('section7Title').innerHTML = `${langData.section7Title} <i class="fas fa-bookmark ml-2 text-primary-color"></i>`;
+
+
+            // Update Language Toggle Buttons
+            updateLanguageButtons();
+
+            // Update Channels
+            const channelContainer = document.getElementById('channelContainer');
+            channelContainer.innerHTML = '';
+            langData.channels.forEach(c => {
+                const item = `
+                    <div class="flex flex-col items-center p-3 text-center bg-white rounded-xl shadow-md border-t-2 border-primary-color">
+                        <div class="channel-icon bg-primary-color"><i class="${c.icon}"></i></div>
+                        <p class="font-semibold text-sm text-gray-700">${c.title}</p>
+                    </div>
+                `;
+                channelContainer.innerHTML += item;
+            });
+
+            // Update Key Takeaways
+            const takeawaysContainer = document.getElementById('takeawaysContainer');
+            takeawaysContainer.innerHTML = '';
+            langData.takeaways.forEach(t => {
+                const item = `
+                    <li class="flex items-start space-x-3 text-gray-200 p-3 bg-gray-700 rounded-lg">
+                        <i class="fas fa-check text-lg text-accent-color mt-1 flex-shrink-0"></i>
+                        <span class="text-base leading-relaxed">${t}</span>
+                    </li>
+                `;
+                takeawaysContainer.innerHTML += item;
+            });
+        }
+
+        function updateLanguageButtons() {
+            const langToggleVi = document.getElementById('langToggleVi');
+            const langToggleEn = document.getElementById('langToggleEn');
+
+            const activeClass = 'bg-accent-color';
+            const inactiveClass = 'text-white hover:bg-white/30';
+
+            langToggleVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'vi' ? activeClass : inactiveClass}`;
+            langToggleEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            document.getElementById('langToggleVi').addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            document.getElementById('langToggleEn').addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">AWS Step Functions - Điều Phối Quy Trình Serverless</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #e11d48; /* Rose 600 - Step Functions Brand Color */
+            --secondary-color: #be123c; /* Rose 700 */
+            --accent-color: #4f46e5;  /* Indigo 600 - Integration */
+            --background-color: #fff1f2; /* Rose 50 */
+            --text-color: #1f2937;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .header-bg {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+            border-top: 4px solid var(--primary-color);
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .feature-icon {
+            background-color: #ffe4e6; /* Rose 100 */
+            color: var(--primary-color);
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .integration-badge {
+            background-color: #e0e7ff; /* Indigo 100 */
+            color: #3730a3; /* Indigo 800 */
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            margin: 0.25rem;
+        }
+        .workflow-node {
+            border: 2px solid var(--primary-color);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            background: white;
+        }
+        .arrow-down {
+            text-align: center;
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+            margin: 5px 0;
+        }
+        b {
+            font-weight: 800 !important;
+            color: var(--secondary-color);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-project-diagram mr-3"></i> AWS Step Functions
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1 backdrop-blur-sm">
+                <button id="langToggleVi" class="px-4 py-1 rounded-full font-bold text-sm transition text-white bg-white/30 hover:bg-white/50">VI</button>
+                <button id="langToggleEn" class="px-4 py-1 rounded-full font-bold text-sm transition text-white hover:bg-white/30">EN</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Introduction -->
+        <section class="card border-l-8 border-l-rose-600">
+            <h2 id="section1Title" class="text-3xl font-bold text-gray-800 mb-4"></h2>
+            <p id="section1Desc" class="text-lg text-gray-700 leading-relaxed"></p>
+            <div class="mt-6 p-4 bg-rose-50 rounded-lg border border-rose-200">
+                <p id="section1Concept" class="italic text-gray-700"></p>
+            </div>
+        </section>
+
+        <!-- Section 2: Features Grid -->
+        <section>
+            <h2 id="featuresTitle" class="text-3xl font-extrabold text-gray-800 mb-8 text-center"></h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Sequencing -->
+                <div class="card">
+                    <div class="feature-icon"><i class="fas fa-sort-numeric-down"></i></div>
+                    <h3 id="featSeqTitle" class="text-xl font-bold mb-2"></h3>
+                    <p id="featSeqDesc" class="text-gray-600"></p>
+                </div>
+                <!-- Parallel -->
+                <div class="card">
+                    <div class="feature-icon"><i class="fas fa-code-branch"></i></div>
+                    <h3 id="featParTitle" class="text-xl font-bold mb-2"></h3>
+                    <p id="featParDesc" class="text-gray-600"></p>
+                </div>
+                <!-- Error Handling -->
+                <div class="card">
+                    <div class="feature-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                    <h3 id="featErrTitle" class="text-xl font-bold mb-2"></h3>
+                    <p id="featErrDesc" class="text-gray-600"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Integrations -->
+        <section class="bg-white p-8 rounded-2xl shadow-lg border-b-4 border-indigo-500">
+            <h2 id="integrationTitle" class="text-3xl font-extrabold text-indigo-700 mb-6 flex items-center"><i class="fas fa-plug mr-3"></i> </h2>
+            <p id="integrationDesc" class="text-lg text-gray-700 mb-6"></p>
+            <div class="flex flex-wrap justify-center" id="integrationList">
+                <!-- Badges populated by JS -->
+            </div>
+        </section>
+
+        <!-- Section 4: Human Approval Workflow (Visual) -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div class="card border-l-8 border-l-yellow-500 bg-yellow-50">
+                <h2 id="humanTitle" class="text-2xl font-bold text-yellow-800 mb-4 flex items-center"><i class="fas fa-user-check mr-3"></i> </h2>
+                <p id="humanDesc" class="text-gray-800 mb-4"></p>
+                <p id="humanLogic" class="font-medium text-yellow-900"></p>
+            </div>
+
+            <!-- Visual Graph Representation -->
+            <div class="bg-white p-6 rounded-xl shadow-inner border border-gray-200 flex flex-col items-center">
+                <div class="workflow-node w-full">Start Workflow</div>
+                <div class="arrow-down"><i class="fas fa-arrow-down"></i></div>
+                <div class="workflow-node w-full bg-blue-50">Lambda Function</div>
+                <div class="arrow-down"><i class="fas fa-arrow-down"></i></div>
+                <div class="workflow-node w-full bg-yellow-100 border-yellow-500 text-yellow-800">
+                    <i class="fas fa-pause mr-2"></i> Human Approval?
+                </div>
+                <div class="flex w-full justify-between mt-2">
+                    <div class="text-center w-1/2 text-green-600 font-bold"><i class="fas fa-arrow-down"></i> Yes</div>
+                    <div class="text-center w-1/2 text-red-600 font-bold"><i class="fas fa-arrow-down"></i> No</div>
+                </div>
+                <div class="flex w-full justify-between mt-2 gap-4">
+                    <div class="workflow-node w-1/2 bg-green-50 border-green-500">Success</div>
+                    <div class="workflow-node w-1/2 bg-red-50 border-red-500">Fail</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Use Cases -->
+        <section class="card bg-gradient-to-br from-white to-rose-50">
+            <h2 id="useCaseTitle" class="text-2xl font-bold text-gray-800 mb-4 flex items-center"><i class="fas fa-briefcase mr-3 text-primary-color"></i> </h2>
+            <ul id="useCaseList" class="space-y-3 list-disc list-inside text-gray-700">
+                <!-- Populated by JS -->
+            </ul>
+        </section>
+
+        <!-- Section 6: Key Takeaways -->
+        <section class="p-8 bg-gray-800 rounded-2xl shadow-2xl text-white">
+            <h2 id="takeawaysTitle" class="text-3xl font-extrabold mb-6 text-center text-rose-400"><i class="fas fa-star mr-2"></i> </h2>
+            <ul id="takeawaysList" class="space-y-4">
+                <!-- Populated by JS -->
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        const content = {
+            'vi': {
+                pageTitle: 'AWS Step Functions - Điều Phối Quy Trình',
+                section1Title: 'Giới Thiệu AWS Step Functions',
+                section1Desc: 'AWS Step Functions cung cấp một cách để xây dựng các <b>quy trình làm việc trực quan không máy chủ (serverless visual workflows)</b> để thực hiện việc <b>điều phối (orchestration)</b>, điển hình là cho các hàm Lambda của bạn.',
+                section1Concept: 'Bạn thiết kế một biểu đồ (graph) trong đó tại mỗi bước, bạn xác định điều gì sẽ xảy ra tiếp theo trong trường hợp thành công hoặc thất bại.',
+                
+                featuresTitle: 'Các Tính Năng Chính',
+                featSeqTitle: 'Trình Tự (Sequencing)',
+                featSeqDesc: 'Thực hiện các bước theo thứ tự cụ thể.',
+                featParTitle: 'Hàm Song Song (Parallel)',
+                featParDesc: 'Chạy nhiều nhánh công việc cùng một lúc.',
+                featErrTitle: 'Xử Lý Lỗi & Thời Gian Chờ',
+                featErrDesc: 'Quản lý <b>điều kiện (conditions)</b>, <b>thời gian chờ (timeouts)</b> và tự động xử lý lỗi.',
+
+                integrationTitle: 'Tích Hợp Với Dịch Vụ AWS',
+                integrationDesc: 'Step Functions không chỉ điều phối Lambda; nó tích hợp với rất nhiều dịch vụ khác:',
+                services: ['EC2 Instances', 'ECS Tasks', 'On-premises Servers', 'API Gateway', 'SQS Queues', 'DynamoDB'],
+
+                humanTitle: 'Tính Năng Phê Duyệt Của Con Người',
+                humanDesc: 'Trong một quy trình, có thể triển khai tính năng <b>phê duyệt của con người (human approval)</b>. Quy trình có thể <b>tạm dừng</b> tại một điểm nhất định để con người xem xét kết quả.',
+                humanLogic: 'Nếu con người chấp thuận ("Yes") -> Tiếp tục. Nếu "No" -> Thất bại. Điều này tăng cường khả năng kiểm soát.',
+
+                useCaseTitle: 'Trường Hợp Sử Dụng (Use Cases)',
+                useCases: [
+                    'Hoàn tất đơn hàng (Order fulfillment).',
+                    'Xử lý dữ liệu (Data processing).',
+                    'Ứng dụng web.',
+                    'Bất kỳ quy trình phức tạp nào cần sự rõ ràng và quản lý bằng biểu đồ trực quan.'
+                ],
+
+                takeawaysTitle: 'Điểm Chính Cần Nhớ',
+                takeaways: [
+                    '<b>AWS Step Functions</b> cho phép xây dựng các quy trình trực quan serverless để điều phối (orchestration).',
+                    'Hỗ trợ trình tự (sequencing), thực thi song song, điều kiện, thời gian chờ và xử lý lỗi.',
+                    'Tích hợp với nhiều dịch vụ AWS ngoài Lambda, bao gồm <b>EC2, ECS, API Gateway, và SQS</b>.',
+                    'Các bước <b>phê duyệt của con người</b> có thể được tích hợp vào quy trình để ra quyết định.'
+                ]
+            },
+            'en': {
+                pageTitle: 'AWS Step Functions - Workflow Orchestration',
+                section1Title: 'Introduction to AWS Step Functions',
+                section1Desc: 'AWS Step Functions provide a way to build <b>serverless visual workflows</b> that perform <b>orchestration</b>, typically of your Lambda functions.',
+                section1Concept: 'You design a graph where, at each step, you define what happens next in case of success or failure.',
+                
+                featuresTitle: 'Key Features',
+                featSeqTitle: 'Sequencing',
+                featSeqDesc: 'Execute steps in a specific order.',
+                featParTitle: 'Parallel Functions',
+                featParDesc: 'Run multiple branches of work simultaneously.',
+                featErrTitle: 'Error Handling & Timeouts',
+                featErrDesc: 'Manage <b>conditions</b>, <b>timeouts</b>, and handle errors robustly.',
+
+                integrationTitle: 'Integration with AWS Services',
+                integrationDesc: 'Step Functions do not only orchestrate Lambda functions; they integrate with many others:',
+                services: ['EC2 Instances', 'ECS Tasks', 'On-premises Servers', 'API Gateway', 'SQS Queues', 'DynamoDB'],
+
+                humanTitle: 'Human Approval in Workflows',
+                humanDesc: 'Within a workflow, it is possible to implement a <b>human approval</b> feature. The workflow can <b>pause</b> at a certain point for a human to review the results.',
+                humanLogic: 'If approved ("Yes") -> Continue. If "No" -> Fail. This enhances control and decision-making.',
+
+                useCaseTitle: 'Use Cases',
+                useCases: [
+                    'Order fulfillment.',
+                    'Data processing.',
+                    'Web applications.',
+                    'Any complex workflow that benefits from a visual graph representation.'
+                ],
+
+                takeawaysTitle: 'Key Takeaways',
+                takeaways: [
+                    '<b>AWS Step Functions</b> enable building serverless visual workflows for orchestration.',
+                    'They support sequencing, parallel execution, conditions, timeouts, and error handling.',
+                    'Integrate with many AWS services beyond Lambda, including <b>EC2, ECS, API Gateway, and SQS</b>.',
+                    '<b>Human approval</b> steps can be incorporated within workflows for decision-making.'
+                ]
+            }
+        };
+
+        let currentLang = 'vi';
+
+        function renderContent() {
+            const data = content[currentLang];
+            document.title = data.pageTitle;
+
+            document.getElementById('section1Title').textContent = data.section1Title;
+            document.getElementById('section1Desc').innerHTML = data.section1Desc;
+            document.getElementById('section1Concept').textContent = data.section1Concept;
+
+            document.getElementById('featuresTitle').textContent = data.featuresTitle;
+            document.getElementById('featSeqTitle').textContent = data.featSeqTitle;
+            document.getElementById('featSeqDesc').textContent = data.featSeqDesc;
+            document.getElementById('featParTitle').textContent = data.featParTitle;
+            document.getElementById('featParDesc').textContent = data.featParDesc;
+            document.getElementById('featErrTitle').textContent = data.featErrTitle;
+            document.getElementById('featErrDesc').innerHTML = data.featErrDesc;
+
+            document.getElementById('integrationTitle').innerHTML = `<i class="fas fa-plug mr-3"></i> ${data.integrationTitle}`;
+            document.getElementById('integrationDesc').textContent = data.integrationDesc;
+            
+            const intList = document.getElementById('integrationList');
+            intList.innerHTML = '';
+            data.services.forEach(svc => {
+                intList.innerHTML += `<span class="integration-badge"><i class="fas fa-cube mr-2"></i> ${svc}</span>`;
+            });
+
+            document.getElementById('humanTitle').innerHTML = `<i class="fas fa-user-check mr-3"></i> ${data.humanTitle}`;
+            document.getElementById('humanDesc').innerHTML = data.humanDesc;
+            document.getElementById('humanLogic').textContent = data.humanLogic;
+
+            document.getElementById('useCaseTitle').innerHTML = `<i class="fas fa-briefcase mr-3 text-primary-color"></i> ${data.useCaseTitle}`;
+            const ucList = document.getElementById('useCaseList');
+            ucList.innerHTML = '';
+            data.useCases.forEach(uc => {
+                ucList.innerHTML += `<li>${uc}</li>`;
+            });
+
+            document.getElementById('takeawaysTitle').innerHTML = `<i class="fas fa-star mr-2"></i> ${data.takeawaysTitle}`;
+            const takeList = document.getElementById('takeawaysList');
+            takeList.innerHTML = '';
+            data.takeaways.forEach(tk => {
+                takeList.innerHTML += `<li class="flex items-start"><i class="fas fa-check-circle text-rose-400 mt-1 mr-3 flex-shrink-0"></i><span>${tk}</span></li>`;
+            });
+
+            // Update buttons
+            const btnVi = document.getElementById('langToggleVi');
+            const btnEn = document.getElementById('langToggleEn');
+            if(currentLang === 'vi') {
+                btnVi.classList.add('bg-white', 'text-rose-600');
+                btnVi.classList.remove('bg-white/30', 'text-white');
+                btnEn.classList.add('bg-white/30', 'text-white');
+                btnEn.classList.remove('bg-white', 'text-rose-600');
+            } else {
+                btnEn.classList.add('bg-white', 'text-rose-600');
+                btnEn.classList.remove('bg-white/30', 'text-white');
+                btnVi.classList.add('bg-white/30', 'text-white');
+                btnVi.classList.remove('bg-white', 'text-rose-600');
+            }
+        }
+
+        document.getElementById('langToggleVi').addEventListener('click', () => {
+            currentLang = 'vi';
+            renderContent();
+        });
+        document.getElementById('langToggleEn').addEventListener('click', () => {
+            currentLang = 'en';
+            renderContent();
+        });
+
+        // Init
+        renderContent();
+    </script>
+</body>
+</html>

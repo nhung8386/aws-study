@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">AWS Batch - Xử Lý Hàng Loạt Mạnh Mẽ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #f97316; /* Orange 600 - Power/Processing */
+            --accent-color: #374151;  /* Gray 700 - Stability/Infrastructure */
+            --background-color: #fff7ed; /* Orange 50 */
+            --text-color: #1f2937;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .header-bg {
+            background-color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .section-title {
+            color: var(--primary-color);
+            font-weight: 800;
+            border-bottom: 3px solid var(--accent-color);
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .comparison-box {
+            background-color: #fef2f2; /* Red 50 */
+            border-left: 4px solid #ef4444; /* Red 500 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+        b {
+            font-weight: 700 !important;
+        }
+        .key-feature {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-layer-group mr-3 text-white"></i>
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Introduction and Core Definition -->
+        <section class="card p-8 shadow-xl bg-white border-b-4 border-primary-color">
+            <h2 id="section1Title" class="text-3xl section-title mb-4 pb-2"></h2>
+            <p id="section1Definition" class="text-lg text-gray-700 leading-relaxed"></p>
+            
+            <h3 id="batchJobTitle" class="text-2xl font-bold text-accent-color mt-6 mb-3 flex items-center"><i class="fas fa-calendar-check mr-2"></i> </h3>
+            <p id="batchJobDefinition" class="text-gray-600 italic border-l-2 pl-3 border-accent-color"></p>
+        </section>
+        
+        <!-- Section 2: Dynamic Provisioning & Job Definition -->
+        <section>
+            <h2 id="section2Title" class="text-3xl font-extrabold text-primary-color text-center mb-8"><i class="fas fa-sitemap mr-2"></i> </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Provisioning -->
+                <div class="card space-y-4 border-t-4 border-primary-color">
+                    <h3 id="provisioningTitle" class="text-2xl font-bold text-primary-color flex items-center"><i class="fas fa-bolt mr-2"></i> </h3>
+                    <p id="provisioningDesc" class="text-gray-700"></p>
+                    <div class="key-feature text-sm">
+                        <p id="provisioningNote" class="font-medium"></p>
+                    </div>
+                </div>
+
+                <!-- Job Definition -->
+                <div class="card space-y-4 border-t-4 border-accent-color">
+                    <h3 id="jobDefinitionTitle" class="text-2xl font-bold text-accent-color flex items-center"><i class="fas fa-docker mr-2"></i> </h3>
+                    <p id="jobDefinitionDesc" class="text-gray-700"></p>
+                    <div class="key-feature bg-gray-600 text-sm">
+                        <p id="jobDefinitionCompatibility" class="font-medium"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 3: Example Use Case (Image Processing) -->
+        <section class="card bg-gray-50 border-r-4 border-primary-color">
+            <h2 id="section3Title" class="text-3xl section-title mb-4 pb-2"><i class="fas fa-images mr-2"></i> </h2>
+            <p id="useCaseIntro" class="text-lg text-gray-700 mb-4"></p>
+            
+            <div class="space-y-4 text-sm text-gray-600">
+                <p id="useCaseStep1" class="flex items-start"><i class="fas fa-upload mr-3 mt-1 text-primary-color flex-shrink-0"></i> </p>
+                <p id="useCaseStep2" class="flex items-start"><i class="fas fa-cogs mr-3 mt-1 text-accent-color flex-shrink-0"></i> </p>
+                <p id="useCaseStep3" class="flex items-start"><i class="fas fa-cloud-download-alt mr-3 mt-1 text-primary-color flex-shrink-0"></i> </p>
+                <p id="useCaseConclusion" class="mt-4 font-semibold text-gray-800"></p>
+            </div>
+        </section>
+
+        <!-- Section 4: AWS Batch vs. AWS Lambda -->
+        <section>
+            <h2 id="section4Title" class="text-3xl font-extrabold text-red-500 mb-6 text-center"><i class="fas fa-balance-scale-left mr-2"></i> </h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <!-- Lambda -->
+                <div class="comparison-box space-y-3">
+                    <h4 class="text-2xl font-bold text-red-600 flex items-center"><i class="fas fa-less-than mr-2"></i> AWS Lambda</h4>
+                    <ul class="list-disc ml-5 text-sm text-gray-800 space-y-2">
+                        <li id="lambda1"></li>
+                        <li id="lambda2"></li>
+                        <li id="lambda3"></li>
+                        <li id="lambda4"></li>
+                    </ul>
+                </div>
+                
+                <!-- Batch -->
+                <div class="card space-y-3 border-l-4 border-primary-color">
+                    <h4 class="text-2xl font-bold text-primary-color flex items-center"><i class="fas fa-greater-than mr-2"></i> AWS Batch</h4>
+                    <ul class="list-disc ml-5 text-sm text-gray-800 space-y-2">
+                        <li id="batch1"></li>
+                        <li id="batch2"></li>
+                        <li id="batch3"></li>
+                        <li id="batch4"></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Key Takeaways -->
+        <section class="p-8 bg-accent-color rounded-2xl shadow-2xl">
+            <h2 id="section5Title" class="text-3xl font-extrabold text-primary-color mb-8 text-center"><i class="fas fa-check-circle mr-2 text-white"></i> </h2>
+            <ul id="takeawaysContainer" class="space-y-4">
+                <!-- Takeaways will be populated by JS -->
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        // Content Translations using <b> for bolding.
+        const content = {
+            'vi': {
+                pageTitle: 'AWS Batch - Xử Lý Hàng Loạt Mạnh Mẽ',
+                introTitle: 'AWS Batch',
+                section1Title: 'Giới Thiệu: Dịch Vụ Xử Lý Hàng Loạt',
+                section1Definition: '<b>AWS Batch</b> là dịch vụ xử lý hàng loạt được <b>quản lý hoàn toàn</b> (fully managed). Dịch vụ này cho phép bạn thực hiện các tác vụ xử lý hàng loạt ở <b>mọi quy mô</b>, dễ dàng chạy hàng trăm nghìn công việc tính toán trên AWS.',
+                
+                batchJobTitle: 'Công Việc Hàng Loạt (Batch Job) là gì?',
+                batchJobDefinition: 'Công việc hàng loạt là công việc có <b>thời gian bắt đầu và kết thúc xác định</b>. Nó khác với công việc liên tục (streaming jobs) chạy vô thời hạn. Một batch job xảy ra tại một thời điểm cụ thể.',
+
+                // Dynamic Provisioning & Job Definition
+                section2Title: 'Cung Cấp Tài Nguyên và Định Nghĩa Công Việc',
+                provisioningTitle: 'Cung Cấp Động và Tối Ưu Chi Phí',
+                provisioningDesc: 'AWS Batch <b>tự động khởi chạy</b> các phiên bản <b>EC2</b> hoặc <b>Spot Instances</b> (Instance Tức Thời) để đáp ứng tải cần thiết. Nó cung cấp lượng tài nguyên tính toán và bộ nhớ thích hợp để quản lý hàng đợi batch của bạn.',
+                provisioningNote: 'Bạn chỉ cần gửi hoặc lên lịch công việc vào hàng đợi; AWS Batch sẽ lo phần còn lại, bao gồm <b>tối ưu hóa chi phí</b>.',
+                
+                jobDefinitionTitle: 'Định Nghĩa Công Việc (Job Definition)',
+                jobDefinitionDesc: 'Một công việc batch được định nghĩa bởi một <b>Docker image</b> và một định nghĩa tác vụ (task definition) chạy trên dịch vụ <b>ECS</b> (Amazon Elastic Container Service).',
+                jobDefinitionCompatibility: 'Về cơ bản, bất cứ điều gì có thể chạy trên ECS đều có thể chạy trên AWS Batch. Điều này mang lại sự linh hoạt cao.',
+
+                // Example Use Case
+                section3Title: 'Ví Dụ Ứng Dụng: Xử Lý Hình Ảnh',
+                useCaseIntro: 'Hãy xem xét việc xử lý hàng loạt các hình ảnh được người dùng tải lên Amazon S3:',
+                useCaseStep1: 'Hình ảnh được tải lên Amazon S3, kích hoạt một công việc batch (batch job).',
+                useCaseStep2: 'AWS Batch tự động quản lý cụm ECS (gồm EC2/Spot Instances), đảm bảo số lượng instance phù hợp để chạy <b>Docker images</b> (thực hiện xử lý, ví dụ: áp dụng bộ lọc).',
+                useCaseStep3: 'Sau khi xử lý, đối tượng (hình ảnh) đã được xử lý sẽ được lưu trữ vào một S3 bucket khác.',
+                useCaseConclusion: 'AWS Batch đảm bảo tài nguyên luôn sẵn sàng cho tải công việc thay đổi.',
+
+                // AWS Batch vs. AWS Lambda
+                section4Title: 'So Sánh: AWS Batch và AWS Lambda',
+                
+                // Lambda
+                lambda1: '<b>Thời gian chạy:</b> Giới hạn 15 phút.',
+                lambda2: '<b>Runtime:</b> Hỗ trợ ít ngôn ngữ lập trình hơn.',
+                lambda3: '<b>Lưu trữ:</b> Không gian đĩa tạm thời (temporary disk space) hạn chế.',
+                lambda4: '<b>Mô hình:</b> <b>Serverless</b> (Không cần quản lý server).',
+                
+                // Batch
+                batch1: '<b>Thời gian chạy:</b> <b>Không giới hạn</b> (dựa trên EC2).',
+                batch2: '<b>Runtime:</b> Hỗ trợ <b>mọi runtime</b> (miễn là được đóng gói bằng Docker image).',
+                batch3: '<b>Lưu trữ:</b> Sử dụng <b>EBS volumes</b> hoặc instance store (nhiều không gian hơn).',
+                batch4: '<b>Mô hình:</b> <b>Managed Service</b> (AWS quản lý việc mở rộng EC2).',
+
+                // Key Takeaways
+                section5Title: 'Tóm Tắt & Điểm Chính',
+                takeaways: [
+                    '<b>AWS Batch</b>: Dịch vụ xử lý hàng loạt được quản lý hoàn toàn, chạy hàng trăm nghìn công việc ở mọi quy mô.',
+                    'Một <b>Batch Job</b> có <b>thời gian bắt đầu và kết thúc xác định</b>.',
+                    'AWS Batch <b>tự động cung cấp</b> các phiên bản <b>EC2 hoặc Spot Instances</b>, tối ưu hóa chi phí và quản lý hạ tầng.',
+                    'Sự khác biệt với Lambda: Batch <b>không có giới hạn thời gian</b>, hỗ trợ <b>mọi runtime</b> thông qua Docker, và dựa trên các phiên bản EC2 được quản lý.'
+                ]
+            },
+            'en': {
+                pageTitle: 'AWS Batch - Powerful Batch Processing',
+                introTitle: 'AWS Batch',
+                section1Title: 'Introduction: The Batch Processing Service',
+                section1Definition: '<b>AWS Batch</b> is a <b>fully managed</b> batch processing service that allows you to perform batch processing at <b>any scale</b>. You can efficiently run hundreds of thousands of computing batch jobs on AWS with ease.',
+                
+                batchJobTitle: 'What is a Batch Job?',
+                batchJobDefinition: 'A batch job is a job that has a <b>defined start and end time</b>. This contrasts with continuous or streaming jobs, which run indefinitely. A batch job occurs at a specific point in time.',
+
+                // Dynamic Provisioning & Job Definition
+                section2Title: 'Dynamic Provisioning & Job Definition',
+                provisioningTitle: 'Dynamic Provisioning and Cost Optimization',
+                provisioningDesc: 'AWS Batch <b>dynamically launches</b> <b>EC2 instances</b> or <b>Spot Instances</b> to accommodate the required load. It provisions the appropriate amount of compute and memory resources to manage your batch queue.',
+                provisioningNote: 'You simply submit or schedule batch jobs; AWS Batch handles the rest, including <b>cost optimizations</b>.',
+                
+                jobDefinitionTitle: 'Job Definition',
+                jobDefinitionDesc: 'A batch job is defined by a <b>Docker image</b> and a task definition that runs on the <b>ECS</b> (Amazon Elastic Container Service) service.',
+                jobDefinitionCompatibility: 'Essentially, anything that can run on ECS can run on AWS Batch. This compatibility makes AWS Batch very useful.',
+
+                // Example Use Case
+                section3Title: 'Example Use Case: Image Processing',
+                useCaseIntro: 'Consider processing images submitted by users into Amazon S3 in a batch manner:',
+                useCaseStep1: 'An image is uploaded to Amazon S3, which triggers a batch job.',
+                useCaseStep2: 'AWS Batch automatically manages the ECS cluster (composed of EC2/Spot Instances), ensuring the right number of instances are available to run your <b>Docker images</b> (which perform the processing, e.g., applying filters).',
+                useCaseStep3: 'The processed object (image) is then stored into another Amazon S3 bucket.',
+                useCaseConclusion: 'AWS Batch ensures compute resources are always ready for the fluctuating job load.',
+
+                // AWS Batch vs. AWS Lambda
+                section4Title: 'Comparison: AWS Batch vs. AWS Lambda',
+                
+                // Lambda
+                lambda1: '<b>Time Limit:</b> Limited to 15 minutes.',
+                lambda2: '<b>Runtime:</b> Supports only a few programming languages.',
+                lambda3: '<b>Storage:</b> Limited temporary disk space.',
+                lambda4: '<b>Model:</b> <b>Serverless</b> (No server management needed).',
+                
+                // Batch
+                batch1: '<b>Time Limit:</b> <b>No time limit</b> (relies on EC2 instances).',
+                batch2: '<b>Runtime:</b> Supports <b>any runtime</b> (as long as it\'s packaged as a Docker image).',
+                batch3: '<b>Storage:</b> Uses <b>EBS volumes</b> or instance store (significantly more disk space).',
+                batch4: '<b>Model:</b> <b>Managed Service</b> (AWS manages EC2 creation and auto scaling).',
+
+                // Key Takeaways
+                section5Title: 'Summary & Key Takeaways',
+                takeaways: [
+                    '<b>AWS Batch</b>: A fully managed batch processing service that efficiently runs hundreds of thousands of jobs at any scale.',
+                    'A <b>Batch Job</b> has a <b>defined start and end time</b>.',
+                    'AWS Batch <b>dynamically provisions</b> <b>EC2 or Spot Instances</b>, optimizing cost and infrastructure management.',
+                    'Differs from Lambda by having <b>no time limits</b>, supporting <b>any runtime</b> via Docker, and relying on managed EC2 instances.'
+                ]
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        function updateContent() {
+            const langData = content[currentLanguage];
+            document.title = langData.pageTitle;
+            document.documentElement.lang = currentLanguage;
+
+            document.getElementById('langToggleVi').textContent = 'VI';
+            document.getElementById('langToggleEn').textContent = 'EN';
+            
+            document.getElementById('introTitle').innerHTML = `${langData.introTitle} <i class="fas fa-layer-group mr-3 text-white"></i>`;
+            document.getElementById('section1Title').textContent = langData.section1Title;
+            
+            // SỬA LỖI: Dùng innerHTML để thẻ <b> được định dạng
+            document.getElementById('section1Definition').innerHTML = langData.section1Definition; 
+            
+            document.getElementById('batchJobTitle').innerHTML = `${langData.batchJobTitle} <i class="fas fa-calendar-check ml-2"></i>`;
+            // SỬA LỖI: Dùng innerHTML
+            document.getElementById('batchJobDefinition').innerHTML = langData.batchJobDefinition; 
+            
+            // Dynamic Provisioning & Job Definition
+            document.getElementById('section2Title').innerHTML = `${langData.section2Title} <i class="fas fa-sitemap ml-2"></i>`;
+            document.getElementById('provisioningTitle').innerHTML = `${langData.provisioningTitle} <i class="fas fa-bolt ml-2"></i>`;
+            
+            // SỬA LỖI: Dùng innerHTML cho đoạn text bị lỗi in đậm
+            document.getElementById('provisioningDesc').innerHTML = langData.provisioningDesc; 
+            
+            document.getElementById('provisioningNote').innerHTML = langData.provisioningNote;
+            
+            document.getElementById('jobDefinitionTitle').innerHTML = `${langData.jobDefinitionTitle} <i class="fas fa-docker ml-2"></i>`;
+            
+            // SỬA LỖI: Dùng innerHTML
+            document.getElementById('jobDefinitionDesc').innerHTML = langData.jobDefinitionDesc; 
+            
+            document.getElementById('jobDefinitionCompatibility').innerHTML = langData.jobDefinitionCompatibility;
+
+            // Example Use Case
+            document.getElementById('section3Title').innerHTML = `${langData.section3Title} <i class="fas fa-images ml-2"></i>`;
+            document.getElementById('useCaseIntro').textContent = langData.useCaseIntro;
+            document.getElementById('useCaseStep1').innerHTML = `<i class="fas fa-upload mr-3 mt-1 text-primary-color flex-shrink-0"></i> ${langData.useCaseStep1}`;
+            document.getElementById('useCaseStep2').innerHTML = `<i class="fas fa-cogs mr-3 mt-1 text-accent-color flex-shrink-0"></i> ${langData.useCaseStep2}`;
+            document.getElementById('useCaseStep3').innerHTML = `<i class="fas fa-cloud-download-alt mr-3 mt-1 text-primary-color flex-shrink-0"></i> ${langData.useCaseStep3}`;
+            document.getElementById('useCaseConclusion').textContent = langData.useCaseConclusion;
+
+            // AWS Batch vs. AWS Lambda
+            document.getElementById('section4Title').innerHTML = `${langData.section4Title} <i class="fas fa-balance-scale-left ml-2"></i>`;
+            
+            // SỬA LỖI: Dùng innerHTML cho phần so sánh
+            document.getElementById('lambda1').innerHTML = langData.lambda1;
+            document.getElementById('lambda2').innerHTML = langData.lambda2;
+            document.getElementById('lambda3').innerHTML = langData.lambda3;
+            document.getElementById('lambda4').innerHTML = langData.lambda4;
+            
+            // SỬA LỖI: Dùng innerHTML cho phần so sánh
+            document.getElementById('batch1').innerHTML = langData.batch1;
+            document.getElementById('batch2').innerHTML = langData.batch2;
+            document.getElementById('batch3').innerHTML = langData.batch3;
+            document.getElementById('batch4').innerHTML = langData.batch4;
+
+
+            // Key Takeaways
+            document.getElementById('section5Title').innerHTML = `${langData.section5Title} <i class="fas fa-check-circle ml-2 text-white"></i>`;
+
+            // Update Language Toggle Buttons
+            updateLanguageButtons();
+
+            // Update Key Takeaways
+            const takeawaysContainer = document.getElementById('takeawaysContainer');
+            takeawaysContainer.innerHTML = '';
+            langData.takeaways.forEach(t => {
+                const item = `
+                    <li class="flex items-start space-x-3 text-white p-3 bg-gray-600 rounded-lg">
+                        <i class="fas fa-star text-lg text-primary-color mt-1 flex-shrink-0"></i>
+                        <span class="text-base leading-relaxed">${t}</span>
+                    </li>
+                `;
+                takeawaysContainer.innerHTML += item;
+            });
+        }
+
+        function updateLanguageButtons() {
+            const langToggleVi = document.getElementById('langToggleVi');
+            const langToggleEn = document.getElementById('langToggleEn');
+
+            const activeClass = 'bg-accent-color';
+            const inactiveClass = 'text-white hover:bg-white/30';
+
+            langToggleVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'vi' ? activeClass : inactiveClass}`;
+            langToggleEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            document.getElementById('langToggleVi').addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            document.getElementById('langToggleEn').addEventListener('click', () => {
+                currentLanguage = 'en';
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

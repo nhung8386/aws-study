@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">AWS Well-Architected Framework và Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #10b981; /* Emerald 500 - Efficiency/Sustainability */
+            --accent-color: #059669;  /* Emerald 600 - Reliability/Deep Color */
+            --secondary-color: #3b82f6; /* Blue 500 - Knowledge/Structure */
+            --background-color: #ecfdf5; /* Emerald 50 */
+            --text-color: #1f2937;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .header-bg {
+            background-color: var(--accent-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .section-title {
+            color: var(--secondary-color);
+            font-weight: 800;
+            border-bottom: 3px solid var(--secondary-color);
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .pillar-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.25rem;
+            background-color: #f0fdf4; /* Green 50 */
+            border-left: 4px solid var(--primary-color);
+            border-radius: 0.5rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            transition: background-color 0.2s;
+        }
+        .pillar-item i {
+            color: var(--secondary-color);
+        }
+        .guideline-item {
+            padding: 0.5rem 0;
+            border-bottom: 1px dashed #e5e7eb;
+        }
+        b {
+            font-weight: 700 !important;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-balance-scale mr-3 text-white"></i>
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Introduction and Core Idea -->
+        <section class="card p-8 shadow-xl bg-white border-b-4 border-primary-color">
+            <h2 id="section1Title" class="text-3xl section-title mb-4 pb-2"></h2>
+            <p id="section1Definition" class="text-lg text-gray-700 leading-relaxed"></p>
+            <p id="coreIdea" class="mt-4 p-3 bg-blue-50 border-l-4 border-secondary-color font-semibold text-sm text-gray-700"></p>
+        </section>
+        
+        <!-- Section 2: Six Pillars -->
+        <section>
+            <h2 id="section2Title" class="text-3xl section-title mb-8 text-center"><i class="fas fa-th-large mr-2"></i> </h2>
+            <div class="card p-6 bg-blue-50">
+                <h3 id="pillarsTitle" class="text-2xl font-bold text-accent-color mb-4"></h3>
+                <p id="pillarsIntro" class="text-gray-600 mb-6"></p>
+                <div id="pillarsList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Pillars populated by JS -->
+                </div>
+                <p id="pillarsSynergy" class="mt-6 text-sm italic text-gray-500"></p>
+            </div>
+        </section>
+        
+        <!-- Section 3: Design Principles (Guidelines) -->
+        <section class="card p-8 bg-white shadow-lg">
+            <h2 id="section3Title" class="text-3xl font-extrabold text-accent-color mb-6"><i class="fas fa-lightbulb mr-2"></i> </h2>
+            <ul id="guidelinesList" class="space-y-3">
+                <!-- Guidelines populated by JS -->
+            </ul>
+        </section>
+
+        <!-- Section 4: The Well-Architected Tool -->
+        <section class="bg-gray-100 p-8 rounded-xl shadow-lg">
+            <h2 id="section4Title" class="text-3xl section-title mb-6 pb-2 text-center"><i class="fas fa-tools mr-2"></i> </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Tool Description -->
+                <div class="space-y-4">
+                    <h3 id="toolDescTitle" class="text-2xl font-bold text-secondary-color flex items-center"><i class="fas fa-magnifying-glass mr-2"></i> </h3>
+                    <p id="toolDesc" class="text-gray-700 leading-relaxed"></p>
+                    <p id="toolLenses" class="p-3 bg-yellow-50 border-l-4 border-yellow-500 text-sm italic text-gray-600"></p>
+                </div>
+                
+                <!-- Tool Workflow -->
+                <div class="card p-6 border-t-4 border-primary-color">
+                    <h3 id="toolWorkflowTitle" class="text-2xl font-bold text-primary-color mb-4"></h3>
+                    <ol id="toolWorkflowList" class="space-y-3">
+                         <!-- Workflow steps populated by JS -->
+                    </ol>
+                </div>
+            </div>
+            <p id="toolConclusion" class="mt-6 p-3 bg-primary-color/10 rounded-lg text-sm text-gray-700 border-l-4 border-primary-color"></p>
+        </section>
+
+        <!-- Section 5: Key Takeaways -->
+        <section class="p-8 bg-secondary-color rounded-2xl shadow-2xl">
+            <h2 id="section5Title" class="text-3xl font-extrabold mb-8 text-center"><i class="fas fa-check-circle mr-2 text-primary-color"></i> </h2>
+            <ul id="takeawaysContainer" class="space-y-4">
+                <!-- Takeaways will be populated by JS -->
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        // Icon mapping for the 6 pillars
+        const pillarIcons = {
+            'Operational Excellence': 'fas fa-cogs',
+            'Security': 'fas fa-lock',
+            'Reliability': 'fas fa-heartbeat',
+            'Performance Efficiency': 'fas fa-tachometer-alt',
+            'Cost Optimization': 'fas fa-hand-holding-dollar',
+            'Sustainability': 'fas fa-leaf'
+        };
+
+        // Content Translations using <b> for bolding.
+        const content = {
+            'vi': {
+                pageTitle: 'AWS Well-Architected Framework và Tool',
+                introTitle: 'Khung Well-Architected Framework',
+                section1Title: 'Giới Thiệu: AWS Well-Architected Framework',
+                section1Definition: 'Có một khung (framework) được gọi là <b>AWS Well-Architected Framework</b>. Đây vừa là một công cụ vừa là một khung giúp bạn xây dựng các ứng dụng chất lượng trên AWS. Bằng cách áp dụng các thực tiễn tốt nhất của Framework, bạn đạt được các kết quả mong muốn.',
+                coreIdea: 'Ý tưởng là thông qua việc triển khai các thực tiễn tốt nhất của Framework, bạn có thể xây dựng các ứng dụng <b>đáng tin cậy</b>, <b>bảo mật</b>, <b>hiệu quả</b>, và <b>tối ưu chi phí</b>.',
+                
+                // Six Pillars
+                section2Title: 'Sáu Trụ Cột của Framework',
+                pillarsTitle: 'Các Trụ Cột Chính',
+                pillarsIntro: 'Framework được xây dựng dựa trên sáu trụ cột. Bạn nên biết tên của tất cả các trụ cột này:',
+                pillars: [
+                    'Operational Excellence', 'Security', 'Reliability', 'Performance Efficiency', 'Cost Optimization', 'Sustainability'
+                ],
+                pillarsSynergy: 'Lưu ý: Các trụ cột này không nhằm mục đích cân bằng hay đánh đổi lẫn nhau; thay vào đó, chúng hoạt động <b>đồng bộ</b>. Ví dụ: Cải thiện tính xuất sắc trong vận hành thường dẫn đến tối ưu chi phí tốt hơn.',
+                
+                // Key Guidelines
+                section3Title: 'Các Nguyên Tắc Thiết Kế Chính',
+                guidelines: [
+                    '<b>Ngừng đoán nhu cầu năng lực</b> (capacity) của bạn; thay vào đó, hãy sử dụng <b>Auto Scaling Groups</b> và các tính năng tương tự.',
+                    '<b>Kiểm tra hệ thống ở quy mô sản xuất</b>. AWS cho phép bạn nhanh chóng triển khai cơ sở hạ tầng lớn để kiểm tra và sau đó tắt đi.',
+                    '<b>Tự động hóa</b> để việc thử nghiệm kiến trúc trở nên dễ dàng hơn, ví dụ: sử dụng <b>CloudFormation</b>.',
+                    'Cho phép <b>kiến trúc tiến hóa</b>. Kiến trúc của bạn có thể phát triển theo thời gian (ví dụ: từ EC2/Load Balancers sang Serverless như API Gateway/Lambda).',
+                    'Thiết kế dựa trên các <b>yêu cầu thay đổi</b>.',
+                    'Đưa ra các quyết định kiến trúc dựa trên <b>dữ liệu</b> (data).',
+                    'Cải thiện thông qua <b>game days</b>, bao gồm việc kiểm tra kiến trúc của bạn trong điều kiện giống sản xuất để xác định các cải tiến (ví dụ: mô phỏng ngày flash sale).'
+                ],
+
+                // Well-Architected Tool
+                section4Title: 'Công Cụ Hỗ Trợ: AWS Well-Architected Tool',
+                toolDescTitle: 'Đánh Giá Kiến Trúc',
+                toolDesc: '<b>Well-Architected Tool</b> là công cụ của AWS giúp bạn xem xét kiến trúc của mình dựa trên sáu trụ cột và điều chỉnh các thực tiễn tốt nhất về kiến trúc.',
+                toolLenses: 'Để định nghĩa workload, bạn áp dụng <b>Lenses</b> (Ống kính) – các bộ câu hỏi được điều chỉnh cho các kiến trúc cụ thể (ví dụ: Serverless Lens, SaaS Lens).',
+                toolWorkflowTitle: 'Quy Trình Hoạt Động Của Tool',
+                toolWorkflow: [
+                    'Bạn chọn <b>workload</b> (tải công việc) của mình (ví dụ: ứng dụng sản xuất).',
+                    'Bạn trả lời một loạt các <b>câu hỏi</b> liên quan đến sáu trụ cột.',
+                    'Bạn xem xét câu trả lời của mình.',
+                    'Bạn nhận được <b>lời khuyên</b> (videos, docs, báo cáo).',
+                    'Bạn xem kết quả trong một <b>dashboard</b>, hiển thị các rủi ro Cao, Trung bình, Thấp.'
+                ],
+                toolConclusion: 'Quá trình này hỗ trợ <b>cải tiến liên tục</b> và đảm bảo ứng dụng của bạn trở nên <b>sẵn sàng cho sản xuất</b> (production-ready) và tuân thủ các thực tiễn tốt nhất.',
+
+                // Key Takeaways
+                section5Title: 'Tóm Tắt & Điểm Chính',
+                takeaways: [
+                    '<b>AWS Well-Architected Framework</b> cung cấp các thực tiễn tốt nhất để xây dựng các ứng dụng đáng tin cậy, bảo mật, hiệu quả và tối ưu chi phí trên AWS.',
+                    'Khung Framework được cấu trúc dựa trên <b>sáu trụ cột</b> (Operational Excellence, Security, Reliability, Performance Efficiency, Cost Optimization, Sustainability).',
+                    '<b>AWS Well-Architected Tool</b> giúp xem xét workloads dựa trên các trụ cột này bằng cách trả lời các câu hỏi và nhận các đề xuất.',
+                    'Các thực tiễn thiết yếu bao gồm <b>kiểm tra liên tục</b>, <b>kiến trúc tiến hóa</b>, và cải tiến thông qua <b>game days</b>.'
+                ]
+            },
+            'en': {
+                pageTitle: 'AWS Well-Architected Framework and Tool',
+                introTitle: 'The Well-Architected Framework',
+                section1Title: 'Introduction to the AWS Well-Architected Framework',
+                section1Definition: 'There is a framework called the <b>AWS Well-Architected Framework</b>. This is both a tool and a framework that allows you to build good applications on AWS. By implementing the best practices of the Framework, you achieve desired outcomes.',
+                coreIdea: 'The core idea is that by implementing the Framework\'s best practices, you ensure your applications are <b>reliable</b>, <b>secure</b>, <b>efficient</b>, and <b>cost-effective</b>.',
+                
+                // Six Pillars
+                section2Title: 'The Six Pillars of the Framework',
+                pillarsTitle: 'The Core Pillars',
+                pillarsIntro: 'The framework is built around six pillars. You should know all these pillars by name:',
+                pillars: [
+                    'Operational Excellence', 'Security', 'Reliability', 'Performance Efficiency', 'Cost Optimization', 'Sustainability'
+                ],
+                pillarsSynergy: 'Note: These pillars are not meant to be balanced or traded off against each other; rather, they work <b>synergistically</b>. For example, improving operational excellence often leads to better cost optimization.',
+                
+                // Key Guidelines
+                section3Title: 'Key Design Principles (Guidelines)',
+                guidelines: [
+                    '<b>Stop guessing your capacity needs</b>; instead, use <b>Auto Scaling Groups</b> and similar features.',
+                    '<b>Test systems at production scale</b>. AWS allows you to quickly deploy large infrastructure for testing and then shut it down shortly after.',
+                    '<b>Automate</b> to make architectural experimentation easier, e.g., using <b>CloudFormation</b> templates.',
+                    'Allow for <b>evolutionary architectures</b>. Your architecture can evolve over time (e.g., starting with EC2/Load Balancers and moving towards Serverless like API Gateway/Lambda).',
+                    'Design based on <b>changing requirements</b>.',
+                    'Drive architecture decisions using <b>data</b>, including data movement and storage.',
+                    'Improve through <b>game days</b>, which involve testing your architecture under production-like conditions to identify improvements (e.g., simulate flash sale days).'
+                ],
+
+                // Well-Architected Tool
+                section4Title: 'The Support Tool: AWS Well-Architected Tool',
+                toolDescTitle: 'Reviewing Your Architecture',
+                toolDesc: 'The <b>Well-Architected Tool</b> is provided by AWS to help you review your architectures against the six pillars and adapt architectural best practices accordingly.',
+                toolLenses: 'To define a workload, you apply <b>Lenses</b> – sets of questions tailored to specific architectures (e.g., Serverless Lens, SaaS Lens).',
+                toolWorkflowTitle: 'The Tool Workflow',
+                toolWorkflow: [
+                    'You select your <b>workload</b> (e.g., your production application).',
+                    'You answer a series of <b>questions</b> related to the six pillars.',
+                    'You review your answers.',
+                    'You receive <b>advice</b> (videos, documentation, reports).',
+                    'You see results in a <b>dashboard</b>, showing High, Medium, and Low risks.'
+                ],
+                toolConclusion: 'This process supports <b>continuous improvement</b> and ensures your application becomes <b>production-ready</b> and compliant with best practices.',
+
+                // Key Takeaways
+                section5Title: 'Summary & Key Takeaways',
+                takeaways: [
+                    'The <b>AWS Well-Architected Framework</b> provides best practices to build reliable, secure, efficient, and cost-effective applications on AWS.',
+                    'The framework is structured around <b>six pillars</b> (Operational Excellence, Security, Reliability, Performance Efficiency, Cost Optimization, Sustainability).',
+                    'The <b>AWS Well-Architected Tool</b> helps review workloads against these pillars by answering structured questions and receiving recommendations.',
+                    'Continuous testing, architectural evolution, and improvement through <b>game days</b> are essential practices for maintaining well-architected applications.'
+                ]
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        function updateContent() {
+            const langData = content[currentLanguage];
+            document.title = langData.pageTitle;
+            document.documentElement.lang = currentLanguage;
+
+            document.getElementById('langToggleVi').textContent = 'VI';
+            document.getElementById('langToggleEn').textContent = 'EN';
+            
+            document.getElementById('introTitle').innerHTML = `${langData.introTitle} <i class="fas fa-balance-scale mr-3 text-white"></i>`;
+            document.getElementById('section1Title').textContent = langData.section1Title;
+            document.getElementById('section1Definition').innerHTML = langData.section1Definition; 
+            document.getElementById('coreIdea').innerHTML = langData.coreIdea;
+
+            // Six Pillars
+            document.getElementById('section2Title').innerHTML = `${langData.section2Title} <i class="fas fa-th-large ml-2"></i>`;
+            document.getElementById('pillarsTitle').textContent = langData.pillarsTitle;
+            document.getElementById('pillarsIntro').textContent = langData.pillarsIntro;
+            document.getElementById('pillarsSynergy').innerHTML = langData.pillarsSynergy;
+            
+            const pillarsListContainer = document.getElementById('pillarsList');
+            pillarsListContainer.innerHTML = '';
+            langData.pillars.forEach(pillar => {
+                const iconClass = pillarIcons[pillar] || 'fas fa-chevron-right';
+                pillarsListContainer.innerHTML += `
+                    <div class="pillar-item">
+                        <i class="${iconClass} mr-3 text-lg"></i>
+                        ${pillar}
+                    </div>
+                `;
+            });
+
+            // Key Guidelines
+            document.getElementById('section3Title').innerHTML = `${langData.section3Title} <i class="fas fa-lightbulb ml-2"></i>`;
+            const guidelinesList = document.getElementById('guidelinesList');
+            guidelinesList.innerHTML = '';
+            langData.guidelines.forEach((guideline, index) => {
+                guidelinesList.innerHTML += `
+                    <li class="guideline-item flex items-start">
+                        <span class="text-primary-color font-bold mr-3 text-xl flex-shrink-0">${index + 1}.</span>
+                        <span class="text-gray-700">${guideline}</span>
+                    </li>
+                `;
+            });
+
+            // Well-Architected Tool
+            document.getElementById('section4Title').innerHTML = `${langData.section4Title} <i class="fas fa-tools ml-2"></i>`;
+            document.getElementById('toolDescTitle').innerHTML = `${langData.toolDescTitle} <i class="fas fa-magnifying-glass ml-2"></i>`;
+            document.getElementById('toolDesc').innerHTML = langData.toolDesc;
+            document.getElementById('toolLenses').innerHTML = langData.toolLenses;
+            
+            document.getElementById('toolWorkflowTitle').innerHTML = langData.toolWorkflowTitle;
+            const toolWorkflowList = document.getElementById('toolWorkflowList');
+            toolWorkflowList.innerHTML = '';
+            langData.toolWorkflow.forEach((step, index) => {
+                toolWorkflowList.innerHTML += `
+                    <li class="flex items-start">
+                        <span class="text-primary-color font-extrabold mr-3 text-xl">${index + 1}.</span>
+                        <span class="text-gray-700">${step}</span>
+                    </li>
+                `;
+            });
+            document.getElementById('toolConclusion').innerHTML = langData.toolConclusion;
+
+            // Key Takeaways
+            document.getElementById('section5Title').innerHTML = `${langData.section5Title} <i class="fas fa-check-circle mr-2 text-primary-color"></i>`;
+
+            // Update Language Toggle Buttons
+            updateLanguageButtons();
+
+            // Update Key Takeaways
+            const takeawaysContainer = document.getElementById('takeawaysContainer');
+            takeawaysContainer.innerHTML = '';
+            langData.takeaways.forEach(t => {
+                const item = `
+                    <li class="flex items-start space-x-3 text-white p-3 bg-gray-700/70 rounded-lg">
+                        <i class="fas fa-star text-lg text-primary-color mt-1 flex-shrink-0"></i>
+                        <span class="text-base leading-relaxed">${t}</span>
+                    </li>
+                `;
+                takeawaysContainer.innerHTML += item;
+            });
+        }
+
+        function updateLanguageButtons() {
+            const langToggleVi = document.getElementById('langToggleVi');
+            const langToggleEn = document.getElementById('langToggleEn');
+
+            const activeClass = 'bg-primary-color';
+            const inactiveClass = 'text-white hover:bg-white/30';
+
+            langToggleVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'vi' ? activeClass : inactiveClass}`;
+            langToggleEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            document.getElementById('langToggleVi').addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            document.getElementById('langToggleEn').addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

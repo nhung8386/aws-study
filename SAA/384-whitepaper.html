@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">WhitePaper - Tài Liệu Thiết Yếu cho Kiến Trúc Sư Giải Pháp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #3b82f6; /* Blue 500 - Knowledge/Professionalism */
+            --accent-color: #1e3a8a;  /* Blue 900 - Depth/Academia */
+            --highlight-color: #fcd34d; /* Yellow 300 - Importance */
+            --background-color: #eff6ff; /* Blue 50 */
+            --text-color: #1f2937;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .header-bg {
+            background-color: var(--accent-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .section-title {
+            color: var(--accent-color);
+            font-weight: 800;
+            border-bottom: 3px solid var(--primary-color);
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .resource-tag {
+            display: inline-flex;
+            align-items: center;
+            background-color: var(--highlight-color);
+            color: var(--accent-color);
+            padding: 0.35rem 0.75rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        .focus-box {
+            background-color: #dbeafe; /* Blue 200 */
+            border-left: 5px solid var(--primary-color);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+        }
+        b {
+            font-weight: 700 !important;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-scroll mr-3 text-white"></i>
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Introduction and Importance -->
+        <section class="card p-8 shadow-xl bg-white border-b-4 border-primary-color">
+            <h2 id="section1Title" class="text-3xl section-title mb-4 pb-2"></h2>
+            <p id="section1Definition" class="text-lg text-gray-700 leading-relaxed"></p>
+            <div class="mt-6 focus-box">
+                <p id="focusPoints" class="text-lg font-semibold text-accent-color"></p>
+            </div>
+        </section>
+        
+        <!-- Section 2: Core Documents and Tools -->
+        <section>
+            <h2 id="section2Title" class="text-3xl font-extrabold text-accent-color text-center mb-8"><i class="fas fa-book-reader mr-2"></i> </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Document Focus -->
+                <div class="card space-y-4 border-t-4 border-primary-color">
+                    <h3 id="docTitle" class="text-2xl font-bold text-primary-color flex items-center"><i class="fas fa-file-alt mr-2"></i> </h3>
+                    <p id="docDesc" class="text-gray-700"></p>
+                    <div class="mt-4 flex flex-wrap" id="docTags">
+                        <!-- Tags populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Practical Tools -->
+                <div class="card space-y-4 border-t-4 border-accent-color">
+                    <h3 id="toolTitle" class="text-2xl font-bold text-accent-color flex items-center"><i class="fas fa-tools mr-2"></i> </h3>
+                    <p id="toolDesc" class="text-gray-700"></p>
+                    <div class="mt-4 flex flex-wrap" id="toolTags">
+                         <!-- Tags populated by JS -->
+                    </div>
+                </div>
+            </div>
+            <p id="realWorldNote" class="mt-8 p-4 bg-yellow-100 rounded-lg text-sm text-gray-700 border-l-4 border-highlight-color"></p>
+        </section>
+        
+        <!-- Section 3: Final Reminder -->
+        <section class="text-center p-8 bg-accent-color rounded-2xl shadow-2xl">
+            <h2 id="section3Title" class="text-3xl font-extrabold text-white mb-4"></h2>
+            <p id="finalConfidence" class="text-lg text-blue-200 italic"></p>
+            <button class="mt-6 px-6 py-3 bg-primary-color text-white font-bold rounded-full shadow-lg hover:bg-blue-600 transition duration-300">
+                <i class="fas fa-arrow-right mr-2"></i> <span id="startButton">Bắt Đầu Ngay</span>
+            </button>
+        </section>
+
+        <!-- Section 4: Key Takeaways -->
+        <section class="p-8 bg-gray-100 rounded-2xl shadow-lg">
+            <h2 id="section4Title" class="text-3xl font-extrabold text-accent-color mb-8 text-center"><i class="fas fa-key mr-2 text-primary-color"></i> </h2>
+            <ul id="takeawaysContainer" class="space-y-4">
+                <!-- Takeaways will be populated by JS -->
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        // Content Translations using <b> for bolding.
+        const content = {
+            'vi': {
+                pageTitle: 'WhitePaper - Tài Liệu Thiết Yếu cho Kiến Trúc Sư Giải Pháp',
+                introTitle: 'Tài Liệu Chuyên Sâu & Kiến Trúc',
+                section1Title: 'Giới Thiệu: Tài Liệu Chuyên Sâu và Kiến Trúc',
+                section1Definition: 'Phần này được dành riêng cho việc nghiên cứu các <b>White Papers</b> (Tài liệu chuyên sâu) và một số tài liệu kiến trúc. Mặc dù những tài liệu này không bắt buộc hoàn toàn cho kỳ thi, việc có sự hiểu biết cơ bản về <b>Well-Architected Framework</b> và <b>Disaster Recovery</b> là vô cùng cần thiết.',
+                focusPoints: 'Chúng ta sẽ khám phá Whitepaper về <b>Well-Architected Framework</b>. Tôi sẽ cố gắng làm cho phần này hấp dẫn nhất có thể, mặc dù có thể một số người sẽ thấy nó ít cuốn hút. Hơn nữa, chúng ta sẽ xem xét Whitepaper về <b>Disaster Recovery on AWS</b>.',
+                
+                // Core Documents and Tools
+                section2Title: 'Tài Liệu Cốt Lõi và Công Cụ Thực Tiễn',
+                docTitle: 'Tài Liệu Nền Tảng',
+                docDesc: 'Việc nắm vững những tài liệu này là <b>cực kỳ quan trọng</b> cho việc chuẩn bị cho kỳ thi và thực hành nghề nghiệp.',
+                docTags: [
+                    'Well-Architected Framework Whitepaper', 'Disaster Recovery on AWS Whitepaper', 'Reference Architecture'
+                ],
+                
+                toolTitle: 'Công Cụ Hỗ Trợ Thực Tiễn',
+                toolDesc: 'Các công cụ này được thiết kế cho ứng dụng thực tế, giúp bạn trở thành một <b>Kiến trúc sư Giải pháp</b> giỏi hơn. Chúng cung cấp các liên kết và công cụ quan trọng.',
+                toolTags: [
+                    'Well-Architected Tool (Tuyệt vời)', 'AWS Trusted Advisor'
+                ],
+                realWorldNote: 'Các tài liệu và công cụ này được thiết kế để áp dụng trong thế giới thực. Chúng sẽ đóng vai trò là các liên kết và công cụ quan trọng cho bạn với tư cách là một kiến trúc sư giải pháp. Hãy nhớ rằng: <b>sự hiểu biết cơ bản là thiết yếu cho kỳ thi</b>.',
+
+                // Final Reminder
+                section3Title: 'Sẵn Sàng Bắt Đầu',
+                finalConfidence: 'Mặc dù tài liệu có vẻ hơi nhàm chán, tôi tin chắc rằng sau khi xem xét, bạn sẽ thấy nó <b>khá thú vị và vô cùng quan trọng</b>.',
+                startButton: 'Bắt Đầu Ngay',
+                
+                // Key Takeaways
+                section4Title: 'Điểm Chính Cần Ghi Nhớ',
+                takeaways: [
+                    'Phần này tập trung vào việc nghiên cứu các <b>white paper</b> và <b>tài liệu kiến trúc</b> liên quan đến AWS.',
+                    'Hiểu rõ về <b>Well-Architected Framework</b> và <b>Disaster Recovery</b> là thiết yếu, đặc biệt cho kỳ thi.',
+                    '<b>Well-Architected Tool</b> và <b>AWS Trusted Advisor</b> cung cấp tài nguyên thực tiễn cho các kiến trúc sư giải pháp.',
+                    'Mặc dù một số tài liệu có vẻ kém hấp dẫn, chúng rất quan trọng cho việc chuẩn bị kỳ thi và thực hành nghề nghiệp.'
+                ]
+            },
+            'en': {
+                pageTitle: 'WhitePaper - Essential Documents for Solutions Architect',
+                introTitle: 'White Papers & Architecture Docs',
+                section1Title: 'Introduction to White Papers and Architecture Documents',
+                section1Definition: 'This section is dedicated to studying <b>white papers</b> and several architecture documents. While these materials are not strictly required for the exam, it is essential to have a basic understanding of the <b>Well-Architected Framework</b> and <b>Disaster Recovery</b>.',
+                focusPoints: 'We will explore the <b>Well-Architected Framework</b> whitepaper. I will strive to make this as engaging as possible, although some may find it less fascinating. Additionally, we will review the <b>Disaster Recovery on AWS</b> whitepaper.',
+                
+                // Core Documents and Tools
+                section2Title: 'Core Documents and Practical Tools',
+                docTitle: 'Foundational Documents',
+                docDesc: 'Mastering these documents is <b>critically important</b> for exam preparation and professional practice.',
+                docTags: [
+                    'Well-Architected Framework Whitepaper', 'Disaster Recovery on AWS Whitepaper', 'Reference Architecture'
+                ],
+                
+                toolTitle: 'Practical Support Tools',
+                toolDesc: 'These tools are designed for practical, real-world application, helping you become a better <b>Solutions Architect</b>. They serve as important links and tools.',
+                toolTags: [
+                    'Well-Architected Tool (Excellent)', 'AWS Trusted Advisor'
+                ],
+                realWorldNote: 'These resources are designed for practical, real-world application. They will serve as important links and tools for you as a solutions architect. Remember: <b>a basic understanding is essential for the exam</b>.',
+
+                // Final Reminder
+                section3Title: 'Ready to Dive In',
+                finalConfidence: 'Although this material may seem somewhat dull, I am confident you will find it <b>quite interesting and highly crucial</b> by the end of this review.',
+                startButton: 'Let\'s Get Started',
+                
+                // Key Takeaways
+                section4Title: 'Key Takeaways',
+                takeaways: [
+                    'The section focuses on studying <b>white papers</b> and <b>architecture documents</b> relevant to AWS.',
+                    'Understanding the <b>Well-Architected Framework</b> and <b>Disaster Recovery</b> is essential, especially for the exam.',
+                    'The <b>Well-Architected Tool</b> and <b>AWS Trusted Advisor</b> provide practical resources for real-world solutions architects.',
+                    'Although some materials may seem less engaging, they are important for exam preparation and professional practice.'
+                ]
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        function updateContent() {
+            const langData = content[currentLanguage];
+            document.title = langData.pageTitle;
+            document.documentElement.lang = currentLanguage;
+
+            document.getElementById('langToggleVi').textContent = 'VI';
+            document.getElementById('langToggleEn').textContent = 'EN';
+            
+            document.getElementById('introTitle').innerHTML = `${langData.introTitle} <i class="fas fa-scroll mr-3 text-white"></i>`;
+            document.getElementById('section1Title').textContent = langData.section1Title;
+            document.getElementById('section1Definition').innerHTML = langData.section1Definition; 
+            document.getElementById('focusPoints').innerHTML = langData.focusPoints;
+
+            // Core Documents and Tools
+            document.getElementById('section2Title').innerHTML = `${langData.section2Title} <i class="fas fa-book-reader ml-2"></i>`;
+            
+            document.getElementById('docTitle').innerHTML = `${langData.docTitle} <i class="fas fa-file-alt ml-2"></i>`;
+            document.getElementById('docDesc').innerHTML = langData.docDesc;
+
+            // Document Tags
+            const docTagsContainer = document.getElementById('docTags');
+            docTagsContainer.innerHTML = '';
+            langData.docTags.forEach(tag => {
+                docTagsContainer.innerHTML += `<span class="resource-tag"><i class="fas fa-clipboard-list mr-2"></i> ${tag}</span>`;
+            });
+
+            document.getElementById('toolTitle').innerHTML = `${langData.toolTitle} <i class="fas fa-tools ml-2"></i>`;
+            document.getElementById('toolDesc').innerHTML = langData.toolDesc;
+            
+            // Tool Tags
+            const toolTagsContainer = document.getElementById('toolTags');
+            toolTagsContainer.innerHTML = '';
+            langData.toolTags.forEach(tag => {
+                toolTagsContainer.innerHTML += `<span class="resource-tag"><i class="fas fa-wrench mr-2"></i> ${tag}</span>`;
+            });
+            
+            document.getElementById('realWorldNote').innerHTML = langData.realWorldNote;
+
+            // Final Reminder
+            document.getElementById('section3Title').textContent = langData.section3Title;
+            document.getElementById('finalConfidence').textContent = langData.finalConfidence;
+            document.getElementById('startButton').textContent = langData.startButton;
+
+            // Key Takeaways
+            document.getElementById('section4Title').innerHTML = `${langData.section4Title} <i class="fas fa-key ml-2 text-primary-color"></i>`;
+
+            // Update Language Toggle Buttons
+            updateLanguageButtons();
+
+            // Update Key Takeaways
+            const takeawaysContainer = document.getElementById('takeawaysContainer');
+            takeawaysContainer.innerHTML = '';
+            langData.takeaways.forEach(t => {
+                const item = `
+                    <li class="flex items-start space-x-3 text-gray-700 p-3 bg-white rounded-lg border border-primary-color/30">
+                        <i class="fas fa-check-square text-lg text-primary-color mt-1 flex-shrink-0"></i>
+                        <span class="text-base leading-relaxed">${t}</span>
+                    </li>
+                `;
+                takeawaysContainer.innerHTML += item;
+            });
+        }
+
+        function updateLanguageButtons() {
+            const langToggleVi = document.getElementById('langToggleVi');
+            const langToggleEn = document.getElementById('langToggleEn');
+
+            const activeClass = 'bg-primary-color';
+            const inactiveClass = 'text-white hover:bg-white/30';
+
+            langToggleVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'vi' ? activeClass : inactiveClass}`;
+            langToggleEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            document.getElementById('langToggleVi').addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            document.getElementById('langToggleEn').addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

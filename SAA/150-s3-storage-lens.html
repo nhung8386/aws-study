@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">S3 Storage Lens - Phân Tích & Tối Ưu Hóa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #10b981; /* Emerald 500 - Optimization */
+            --accent-color: #2563eb;  /* Blue 600 - Analytics */
+            --text-color: #1f2937;
+            --background-color: #f0fdf4; /* Green 50 */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .header-bg {
+            background-color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .info-card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+            border-top: 5px solid var(--accent-color);
+        }
+        .metric-category {
+            background-color: #f7fee7; /* Lime 50 */
+            border-left: 4px solid var(--primary-color);
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        b {
+            font-weight: 700 !important;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-chart-line mr-3 text-white"></i>
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Introduction & Scope -->
+        <section class="info-card p-8 bg-white shadow-xl">
+            <h2 id="section1Title" class="text-3xl font-extrabold text-accent-color mb-4 border-b-2 pb-2 border-primary-color"></h2>
+            <p id="section1Definition" class="text-lg text-gray-700 leading-relaxed"></p>
+            
+            <div class="mt-6 p-4 bg-primary-color/10 rounded-lg border-l-4 border-primary-color">
+                <b id="scopeTitle" class="text-accent-color text-xl mb-2 block flex items-center"><i class="fas fa-sitemap mr-3"></i></b>
+                <p id="scopeContent" class="text-gray-600"></p>
+            </div>
+        </section>
+        
+        <!-- Section 2: Default Dashboard & Features -->
+        <section>
+            <h2 id="section2Title" class="text-3xl font-extrabold text-text-color mb-6 text-center"><i class="fas fa-tachometer-alt mr-2 text-accent-color"></i> </h2>
+            <div class="info-card">
+                <b id="dashboardTitle" class="text-xl text-primary-color mb-2 block"></b>
+                <p id="dashboardContent" class="text-gray-700 mb-4"></p>
+                <ul id="dashboardDetails" class="space-y-2 text-sm text-gray-600 list-disc pl-5">
+                    <!-- Dashboard details will be populated by JS -->
+                </ul>
+                <p id="dashboardNote" class="mt-4 p-3 text-sm text-red-600 bg-red-50 rounded-lg border-l-4 border-red-400"></p>
+            </div>
+        </section>
+        
+        <!-- Section 3: Available Metrics -->
+        <section>
+            <h2 id="section3Title" class="text-3xl font-extrabold text-text-color mb-6 text-center"><i class="fas fa-search-dollar mr-2 text-primary-color"></i> </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="metricsContainer">
+                <!-- Metric Categories will be populated by JS -->
+            </div>
+        </section>
+
+        <!-- Section 4: Free vs Paid Metrics -->
+        <section class="p-8 bg-accent-color/10 rounded-xl shadow-lg">
+            <h2 id="section4Title" class="text-3xl font-extrabold text-accent-color mb-8 text-center"><i class="fas fa-hand-holding-usd mr-2"></i> </h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+                <!-- Free Metrics -->
+                <div class="p-5 rounded-xl border-2 border-primary-color/50 bg-white shadow-lg">
+                    <b id="freeTitle" class="text-2xl font-bold text-primary-color mb-3 flex items-center"></b>
+                    <p id="freeContent" class="text-gray-600 mb-4"></p>
+                    <div id="freeBadges" class="space-x-2 space-y-2">
+                        <span class="badge bg-primary-color text-white">~28 Metrics</span>
+                        <span class="badge bg-gray-200 text-gray-700" id="freeRetention"></span>
+                    </div>
+                </div>
+
+                <!-- Paid Metrics -->
+                <div class="p-5 rounded-xl border-2 border-accent-color/50 bg-white shadow-lg">
+                    <b id="paidTitle" class="text-2xl font-bold text-accent-color mb-3 flex items-center"></b>
+                    <p id="paidContent" class="text-gray-600 mb-4"></p>
+                    <div id="paidBadges" class="space-x-2 space-y-2">
+                        <span class="badge bg-accent-color text-white" id="prefixLevel"></span>
+                        <span class="badge bg-gray-200 text-gray-700" id="paidRetention"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Key Takeaways -->
+        <section class="p-8 bg-primary-color/10 rounded-xl shadow-lg">
+            <h2 id="section5Title" class="text-3xl font-extrabold text-primary-color mb-8 text-center"><i class="fas fa-thumbtack mr-2"></i> </h2>
+            <ul id="takeawaysContainer" class="space-y-4">
+                <!-- Takeaways will be populated by JS -->
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        // Content Translations using <b> for bolding.
+        const content = {
+            'vi': {
+                pageTitle: 'S3 Storage Lens - Phân Tích & Tối Ưu Hóa',
+                introTitle: 'Giới Thiệu S3 Storage Lens',
+                section1Title: 'S3 Storage Lens: Phân Tích Toàn Diện',
+                section1Definition: '<b>S3 Storage Lens</b> là một dịch vụ được thiết kế để giúp bạn hiểu rõ, phân tích và <b>tối ưu hóa lưu trữ</b> trên toàn bộ <b>AWS Organization</b> của bạn. Nó cho phép bạn phát hiện các bất thường, xác định các cơ hội tiết kiệm chi phí và áp dụng các phương pháp bảo vệ tốt nhất.',
+                scopeTitle: 'Phạm Vi Báo Cáo',
+                scopeContent: 'Bạn nhận được các số liệu sử dụng và hoạt động trong 30 ngày, có thể được tổng hợp ở nhiều cấp độ: <b>Organization</b>, tài khoản cụ thể, Vùng (Regions), Buckets, hoặc thậm chí theo tiền tố (Prefixes). Dữ liệu có thể được xuất ra S3 bucket dưới dạng <b>CSV</b> hoặc <b>Parquet</b>.',
+                
+                // Default Dashboard
+                section2Title: 'Tổng Quan về Dashboard Mặc Định',
+                dashboardTitle: 'Dashboard Mặc Định (Default Dashboard)',
+                dashboardContent: 'Dashboard này cung cấp các thông tin tổng hợp và xu hướng cho cả số liệu miễn phí và nâng cao. Nó hiển thị dữ liệu trên <b>nhiều Vùng và Tài khoản</b> mà không cần cấu hình bộ lọc đặc biệt.',
+                dashboardDetails: [
+                    'Cung cấp thông tin tổng thể như tổng dung lượng lưu trữ, số lượng đối tượng (object count), kích thước đối tượng trung bình, số lượng bucket và tài khoản.',
+                    'Cho phép xem chi tiết theo từng tài khoản hoặc từng Vùng.',
+                    'Có sẵn các tùy chọn để chọn Vùng, tài khoản, bucket, lớp lưu trữ để phân tích.'
+                ],
+                dashboardNote: 'Lưu ý: Bạn không thể xóa <b>Default Dashboard</b>, nhưng có thể tắt (disable) nó nếu muốn.',
+
+                // Metrics
+                section3Title: 'Các Loại Số Liệu (Metrics) Chính',
+                metrics: [
+                    {
+                        title: 'Tóm Tắt (Summary Metrics)',
+                        icon: 'fas fa-chart-bar',
+                        useCase: '<b>Storage Bytes</b> và <b>Object Counts</b>. Giúp xác định các bucket đang phát triển nhanh nhất hoặc các bucket không được sử dụng.',
+                        color: 'text-primary-color'
+                    },
+                    {
+                        title: 'Tối Ưu Chi Phí (Cost Optimization Metrics)',
+                        icon: 'fas fa-money-bill-wave',
+                        useCase: '<b>Non-current Version Storage Bytes</b> (dữ liệu phiên bản cũ) và <b>Incomplete Multi-part Upload Storage Bytes</b> (dữ liệu tải lên dở dang). Giúp xác định dữ liệu có thể dọn dẹp hoặc chuyển sang lớp lưu trữ rẻ hơn.',
+                        color: 'text-yellow-600'
+                    },
+                    {
+                        title: 'Bảo Vệ Dữ Liệu (Data Protection Metrics)',
+                        icon: 'fas fa-shield-alt',
+                        useCase: 'Số lượng bucket có <b>Versioning</b>, <b>MFA Delete</b>, <b>SSE-KMS</b>, và <b>Cross-Region Replication</b>. Giúp xác định các bucket không tuân thủ các thực hành bảo vệ dữ liệu tốt nhất.',
+                        color: 'text-red-600'
+                    },
+                    {
+                        title: 'Hoạt Động (Activity Metrics)',
+                        icon: 'fas fa-stream',
+                        useCase: 'Thông tin về các yêu cầu <b>GET</b>, <b>PUT</b>, số lượng bytes đã tải xuống (bytes downloaded), v.v.',
+                        color: 'text-blue-600'
+                    },
+                    {
+                        title: 'Quản Lý Truy Cập (Access Management Metrics)',
+                        icon: 'fas fa-user-lock',
+                        useCase: 'Cấu hình sở hữu bucket (Ownership settings). Giúp bạn xác định cấu hình sở hữu mà các bucket của bạn hiện đang sử dụng.',
+                        color: 'text-purple-600'
+                    },
+                    {
+                        title: 'Mã Trạng Thái HTTP (HTTP Status Code Metrics)',
+                        icon: 'fas fa-exclamation-circle',
+                        useCase: 'Các số liệu quanh mã trạng thái HTTP như <b>200 OK</b>, <b>403 Forbidden</b>, v.v. Giúp hiểu loại hình sử dụng mà các bucket đang nhận được.',
+                        color: 'text-orange-600'
+                    }
+                ],
+
+                // Free vs Paid
+                section4Title: 'So Sánh: Số Liệu Miễn Phí và Trả Phí',
+                freeTitle: 'Số Liệu Miễn Phí (Free Metrics)',
+                freeContent: 'Bao gồm khoảng 28 số liệu sử dụng cơ bản. Tự động có sẵn cho tất cả khách hàng.',
+                freeRetention: 'Lưu trữ 14 ngày',
+                paidTitle: 'Số Liệu Nâng Cao (Paid Metrics)',
+                paidContent: 'Bao gồm Hoạt động (Activity), Tối ưu chi phí nâng cao, Bảo vệ dữ liệu nâng cao và Mã Trạng thái HTTP. Có thể được xuất bản tới CloudWatch.',
+                paidRetention: 'Lưu trữ 15 tháng',
+                prefixLevel: 'Thu thập dữ liệu cấp Prefix',
+                
+                // Key Takeaways
+                section5Title: 'Điểm Chính Cần Nhớ',
+                takeaways: [
+                    '<b>S3 Storage Lens</b> cung cấp số liệu toàn diện để phân tích và tối ưu hóa lưu trữ trên toàn bộ <b>AWS Organization</b>.',
+                    'Cung cấp cả số liệu <b>Miễn phí</b> và <b>Nâng cao</b> (trả phí), bao gồm các insights về chi phí, bảo vệ dữ liệu, và hiệu suất.',
+                    '<b>Default Dashboard</b> tổng hợp dữ liệu qua nhiều tài khoản và Vùng; không thể xóa nhưng có thể tắt.',
+                    'Số liệu và báo cáo có thể được xuất ra S3 dưới dạng <b>CSV</b> hoặc <b>Parquet</b>.'
+                ]
+            },
+            'en': {
+                pageTitle: 'S3 Storage Lens - Analysis & Optimization',
+                introTitle: 'Introduction to S3 Storage Lens',
+                section1Title: 'S3 Storage Lens: Comprehensive Analysis',
+                section1Definition: '<b>S3 Storage Lens</b> is a service designed to help you understand, analyze, and <b>optimize storage</b> across your entire <b>AWS Organization</b>. It enables you to discover anomalies, identify cost efficiencies, and apply protection best practices.',
+                scopeTitle: 'Reporting Scope',
+                scopeContent: 'You receive 30-day usage and activity metrics, which can be aggregated at various levels: <b>Organization</b>, specific accounts, Regions, Buckets, or even prefixes. Metrics and reports can be exported into an S3 bucket in <b>CSV</b> or <b>Parquet</b> format.',
+                
+                // Default Dashboard
+                section2Title: 'Default Dashboard Overview',
+                dashboardTitle: 'Default Dashboard',
+                dashboardContent: 'This dashboard provides summarized insights and trends for both free and advanced metrics. It displays data across <b>multiple regions and accounts</b> without requiring special filter setup.',
+                dashboardDetails: [
+                    'Provides overall information like total storage, object count, average object size, number of buckets, and accounts.',
+                    'Allows detailed views per account or per region.',
+                    'Configuration is centralized for selecting regions, accounts, buckets, and storage classes for analysis.'
+                ],
+                dashboardNote: 'Note: You cannot delete the <b>Default Dashboard</b>, but you can disable it if desired.',
+
+                // Metrics
+                section3Title: 'Key Available Metrics',
+                metrics: [
+                    {
+                        title: 'Summary Metrics',
+                        icon: 'fas fa-chart-bar',
+                        useCase: '<b>Storage Bytes</b> and <b>Object Counts</b>. Use cases include identifying the fastest-growing or unused buckets and prefixes.',
+                        color: 'text-primary-color'
+                    },
+                    {
+                        title: 'Cost Optimization Metrics',
+                        icon: 'fas fa-money-bill-wave',
+                        useCase: '<b>Non-current Version Storage Bytes</b> and <b>Incomplete Multi-part Upload Storage Bytes</b>. Helps identify data that can be cleaned up or transitioned to lower-cost storage classes.',
+                        color: 'text-yellow-600'
+                    },
+                    {
+                        title: 'Data Protection Metrics',
+                        icon: 'fas fa-shield-alt',
+                        useCase: 'Count of buckets with <b>Versioning</b>, <b>MFA Delete</b>, <b>SSE-KMS</b>, and <b>Cross-Region Replication</b>. Helps identify buckets not following data protection best practices.',
+                        color: 'text-red-600'
+                    },
+                    {
+                        title: 'Activity Metrics',
+                        icon: 'fas fa-stream',
+                        useCase: 'Information about <b>GET</b> and <b>PUT</b> requests, number of bytes downloaded, and more.',
+                        color: 'text-blue-600'
+                    },
+                    {
+                        title: 'Access Management Metrics',
+                        icon: 'fas fa-user-lock',
+                        useCase: 'S3 bucket ownership settings. Helps you identify which ownership configurations your buckets currently use.',
+                        color: 'text-purple-600'
+                    },
+                    {
+                        title: 'HTTP Status Code Metrics',
+                        icon: 'fas fa-exclamation-circle',
+                        useCase: 'Metrics around HTTP status codes such as <b>200 OK</b>, <b>403 Forbidden</b>, and others. Helps understand the type of usage your buckets are receiving.',
+                        color: 'text-orange-600'
+                    }
+                ],
+
+                // Free vs Paid
+                section4Title: 'Comparison: Free vs. Advanced (Paid) Metrics',
+                freeTitle: 'Free Metrics',
+                freeContent: 'Includes around 28 basic usage metrics. Automatically available to all customers.',
+                freeRetention: '14 days retention',
+                paidTitle: 'Advanced (Paid) Metrics',
+                paidContent: 'Includes Activity, Advanced Cost Optimization, Advanced Data Protection, and HTTP Status Codes. Can be published to CloudWatch.',
+                paidRetention: '15 months retention',
+                prefixLevel: 'Prefix-level data collection',
+
+                // Key Takeaways
+                section5Title: 'Key Takeaways',
+                takeaways: [
+                    '<b>S3 Storage Lens</b> provides comprehensive metrics to analyze and optimize storage across an entire <b>AWS Organization</b>.',
+                    'It offers both <b>Free</b> and <b>Advanced</b> (paid) metrics, including cost optimization, data protection, and performance insights.',
+                    'The <b>Default Dashboard</b> aggregates data across multiple accounts and regions; it cannot be deleted but can be disabled.',
+                    'Metrics and reports can be exported in <b>CSV</b> or <b>Parquet</b> format.'
+                ]
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        function updateContent() {
+            const langData = content[currentLanguage];
+            document.title = langData.pageTitle;
+            document.documentElement.lang = currentLanguage;
+
+            document.getElementById('langToggleVi').textContent = 'VI';
+            document.getElementById('langToggleEn').textContent = 'EN';
+            
+            document.getElementById('introTitle').innerHTML = `${langData.introTitle} <i class="fas fa-chart-line mr-3 text-white"></i>`;
+            document.getElementById('section1Title').textContent = langData.section1Title;
+            document.getElementById('section1Definition').innerHTML = langData.section1Definition; 
+            document.getElementById('scopeTitle').innerHTML = langData.scopeTitle;
+            document.getElementById('scopeContent').innerHTML = langData.scopeContent;
+
+            // Default Dashboard
+            document.getElementById('section2Title').innerHTML = `${langData.section2Title} <i class="fas fa-tachometer-alt ml-2 text-accent-color"></i>`;
+            document.getElementById('dashboardTitle').innerHTML = langData.dashboardTitle;
+            document.getElementById('dashboardContent').innerHTML = langData.dashboardContent;
+            
+            const dashboardDetails = document.getElementById('dashboardDetails');
+            dashboardDetails.innerHTML = '';
+            langData.dashboardDetails.forEach(detail => {
+                dashboardDetails.innerHTML += `<li>${detail}</li>`;
+            });
+
+            document.getElementById('dashboardNote').innerHTML = langData.dashboardNote;
+
+            // Metrics
+            document.getElementById('section3Title').innerHTML = `${langData.section3Title} <i class="fas fa-search-dollar ml-2 text-primary-color"></i>`;
+            const metricsContainer = document.getElementById('metricsContainer');
+            metricsContainer.innerHTML = '';
+            langData.metrics.forEach(metric => {
+                const card = `
+                    <div class="metric-category border-l-4 ${metric.color}/50 bg-white shadow-sm">
+                        <b class="text-xl mb-2 flex items-center ${metric.color}"><i class="${metric.icon} mr-3"></i> ${metric.title}</b>
+                        <p class="text-gray-600 text-sm">${metric.useCase}</p>
+                    </div>
+                `;
+                metricsContainer.innerHTML += card;
+            });
+
+            // Free vs Paid
+            document.getElementById('section4Title').innerHTML = `${langData.section4Title} <i class="fas fa-hand-holding-usd ml-2"></i>`;
+            
+            // Free
+            document.getElementById('freeTitle').innerHTML = `${langData.freeTitle} <i class="fas fa-cloud mr-3"></i>`;
+            document.getElementById('freeContent').innerHTML = langData.freeContent;
+            document.getElementById('freeRetention').textContent = langData.freeRetention;
+            
+            // Paid
+            document.getElementById('paidTitle').innerHTML = `${langData.paidTitle} <i class="fas fa-chart-pie mr-3"></i>`;
+            document.getElementById('paidContent').innerHTML = langData.paidContent;
+            document.getElementById('paidRetention').textContent = langData.paidRetention;
+            document.getElementById('prefixLevel').textContent = langData.prefixLevel;
+
+            // Key Takeaways
+            document.getElementById('section5Title').innerHTML = `${langData.section5Title} <i class="fas fa-thumbtack ml-2 text-primary-color"></i>`;
+
+            // Update Key Takeaways
+            const takeawaysContainer = document.getElementById('takeawaysContainer');
+            takeawaysContainer.innerHTML = '';
+            langData.takeaways.forEach(t => {
+                const item = `
+                    <li class="flex items-start space-x-3 text-gray-700 p-3 bg-white rounded-lg shadow-sm">
+                        <i class="fas fa-check-square text-lg text-accent-color mt-1 flex-shrink-0"></i>
+                        <span class="text-base leading-relaxed">${t}</span>
+                    </li>
+                `;
+                takeawaysContainer.innerHTML += item;
+            });
+
+            // Update Language Toggle Buttons
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            const langToggleVi = document.getElementById('langToggleVi');
+            const langToggleEn = document.getElementById('langToggleEn');
+
+            const activeClass = 'bg-accent-color';
+            const inactiveClass = 'text-white hover:bg-white/30';
+
+            langToggleVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'vi' ? activeClass : inactiveClass}`;
+            langToggleEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            document.getElementById('langToggleVi').addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            document.getElementById('langToggleEn').addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Hỗ Trợ Đăng Nhập Đa Phiên AWS Console</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #10b981; /* Emerald 500 - Efficiency */
+            --accent-color: #059669;  /* Emerald 600 - Improvement */
+            --text-color: #1f2937;
+            --background-color: #ecfdf5; /* Emerald 50 */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .header-bg {
+            background-color: var(--accent-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .session-card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid var(--primary-color);
+            transition: transform 0.3s;
+        }
+        .session-step {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background-color: #f0fdf4; /* Green 50 */
+            border-radius: 0.75rem;
+            font-weight: 600;
+            color: var(--text-color);
+            border: 1px solid #d1fae5;
+        }
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 1rem;
+            background-color: #e0f2f1; /* Teal 100 */
+            border-radius: 0.75rem;
+        }
+        b {
+            font-weight: 700 !important;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-desktop mr-3 text-white"></i>
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Introduction to Multi-Session -->
+        <section class="session-card p-8 bg-white shadow-xl">
+            <h2 id="section1Title" class="text-3xl font-extrabold text-accent-color mb-4 border-b-2 pb-2 border-primary-color"></h2>
+            <p id="section1Definition" class="text-lg text-gray-700 leading-relaxed"></p>
+        </section>
+        
+        <!-- Section 2: How to Use (Steps) -->
+        <section>
+            <h2 id="section2Title" class="text-3xl font-extrabold text-text-color mb-6 text-center"><i class="fas fa-fingerprint mr-2 text-primary-color"></i> </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- Step 1 -->
+                <div class="session-step">
+                    <span class="text-3xl font-extrabold text-primary-color mr-3">1.</span>
+                    <span id="step1"></span>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="session-step">
+                    <span class="text-3xl font-extrabold text-primary-color mr-3">2.</span>
+                    <span id="step2"></span>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="session-step">
+                    <span class="text-3xl font-extrabold text-primary-color mr-3">3.</span>
+                    <span id="step3"></span>
+                </div>
+            </div>
+            
+            <p id="stepContext" class="mt-6 p-4 bg-yellow-50 text-sm border-l-4 border-yellow-400 text-gray-700">
+                <i class="fas fa-lightbulb mr-2 text-yellow-500"></i>
+            </p>
+        </section>
+        
+        <!-- Section 3: Demonstration Example -->
+        <section class="session-card">
+            <h2 id="section3Title" class="text-3xl font-extrabold text-accent-color mb-4 border-b-2 pb-2 border-primary-color"><i class="fas fa-exchange-alt mr-2"></i> </h2>
+            <div class="space-y-4 text-gray-700">
+                <p id="demoScenario" class="font-semibold"></p>
+                
+                <div class="p-4 bg-gray-100 rounded-lg">
+                    <p class="mb-2 text-sm text-gray-500">Tình huống/Scenario 1:</p>
+                    <p id="demoAccount1"></p>
+                </div>
+
+                <div class="p-4 bg-gray-200 rounded-lg">
+                    <p class="mb-2 text-sm text-gray-500">Tình huống/Scenario 2:</p>
+                    <p id="demoAccount2"></p>
+                </div>
+                
+                <p id="conclusionDemo" class="italic pt-2"></p>
+            </div>
+        </section>
+
+        <!-- Section 4: Benefits and Key Takeaways -->
+        <section>
+            <h2 id="section4Title" class="text-3xl font-extrabold text-text-color mb-6 text-center"><i class="fas fa-thumbs-up mr-2 text-primary-color"></i> </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="benefit-item">
+                    <i class="fas fa-check-circle text-2xl text-accent-color mr-3 mt-1 flex-shrink-0"></i>
+                    <p id="benefit1" class="font-medium text-gray-700"></p>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-check-circle text-2xl text-accent-color mr-3 mt-1 flex-shrink-0"></i>
+                    <p id="benefit2" class="font-medium text-gray-700"></p>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-check-circle text-2xl text-accent-color mr-3 mt-1 flex-shrink-0"></i>
+                    <p id="benefit3" class="font-medium text-gray-700"></p>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-check-circle text-2xl text-accent-color mr-3 mt-1 flex-shrink-0"></i>
+                    <p id="benefit4" class="font-medium text-gray-700"></p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Content Translations using <b> for bolding.
+        const content = {
+            'vi': {
+                pageTitle: 'Hỗ Trợ Đăng Nhập Đa Phiên AWS Console',
+                introTitle: 'Giới Thiệu Hỗ Trợ Đa Phiên AWS Console',
+                section1Title: 'Hỗ Trợ Đa Phiên (Multi-Session Support)',
+                section1Definition: 'Đây là một tính năng mới rất hữu ích. Ý tưởng là bạn có thể có một vai trò (role) hoặc tài khoản (account) cụ thể trong một trình duyệt. Tính năng này cho phép bạn có nhiều phiên đăng nhập, mỗi phiên là một tài khoản/vai trò khác nhau, <b>trong cùng một trình duyệt</b>.',
+                
+                // Steps
+                section2Title: 'Cách Thêm Phiên Đăng Nhập Mới',
+                step1: 'Kích hoạt tùy chọn Multi-Session Support trong console.',
+                step2: 'Nhấp vào <b>Add a session</b> (Thêm phiên) để đăng nhập vào một tài khoản/định danh khác.',
+                step3: 'Đăng nhập lại bằng bất kỳ ID tài khoản hoặc vai trò nào khác bạn muốn truy cập.',
+                stepContext: 'Sau khi đăng nhập, bạn sẽ thấy mình có một ID tài khoản cụ thể ở cửa sổ này và một ID tài khoản khác ở phiên khác (hoặc cửa sổ khác).',
+                
+                // Demonstration
+                section3Title: 'Minh Họa và So Sánh Giữa Các Phiên',
+                demoScenario: 'Giả sử bạn đang làm việc trên hai tài khoản khác nhau:',
+                demoAccount1: 'Trong Phiên 1 (Tài khoản A), bạn vào EC2 Console và tạo nhanh một Volume EBS 1GB. Volume này được tạo thành công.',
+                demoAccount2: 'Trong Phiên 2 (Tài khoản B) trên một cửa sổ trình duyệt khác, bạn cũng vào EC2 Console/Volumes. Bạn sẽ <b>không thấy</b> Volume EBS vừa tạo vì bạn đang sử dụng <b>phiên tài khoản khác</b>.',
+                conclusionDemo: 'Điều này chứng minh rằng bạn có thể có hai tài khoản hoạt động song song, hoàn toàn độc lập với nhau, trong cùng một trình duyệt.',
+                
+                // Benefits and Takeaways
+                section4Title: 'Lợi Ích và Điểm Chính',
+                benefit1: 'Hỗ trợ đăng nhập <b>đa phiên</b> trong cùng một trình duyệt.',
+                benefit2: 'Cho phép người dùng đăng nhập vào các tài khoản/vai trò khác nhau <b>đồng thời</b>.',
+                benefit3: 'Giúp quản lý tài nguyên trên nhiều tài khoản AWS mà <b>không cần chuyển đổi trình duyệt</b> hoặc dùng chế độ Ẩn danh (Incognito).',
+                benefit4: 'Nâng cao <b>năng suất</b> cho người dùng quản lý AWS ở quy mô lớn. Đây là một cải tiến lớn.'
+            },
+            'en': {
+                pageTitle: 'AWS Console Multi-Session Sign-in Support',
+                introTitle: 'Introduction to AWS Console Multi-Session Support',
+                section1Title: 'Multi-Session Support in AWS Console',
+                section1Definition: 'This is a very cool and helpful new feature. The idea is that you can have a specific role or account in this browser. This feature allows you to have multiple sessions, each with a different account/role, <b>within the same browser</b>.',
+                
+                // Steps
+                section2Title: 'How to Add an Additional Session',
+                step1: 'Click to turn on the Multi-Session Support option in the console.',
+                step2: 'Click on <b>Add a session</b> to sign into a different identity.',
+                step3: 'Log in again using any other account ID or role you wish to access.',
+                stepContext: 'After signing in, you will see that you have one specific account ID in this window and a different account ID in another session (or browser window).',
+                
+                // Demonstration
+                section3Title: 'Demonstration and Session Comparison',
+                demoScenario: 'Suppose you are working across two different accounts:',
+                demoAccount1: 'In Session 1 (Account A), you go to the EC2 Console and quickly create a 1GB EBS Volume. The volume is created successfully.',
+                demoAccount2: 'In Session 2 (Account B) on a different browser window, you also navigate to EC2 Console/Volumes. You will <b>not see</b> the newly created EBS Volume because you are using a <b>different account session</b>.',
+                conclusionDemo: 'This demonstrates that you can have two accounts operating simultaneously, completely independently of each other, within the same browser.',
+                
+                // Benefits and Takeaways
+                section4Title: 'Benefits and Key Takeaways',
+                benefit1: 'Supports <b>multi-session</b> sign-in within the same browser.',
+                benefit2: 'Allows users to sign into different accounts/roles <b>simultaneously</b>.',
+                benefit3: 'Enables managing resources across multiple AWS accounts <b>without switching browsers</b> or using Incognito mode.',
+                benefit4: 'Enhances <b>productivity</b> for users managing AWS at scale. This is a little revolution.'
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        function updateContent() {
+            const langData = content[currentLanguage];
+            document.title = langData.pageTitle;
+            document.documentElement.lang = currentLanguage;
+
+            document.getElementById('langToggleVi').textContent = 'VI';
+            document.getElementById('langToggleEn').textContent = 'EN';
+            
+            document.getElementById('introTitle').innerHTML = `${langData.introTitle} <i class="fas fa-desktop mr-3 text-white"></i>`;
+            document.getElementById('section1Title').textContent = langData.section1Title;
+            document.getElementById('section1Definition').innerHTML = langData.section1Definition; 
+
+            // Steps
+            document.getElementById('section2Title').innerHTML = `${langData.section2Title} <i class="fas fa-fingerprint ml-2 text-primary-color"></i>`;
+            document.getElementById('step1').innerHTML = langData.step1;
+            document.getElementById('step2').innerHTML = langData.step2;
+            document.getElementById('step3').innerHTML = langData.step3;
+            document.getElementById('stepContext').innerHTML = `<i class="fas fa-lightbulb mr-2 text-yellow-500"></i> ${langData.stepContext}`;
+
+            // Demonstration
+            document.getElementById('section3Title').innerHTML = `${langData.section3Title} <i class="fas fa-exchange-alt ml-2"></i>`;
+            document.getElementById('demoScenario').textContent = langData.demoScenario;
+            document.getElementById('demoAccount1').innerHTML = langData.demoAccount1;
+            document.getElementById('demoAccount2').innerHTML = langData.demoAccount2;
+            document.getElementById('conclusionDemo').innerHTML = langData.conclusionDemo;
+            
+            // Benefits
+            document.getElementById('section4Title').innerHTML = `${langData.section4Title} <i class="fas fa-thumbs-up ml-2 text-primary-color"></i>`;
+            document.getElementById('benefit1').innerHTML = langData.benefit1;
+            document.getElementById('benefit2').innerHTML = langData.benefit2;
+            document.getElementById('benefit3').innerHTML = langData.benefit3;
+            document.getElementById('benefit4').innerHTML = langData.benefit4;
+
+            // Update Language Toggle Buttons
+            updateLanguageButtons();
+        }
+
+        function updateLanguageButtons() {
+            const langToggleVi = document.getElementById('langToggleVi');
+            const langToggleEn = document.getElementById('langToggleEn');
+
+            const activeClass = 'bg-primary-color';
+            const inactiveClass = 'text-white hover:bg-white/30';
+
+            langToggleVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'vi' ? activeClass : inactiveClass}`;
+            langToggleEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            document.getElementById('langToggleVi').addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            document.getElementById('langToggleEn').addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

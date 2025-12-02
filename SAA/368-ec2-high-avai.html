@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="title">EC2 Instance High Availability Deep Dive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Load Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3b82f6; /* Blue 500 */
+            --secondary-color: #10b981; /* Emerald 500 */
+            --background-color: #f8fafc; /* Slate 50 */
+            --text-color: #1e293b; /* Slate 800 */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .header-bg {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #1e3a8a 100%);
+        }
+        .section-title {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 0.5rem;
+        }
+        .card {
+            background-color: white;
+            border-left: 5px solid var(--secondary-color);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .btn-active {
+            background-color: var(--secondary-color);
+        }
+        .key-point {
+            border: 1px solid #d1d5db; /* Gray 300 */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Language Toggle and Header -->
+    <div class="header-bg py-8 shadow-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center">
+                <h1 data-i18n="header.heading" class="text-4xl font-extrabold text-white tracking-tight">
+                    EC2 Instance High Availability
+                </h1>
+                <div class="flex space-x-2 p-2 bg-white/20 rounded-lg">
+                    <button id="langToggleVi" class="px-3 py-1 rounded-md font-semibold text-sm text-white hover:bg-white/30 transition duration-150">VI</button>
+                    <button id="langToggleEn" class="px-3 py-1 rounded-md font-semibold text-sm btn-active text-white transition duration-150">EN</button>
+                </div>
+            </div>
+            <p data-i18n="header.tagline" class="mt-2 text-xl text-indigo-100">
+                Architecting resilient solutions for seamless uptime.
+            </p>
+        </div>
+    </div>
+
+    <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <!-- Introduction -->
+        <section class="mb-12">
+            <h2 data-i18n="intro.title" class="text-3xl font-bold section-title mb-4">Introduction to EC2 Instance High Availability</h2>
+            <div data-i18n="intro.content" class="text-lg leading-relaxed bg-white p-6 rounded-xl shadow-md">
+                Let's discuss solution architecture to understand how we can make an EC2 instance highly available. By default, an EC2 instance is launched in one <b>Availability Zone</b> and is not <b>highly available</b>. However, we can engineer solutions to achieve <b>high availability</b>, which is the purpose of this lecture. There are different approaches depending on your requirements and the amount of work you want to undertake.
+            </div>
+        </section>
+
+        <!-- HA Strategies -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+            
+            <!-- Strategy 1: Elastic IP + Standby -->
+            <div class="card p-6 rounded-xl shadow-lg">
+                <div class="flex items-center space-x-3 mb-4">
+                    <i class="fas fa-route text-2xl text-yellow-500"></i>
+                    <h3 data-i18n="strategy1.title" class="text-xl font-bold text-gray-700">Using Elastic IP with a Standby EC2 Instance</h3>
+                </div>
+                <div data-i18n="strategy1.content" class="text-gray-600">
+                    Suppose we have a public EC2 instance running a web server. To enable access, we attach an <b>Elastic IP</b> to that EC2 instance. Users can then access the website directly through this <b>Elastic IP</b>. To achieve <b>high availability</b>, we want to have a <b>standby EC2 instance</b> in case the primary instance fails. We need a failover mechanism to switch to the standby instance when necessary.
+                </div>
+            </div>
+
+            <!-- Strategy 2: Monitoring and Failover Mechanism -->
+            <div class="card p-6 rounded-xl shadow-lg">
+                <div class="flex items-center space-x-3 mb-4">
+                    <i class="fas fa-bell text-2xl text-red-500"></i>
+                    <h3 data-i18n="strategy2.title" class="text-xl font-bold text-gray-700">Monitoring and Failover Mechanism</h3>
+                </div>
+                <div data-i18n="strategy2.content" class="text-gray-600">
+                    To detect failures, monitoring must be in place. We can create a <b>CloudWatch Event</b> or <b>CloudWatch Alarm</b> based on specific events. From the Alarm or Event, a <b>Lambda function</b> can be triggered. This <b>Lambda function</b> can perform actions such as starting the standby instance if it is not running and attaching the <b>Elastic IP</b> to the standby instance, effectively failing over without users noticing any disruption.
+                </div>
+            </div>
+            
+            <!-- Strategy 3: Auto Scaling Group Approach -->
+            <div class="card p-6 rounded-xl shadow-lg lg:col-span-2">
+                <div class="flex items-center space-x-3 mb-4">
+                    <i class="fas fa-layer-group text-2xl text-green-500"></i>
+                    <h3 data-i18n="strategy3.title" class="text-xl font-bold text-gray-700">Auto Scaling Group Approach (ASG)</h3>
+                </div>
+                <div data-i18n="strategy3.content" class="text-gray-600">
+                    Another method involves using an <b>Auto Scaling Group (ASG)</b> spanning two <b>Availability Zones</b>. We configure the <b>ASG</b> with a minimum, maximum, and desired capacity of one instance. The <b>EC2 instance's user data script</b> acquires and attaches the <b>Elastic IP</b> based on tags when it launches. If the instance fails, the <b>ASG</b> automatically launches a replacement instance in the other <b>Availability Zone</b>. The new instance runs its user data script to attach the <b>Elastic IP</b>, providing seamless failover.
+                </div>
+            </div>
+            
+            <!-- Strategy 4: Instance Role -->
+            <div class="card p-6 rounded-xl shadow-lg">
+                <div class="flex items-center space-x-3 mb-4">
+                    <i class="fas fa-key text-2xl text-indigo-500"></i>
+                    <h3 data-i18n="strategy4.title" class="text-xl font-bold text-gray-700">Instance Role for API Calls</h3>
+                </div>
+                <div data-i18n="strategy4.content" class="text-gray-600">
+                    Since the EC2 instance performs <b>API calls</b> to attach the <b>Elastic IP</b>, it must have an <b>instance role</b> with permissions to execute these <b>API calls</b> successfully. This combination of EC2 user data and <b>instance role</b> ensures the <b>Elastic IP</b> is correctly attached during instance launch.
+                </div>
+            </div>
+
+            <!-- Strategy 5: Stateful Instances with EBS -->
+            <div class="card p-6 rounded-xl shadow-lg">
+                <div class="flex items-center space-x-3 mb-4">
+                    <i class="fas fa-database text-2xl text-purple-500"></i>
+                    <h3 data-i18n="strategy5.title" class="text-xl font-bold text-gray-700">Extending to Stateful Instances with EBS Volumes</h3>
+                </div>
+                <div data-i18n="strategy5.content" class="text-gray-600">
+                    We can extend this pattern to <b>Stateful Instances</b> with attached <b>EBS volumes</b>. The <b>EBS volume</b> is locked to a specific <b>Availability Zone</b>. When the instance is terminated, the ASG can use <b>lifecycle hooks</b> to trigger scripts that create <b>snapshots</b> of the <b>EBS volume</b>. A replacement EC2 instance is launched in another <b>Availability Zone</b>, where a new <b>EBS volume</b> is created from the <b>snapshot</b> and attached. This provides a highly available EC2 instance with <b>persistent storage</b> across <b>Availability Zones</b>.
+                </div>
+            </div>
+
+        </section>
+        
+        <!-- Summary -->
+        <section class="mb-12 p-6 bg-blue-50 rounded-xl shadow-inner">
+            <h2 data-i18n="summary.title" class="text-3xl font-bold text-blue-700 mb-4">Summary</h2>
+            <p data-i18n="summary.content" class="text-lg leading-relaxed text-gray-700">
+                The possibilities for creating <b>highly available EC2 architectures</b> are extensive. While these solutions require more custom work and automation, they enable robust failover and stateful recovery mechanisms. Automation through CloudWatch, Lambda, <b>Auto Scaling Groups</b>, <b>lifecycle hooks</b>, and <b>instance roles</b> allows for seamless <b>high availability</b> of EC2 instances and their associated resources.
+            </p>
+        </section>
+
+        <!-- Key Takeaways -->
+        <section>
+            <h2 data-i18n="keytakeaways.title" class="text-3xl font-bold section-title mb-6">Key Takeaways</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Takeaway 1 -->
+                <div class="key-point p-4 rounded-xl shadow-sm bg-white hover:bg-yellow-50">
+                    <i class="fas fa-shield-alt text-lg text-yellow-600 mr-2"></i>
+                    <span data-i18n="keytakeaways.p1" class="text-gray-700 font-medium">EC2 instances are launched in a single <b>Availability Zone</b> by default and are not <b>highly available</b> without additional architecture.</span>
+                </div>
+                <!-- Takeaway 2 -->
+                <div class="key-point p-4 rounded-xl shadow-sm bg-white hover:bg-yellow-50">
+                    <i class="fas fa-exchange-alt text-lg text-yellow-600 mr-2"></i>
+                    <span data-i18n="keytakeaways.p2" class="text-gray-700 font-medium"><b>Elastic IPs</b> can be used to provide a consistent public IP address that can be reassigned to standby instances for failover.</span>
+                </div>
+                <!-- Takeaway 3 -->
+                <div class="key-point p-4 rounded-xl shadow-sm bg-white hover:bg-yellow-50">
+                    <i class="fas fa-robot text-lg text-yellow-600 mr-2"></i>
+                    <span data-i18n="keytakeaways.p3" class="text-gray-700 font-medium"><b>CloudWatch Events</b> and <b>Alarms</b> can monitor instance health and trigger <b>Lambda functions</b> to automate failover processes.</span>
+                </div>
+                 <!-- Takeaway 4 -->
+                <div class="key-point p-4 rounded-xl shadow-sm bg-white hover:bg-yellow-50">
+                    <i class="fas fa-sync-alt text-lg text-yellow-600 mr-2"></i>
+                    <span data-i18n="keytakeaways.p4" class="text-gray-700 font-medium"><b>Auto Scaling Groups</b> configured with minimum, maximum, and desired capacity of one across multiple <b>Availability Zones</b> can provide automatic replacement of failed instances.</span>
+                </div>
+                <!-- Takeaway 5 -->
+                <div class="key-point p-4 rounded-xl shadow-sm bg-white hover:bg-yellow-50">
+                    <i class="fas fa-clone text-lg text-yellow-600 mr-2"></i>
+                    <span data-i18n="keytakeaways.p5" class="text-gray-700 font-medium"><b>Lifecycle hooks</b> in <b>Auto Scaling Groups</b> enable snapshotting and restoration of <b>EBS volumes</b> to maintain stateful data across instance replacements.</span>
+                </div>
+                <!-- Takeaway 6 -->
+                <div class="key-point p-4 rounded-xl shadow-sm bg-white hover:bg-yellow-50">
+                    <i class="fas fa-cogs text-lg text-yellow-600 mr-2"></i>
+                    <span data-i18n="keytakeaways.p6" class="text-gray-700 font-medium">Combining <b>EC2 User Data scripts</b>, <b>instance roles</b>, and <b>lifecycle hooks</b> allows for automated, <b>highly available EC2 architectures</b> with stateful storage.</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-6 mt-12 bg-gray-100 text-gray-500">
+        <p data-i18n="footer.text">© 2025 EC2 High Availability Concepts.</p>
+    </footer>
+
+    <script>
+        const content_en = {
+            title: "EC2 Instance High Availability Deep Dive",
+            header: {
+                heading: "EC2 Instance High Availability",
+                tagline: "Architecting resilient solutions for seamless uptime."
+            },
+            intro: {
+                title: "Introduction to EC2 Instance High Availability",
+                content: "Let's discuss solution architecture to understand how we can make an EC2 instance highly available. By default, an EC2 instance is launched in one <b>Availability Zone</b> and is not <b>highly available</b>. However, we can engineer solutions to achieve <b>high availability</b>, which is the purpose of this lecture. There are different approaches depending on your requirements and the amount of work you want to undertake."
+            },
+            strategy1: {
+                title: "Using Elastic IP with a Standby EC2 Instance",
+                content: "Suppose we have a public EC2 instance running a web server. To enable access, we attach an <b>Elastic IP</b> to that EC2 instance. Users can then access the website directly through this <b>Elastic IP</b>. To achieve <b>high availability</b>, we want to have a <b>standby EC2 instance</b> in case the primary instance fails. We need a failover mechanism to switch to the standby instance when necessary."
+            },
+            strategy2: {
+                title: "Monitoring and Failover Mechanism",
+                content: "To detect failures, monitoring must be in place. We can create a <b>CloudWatch Event</b> or <b>CloudWatch Alarm</b> based on specific events. From the Alarm or Event, a <b>Lambda function</b> can be triggered. This <b>Lambda function</b> can perform actions such as starting the standby instance if it is not running and attaching the <b>Elastic IP</b> to the standby instance, effectively failing over without users noticing any disruption."
+            },
+            strategy3: {
+                title: "Auto Scaling Group Approach (ASG)",
+                content: "Another method involves using an <b>Auto Scaling Group (ASG)</b> spanning two <b>Availability Zones</b>. We configure the <b>ASG</b> with a minimum, maximum, and desired capacity of one instance. The <b>EC2 instance's user data script</b> acquires and attaches the <b>Elastic IP</b> based on tags when it launches. If the instance fails, the <b>ASG</b> automatically launches a replacement instance in the other <b>Availability Zone</b>. The new instance runs its user data script to attach the <b>Elastic IP</b>, providing seamless failover."
+            },
+            strategy4: {
+                title: "Instance Role for API Calls",
+                content: "Since the EC2 instance performs <b>API calls</b> to attach the <b>Elastic IP</b>, it must have an <b>instance role</b> with permissions to execute these <b>API calls</b> successfully. This combination of EC2 user data and <b>instance role</b> ensures the <b>Elastic IP</b> is correctly attached during instance launch."
+            },
+            strategy5: {
+                title: "Extending to Stateful Instances with EBS Volumes",
+                content: "We can extend this pattern to <b>Stateful Instances</b> with attached <b>EBS volumes</b>. The <b>EBS volume</b> is locked to a specific <b>Availability Zone</b>. When the instance is terminated, the ASG can use <b>lifecycle hooks</b> to trigger scripts that create <b>snapshots</b> of the <b>EBS volume</b>. A replacement EC2 instance is launched in another <b>Availability Zone</b>, where a new <b>EBS volume</b> is created from the <b>snapshot</b> and attached. This provides a highly available EC2 instance with <b>persistent storage</b> across <b>Availability Zones</b>."
+            },
+            summary: {
+                title: "Summary",
+                content: "The possibilities for creating <b>highly available EC2 architectures</b> are extensive. While these solutions require more custom work and automation, they enable robust failover and stateful recovery mechanisms. Automation through CloudWatch, Lambda, <b>Auto Scaling Groups</b>, <b>lifecycle hooks</b>, and <b>instance roles</b> allows for seamless <b>high availability</b> of EC2 instances and their associated resources."
+            },
+            keytakeaways: {
+                title: "Key Takeaways",
+                p1: "EC2 instances are launched in a single <b>Availability Zone</b> by default and are not <b>highly available</b> without additional architecture.",
+                p2: "<b>Elastic IPs</b> can be used to provide a consistent public IP address that can be reassigned to standby instances for failover.",
+                p3: "<b>CloudWatch Events</b> and <b>Alarms</b> can monitor instance health and trigger <b>Lambda functions</b> to automate failover processes.",
+                p4: "<b>Auto Scaling Groups</b> configured with minimum, maximum, and desired capacity of one across multiple <b>Availability Zones</b> can provide automatic replacement of failed instances.",
+                p5: "<b>Lifecycle hooks</b> in <b>Auto Scaling Groups</b> enable snapshotting and restoration of <b>EBS volumes</b> to maintain stateful data across instance replacements.",
+                p6: "Combining <b>EC2 User Data scripts</b>, <b>instance roles</b>, and <b>lifecycle hooks</b> allows for automated, <b>highly available EC2 architectures</b> with stateful storage."
+            },
+            footer: {
+                text: "© 2025 EC2 High Availability Concepts."
+            }
+        };
+
+        const content_vi = {
+            title: "Khám Phá Chi Tiết Tính Sẵn Sàng Cao của EC2 Instance",
+            header: {
+                heading: "Tính Sẵn Sàng Cao của EC2 Instance",
+                tagline: "Xây dựng kiến trúc kiên cường để đảm bảo thời gian hoạt động liền mạch."
+            },
+            intro: {
+                title: "Giới thiệu về Tính Sẵn Sàng Cao của EC2 Instance",
+                content: "Hãy cùng thảo luận về kiến trúc giải pháp để hiểu cách chúng ta có thể làm cho một EC2 instance có <b>tính sẵn sàng cao</b>. Theo mặc định, một EC2 instance được khởi chạy trong một <b>Vùng Sẵn Sàng (Availability Zone)</b> và không có <b>tính sẵn sàng cao</b>. Tuy nhiên, chúng ta có thể thiết kế các giải pháp để đạt được <b>tính sẵn sàng cao</b>, đây là mục đích của bài giảng này. Có nhiều cách tiếp cận khác nhau tùy thuộc vào yêu cầu và khối lượng công việc bạn muốn thực hiện."
+            },
+            strategy1: {
+                title: "Sử dụng Elastic IP với một EC2 Instance Dự phòng",
+                content: "Giả sử chúng ta có một EC2 instance công cộng đang chạy máy chủ web. Để cho phép truy cập, chúng ta gắn một <b>Elastic IP</b> vào EC2 instance đó. Người dùng sau đó có thể truy cập trang web trực tiếp thông qua <b>Elastic IP</b> này. Để đạt được <b>tính sẵn sàng cao</b>, chúng ta muốn có một <b>EC2 instance dự phòng</b> trong trường hợp instance chính bị lỗi. Chúng ta cần một cơ chế chuyển đổi dự phòng (failover) để chuyển sang instance dự phòng khi cần thiết."
+            },
+            strategy2: {
+                title: "Cơ chế Giám sát và Chuyển đổi Dự phòng (Failover)",
+                content: "Để phát hiện lỗi, cần phải có giám sát. Chúng ta có thể tạo một <b>CloudWatch Event</b> hoặc <b>CloudWatch Alarm</b> dựa trên các sự kiện cụ thể. Từ Alarm hoặc Event, một <b>Lambda function</b> có thể được kích hoạt. <b>Lambda function</b> này có thể thực hiện các hành động như khởi động instance dự phòng nếu nó chưa chạy và gắn <b>Elastic IP</b> vào instance dự phòng, thực hiện chuyển đổi dự phòng một cách hiệu quả mà người dùng không nhận thấy bất kỳ gián đoạn nào."
+            },
+            strategy3: {
+                title: "Phương pháp Auto Scaling Group (ASG)",
+                content: "Một phương pháp khác liên quan đến việc sử dụng một <b>Auto Scaling Group (ASG)</b> trải rộng trên hai <b>Vùng Sẵn Sàng</b>. Chúng ta cấu hình <b>ASG</b> với dung lượng tối thiểu, tối đa và mong muốn là một instance. <b>Script user data của EC2 instance</b> sẽ lấy và gắn <b>Elastic IP</b> dựa trên các tag khi nó khởi chạy. Nếu instance bị lỗi, <b>ASG</b> sẽ tự động khởi chạy một instance thay thế ở <b>Vùng Sẵn Sàng</b> khác. Instance mới chạy script user data để gắn <b>Elastic IP</b>, cung cấp khả năng chuyển đổi dự phòng liền mạch."
+            },
+            strategy4: {
+                title: "Vai trò Instance (Instance Role) cho các Cuộc gọi API",
+                content: "Vì EC2 instance thực hiện các <b>cuộc gọi API</b> để gắn <b>Elastic IP</b>, nó phải có một <b>vai trò instance</b> với các quyền để thực hiện thành công các <b>cuộc gọi API</b> này. Sự kết hợp giữa user data của EC2 và <b>vai trò instance</b> đảm bảo <b>Elastic IP</b> được gắn chính xác trong quá trình khởi chạy instance."
+            },
+            strategy5: {
+                title: "Mở rộng cho các Instance Có Trạng Thái (Stateful Instances) với EBS Volumes",
+                content: "Chúng ta có thể mở rộng mô hình này cho các <b>Instance Có Trạng Thái</b> với các <b>EBS volumes</b> được gắn kèm. <b>EBS volume</b> bị khóa với một <b>Vùng Sẵn Sàng</b> cụ thể. Khi instance bị chấm dứt, ASG có thể sử dụng <b>lifecycle hooks</b> để kích hoạt các script tạo <b>snapshots</b> của <b>EBS volume</b>. Một EC2 instance thay thế được khởi chạy trong một <b>Vùng Sẵn Sàng</b> khác, nơi một <b>EBS volume</b> mới được tạo từ <b>snapshot</b> và được gắn vào. Điều này cung cấp một EC2 instance sẵn sàng cao với <b>lưu trữ bền vững</b> trên các <b>Vùng Sẵn Sàng</b>."
+            },
+            summary: {
+                title: "Tóm Tắt",
+                content: "Khả năng tạo ra các <b>kiến trúc EC2 sẵn sàng cao</b> là rất rộng lớn. Mặc dù các giải pháp này đòi hỏi nhiều công việc tùy chỉnh và tự động hóa hơn, chúng cho phép các cơ chế chuyển đổi dự phòng mạnh mẽ và khôi phục trạng thái. Tự động hóa thông qua CloudWatch, Lambda, <b>Auto Scaling Groups</b>, <b>lifecycle hooks</b>, và <b>vai trò instance</b> cho phép <b>tính sẵn sàng cao</b> liền mạch của EC2 instances và các tài nguyên liên quan."
+            },
+            keytakeaways: {
+                title: "Các Điểm Chính Cần Ghi Nhớ",
+                p1: "EC2 instances được khởi chạy trong một <b>Vùng Sẵn Tàng</b> duy nhất theo mặc định và không có <b>tính sẵn sàng cao</b> nếu không có kiến trúc bổ sung.",
+                p2: "<b>Elastic IP</b> có thể được sử dụng để cung cấp địa chỉ IP công cộng nhất quán có thể được gán lại cho các instance dự phòng để chuyển đổi dự phòng.",
+                p3: "<b>CloudWatch Events</b> và <b>Alarms</b> có thể giám sát tình trạng instance và kích hoạt <b>Lambda functions</b> để tự động hóa các quy trình chuyển đổi dự phòng.",
+                p4: "<b>Auto Scaling Groups</b> được cấu hình với dung lượng tối thiểu, tối đa và mong muốn là một instance trên nhiều <b>Vùng Sẵn Sàng</b> có thể cung cấp khả năng thay thế tự động cho các instance bị lỗi.",
+                p5: "<b>Lifecycle hooks</b> trong <b>Auto Scaling Groups</b> cho phép chụp nhanh (snapshotting) và khôi phục <b>EBS volumes</b> để duy trì dữ liệu có trạng thái trên các lần thay thế instance.",
+                p6: "Kết hợp <b>script User Data của EC2</b>, <b>vai trò instance</b>, và <b>lifecycle hooks</b> cho phép các <b>kiến trúc EC2 sẵn sàng cao</b> tự động với lưu trữ có trạng thái."
+            },
+            footer: {
+                text: "© 2025 Khái niệm về Tính Sẵn Sàng Cao của EC2."
+            }
+        };
+
+        let currentLanguage = 'en';
+
+        const langToggleVi = document.getElementById('langToggleVi');
+        const langToggleEn = document.getElementById('langToggleEn');
+
+        function updateLanguageButtons() {
+            const activeClass = 'bg-white/50';
+            const inactiveClass = 'bg-white/20';
+
+            if (currentLanguage === 'vi') {
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm btn-active text-white transition duration-150`;
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm ${inactiveClass} text-white hover:bg-white/30 transition duration-150`;
+            } else {
+                langToggleEn.className = `px-3 py-1 rounded-md font-semibold text-sm btn-active text-white transition duration-150`;
+                langToggleVi.className = `px-3 py-1 rounded-md font-semibold text-sm ${inactiveClass} text-white hover:bg-white/30 transition duration-150`;
+            }
+        }
+
+        function updateContent() {
+            const dictionary = currentLanguage === 'vi' ? content_vi : content_en;
+            
+            // Update document title and body language
+            document.title = dictionary.title;
+            document.documentElement.lang = currentLanguage;
+
+            // Iterate over all elements with data-i18n attribute
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const keyPath = element.getAttribute('data-i18n');
+                
+                // Navigate nested object keys
+                let content = dictionary;
+                const keys = keyPath.split('.');
+                for (const key of keys) {
+                    content = content[key];
+                    if (content === undefined) break;
+                }
+
+                if (typeof content === 'string') {
+                    // Update content. If it contains HTML (like <b>), use innerHTML
+                    element.innerHTML = content;
+                }
+            });
+
+            updateLanguageButtons();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize content with default language (EN)
+            updateContent();
+
+            // Language toggle event listeners
+            langToggleVi.addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            langToggleEn.addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>

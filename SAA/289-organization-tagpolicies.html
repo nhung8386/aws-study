@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">AWS Organizations - Tag Policies</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #7c3aed; /* Violet 600 - Policy/Control */
+            --secondary-color: #a78bfa; /* Violet 400 */
+            --background-color: #f5f3ff; /* Violet 50 */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: #1f2937;
+        }
+        .header-bg {
+            background-color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid var(--primary-color);
+            transition: border-left-color 0.3s;
+        }
+        .card:hover {
+            border-left-color: var(--secondary-color);
+        }
+        .feature-icon {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-right: 1rem;
+        }
+        /* Mandatory Bolding Replacement */
+        b {
+            font-weight: 700 !important;
+            color: var(--primary-color);
+        }
+        .compliance-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-tags mr-3"></i> Tag Policies
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Introduction & Goal -->
+        <section class="card space-y-4">
+            <h2 id="section1Title" class="text-3xl font-extrabold text-gray-800 border-b pb-2 mb-4"></h2>
+            
+            <p id="section1Intro" class="text-lg text-gray-700 leading-relaxed"></p>
+            
+            <div id="section1Goal" class="p-4 mt-4 bg-violet-100 rounded-lg border-2 border-violet-300 text-violet-900 font-medium flex items-center">
+                <i class="fas fa-bullseye feature-icon text-violet-600"></i>
+                <span id="goalText"></span>
+            </div>
+            
+            <p id="section1Define" class="text-gray-600 pt-2"></p>
+        </section>
+        
+
+        <!-- Section 2: Key Use Cases & Consistency -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="card md:col-span-2">
+                <h3 id="useCaseTitle" class="text-2xl font-bold text-primary-color mb-4 flex items-center"><i class="fas fa-handshake feature-icon"></i> </h3>
+                <p id="useCaseDesc" class="text-gray-700 mb-4 leading-relaxed"></p>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Cost Allocation -->
+                    <div class="p-4 rounded-lg bg-gray-50 border border-gray-200">
+                        <p class="font-bold text-lg text-green-700 flex items-center"><i class="fas fa-dollar-sign mr-2"></i> <span id="costTitle"></span></p>
+                        <p id="costDesc" class="text-sm text-gray-600"></p>
+                    </div>
+                    <!-- ABAC -->
+                    <div class="p-4 rounded-lg bg-gray-50 border border-gray-200">
+                        <p class="font-bold text-lg text-red-700 flex items-center"><i class="fas fa-user-shield mr-2"></i> <span id="abacTitle"></span></p>
+                        <p id="abacDesc" class="text-sm text-gray-600"></p>
+                    </div>
+                </div>
+            </div>
+             <!-- Exam Tip -->
+            <div class="card bg-yellow-50 border-yellow-500 flex flex-col justify-center">
+                <h3 id="examTipTitle" class="text-xl font-bold text-yellow-700 mb-3 flex items-center"><i class="fas fa-graduation-cap mr-2"></i> </h3>
+                <p id="examTipText" class="text-gray-700 italic font-medium"></p>
+            </div>
+        </section>
+
+        <!-- Section 3: Compliance & Reporting -->
+        <section class="card space-y-4">
+            <h2 id="complianceTitle" class="text-3xl font-extrabold text-gray-800 mb-4 flex items-center"><i class="fas fa-clipboard-check feature-icon"></i> </h2>
+            
+            <p id="compliancePrevention" class="text-lg text-gray-700 leading-relaxed"></p>
+            
+            <div class="flex items-center space-x-4">
+                <span class="compliance-badge bg-red-100 text-red-800"><i class="fas fa-times-circle mr-2"></i> <span id="nonCompliantLabel"></span></span>
+                <span class="compliance-badge bg-green-100 text-green-800"><i class="fas fa-check-circle mr-2"></i> <span id="taggedLabel"></span></span>
+                <span class="compliance-badge bg-gray-100 text-gray-800"><i class="fas fa-minus-circle mr-2"></i> <span id="nonTaggedLabel"></span></span>
+            </div>
+            
+            <p id="reportingText" class="text-gray-600 pt-3"></p>
+
+            <div class="p-3 bg-blue-50 rounded-lg border border-blue-200 text-blue-800 font-medium flex items-center">
+                <i class="fas fa-bell mr-3"></i> <span id="eventBridgeTip"></span>
+            </div>
+        </section>
+
+        <!-- Section 4: Key Takeaways -->
+        <section class="p-8 bg-gray-800 rounded-2xl shadow-2xl text-white">
+            <h2 id="takeawaysTitle" class="text-3xl font-extrabold mb-6 text-center text-secondary-color"><i class="fas fa-key mr-2"></i> </h2>
+            <ul id="takeawaysList" class="space-y-4">
+                <!-- Takeaways populated by JS -->
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        const content = {
+            'vi': {
+                pageTitle: 'AWS Organizations - Chính Sách Thẻ (Tag Policies)',
+                section1Title: 'Chính Sách Thẻ (Tag Policies) Trong AWS Organizations',
+                section1Intro: 'Hãy thảo luận về một loại chính sách khác mà bạn có thể triển khai trong tổ chức AWS của mình, được gọi là <b>chính sách thẻ (tag policy)</b>.',
+                section1Goal: 'Mục tiêu chính là duy trì <b>tính nhất quán</b> trong việc gắn thẻ trên toàn bộ tổ chức của bạn.',
+                section1Define: 'Các chính sách thẻ được thiết kế để <b>tiêu chuẩn hóa thẻ</b> trên các tài nguyên trong một tổ chức AWS cụ thể. Chúng được sử dụng để đảm bảo <b>gắn thẻ nhất quán</b>, kiểm toán các tài nguyên đã gắn thẻ và duy trì phân loại tài nguyên thích hợp. Bạn xác định các khóa thẻ và các giá trị được phép của chúng, sau đó bạn có thể gán chúng trực tiếp cho tài nguyên hoặc áp đặt các hạn chế về cách chúng được gán trên tất cả các tài khoản của bạn.',
+                
+                useCaseTitle: 'Tính Nhất Quán Cho Kiểm Soát',
+                useCaseDesc: 'Chính sách thẻ đặc biệt hữu ích khi triển khai <b>thẻ phân bổ chi phí (cost allocation tags)</b> và <b>kiểm soát truy cập dựa trên thuộc tính (ABAC)</b> vì chúng hạn chế những gì các tài khoản có thể làm, từ đó duy trì tính nhất quán giữa các tài khoản. Tính nhất quán này cho phép hạch toán chi phí chính xác dựa trên thẻ và kiểm soát truy cập dựa trên thẻ.',
+                costTitle: 'Phân Bổ Chi Phí',
+                costDesc: 'Đảm bảo tính nhất quán cho phép hạch toán chi phí chính xác dựa trên thẻ.',
+                abacTitle: 'Kiểm Soát Truy Cập (ABAC)',
+                abacDesc: 'Đảm bảo tính nhất quán cho phép kiểm soát truy cập dựa trên thẻ.',
+
+                complianceTitle: 'Tuân Thủ và Báo Cáo',
+                compliancePrevention: 'Chính sách thẻ cũng có thể ngăn chặn bất kỳ hoạt động gắn thẻ <b>không tuân thủ (non-compliant)</b> nào trên các dịch vụ và tài nguyên được chỉ định; tuy nhiên, chúng không ảnh hưởng đến các tài nguyên không có thẻ.',
+                nonCompliantLabel: 'Tài nguyên không tuân thủ',
+                taggedLabel: 'Tài nguyên đã gắn thẻ',
+                nonTaggedLabel: 'Tài nguyên chưa gắn thẻ',
+                reportingText: 'Bạn có thể tạo một danh sách và báo cáo bao gồm tất cả các tài nguyên đã gắn thẻ, chưa gắn thẻ hoặc không tuân thủ.',
+                eventBridgeTip: 'Để theo dõi các thẻ không tuân thủ, bạn có thể sử dụng <b>EventBridge</b> cho các phản hồi dựa trên sự kiện.',
+                
+                examTipTitle: 'Mẹo Thi Cử',
+                examTipText: 'Nếu bạn gặp câu hỏi về việc duy trì <b>thẻ nhất quán</b> trên các tài khoản, hãy coi <b>chính sách thẻ</b> trong AWS Organizations là giải pháp.',
+
+                takeawaysTitle: 'Điểm Chính Cần Nắm Vững',
+                takeaways: [
+                    '<b>Chính sách thẻ</b> tiêu chuẩn hóa thẻ trên các tài nguyên tổ chức AWS để đảm bảo <b>tính nhất quán</b>.',
+                    'Chúng cho phép <b>kiểm toán</b> các tài nguyên đã gắn thẻ và duy trì phân loại tài nguyên thích hợp.',
+                    'Chính sách thẻ hạn chế cách thẻ được gán, hỗ trợ <b>phân bổ chi phí</b> và <b>kiểm soát truy cập dựa trên thuộc tính (ABAC)</b>.',
+                    'Các thao tác gắn thẻ không tuân thủ có thể được ngăn chặn và có thể tạo báo cáo về các tài nguyên đã gắn thẻ và không tuân thủ.'
+                ]
+            },
+            'en': {
+                pageTitle: 'AWS Organizations - Tag Policies',
+                section1Title: 'Tag Policies in AWS Organizations',
+                section1Intro: "Let's discuss another type of policy you can implement in your AWS organization, called a <b>tag policy</b>.",
+                section1Goal: 'The primary goal is to maintain <b>consistency</b> in tagging across your organization.',
+                section1Define: 'Tag policies are designed to <b>standardize tags</b> across resources within a specific AWS organization. They are used to ensure <b>consistent tagging</b>, audit tagged resources, and maintain proper resource categorization. You define the tag keys and their allowed values, and then you can assign them directly to resources or impose restrictions on how they are assigned across all your accounts.',
+                
+                useCaseTitle: 'Consistency for Control',
+                useCaseDesc: 'Tag policies are particularly useful when implementing <b>cost allocation tags</b> and <b>attribute-based access control (ABAC)</b> because they restrict what accounts can do, thereby maintaining consistency across accounts. This consistency enables accurate cost accounting based on tags and access control based on tags.',
+                costTitle: 'Cost Allocation',
+                costDesc: 'Ensuring consistency enables accurate cost accounting based on tags.',
+                abacTitle: 'Access Control (ABAC)',
+                abacDesc: 'Ensuring consistency enables access control based on tags.',
+
+                complianceTitle: 'Compliance and Reporting',
+                compliancePrevention: 'Tag policies can also prevent any <b>non-compliant</b> tagging operations on specified services and resources; however, they do not affect resources without tags.',
+                nonCompliantLabel: 'Non-compliant resources',
+                taggedLabel: 'Tagged resources',
+                nonTaggedLabel: 'Non-tagged resources',
+                reportingText: 'You can generate a list and report that includes all tagged, non-tagged, or non-compliant resources.',
+                eventBridgeTip: 'To monitor non-compliant tags, you can use <b>EventBridge</b> for event-driven responses.',
+                
+                examTipTitle: 'Exam Tip',
+                examTipText: 'If you encounter an exam question about maintaining <b>consistent tags</b> across accounts, consider <b>tag policies</b> within AWS Organizations as the solution.',
+
+                takeawaysTitle: 'Key Takeaways',
+                takeaways: [
+                    '<b>Tag policies</b> standardize tags across AWS organization resources to ensure <b>consistency</b>.',
+                    'They enable <b>auditing</b> of tagged resources and maintain proper resource categorization.',
+                    'Tag policies restrict how tags are assigned, supporting <b>cost allocation</b> and <b>attribute-based access control (ABAC)</b>.',
+                    'Non-compliant tagging operations can be prevented, and reports on tagged and non-compliant resources can be generated.'
+                ]
+            }
+        };
+
+        let currentLang = 'vi';
+
+        function renderContent() {
+            const data = content[currentLang];
+            document.title = data.pageTitle;
+            document.documentElement.lang = currentLang;
+
+            // Header & Language Toggle
+            const titleSplit = currentLang === 'vi' ? data.section1Title.split(' Trong ')[0] : data.section1Title.split(' in ')[0];
+            document.getElementById('introTitle').innerHTML = `<i class="fas fa-tags mr-3"></i> ${titleSplit.replace(/\s*\(.*\)/, '')}`;
+            document.getElementById('langToggleVi').textContent = 'VI';
+            document.getElementById('langToggleEn').textContent = 'EN';
+            
+            // Section 1: Intro & Goal
+            document.getElementById('section1Title').textContent = data.section1Title;
+            document.getElementById('section1Intro').innerHTML = data.section1Intro;
+            document.getElementById('goalText').innerHTML = data.section1Goal;
+            document.getElementById('section1Define').innerHTML = data.section1Define;
+
+            // Section 2: Use Cases & Exam Tip
+            document.getElementById('useCaseTitle').innerHTML = `<i class="fas fa-handshake feature-icon"></i> ${data.useCaseTitle}`;
+            document.getElementById('useCaseDesc').innerHTML = data.useCaseDesc;
+            document.getElementById('costTitle').textContent = data.costTitle;
+            document.getElementById('costDesc').textContent = data.costDesc;
+            document.getElementById('abacTitle').textContent = data.abacTitle;
+            document.getElementById('abacDesc').textContent = data.abacDesc;
+            
+            document.getElementById('examTipTitle').innerHTML = `<i class="fas fa-graduation-cap mr-2"></i> ${data.examTipTitle}`;
+            document.getElementById('examTipText').innerHTML = data.examTipText;
+
+            // Section 3: Compliance
+            document.getElementById('complianceTitle').innerHTML = `<i class="fas fa-clipboard-check feature-icon"></i> ${data.complianceTitle}`;
+            document.getElementById('compliancePrevention').innerHTML = data.compliancePrevention;
+            document.getElementById('nonCompliantLabel').textContent = data.nonCompliantLabel;
+            document.getElementById('taggedLabel').textContent = data.taggedLabel;
+            document.getElementById('nonTaggedLabel').textContent = data.nonTaggedLabel;
+            document.getElementById('reportingText').textContent = data.reportingText;
+            document.getElementById('eventBridgeTip').innerHTML = data.eventBridgeTip;
+
+
+            // Section 4: Key Takeaways
+            document.getElementById('takeawaysTitle').innerHTML = `<i class="fas fa-key mr-2"></i> ${data.takeawaysTitle}`;
+            const takeawaysList = document.getElementById('takeawaysList');
+            takeawaysList.innerHTML = data.takeaways.map(tk => `
+                <li class="flex items-start">
+                    <i class="fas fa-arrow-alt-circle-right text-secondary-color mt-1 mr-3 flex-shrink-0"></i>
+                    <span>${tk}</span>
+                </li>
+            `).join('');
+            
+            // Update buttons
+            const btnVi = document.getElementById('langToggleVi');
+            const btnEn = document.getElementById('langToggleEn');
+            const activeClass = 'bg-white text-primary-color';
+            const inactiveClass = 'text-white hover:bg-white/30';
+            
+            btnVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLang === 'vi' ? activeClass : inactiveClass}`;
+            btnEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLang === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.getElementById('langToggleVi').addEventListener('click', () => {
+            currentLang = 'vi';
+            renderContent();
+        });
+        document.getElementById('langToggleEn').addEventListener('click', () => {
+            currentLang = 'en';
+            renderContent();
+        });
+
+        // Init
+        document.addEventListener('DOMContentLoaded', renderContent);
+    </script>
+</body>
+</html>

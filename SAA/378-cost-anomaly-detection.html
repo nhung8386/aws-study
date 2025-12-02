@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">AWS Cost Anomaly Detection - Phát Hiện Bất Thường Chi Phí</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #3b82f6; /* Blue 500 - Monitoring/Intelligence */
+            --accent-color: #f59e0b;  /* Amber 500 - Alert/Anomaly */
+            --background-color: #eff6ff; /* Blue 50 */
+            --text-color: #1f2937;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+        .header-bg {
+            background-color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .section-title {
+            color: var(--primary-color);
+            font-weight: 800;
+            border-bottom: 3px solid var(--accent-color);
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .ml-feature {
+            background-color: #fefce8; /* Yellow 50 */
+            border-left: 4px solid var(--accent-color);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            color: #854d0e; /* Yellow 900 */
+        }
+        b {
+            font-weight: 700 !important;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-exclamation-triangle mr-3 text-accent-color"></i>
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Introduction and Core Function -->
+        <section class="card p-8 shadow-xl bg-white border-b-4 border-primary-color">
+            <h2 id="section1Title" class="text-3xl section-title mb-4 pb-2"></h2>
+            <p id="section1Definition" class="text-lg text-gray-700 leading-relaxed"></p>
+        </section>
+        
+        <!-- Section 2: Machine Learning Intelligence -->
+        <section>
+            <h2 id="section2Title" class="text-3xl font-extrabold text-primary-color mb-6"><i class="fas fa-brain mr-2"></i> </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Learning Feature -->
+                <div class="card space-y-4 border-t-4 border-primary-color">
+                    <h3 id="learningTitle" class="text-2xl font-bold text-gray-800 flex items-center"><i class="fas fa-history mr-2 text-primary-color"></i> </h3>
+                    <div class="ml-feature">
+                        <p id="learningDesc" class="font-medium text-sm"></p>
+                    </div>
+                    <p id="learningType" class="text-gray-700 text-base"></p>
+                </div>
+
+                <!-- Threshold Feature -->
+                <div class="card space-y-4 border-t-4 border-accent-color">
+                    <h3 id="thresholdTitle" class="text-2xl font-bold text-gray-800 flex items-center"><i class="fas fa-sliders-h mr-2 text-accent-color"></i> </h3>
+                    <div class="ml-feature">
+                        <p id="thresholdDesc" class="font-medium text-sm"></p>
+                    </div>
+                    <p id="thresholdDetail" class="text-gray-700 text-base"></p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 3: Monitoring Scope & Reporting -->
+        <section>
+            <h2 id="section3Title" class="text-3xl font-extrabold text-primary-color mb-6 text-center"><i class="fas fa-search mr-2"></i> </h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Scope -->
+                <div class="card bg-blue-50 lg:col-span-1 border-r-4 border-primary-color">
+                    <h4 id="scopeTitle" class="text-xl font-bold text-primary-color mb-3"></h4>
+                    <ul class="list-disc ml-5 text-sm text-gray-700 space-y-1">
+                        <li id="scope1"></li>
+                        <li id="scope2"></li>
+                        <li id="scope3"></li>
+                        <li id="scope4"></li>
+                    </ul>
+                </div>
+                
+                <!-- Reporting -->
+                <div class="card lg:col-span-2 space-y-4 border-l-4 border-accent-color">
+                    <h4 id="reportingTitle" class="text-xl font-bold text-gray-800 mb-3 flex items-center"><i class="fas fa-file-invoice-dollar mr-2 text-accent-color"></i> </h4>
+                    <p id="reportingContent" class="text-gray-700 text-base"></p>
+                    <div class="p-3 bg-yellow-100 rounded-lg">
+                        <h5 id="notificationTitle" class="font-semibold text-lg text-accent-color flex items-center"><i class="fas fa-bell mr-2"></i> </h5>
+                        <p id="notificationDesc" class="text-gray-700 text-sm mt-1"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Key Takeaways -->
+        <section class="p-8 bg-gray-900 rounded-2xl shadow-2xl">
+            <h2 id="section4Title" class="text-3xl font-extrabold text-white mb-8 text-center"><i class="fas fa-star mr-2 text-accent-color"></i> </h2>
+            <ul id="takeawaysContainer" class="space-y-4">
+                <!-- Takeaways will be populated by JS -->
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        // Content Translations using <b> for bolding.
+        const content = {
+            'vi': {
+                pageTitle: 'AWS Cost Anomaly Detection - Phát Hiện Bất Thường Chi Phí',
+                introTitle: 'AWS Cost Anomaly Detection',
+                section1Title: 'Giới Thiệu: Giám Sát Chi Phí Liên Tục',
+                section1Definition: 'AWS Cost Anomaly Detection (CAD) được thiết kế để <b>giám sát liên tục</b> dữ liệu chi phí và việc sử dụng tài nguyên AWS của bạn. Tên gọi đã thể hiện rõ mục đích: phát hiện các hành vi chi tiêu bất thường.',
+                
+                // ML Intelligence
+                section2Title: 'Trí Tuệ Máy Học (Machine Learning)',
+                learningTitle: 'Học hỏi từ Lịch Sử',
+                learningDesc: 'CAD sử dụng công nghệ <b>Machine Learning</b> để học hỏi từ dữ liệu chi tiêu lịch sử <b>độc đáo</b> của riêng bạn.',
+                learningType: 'Điều này giúp nó phát hiện cả <b>đỉnh chi phí đột xuất (one-time spikes)</b> và <b>tăng chi phí liên tục (continuous increases)</b>.',
+                
+                thresholdTitle: 'Không Cần Thiết Lập Ngưỡng',
+                thresholdDesc: 'Bạn <b>không cần phải xác định bất kỳ ngưỡng</b> (thresholds) hay tham số nào.',
+                thresholdDetail: 'Dịch vụ sẽ <b>tự động xác định</b> đâu là hành vi chi tiêu bất thường dựa trên mô hình đã học.',
+
+                // Scope & Reporting
+                section3Title: 'Phạm Vi Giám Sát và Báo Cáo',
+                scopeTitle: 'Phạm Vi Giám Sát (Monitored Scope)',
+                scope1: 'Các dịch vụ AWS (AWS services).',
+                scope2: 'Các tài khoản thành viên (member accounts).',
+                scope3: 'Các thẻ phân bổ chi phí (cost allocation tags).',
+                scope4: 'Các danh mục chi phí (cost categories).',
+                
+                reportingTitle: 'Báo Cáo và Phân Tích Nguyên Nhân Gốc',
+                reportingContent: 'CAD gửi các báo cáo phát hiện bất thường, bao gồm cả <b>phân tích nguyên nhân gốc (root cause analysis)</b>. Điều này giúp bạn nhanh chóng hiểu được vấn đề đang xảy ra trong tài khoản của mình.',
+                notificationTitle: 'Thông Báo (Notification)',
+                notificationDesc: 'Bạn có thể nhận thông báo qua <b>cảnh báo cá nhân (individual alerts)</b> hoặc <b>tóm tắt hàng ngày/hàng tuần</b>, tận dụng dịch vụ <b>Amazon SNS</b>.',
+                
+                // Key Takeaways
+                section4Title: 'Tóm Tắt & Điểm Chính',
+                takeaways: [
+                    '<b>AWS Cost Anomaly Detection</b>: Dịch vụ giám sát chi phí liên tục bằng cách sử dụng <b>Machine Learning</b>.',
+                    'Hệ thống <b>tự động học</b> mô hình chi tiêu lịch sử của bạn để phát hiện bất thường.',
+                    '<b>Không cần xác định ngưỡng</b> (No thresholds needed); hệ thống tự nhận diện chi tiêu bất thường.',
+                    'Cung cấp báo cáo phát hiện bất thường kèm theo <b>phân tích nguyên nhân gốc</b> (Root Cause Analysis).',
+                    'Hỗ trợ thông báo qua <b>cảnh báo cá nhân</b> hoặc tóm tắt qua <b>Amazon SNS</b>.'
+                ]
+            },
+            'en': {
+                pageTitle: 'AWS Cost Anomaly Detection - Cost Anomaly Detection',
+                introTitle: 'AWS Cost Anomaly Detection',
+                section1Title: 'Introduction: Continuous Cost Monitoring',
+                section1Definition: 'AWS Cost Anomaly Detection (CAD) is designed to <b>continuously monitor</b> your AWS cost and usage data. The name clearly reflects its purpose: to detect unusual spending patterns.',
+                
+                // ML Intelligence
+                section2Title: 'Machine Learning Intelligence',
+                learningTitle: 'Learning from History',
+                learningDesc: 'CAD uses <b>Machine Learning</b> technology to learn from your <b>unique historical</b> spending data.',
+                learningType: 'This helps it detect both <b>one-time cost spikes</b> and <b>continuous cost increases</b>.',
+                
+                thresholdTitle: 'No Thresholds Required',
+                thresholdDesc: 'You <b>do not need to define any thresholds</b> or parameters.',
+                thresholdDetail: 'The service <b>autonomously determines</b> what constitutes unusual spending behavior based on its learned model.',
+
+                // Scope & Reporting
+                section3Title: 'Monitoring Scope & Reporting',
+                scopeTitle: 'Monitored Scope',
+                scope1: 'AWS services.',
+                scope2: 'Member accounts.',
+                scope3: 'Cost allocation tags.',
+                scope4: 'Cost categories.',
+                
+                reportingTitle: 'Reporting and Root Cause Analysis',
+                reportingContent: 'CAD sends anomaly detection reports that include <b>root cause analysis</b>, helping you quickly understand what is happening in your account.',
+                notificationTitle: 'Notification',
+                notificationDesc: 'You can receive notifications through <b>individual alerts</b> or <b>daily and weekly summaries</b> that leverage <b>Amazon SNS</b>.',
+                
+                // Key Takeaways
+                section4Title: 'Summary & Key Takeaways',
+                takeaways: [
+                    '<b>AWS Cost Anomaly Detection</b>: Continuously monitors costs using <b>Machine Learning</b>.',
+                    'The system <b>automatically learns</b> your unique historical spending patterns to detect anomalies.',
+                    '<b>No thresholds needed</b>; the system autonomously identifies unusual spending.',
+                    'Provides anomaly detection reports with <b>Root Cause Analysis</b>.',
+                    'Supports notifications via <b>individual alerts</b> or summaries using <b>Amazon SNS</b>.'
+                ]
+            }
+        };
+
+        let currentLanguage = 'vi'; // Default to Vietnamese
+
+        function updateContent() {
+            const langData = content[currentLanguage];
+            document.title = langData.pageTitle;
+            document.documentElement.lang = currentLanguage;
+
+            document.getElementById('langToggleVi').textContent = 'VI';
+            document.getElementById('langToggleEn').textContent = 'EN';
+            
+            document.getElementById('introTitle').innerHTML = `${langData.introTitle} <i class="fas fa-exclamation-triangle mr-3 text-accent-color"></i>`;
+            document.getElementById('section1Title').textContent = langData.section1Title;
+            document.getElementById('section1Definition').innerHTML = langData.section1Definition;
+            
+            // ML Intelligence
+            document.getElementById('section2Title').innerHTML = `${langData.section2Title} <i class="fas fa-brain ml-2"></i>`;
+            document.getElementById('learningTitle').innerHTML = `${langData.learningTitle} <i class="fas fa-history ml-2"></i>`;
+            document.getElementById('learningDesc').innerHTML = langData.learningDesc;
+            document.getElementById('learningType').innerHTML = langData.learningType;
+            
+            document.getElementById('thresholdTitle').innerHTML = `${langData.thresholdTitle} <i class="fas fa-sliders-h ml-2"></i>`;
+            document.getElementById('thresholdDesc').innerHTML = langData.thresholdDesc;
+            document.getElementById('thresholdDetail').innerHTML = langData.thresholdDetail;
+
+            // Scope & Reporting
+            document.getElementById('section3Title').innerHTML = `${langData.section3Title} <i class="fas fa-search ml-2"></i>`;
+            document.getElementById('scopeTitle').textContent = langData.scopeTitle;
+            document.getElementById('scope1').textContent = langData.scope1;
+            document.getElementById('scope2').textContent = langData.scope2;
+            document.getElementById('scope3').textContent = langData.scope3;
+            document.getElementById('scope4').textContent = langData.scope4;
+            
+            document.getElementById('reportingTitle').innerHTML = `${langData.reportingTitle} <i class="fas fa-file-invoice-dollar ml-2 text-accent-color"></i>`;
+            document.getElementById('reportingContent').innerHTML = langData.reportingContent;
+            document.getElementById('notificationTitle').innerHTML = `${langData.notificationTitle} <i class="fas fa-bell ml-2"></i>`;
+            document.getElementById('notificationDesc').innerHTML = langData.notificationDesc;
+
+            // Key Takeaways
+            document.getElementById('section4Title').innerHTML = `${langData.section4Title} <i class="fas fa-star ml-2 text-accent-color"></i>`;
+
+            // Update Language Toggle Buttons
+            updateLanguageButtons();
+
+            // Update Key Takeaways
+            const takeawaysContainer = document.getElementById('takeawaysContainer');
+            takeawaysContainer.innerHTML = '';
+            langData.takeaways.forEach(t => {
+                const item = `
+                    <li class="flex items-start space-x-3 text-gray-200 p-3 bg-gray-700 rounded-lg">
+                        <i class="fas fa-check-circle text-lg text-accent-color mt-1 flex-shrink-0"></i>
+                        <span class="text-base leading-relaxed">${t}</span>
+                    </li>
+                `;
+                takeawaysContainer.innerHTML += item;
+            });
+        }
+
+        function updateLanguageButtons() {
+            const langToggleVi = document.getElementById('langToggleVi');
+            const langToggleEn = document.getElementById('langToggleEn');
+
+            const activeClass = 'bg-accent-color';
+            const inactiveClass = 'text-white hover:bg-white/30';
+
+            langToggleVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'vi' ? activeClass : inactiveClass}`;
+            langToggleEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLanguage === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateContent();
+
+            document.getElementById('langToggleVi').addEventListener('click', () => {
+                currentLanguage = 'vi';
+                updateContent();
+            });
+
+            document.getElementById('langToggleEn').addEventListener('click', () => {
+                currentLanguage = 'en';
+                updateContent();
+            });
+        });
+    </script>
+</body>
+</html>
