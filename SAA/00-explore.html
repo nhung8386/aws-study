@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Keywords Explorer - Hover & Click</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .aws-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .aws-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Tag Styles */
+        .keyword-tag {
+            transition: all 0.2s;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .keyword-tag:hover {
+            background-color: #eff6ff;
+            color: #1d4ed8;
+            border-color: #3b82f6;
+        }
+
+        .keyword-tag:active {
+            transform: scale(0.95);
+        }
+
+        .highlight {
+            background-color: #fef08a;
+            color: #1e40af;
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+
+        .gradient-header {
+            background: linear-gradient(135deg, #232f3e 0%, #1a1a1a 100%);
+        }
+
+        /* Enhanced Tooltip Style */
+        .tooltip {
+            visibility: hidden;
+            position: absolute;
+            bottom: 130%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #1e293b;
+            color: #fff;
+            text-align: left;
+            padding: 10px 14px;
+            border-radius: 8px;
+            z-index: 50;
+            opacity: 0;
+            transition: opacity 0.2s, transform 0.2s;
+            width: max-content;
+            max-width: 280px;
+            font-size: 0.75rem;
+            font-weight: 400;
+            line-height: 1.5;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            pointer-events: none;
+            /* Tránh việc tooltip che mất click event */
+        }
+
+        .tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -6px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: #1e293b transparent transparent transparent;
+        }
+
+        .keyword-tag:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+            transform: translateX(-50%) translateY(-5px);
+        }
+    </style>
+</head>
+
+<body class="pb-12">
+
+    <!-- Header -->
+    <header class="gradient-header text-white py-16 px-4 shadow-lg mb-8">
+        <div class="max-w-6xl mx-auto text-center">
+            <h1 class="text-4xl font-extrabold mb-4 flex items-center justify-center tracking-tight">
+                <i class="fab fa-aws text-orange-500 mr-4 text-5xl"></i> AWS Keywords Explorer
+            </h1>
+            <p class="text-gray-300 text-lg max-w-2xl mx-auto font-light leading-relaxed">
+                <span class="text-orange-400 font-semibold">Hover</span> để xem giải nghĩa tiếng Việt.
+                <span class="text-blue-400 font-semibold">Click</span> để lọc nhanh dịch vụ theo từ khóa.
+            </p>
+        </div>
+    </header>
+
+    <div class="max-w-6xl mx-auto px-4">
+        <!-- Search Box -->
+        <div class="relative mb-8 group">
+            <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+                <i class="fas fa-search text-gray-400 group-focus-within:text-blue-500 transition-colors"></i>
+            </div>
+            <input type="text" id="searchInput"
+                class="block w-full pl-14 pr-16 py-5 bg-white border border-gray-200 rounded-3xl shadow-sm focus:ring-4 focus:ring-blue-100 focus:border-blue-400 outline-none text-lg transition-all"
+                placeholder="Tìm dịch vụ hoặc nhấp vào từ khóa bên dưới...">
+            <button id="clearSearch"
+                class="absolute inset-y-0 right-0 pr-6 flex items-center text-gray-400 hover:text-red-500 hidden">
+                <i class="fas fa-times-circle text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Filters -->
+        <div class="flex flex-wrap gap-2 mb-10 items-center" id="categoryFilters">
+            <span class="text-sm font-semibold text-gray-500 mr-2">Danh mục:</span>
+            <button
+                class="filter-btn active bg-blue-600 text-white px-5 py-2 rounded-full text-sm font-semibold shadow-md shadow-blue-200"
+                data-category="all">Tất cả</button>
+            <button
+                class="filter-btn bg-white text-gray-600 border border-gray-200 px-5 py-2 rounded-full text-sm font-semibold hover:border-blue-300 transition-all"
+                data-category="Database">Database</button>
+            <button
+                class="filter-btn bg-white text-gray-600 border border-gray-200 px-5 py-2 rounded-full text-sm font-semibold hover:border-blue-300 transition-all"
+                data-category="Compute">Compute</button>
+            <button
+                class="filter-btn bg-white text-gray-600 border border-gray-200 px-5 py-2 rounded-full text-sm font-semibold hover:border-blue-300 transition-all"
+                data-category="Storage">Storage</button>
+            <button
+                class="filter-btn bg-white text-gray-600 border border-gray-200 px-5 py-2 rounded-full text-sm font-semibold hover:border-blue-300 transition-all"
+                data-category="Networking">Networking</button>
+            <button
+                class="filter-btn bg-white text-gray-600 border border-gray-200 px-5 py-2 rounded-full text-sm font-semibold hover:border-blue-300 transition-all"
+                data-category="Security">Security</button>
+            <!-- Platform -->
+            <button
+                class="filter-btn bg-white text-gray-600 border px-5 py-2 rounded-full text-sm font-semibold hover:border-blue-300"
+                data-category="Application Integration">Application Integration</button>
+            <button
+                class="filter-btn bg-white text-gray-600 border px-5 py-2 rounded-full text-sm font-semibold hover:border-blue-300"
+                data-category="Containers">Containers</button>
+            <button
+                class="filter-btn bg-white text-gray-600 border px-5 py-2 rounded-full text-sm font-semibold hover:border-blue-300"
+                data-category="Frontend & Mobile">Frontend & Mobile</button>
+            <button
+                class="filter-btn bg-white text-gray-600 border px-5 py-2 rounded-full text-sm font-semibold hover:border-blue-300"
+                data-category="Edge & Hybrid">Edge & Hybrid</button>
+
+            <!-- Data & AI -->
+            <button
+                class="filter-btn bg-white text-gray-600 border px-5 py-2 rounded-full text-sm font-semibold hover:border-blue-300"
+                data-category="Analytics">Analytics</button>
+            <button
+                class="filter-btn bg-white text-gray-600 border px-5 py-2 rounded-full text-sm font-semibold hover:border-blue-300"
+                data-category="Machine Learning">Machine Learning</button>
+
+
+            <button
+                class="filter-btn bg-white text-gray-600 border px-5 py-2 rounded-full text-sm font-semibold hover:border-blue-300"
+                data-category="Management & Governance">Management & Governance</button>
+            <button
+                class="filter-btn bg-white text-gray-600 border px-5 py-2 rounded-full text-sm font-semibold hover:border-blue-300"
+                data-category="Developer Tools">Developer Tools</button>
+            <button
+                class="filter-btn bg-white text-gray-600 border px-5 py-2 rounded-full text-sm font-semibold hover:border-blue-300"
+                data-category="Cost Management">Cost Management</button>
+
+            <!-- Enterprise -->
+            <button
+                class="filter-btn bg-white text-gray-600 border px-5 py-2 rounded-full text-sm font-semibold hover:border-blue-300"
+                data-category="Migration & Transfer">Migration & Transfer</button>
+            <button
+                class="filter-btn bg-white text-gray-600 border px-5 py-2 rounded-full text-sm font-semibold hover:border-blue-300"
+                data-category="End User Computing">End User Computing</button>
+            <button
+                class="filter-btn bg-white text-gray-600 border px-5 py-2 rounded-full text-sm font-semibold hover:border-blue-300"
+                data-category="Business Applications">Business Applications</button>
+        </div>
+
+        <!-- Grid -->
+        <div id="servicesGrid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- JS Injected -->
+        </div>
+
+        <!-- Empty -->
+        <div id="emptyState" class="hidden text-center py-20">
+            <div class="bg-gray-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-search text-gray-400 text-3xl"></i>
+            </div>
+            <p class="text-gray-500 text-xl font-medium">Không tìm thấy thông tin phù hợp.</p>
+            <button onclick="resetSearch()" class="mt-4 text-blue-600 hover:underline font-semibold">Xóa tìm
+                kiếm</button>
+        </div>
+    </div>
+
+    <script>
+        const services = [
+            {
+                id: "security-lake",
+                name: "Amazon Security Lake",
+                category: "Security",
+                description: "Tự động tập trung hóa dữ liệu bảo mật từ các nguồn AWS và bên thứ ba vào một data lake chuyên dụng.",
+                keywords: [
+                    { t: "Security Lake", d: "Data lake tập trung lưu trữ log bảo mật từ nhiều nguồn." },
+                    { t: "OCSF", d: "Open Cybersecurity Schema Framework: Định dạng chuẩn hóa log để dễ query và tích hợp tool." },
+                    { t: "Automatic collection", d: "Tự động thu thập log từ VPC Flow Logs, CloudTrail, Security Hub, S3, EKS..." },
+                    { t: "Custom sources", d: "Hỗ trợ thêm nguồn log tùy chỉnh (CloudWatch, on-prem...)." },
+                    { t: "Lifecycle management", d: "Tự động lưu bản gốc + bản chuẩn hóa, chuyển sang storage rẻ hơn (Glacier)." },
+                    { t: "Delegated admin", d: "Quản lý tập trung cross-account trong AWS Organizations." },
+                    { t: "Query & integration", d: "Dễ query bằng Athena, tích hợp SIEM (Splunk, Elastic, Sentinel), Security Hub, Detective." },
+                    { t: "Centralize & Normalize", d: "Mục tiêu: Tập trung và chuẩn hóa dữ liệu bảo mật để phân tích, threat hunting nhanh chóng." }
+                ],
+                color: "red"
+            },
+            /* ===================== DATABASE ===================== */
+            {
+                id: "rds",
+                name: "Amazon RDS",
+                category: "Database",
+                description: "Dịch vụ managed relational database, AWS quản lý patching, backup, scaling.",
+                keywords: [
+                    { t: "Relational DB", d: "Hỗ trợ engine: MySQL, PostgreSQL, MariaDB, Oracle, SQL Server." },
+                    { t: "Multi-AZ", d: "Triển khai synchronous standby ở AZ khác → failover tự động, high availability." },
+                    { t: "Read Replicas", d: "Tạo bản sao chỉ đọc để scale read traffic, hỗ trợ cross-region." },
+                    { t: "Automated backup", d: "Backup hàng ngày + transaction log → point-in-time recovery." },
+                    { t: "Performance Insights", d: "Dashboard phân tích query chậm, load database." },
+                    { t: "Aurora", d: "Phiên bản RDS hiệu suất cao, cloud-native (tách compute-storage)." }
+                ],
+                color: "blue"
+            },
+            {
+                id: "aurora",
+                name: "Amazon Aurora",
+                category: "Database",
+                description: "Relational database cloud-native, tương thích MySQL/PostgreSQL, hiệu suất cao hơn standard nhiều lần.",
+                keywords: [
+                    { t: "High performance", d: "Tối ưu storage layer → nhanh hơn MySQL/PostgreSQL chuẩn đến 5x." },
+                    { t: "Serverless v2", d: "Auto-scale compute tức thì theo load, trả tiền theo ACU/giây." },
+                    { t: "Global Database", d: "Replication cross-region latency <1s, failover nhanh." },
+                    { t: "Storage auto-scaling", d: "Tự động mở rộng storage đến 128TB không downtime." },
+                    { t: "Babelfish", d: "Hiểu cú pháp T-SQL → dễ migrate từ SQL Server." },
+                    { t: "Zero-downtime patching", d: "Áp dụng patch mà không gián đoạn service." }
+                ],
+                color: "blue"
+            },
+            {
+                id: "dynamodb",
+                name: "Amazon DynamoDB",
+                category: "Database",
+                description: "NoSQL serverless key-value & document, scale vô hạn, latency single-digit ms.",
+                keywords: [
+                    { t: "Serverless", d: "Không quản lý server, auto-scale theo traffic." },
+                    { t: "Single-digit ms", d: "Latency thấp ổn định dù hàng triệu request/giây." },
+                    { t: "DAX", d: "In-memory cache accelerator → giảm latency xuống microsecond." },
+                    { t: "Global Tables", d: "Multi-region multi-master replication." },
+                    { t: "Streams", d: "Capture item-level changes realtime → trigger Lambda." },
+                    { t: "On-demand", d: "Capacity mode không cần provision trước, trả theo request." }
+                ],
+                color: "blue"
+            },
+            {
+                id: "elasticache",
+                name: "Amazon ElastiCache",
+                category: "Database",
+                description: "Managed in-memory data store/cache tương thích Redis & Memcached.",
+                keywords: [
+                    { t: "Redis", d: "Hỗ trợ data structures (list, set, sorted set, pub/sub...)." },
+                    { t: "Memcached", d: "Simple key-value cache đa luồng." },
+                    { t: "Sub-ms latency", d: "Cache layer cho ứng dụng read-heavy." },
+                    { t: "Cluster mode", d: "Sharding + replication → scale ngang và HA." },
+                    { t: "Valkey", d: "Fork open-source của Redis (AWS chuyển sang từ 2024)." }
+                ],
+                color: "blue"
+            },
+            {
+                id: "documentdb",
+                name: "Amazon DocumentDB",
+                category: "Database",
+                description: "Managed document database tương thích MongoDB API.",
+                keywords: [
+                    { t: "MongoDB compatible", d: "Dùng driver/code MongoDB hiện có mà không thay đổi." },
+                    { t: "Scalable", d: "Storage auto-scale, thêm read replicas dễ dàng." },
+                    { t: "High availability", d: "Replica set multi-AZ, failover tự động." },
+                    { t: "Vector search", d: "Tìm kiếm similarity với embedding (GenAI use case)." }
+                ],
+                color: "blue"
+            },
+            {
+                id: "neptune",
+                name: "Amazon Neptune",
+                category: "Database",
+                description: "Managed graph database hỗ trợ Property Graph và RDF.",
+                keywords: [
+                    { t: "Graph DB", d: "Lưu trữ mối quan hệ → query nhanh cho network data." },
+                    { t: "Gremlin & SPARQL", d: "Hai query language chuẩn cho graph." },
+                    { t: "Use cases", d: "Recommendation engine, fraud detection, social network, knowledge graph." },
+                    { t: "Neptune Analytics", d: "Graph algorithms + vector search nhanh." }
+                ],
+                color: "blue"
+            },
+            {
+                id: "timestream",
+                name: "Amazon Timestream",
+                category: "Database",
+                description: "Serverless time-series database tối ưu cho IoT & monitoring.",
+                keywords: [
+                    { t: "Time-series", d: "Lưu trữ dữ liệu có timestamp hiệu quả." },
+                    { t: "Serverless", d: "Auto-scale ingest/query, pay per use." },
+                    { t: "High ingestion", d: "Hàng tỷ events/ngày với low cost." },
+                    { t: "Retention policies", d: "In-memory (hot) + magnetic (cold) storage tự động." }
+                ],
+                color: "blue"
+            },
+            {
+                id: "keyspaces",
+                name: "Amazon Keyspaces",
+                category: "Database",
+                description: "Managed wide-column database tương thích Apache Cassandra.",
+                keywords: [
+                    { t: "Cassandra compatible", d: "Dùng CQL và driver Cassandra hiện có." },
+                    { t: "Serverless", d: "On-demand hoặc provisioned throughput." },
+                    { t: "Wide-column", d: "Phù hợp workload write-heavy, query linh hoạt." }
+                ],
+                color: "blue"
+            },
+            {
+                id: "qls",
+                name: "Amazon QLDB",
+                category: "Database",
+                description: "Quantum Ledger Database – immutable & cryptographically verifiable.",
+                keywords: [
+                    { t: "Ledger", d: "Dữ liệu immutable, có history đầy đủ." },
+                    { t: "Cryptographic verification", d: "Chứng minh dữ liệu không bị thay đổi." },
+                    { t: "Use cases", d: "Financial transactions, supply chain, insurance claims, audit trail." }
+                ],
+                color: "blue"
+            },
+            {
+                id: "aurora-serverless",
+                name: "Aurora Serverless v2",
+                category: "Database",
+                description: "Phiên bản tự động mở rộng của Amazon Aurora, phù hợp cho tải công việc biến động.",
+                keywords: [
+                    { t: "Auto-scaling", d: "Tự động tăng giảm sức mạnh xử lý dựa trên lưu lượng thực tế." },
+                    { t: "ACU", d: "Aurora Capacity Unit - Đơn vị đo lường sức mạnh tính toán (CPU + RAM)." },
+                    { t: "Instant scaling", d: "Mở rộng gần như tức thì, không làm gián đoạn kết nối người dùng." },
+                    { t: "Pay-per-use", d: "Chỉ trả tiền cho số lượng ACU thực tế sử dụng mỗi giây." }
+                ],
+                color: "blue"
+            },
+            /* ===================== COMPUTE ===================== */
+            {
+                id: "ec2",
+                name: "Amazon EC2",
+                category: "Compute",
+                description: "Virtual servers linh hoạt trong cloud.",
+                keywords: [
+                    { t: "Instance types", d: "Đa dạng CPU, memory, storage, network (general, compute, memory, storage optimized)." },
+                    { t: "AMI", d: "Amazon Machine Image – template để launch instance." },
+                    { t: "Spot Instances", d: "Giá rẻ đến 90%, chấp nhận bị interrupt." },
+                    { t: "Reserved/ Savings Plans", d: "Tiết kiệm chi phí cho workload ổn định." },
+                    { t: "Auto Scaling Group", d: "Tự động scale số lượng instance theo load." },
+                    { t: "Instance store", d: "Storage tạm tốc độ cao, mất dữ liệu khi stop/terminate." },
+                    { t: "Hibernation", d: "Lưu trạng thái RAM vào EBS khi stop." }
+                ],
+                color: "orange"
+            },
+            {
+                id: "lambda",
+                name: "AWS Lambda",
+                category: "Compute",
+                description: "Serverless compute – chạy code mà không quản lý server.",
+                keywords: [
+                    { t: "Serverless", d: "Tự động scale, pay per use (ms)." },
+                    { t: "Event-driven", d: "Trigger từ S3, DynamoDB, API Gateway, EventBridge..." },
+                    { t: "Runtimes", d: "Node.js, Python, Java, .NET, Go, Ruby, custom." },
+                    { t: "Provisioned Concurrency", d: "Giảm cold start cho latency thấp." },
+                    { t: "Layers", d: "Chia sẻ code/library chung." },
+                    { t: "SnapStart", d: "Giảm cold start Java đến 10x." },
+                    { t: "Max duration 15min", d: "Giới hạn thời gian chạy." }
+                ],
+                color: "orange"
+            },
+            {
+                id: "ecs",
+                name: "Amazon ECS",
+                category: "Compute",
+                description: "Container orchestration service.",
+                keywords: [
+                    { t: "Docker containers", d: "Chạy và quản lý container Docker." },
+                    { t: "EC2 & Fargate", d: "Launch type: tự quản server hoặc serverless." },
+                    { t: "Task & Service", d: "Task definition + service duy trì số task." },
+                    { t: "Integration", d: "ALB, CloudWatch, ECR, Secrets Manager." },
+                    { t: "Capacity Providers", d: "Kết hợp EC2 + Fargate trong cluster." }
+                ],
+                color: "orange"
+            },
+            {
+                id: "eks",
+                name: "Amazon EKS",
+                category: "Compute",
+                description: "Managed Kubernetes service.",
+                keywords: [
+                    { t: "Kubernetes", d: "Managed control plane, chuẩn CNCF." },
+                    { t: "Fargate profiles", d: "Chạy pod serverless không quản lý node." },
+                    { t: "Add-ons", d: "CoreDNS, vpc-cni, kube-proxy managed." },
+                    { t: "EKS Anywhere", d: "Chạy Kubernetes on-prem hoặc hybrid." },
+                    { t: "Blueprints", d: "Terraform-ready cluster templates." }
+                ],
+                color: "orange"
+            },
+            {
+                id: "elastic-beanstalk",
+                name: "AWS Elastic Beanstalk",
+                category: "Compute",
+                description: "Paas để deploy và quản lý ứng dụng nhanh.",
+                keywords: [
+                    { t: "PaaS", d: "Upload code → tự động provision EC2, LB, ASG..." },
+                    { t: "Supported platforms", d: "Java, .NET, PHP, Node.js, Python, Ruby, Go, Docker." },
+                    { t: "Environment", d: "Dev, staging, prod với config riêng." },
+                    { t: "Customization", d: "EB extensions và .config files." }
+                ],
+                color: "orange"
+            },
+            {
+                id: "lightsail",
+                name: "Amazon Lightsail",
+                category: "Compute",
+                description: "VPS đơn giản, giá cố định cho beginner.",
+                keywords: [
+                    { t: "Simple VPS", d: "Virtual server với giá thấp, predictable." },
+                    { t: "Bundled resources", d: "CPU, RAM, SSD, data transfer cố định." },
+                    { t: "Managed DB & CDN", d: "Database, container, load balancer dễ dùng." },
+                    { t: "Blueprints", d: "Pre-configured app (WordPress, LAMP...)." }
+                ],
+                color: "orange"
+            },
+            {
+                id: "batch",
+                name: "AWS Batch",
+                category: "Compute",
+                description: "Chạy batch jobs tại scale trên cloud.",
+                keywords: [
+                    { t: "Batch computing", d: "Quản lý hàng nghìn job (simulation, rendering, ML...)." },
+                    { t: "Job queue", d: "FIFO, priority queue." },
+                    { t: "Compute environment", d: "EC2 hoặc Fargate managed." },
+                    { t: "Array & Multi-node", d: "Job array và parallel processing." }
+                ],
+                color: "orange"
+            },
+            {
+                id: "outposts",
+                name: "AWS Outposts",
+                category: "Compute",
+                description: "Mang infrastructure AWS vào on-premises.",
+                keywords: [
+                    { t: "Hybrid cloud", d: "Chạy EC2, EBS, ECS/EKS on-prem." },
+                    { t: "Rack & Servers", d: "Form factor 42U rack hoặc 1-2U server." },
+                    { t: "Low latency", d: "Ứng dụng cần phản hồi cực nhanh tại chỗ." },
+                    { t: "Data residency", d: "Tuân thủ quy định dữ liệu lưu trú địa phương." }
+                ],
+                color: "orange"
+            },
+            {
+                id: "vpc",
+                name: "Amazon VPC",
+                category: "Networking",
+                description: "Mạng ảo riêng biệt của bạn trên đám mây AWS.",
+                keywords: [
+                    { t: "Subnet", d: "Phân đoạn mạng nhỏ bên trong VPC (Công khai hoặc Riêng tư)." },
+                    { t: "IGW", d: "Internet Gateway - Cổng kết nối VPC với mạng Internet." },
+                    { t: "NAT Gateway", d: "Cho phép tài nguyên trong Private Subnet kết nối ra ngoài nhưng không cho chiều ngược lại." },
+                    { t: "Security Group", d: "Tường lửa ảo ở cấp độ Instance (Stateful)." }
+                ],
+                color: "indigo"
+            },
+            {
+                id: "guardduty",
+                name: "Amazon GuardDuty",
+                category: "Security",
+                description: "Dịch vụ phát hiện mối đe dọa liên tục, sử dụng machine learning và threat intelligence để giám sát môi trường AWS.",
+                keywords: [
+                    { t: "GuardDuty", d: "Dịch vụ managed threat detection, tự động phân tích log để phát hiện hoạt động đáng ngờ." },
+                    { t: "Continuous monitoring", d: "Giám sát liên tục VPC Flow Logs, CloudTrail, DNS logs, S3 data events..." },
+                    { t: "Threat detection", d: "Phát hiện malware, crypto mining, reconnaissance, credential abuse, C2 communication." },
+                    { t: "Machine Learning", d: "Sử dụng ML và anomaly detection để tìm hành vi bất thường mà không cần rule thủ công." },
+                    { t: "Threat Intelligence", d: "Tích hợp feed từ AWS, CrowdStrike, Proofpoint để phát hiện known threats." },
+                    { t: "Findings", d: "Tạo findings chi tiết (severity: Low/Medium/High) và gửi đến Security Hub, EventBridge." },
+                    { t: "Multi-account", d: "Hỗ trợ delegated admin trong Organizations để quản lý tập trung." },
+                    { t: "Integration", d: "Tích hợp với Security Hub, Detective, Lambda để tự động response." }
+                ],
+                color: "red"
+            },
+            {
+                id: "iam",
+                name: "AWS Identity and Access Management",
+                category: "Security",
+                description: "Quản lý xác thực và phân quyền truy cập tài nguyên AWS.",
+                keywords: [
+                    { t: "Users & Groups", d: "Quản lý user, group trong account." },
+                    { t: "Roles", d: "Phân quyền cho service hoặc cross-account." },
+                    { t: "Policies", d: "JSON document định nghĩa permission." },
+                    { t: "Least privilege", d: "Nguyên tắc phân quyền tối thiểu." },
+                    { t: "MFA", d: "Multi-Factor Authentication." },
+                    { t: "STS", d: "Security Token Service – temporary credentials." },
+                    { t: "IAM Access Analyzer", d: "Phát hiện policy rủi ro." },
+                    { t: "Identity Federation", d: "SSO với external IdP." }
+                ],
+                color: "red"
+            },
+            {
+                id: "cognito",
+                name: "Amazon Cognito",
+                category: "Security",
+                description: "Xác thực và quản lý người dùng cho web & mobile app.",
+                keywords: [
+                    { t: "User Pools", d: "User directory, sign-up/sign-in." },
+                    { t: "Identity Pools", d: "Federated access vào AWS resources." },
+                    { t: "OAuth 2.0 / OIDC", d: "Chuẩn xác thực phổ biến." },
+                    { t: "Social sign-in", d: "Google, Facebook, Apple." },
+                    { t: "MFA & Adaptive Auth", d: "Bảo mật nâng cao." },
+                    { t: "Sync", d: "Đồng bộ dữ liệu user cross-device." }
+                ],
+                color: "red"
+            },
+            {
+                id: "security-hub",
+                name: "AWS Security Hub",
+                category: "Security",
+                description: "Bảng điều khiển tập trung cho security posture.",
+                keywords: [
+                    { t: "Centralized view", d: "Tổng hợp findings từ nhiều service." },
+                    { t: "Security standards", d: "CIS, PCI DSS, AWS Foundational Best Practices." },
+                    { t: "Automated checks", d: "Continuous compliance monitoring." },
+                    { t: "Integration", d: "GuardDuty, Inspector, Macie, Firewall Manager." },
+                    { t: "Findings aggregation", d: "Cross-account & cross-region." },
+                    { t: "Remediation", d: "Tích hợp EventBridge cho auto-response." }
+                ],
+                color: "red"
+            },
+            /* ===================== SECURITY ===================== */
+            {
+                id: "inspector",
+                name: "Amazon Inspector",
+                category: "Security",
+                description: "Dịch vụ tự động đánh giá lỗ hổng bảo mật trên workload AWS.",
+                keywords: [
+                    { t: "Vulnerability scanning", d: "Quét lỗ hổng CVE trên EC2, Lambda, ECR container images." },
+                    { t: "Software vulnerabilities", d: "Phát hiện package dễ bị khai thác (OS & application)." },
+                    { t: "Network exposure", d: "Kiểm tra instance có public exposure không mong muốn." },
+                    { t: "CIS benchmarks", d: "Đánh giá cấu hình theo CIS hardening standards (EC2)." },
+                    { t: "Code scanning (Lambda)", d: "Quét code Lambda và dependencies tìm lỗ hổng." },
+                    { t: "Findings", d: "Tạo findings chi tiết với severity (Critical/High/Medium/Low)." },
+                    { t: "Integration", d: "Gửi findings đến Security Hub, EventBridge để auto-remediate." },
+                    { t: "Continuous scanning", d: "Tự động quét khi có thay đổi hoặc định kỳ." },
+                    { t: "Delegated admin", d: "Quản lý tập trung cross-account trong Organizations." }
+                ],
+                color: "red"
+            },
+
+            /* ===================== MANAGEMENT & GOVERNANCE ===================== */
+            {
+                id: "cloudwatch",
+                name: "Amazon CloudWatch",
+                category: "Management & Governance",
+                description: "Giám sát metrics, logs và alarm.",
+                keywords: [
+                    { t: "Metrics", d: "Thu thập và hiển thị metrics hệ thống/custom." },
+                    { t: "Logs", d: "Centralized log management với CloudWatch Logs." },
+                    { t: "Alarms", d: "Cảnh báo realtime và auto-action." },
+                    { t: "Dashboards", d: "Visualization metrics đa nguồn." },
+                    { t: "Events & EventBridge", d: "Trigger action dựa trên event." },
+                    { t: "Container Insights", d: "Monitor ECS/EKS." },
+                    { t: "Synthetics Canaries", d: "Monitor endpoint chủ động." }
+                ],
+                color: "blue"
+            },
+            {
+                id: "cloudtrail",
+                name: "AWS CloudTrail",
+                category: "Management & Governance",
+                description: "Audit log cho toàn bộ API call AWS.",
+                keywords: [
+                    { t: "Audit logging", d: "Ghi lại mọi API call và hoạt động." },
+                    { t: "Management events", d: "Control plane operations." },
+                    { t: "Data events", d: "S3 object-level, Lambda invocation." },
+                    { t: "Trail", d: "Multi-region & organization trail." },
+                    { t: "Compliance", d: "Phục vụ kiểm toán và forensic." },
+                    { t: "Lake integration", d: "Gửi log vào Security Lake." }
+                ],
+                color: "blue"
+            },
+            {
+                id: "config",
+                name: "AWS Config",
+                category: "Management & Governance",
+                description: "Theo dõi cấu hình tài nguyên AWS.",
+                keywords: [
+                    { t: "Configuration history", d: "Lưu lịch sử thay đổi tài nguyên." },
+                    { t: "Configuration recorder", d: "Ghi lại thay đổi liên tục." },
+                    { t: "Compliance rules", d: "Conformance packs & custom rules." },
+                    { t: "Remediation", d: "Auto-remediate với SSM Automation." },
+                    { t: "Resource inventory", d: "Xem toàn bộ tài nguyên và relationship." }
+                ],
+                color: "blue"
+            },
+            {
+                id: "systems-manager",
+                name: "AWS Systems Manager",
+                category: "Management & Governance",
+                description: "Quản lý vận hành EC2 & hybrid.",
+                keywords: [
+                    { t: "Run Command", d: "Thực thi command từ xa trên fleet." },
+                    { t: "Patch Manager", d: "Quản lý patch OS & application." },
+                    { t: "Session Manager", d: "SSH/RDP an toàn không cần bastion." },
+                    { t: "Parameter Store", d: "Lưu config & secret (tích hợp Secrets Manager)." },
+                    { t: "Automation", d: "Runbook tự động hóa vận hành." },
+                    { t: "Inventory", d: "Thu thập thông tin instance." },
+                    { t: "Hybrid activations", d: "Quản lý on-prem server." }
+                ],
+                color: "blue"
+            },
+
+            /* ===================== APPLICATION INTEGRATION ===================== */
+            {
+                id: "sqs",
+                name: "Amazon SQS",
+                category: "Application Integration",
+                description: "Message queue serverless.",
+                keywords: [
+                    { t: "Standard Queue", d: "High throughput, at-least-once." },
+                    { t: "FIFO Queue", d: "Exactly-once, strict ordering." },
+                    { t: "Decoupling", d: "Tách producer và consumer." },
+                    { t: "Visibility timeout", d: "Tránh xử lý trùng." },
+                    { t: "Dead-letter queue", d: "Xử lý message lỗi." },
+                    { t: "Delay queue", d: "Trì hoãn message." }
+                ],
+                color: "purple"
+            },
+            {
+                id: "sns",
+                name: "Amazon SNS",
+                category: "Application Integration",
+                description: "Pub/Sub messaging service.",
+                keywords: [
+                    { t: "Topic", d: "Publish message đến nhiều subscriber." },
+                    { t: "Fan-out", d: "Gửi đồng thời đến SQS, Lambda, HTTP..." },
+                    { t: "Notification", d: "SMS, Email, Mobile Push." },
+                    { t: "Message filtering", d: "Subscriber chỉ nhận message phù hợp." },
+                    { t: "FIFO Topic", d: "Ordering và deduplication." }
+                ],
+                color: "purple"
+            },
+            {
+                id: "eventbridge",
+                name: "Amazon EventBridge",
+                category: "Application Integration",
+                description: "Event bus trung tâm cho event-driven architecture.",
+                keywords: [
+                    { t: "Event bus", d: "Nhận và route event." },
+                    { t: "Rules & Targets", d: "Route event theo pattern đến Lambda, SQS..." },
+                    { t: "Schema Registry", d: "Quản lý schema event." },
+                    { t: "SaaS integration", d: "Partner event sources (Stripe, Zendesk...)." },
+                    { t: "API Destinations", d: "Gửi event ra external HTTP." }
+                ],
+                color: "purple"
+            },
+            {
+                id: "step-functions",
+                name: "AWS Step Functions",
+                category: "Application Integration",
+                description: "Orchestration workflow serverless: Điều phối nhiều service AWS theo workflow có trạng thái. 👉 Dùng khi process có nhiều bước + rẽ nhánh + retry + chờ đợi",
+                keywords: [
+                    { t: "State machine", d: "Định nghĩa workflow bằng ASL." },
+                    { t: "Visual workflow", d: "Designer trong console." },
+                    { t: "Error handling", d: "Retry, catch, fallback built-in." },
+                    { t: "Express vs Standard", d: "High-volume vs long-running." },
+                    { t: "Integration", d: "Gọi Lambda, ECS, SNS, SQS..." }
+                ],
+                color: "purple"
+            },
+
+            /* ===================== ANALYTICS & BIG DATA ===================== */
+            {
+                id: "athena",
+                name: "Amazon Athena",
+                category: "Analytics",
+                description: "Query dữ liệu S3 bằng SQL.",
+                keywords: [
+                    { t: "Serverless SQL", d: "Presto/Trino engine trên S3." },
+                    { t: "Pay per query", d: "Tính phí theo data scanned." },
+                    { t: "Federated query", d: "Query nhiều nguồn (RDS, Redshift...)." },
+                    { t: "Workgroups", d: "Quản lý cost & access." },
+                    { t: "Partitioning", d: "Tối ưu performance & chi phí." }
+                ],
+                color: "green"
+            },
+            {
+                id: "redshift",
+                name: "Amazon Redshift",
+                category: "Analytics",
+                description: "Data warehouse hiệu năng cao.",
+                keywords: [
+                    { t: "MPP", d: "Massively Parallel Processing." },
+                    { t: "Columnar storage", d: "Tối ưu analytical query." },
+                    { t: "RA3 nodes", d: "Storage riêng biệt với compute." },
+                    { t: "Concurrency scaling", d: "Auto scale cho peak load." },
+                    { t: "AQUA", d: "Advanced Query Accelerator." },
+                    { t: "Spectrum", d: "Query trực tiếp S3." }
+                ],
+                color: "green"
+            },
+            {
+                id: "glue",
+                name: "AWS Glue",
+                category: "Analytics",
+                description: "ETL serverless cho data lake.",
+                keywords: [
+                    { t: "ETL jobs", d: "Serverless Spark jobs." },
+                    { t: "Data Catalog", d: "Metadata repository cho Athena, Redshift..." },
+                    { t: "Crawler", d: "Tự động discover schema." },
+                    { t: "Job bookmarks", d: "Incremental processing: Lần chạy sau, job chỉ xử lý dữ liệu mới hoặc thay đổi, bỏ qua dữ liệu cũ" },
+                    { t: "Streaming ETL", d: "Xử lý Kafka/Kinesis realtime." }
+                ],
+                color: "green"
+            },
+            {
+                id: "kinesis",
+                name: "Amazon Kinesis",
+                category: "Analytics",
+                description: "Xử lý streaming data realtime.",
+                keywords: [
+                    { t: "Data Streams", d: "Ingest và process streaming." },
+                    { t: "Data Firehose", d: "Load streaming vào S3, Redshift, OpenSearch." },
+                    { t: "Data Analytics", d: "SQL trên streaming data." },
+                    { t: "Video Streams", d: "Xử lý video realtime." },
+                    { t: "Shards", d: "Scale throughput." }
+                ],
+                color: "green"
+            },
+
+            /* ===================== MACHINE LEARNING & AI ===================== */
+            /* ===================== MACHINE LEARNING & AI ===================== */
+            {
+                id: "sagemaker",
+                name: "Amazon SageMaker",
+                category: "Machine Learning",
+                description: "Nền tảng end-to-end để xây dựng, train và deploy ML model.",
+                keywords: [
+                    { t: "Notebooks", d: "Managed Jupyter notebooks." },
+                    { t: "Training jobs", d: "Distributed training tại scale lớn." },
+                    { t: "Endpoints", d: "Realtime & async inference." },
+                    { t: "Feature Store", d: "Quản lý feature offline/online." },
+                    { t: "Pipelines", d: "MLOps workflow tự động." },
+                    { t: "Clarify", d: "Phát hiện bias trong model." },
+                    { t: "Model Monitor", d: "Theo dõi drift và quality." },
+                    { t: "Ground Truth", d: "Labeling data với human-in-the-loop." }
+                ],
+                color: "orange"
+            },
+            {
+                id: "bedrock",
+                name: "Amazon Bedrock",
+                category: "Machine Learning",
+                description: "Nền tảng serverless cho Generative AI.",
+                keywords: [
+                    { t: "Foundation models", d: "Truy cập Claude, Titan, Llama, Mistral..." },
+                    { t: "Serverless", d: "Không quản lý infrastructure." },
+                    { t: "Agents", d: "Tạo agent thực hiện task phức tạp." },
+                    { t: "Knowledge Bases", d: "RAG với dữ liệu riêng." },
+                    { t: "Guardrails", d: "Lọc nội dung và an toàn." },
+                    { t: "Custom models", d: "Fine-tuning và continued pre-training." },
+                    { t: "Model Evaluation", d: "Đánh giá model tự động." }
+                ],
+                color: "orange"
+            },
+            {
+                id: "rekognition",
+                name: "Amazon Rekognition",
+                category: "Machine Learning",
+                description: "Phân tích hình ảnh và video bằng deep learning.",
+                keywords: [
+                    { t: "Face analysis", d: "Nhận diện, so sánh khuôn mặt." },
+                    { t: "Label detection", d: "Phát hiện object, scene, activity." },
+                    { t: "Text detection", d: "OCR trong ảnh và video." },
+                    { t: "Moderation", d: "Phát hiện nội dung không phù hợp." },
+                    { t: "Custom Labels", d: "Train model nhận diện riêng." },
+                    { t: "Celebrity recognition", d: "Nhận diện người nổi tiếng." }
+                ],
+                color: "orange"
+            },
+            {
+                id: "comprehend",
+                name: "Amazon Comprehend",
+                category: "Machine Learning",
+                description: "Xử lý ngôn ngữ tự nhiên (NLP).",
+                keywords: [
+                    { t: "Sentiment analysis", d: "Phân tích cảm xúc text." },
+                    { t: "Entity recognition", d: "Trích xuất người, địa điểm, tổ chức." },
+                    { t: "Key phrases", d: "Trích xuất cụm từ quan trọng." },
+                    { t: "Syntax analysis", d: "Phân tích cấu trúc câu." },
+                    { t: "Custom entities", d: "Train model nhận diện thực thể riêng." },
+                    { t: "Medical", d: "Phiên bản chuyên y tế (Comprehend Medical)." }
+                ],
+                color: "orange"
+            },
+            {
+                id: "transcribe",
+                name: "Amazon Transcribe",
+                category: "Machine Learning",
+                description: "Chuyển giọng nói thành văn bản.",
+                keywords: [
+                    { t: "ASR", d: "Automatic Speech Recognition." },
+                    { t: "Real-time", d: "Streaming transcription." },
+                    { t: "Speaker identification", d: "Phân biệt người nói." },
+                    { t: "Custom vocabulary", d: "Tối ưu từ chuyên ngành." },
+                    { t: "Call Analytics", d: "Phân tích cuộc gọi (sentiment, redaction)." },
+                    { t: "Medical", d: "Phiên bản y tế chuyên biệt." }
+                ],
+                color: "orange"
+            },
+            {
+                id: "polly",
+                name: "Amazon Polly",
+                category: "Machine Learning",
+                description: "Chuyển văn bản thành giọng nói tự nhiên.",
+                keywords: [
+                    { t: "Text-to-Speech", d: "Speech synthesis chất lượng cao." },
+                    { t: "Neural voices", d: "Giọng nói gần như người thật." },
+                    { t: "SSML", d: "Kiểm soát phát âm, nhấn nhá." },
+                    { t: "Lexicons", d: "Custom pronunciation." },
+                    { t: "Long-form", d: "Tạo audiobook dài." }
+                ],
+                color: "orange"
+            },
+            {
+                id: "lex",
+                name: "Amazon Lex",
+                category: "Machine Learning",
+                description: "Xây dựng chatbot và conversational AI.",
+                keywords: [
+                    { t: "Chatbot", d: "Text & voice interface." },
+                    { t: "NLU", d: "Natural Language Understanding." },
+                    { t: "Intents & Slots", d: "Xử lý ý định và thông tin người dùng." },
+                    { t: "Multi-turn", d: "Hội thoại nhiều lượt." },
+                    { t: "Integration", d: "Kết nối Lambda, Connect, Kendra." }
+                ],
+                color: "orange"
+            },
+            {
+                id: "textract",
+                name: "Amazon Textract",
+                category: "Machine Learning",
+                description: "Trích xuất text và dữ liệu từ tài liệu scan.",
+                keywords: [
+                    { t: "OCR", d: "Optical Character Recognition nâng cao." },
+                    { t: "Forms & Tables", d: "Trích xuất key-value và bảng." },
+                    { t: "Handwriting", d: "Nhận diện chữ viết tay." },
+                    { t: "Invoices & Receipts", d: "Xử lý hóa đơn, biên lai." },
+                    { t: "Queries", d: "Truy vấn trực tiếp bằng natural language." }
+                ],
+                color: "orange"
+            },
+            {
+                id: "translate",
+                name: "Amazon Translate",
+                category: "Machine Learning",
+                description: "Dịch thuật ngôn ngữ realtime.",
+                keywords: [
+                    { t: "Neural MT", d: "Machine translation chất lượng cao." },
+                    { t: "Real-time", d: "Dịch batch và streaming." },
+                    { t: "Custom terminology", d: "Thuật ngữ riêng domain." },
+                    { t: "Active Custom Translation", d: "Fine-tune model riêng." }
+                ],
+                color: "orange"
+            },
+            {
+                id: "personalize",
+                name: "Amazon Personalize",
+                category: "Machine Learning",
+                description: "Tạo recommendation cá nhân hóa.",
+                keywords: [
+                    { t: "Recommendations", d: "Gợi ý sản phẩm/user realtime." },
+                    { t: "Recipes", d: "Pre-built algorithm (HRNN, SIMS...)." },
+                    { t: "AutoML", d: "Tự động chọn model tốt nhất." },
+                    { t: "Cold start", d: "Xử lý user/item mới." }
+                ],
+                color: "orange"
+            },
+
+            /* ===================== EDGE / CONTAINERS / FRONTEND ===================== */
+            {
+                id: "cloudfront",
+                name: "Amazon CloudFront",
+                category: "Edge & Hybrid",
+                description: "CDN toàn cầu.",
+                keywords: [
+                    { t: "Edge locations", d: "Cache nội dung gần người dùng." },
+                    { t: "Low latency", d: "Phân phối nội dung nhanh toàn cầu." },
+                    { t: "Lambda@Edge", d: "Chạy code tại edge." },
+                    { t: "DDoS protection", d: "Tích hợp AWS Shield." },
+                    { t: "Origin Shield", d: "Giảm load origin." },
+                    { t: "RTMP & HLS", d: "Streaming media." }
+                ],
+                color: "cyan"
+            },
+            {
+                id: "ecs",
+                name: "Amazon ECS",
+                category: "Containers",
+                description: "Container orchestration(điều phối).",
+                keywords: [
+                    { t: "Docker containers", d: "Chạy và quản lý container Docker." },
+                    { t: "EC2 & Fargate", d: "Launch type: tự quản server hoặc serverless." },
+                    { t: "Task & Service", d: "Task definition + service duy trì số task." },
+                    { t: "Integration", d: "ALB, CloudWatch, ECR, Secrets Manager." },
+                    { t: "Capacity Providers", d: "Kết hợp EC2 + Fargate trong cluster." }
+                ],
+                color: "teal"
+            },
+            {
+                id: "eks",
+                name: "Amazon EKS",
+                category: "Containers",
+                description: "Managed Kubernetes.",
+                keywords: [
+                    { t: "Kubernetes", d: "Managed control plane CNCF-compliant." },
+                    { t: "Fargate profiles", d: "Serverless pod execution." },
+                    { t: "Add-ons", d: "CoreDNS, vpc-cni, kube-proxy." },
+                    { t: "Hybrid", d: "EKS Anywhere cho on-prem." },
+                    { t: "Blueprints", d: "Terraform-ready cluster." }
+                ],
+                color: "teal"
+            },
+            {
+                id: "amplify",
+                name: "AWS Amplify",
+                category: "Frontend & Mobile",
+                description: "Build & deploy frontend nhanh.",
+                keywords: [
+                    { t: "Fullstack serverless", d: "Frontend + backend trong một workflow." },
+                    { t: "CI/CD", d: "Deploy React, Vue, Angular, Next.js." },
+                    { t: "Hosting", d: "Global CDN với CloudFront." },
+                    { t: "Auth", d: "Tích hợp Cognito." },
+                    { t: "API & Storage", d: "GraphQL/REST + S3." },
+                    { t: "Analytics & Predictions", d: "Pinpoint & Rekognition." }
+                ],
+                color: "pink"
+            },
+            /* ===================== API & NETWORKING ===================== */
+            {
+                id: "apigateway",
+                name: "Amazon API Gateway",
+                category: "Networking",
+                description: "Dịch vụ managed để tạo, deploy và quản lý API tại scale.",
+                keywords: [
+                    { t: "REST APIs", d: "Tạo API HTTP truyền thống với stages, resources, methods." },
+                    { t: "WebSocket APIs", d: "Hỗ trợ kết nối hai chiều realtime (chat, notification)." },
+                    { t: "HTTP APIs", d: "Phiên bản nhẹ, rẻ hơn REST, hỗ trợ OIDC/JWT authorizer." },
+                    { t: "Private APIs", d: "API chỉ truy cập từ trong VPC qua VPC Endpoint (PrivateLink)." },
+                    { t: "Integration", d: "Kết nối backend: Lambda, HTTP, AWS services (DynamoDB, SQS...)." },
+                    { t: "Authorizers", d: "Xác thực bằng Cognito, Lambda, IAM hoặc JWT." },
+                    { t: "Throttling & Quotas", d: "Giới hạn request rate và usage plan theo API key." },
+                    { t: "Caching", d: "Cache response để giảm latency và load backend." },
+                    { t: "CloudWatch monitoring", d: "Metrics, logs chi tiết + integration X-Ray tracing." },
+                    { t: "Canary deployments", d: "Triển khai dần traffic mới với stage variables." },
+                    { t: "Resource Policies", d: "Kiểm soát truy cập API theo IP, VPC, hoặc AWS account." },
+                    { t: "Usage Plans & API Keys", d: "Quản lý quota và throttling theo từng consumer." },
+                    { t: "Stages & Stage Variables", d: "Quản lý môi trường và cấu hình động cho backend." },
+                    { t: "Custom Domain Names", d: "Expose API qua domain riêng với SSL/TLS (ACM)." },
+                    { t: "Access Logging", d: "Log chi tiết request/response phục vụ audit & debug." },
+                    { t: "Endpoint Types", d: "Regional, Edge-Optimized, Private API Gateway." }
+                ],
+                color: "purple"
+            },
+            /* ===================== STORAGE ===================== */
+            {
+                id: "s3",
+                name: "Amazon S3",
+                category: "Storage",
+                description: "Dịch vụ lưu trữ đối tượng với độ bền cao, scale vô hạn và chi phí thấp.",
+                keywords: [
+                    { t: "Object storage", d: "Lưu trữ file (object) với key, metadata, version." },
+                    { t: "Durability 11 9s", d: "Độ bền dữ liệu 99.999999999% nhờ replicate cross-AZ." },
+                    { t: "Bucket", d: "Container logic chứa object, tên bucket unique toàn cầu." },
+                    { t: "Storage classes", d: "Standard, Intelligent-Tiering, Glacier Instant/Deep Archive..." },
+                    { t: "Lifecycle policies", d: "Tự động chuyển class hoặc expire object theo thời gian." },
+                    { t: "Versioning", d: "Giữ nhiều phiên bản object, bảo vệ xóa nhầm." },
+                    { t: "Replication", d: "CRR/SRR – replicate cross-region/account." },
+                    { t: "Event notifications", d: "Trigger Lambda, SQS, SNS khi object tạo/xóa." },
+                    { t: "Static website", d: "Host website tĩnh trực tiếp từ bucket." }
+                ],
+                color: "green"
+            },
+            {
+                id: "efs",
+                name: "Amazon EFS",
+                category: "Storage",
+                description: "Elastic File System – NFS managed, shared file storage.",
+                keywords: [
+                    { t: "NFS filesystem", d: "Shared file storage cho nhiều EC2/EKS/Lambda." },
+                    { t: "Elastic scaling", d: "Tự động scale throughput & storage." },
+                    { t: "Performance modes", d: "General Purpose, Max I/O, Provisioned." },
+                    { t: "Storage classes", d: "Standard, Infrequent Access, Archive." },
+                    { t: "Multi-AZ", d: "Regional resilience với replication tự động." },
+                    { t: "Lifecycle management", d: "Tự động chuyển IA sau thời gian không truy cập." }
+                ],
+                color: "green"
+            },
+            {
+                id: "fsx-lustre",
+                name: "Amazon FSx for Lustre",
+                category: "Storage",
+                description: "Hệ thống file parallel cao cấp, tối ưu cho workload compute-intensive.",
+                keywords: [
+                    { t: "Lustre filesystem", d: "File system phân tán, parallel access tốc độ cao." },
+                    { t: "High performance", d: "Throughput hàng GB/s, IOPS hàng triệu, latency thấp." },
+                    { t: "HPC & ML", d: "Lý tưởng cho high-performance computing, machine learning training, rendering." },
+                    { t: "S3 integration", d: "Mount trực tiếp S3 như file system, lazy loading data." },
+                    { t: "Data Repository", d: "Import/export tự động giữa FSx và S3." },
+                    { t: "Deployment options", d: "Persistent (long-term) hoặc Scratch (tạm thời cao tốc)." },
+                    { t: "Multi-AZ", d: "High availability với replication cross-AZ." },
+                    { t: "POSIX compliant", d: "Tương thích chuẩn Unix, dễ integrate với cluster compute." }
+                ],
+                color: "green"
+            },
+            {
+                id: "ebs",
+                name: "Amazon EBS",
+                category: "Storage",
+                description: "Block storage cho EC2 instances.",
+                keywords: [
+                    { t: "Block storage", d: "Ổ đĩa gắn vào EC2 như local disk." },
+                    { t: "Volume types", d: "gp3, io2, st1, sc1 – tối ưu cost/performance." },
+                    { t: "Snapshots", d: "Backup incremental lưu trên S3." },
+                    { t: "Encryption", d: "KMS integration mặc định." },
+                    { t: "Elastic Volumes", d: "Thay đổi size/type không downtime." },
+                    { t: "Multi-Attach", d: "Gắn một volume vào nhiều instance (io2)." }
+                ],
+                color: "green"
+            },
+            {
+                id: "storage-gateway",
+                name: "AWS Storage Gateway",
+                category: "Storage",
+                description: "Hybrid storage kết nối on-prem với AWS cloud.",
+                keywords: [
+                    { t: "File Gateway", d: "NFS/SMB → lưu file vào S3." },
+                    { t: "Volume Gateway", d: "iSCSI block storage với cache local." },
+                    { t: "Tape Gateway", d: "VTL cho backup vào S3/Glacier." },
+                    { t: "Hybrid access", d: "Low-latency local + cloud backup." }
+                ],
+                color: "green"
+            },
+            {
+                id: "backup",
+                name: "AWS Backup",
+                category: "Storage",
+                description: "Centralized backup service cho nhiều AWS resources.",
+                keywords: [
+                    { t: "Centralized management", d: "Backup policy cross-service (EBS, RDS, EC2, S3...)." },
+                    { t: "Backup vault", d: "Lưu trữ backup an toàn với lock." },
+                    { t: "Cross-region/account", d: "Replication backup tự động." },
+                    { t: "Audit & compliance", d: "Backup activity monitoring." }
+                ],
+                color: "green"
+            },
+            {
+                id: "fsx-windows",
+                name: "Amazon FSx for Windows File Server",
+                category: "Storage",
+                description: "Managed Windows file system dựa trên SMB, tích hợp đầy đủ Active Directory.",
+                keywords: [
+                    { t: "SMB protocol", d: "Hỗ trợ SMB 2.0 đến 3.1.1 cho Windows workload." },
+                    { t: "Active Directory integration", d: "Join domain on-prem hoặc AWS Managed Microsoft AD." },
+                    { t: "Fully managed", d: "AWS quản lý backup hàng ngày, patching, HA." },
+                    { t: "Multi-AZ", d: "High availability với failover tự động cross-AZ." },
+                    { t: "Single-AZ", d: "Option rẻ hơn cho workload không cần HA cao." },
+                    { t: "Data Deduplication", d: "Tiết kiệm storage đến 50-60% với VSS." },
+                    { t: "Shadow Copy", d: "User self-service restore file cũ." },
+                    { t: "Access control", d: "NTFS ACL chi tiết như Windows Server truyền thống." },
+                    { t: "DFS support", d: "Distributed File System cho namespace lớn." }
+                ],
+                color: "green"
+            },
+            /* ===================== Migration & Transfer ===================== */
+            {
+                id: "datasync",
+                name: "AWS DataSync",
+                category: "Migration & Transfer",
+                description: "Dịch vụ chuyển dữ liệu tự động, an toàn giữa on-premises và AWS storage hoặc giữa các AWS services.",
+                keywords: [
+                    { t: "Data transfer", d: "Chuyển dữ liệu nhanh, hỗ trợ NFS, SMB, HDFS, self-managed object storage." },
+                    { t: "Sources/Destinations", d: "On-prem → S3/EFS/FSx; giữa S3/EFS/FSx; hoặc cloud khác (Azure, GCP)." },
+                    { t: "Accelerated transfer", d: "Tối ưu bandwidth, nén dữ liệu, parallel threads → nhanh hơn rsync/scp." },
+                    { t: "Task scheduling", d: "Lập lịch chạy định kỳ hoặc one-time." },
+                    { t: "Data integrity", d: "Kiểm tra checksum, preserve metadata, permissions." },
+                    { t: "Security", d: "Mã hóa in-transit (TLS), VPC endpoint, IAM control." },
+                    { t: "Monitoring", d: "CloudWatch metrics, logs chi tiết tiến độ." },
+                    { t: "Discovery", d: "DataSync Discovery tự động inventory storage on-prem để lập kế hoạch migrate." }
+                ],
+                color: "green"
+            },
+            {
+                id: "mgn",
+                name: "AWS Application Migration Service (MGN)",
+                category: "Migration & Transfer",
+                description: "Dịch vụ lift-and-shift migrate server từ on-prem hoặc cloud khác lên AWS.",
+                keywords: [
+                    { t: "Lift-and-shift", d: "Rehost server vật lý/virtual mà ít thay đổi." },
+                    { t: "Replication agent", d: "Cài agent trên source server để replicate liên tục." },
+                    { t: "Cutover", d: "Chuyển traffic sang instance AWS với downtime tối thiểu." },
+                    { t: "Post-launch modernization", d: "Tự động cài CloudWatch, SSM sau migrate." },
+                    { t: "Multi-server", d: "Hỗ trợ Windows/Linux, VMware, Hyper-V, physical." }
+                ],
+                color: "purple"
+            },
+            {
+                id: "dms",
+                name: "AWS Database Migration Service (DMS)",
+                category: "Migration & Transfer",
+                description: "Migrate database với downtime tối thiểu, hỗ trợ homogeneous & heterogeneous.",
+                keywords: [
+                    { t: "Ongoing replication", d: "CDC (Change Data Capture) cho minimal downtime." },
+                    { t: "Schema conversion", d: "Tích hợp SCT để chuyển schema khác engine." },
+                    { t: "Sources/Targets", d: "On-prem, RDS, EC2, S3, Kafka, OpenSearch..." },
+                    { t: "Fleet Advisor", d: "Tự động inventory và lập kế hoạch migrate DB." }
+                ],
+                color: "purple"
+            },
+            {
+                id: "snow",
+                name: "AWS Snow Family",
+                category: "Migration & Transfer",
+                description: "Thiết bị vật lý để chuyển dữ liệu lớn offline.",
+                keywords: [
+                    { t: "Snowcone", d: "Nhỏ nhất, 8-14TB, edge compute." },
+                    { t: "Snowball Edge", d: "80-210TB, có compute/storage cluster." },
+                    { t: "Snowmobile", d: "Xe tải chứa exabytes cho dữ liệu cực lớn." },
+                    { t: "Offline transfer", d: "Ship thiết bị để tránh bandwidth hạn chế." }
+                ],
+                color: "purple"
+            },
+            {
+                id: "transfer-family",
+                name: "AWS Transfer Family",
+                category: "Migration & Transfer",
+                description: "Managed SFTP/FTPS/FTP để chuyển file vào/ra S3/EFS.",
+                keywords: [
+                    { t: "Protocol support", d: "SFTP, FTPS, FTP, AS2." },
+                    { t: "Serverless", d: "Không quản lý server, auto-scale." },
+                    { t: "Identity provider", d: "Custom, AWS Directory, Lambda." },
+                    { t: "S3/EFS backend", d: "Lưu trực tiếp vào bucket hoặc filesystem." }
+                ],
+                color: "purple"
+            },
+        ];
+
+        const searchInput = document.getElementById('searchInput');
+        const clearSearchBtn = document.getElementById('clearSearch');
+        const servicesGrid = document.getElementById('servicesGrid');
+        const emptyState = document.getElementById('emptyState');
+        const categoryButtons = document.querySelectorAll('.filter-btn');
+        let currentFilter = 'all';
+
+        function renderServices(searchTerm = '') {
+            const filteredServices = services.filter(service => {
+                const searchLower = searchTerm.toLowerCase();
+                const matchesSearch =
+                    service.name.toLowerCase().includes(searchLower) ||
+                    service.description.toLowerCase().includes(searchLower) ||
+                    service.keywords.some(k => k.t.toLowerCase().includes(searchLower));
+
+                const matchesCategory = currentFilter === 'all' || service.category === currentFilter;
+
+                return matchesSearch && matchesCategory;
+            });
+
+            // Update Clear button visibility
+            clearSearchBtn.classList.toggle('hidden', searchTerm === '');
+
+            if (filteredServices.length === 0) {
+                servicesGrid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            servicesGrid.innerHTML = filteredServices.map(service => `
+                <div class="aws-card bg-white rounded-3xl border border-gray-100 p-8 flex flex-col h-full shadow-sm hover:shadow-xl">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="px-3 py-1 bg-${service.color}-50 text-${service.color}-600 rounded-full text-[10px] font-bold uppercase tracking-wider border border-${service.color}-100">
+                                    ${service.category}
+                                </span>
+                            </div>
+                            <h3 class="text-2xl font-bold text-slate-800 tracking-tight">${highlightText(service.name, searchTerm)}</h3>
+                        </div>
+                        <div class="h-12 w-12 bg-slate-50 flex items-center justify-center rounded-2xl border border-slate-100 text-${service.color}-500 shadow-sm">
+                            <i class="fas fa-cube text-xl"></i>
+                        </div>
+                    </div>
+                    
+                    <p class="text-slate-500 mb-8 text-sm leading-relaxed font-normal">
+                        ${highlightText(service.description, searchTerm)}
+                    </p>
+
+                    <div class="mt-auto">
+                        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-3">Từ khóa (Click để tìm)</div>
+                        <div class="flex flex-wrap gap-2">
+                            ${service.keywords.map(kw => `
+                                <div class="keyword-tag bg-white text-slate-600 px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-200" 
+                                     onclick="applySearch('${kw.t}')">
+                                    ${highlightText(kw.t, searchTerm)}
+                                    <div class="tooltip">
+                                        <div class="font-bold text-blue-400 mb-1">Giải nghĩa:</div>
+                                        ${kw.d}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function highlightText(text, term) {
+            if (!term) return text;
+            const regex = new RegExp(`(${term})`, 'gi');
+            return text.replace(regex, '<span class="highlight">$1</span>');
+        }
+
+        function applySearch(term) {
+            searchInput.value = term;
+            renderServices(term);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetSearch() {
+            searchInput.value = '';
+            renderServices('');
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            renderServices(e.target.value);
+        });
+
+        clearSearchBtn.addEventListener('click', resetSearch);
+
+        categoryButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                categoryButtons.forEach(b => {
+                    b.classList.remove('active', 'bg-blue-600', 'text-white', 'shadow-md', 'shadow-blue-200');
+                    b.classList.add('bg-white', 'text-gray-600');
+                });
+                btn.classList.add('active', 'bg-blue-600', 'text-white', 'shadow-md', 'shadow-blue-200');
+                btn.classList.remove('bg-white', 'text-gray-600');
+
+                currentFilter = btn.dataset.category;
+                renderServices(searchInput.value);
+            });
+        });
+
+        // Initial render
+        renderServices();
+    </script>
+</body>
+
+</html>

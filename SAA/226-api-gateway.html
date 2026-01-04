@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">API Gateway Overview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #8b5cf6; /* Purple 500 - API */
+            --secondary-color: #1e40af; /* Blue 800 - Features */
+            --background-color: #f5f3ff; /* Purple 50 */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: #1f2937;
+        }
+        .header-bg {
+            background-color: var(--secondary-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid var(--primary-color);
+        }
+        .feature-icon {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+        /* Mandatory Bolding Replacement: Using <b> tag and primary color */
+        b {
+            font-weight: 700 !important;
+            color: var(--secondary-color);
+        }
+        .integration-box {
+            background-color: #f3f4f6;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            border: 1px solid #e5e7eb;
+        }
+        .endpoint-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-route mr-3 text-yellow-300"></i> API Gateway
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Introduction & Why API Gateway -->
+        <section class="card space-y-4">
+            <h2 id="section1Title" class="text-3xl font-extrabold text-gray-800 border-b pb-2 mb-4"></h2>
+            
+            <p id="section1Intro" class="text-lg text-gray-700 leading-relaxed"></p>
+            
+            <div class="p-4 mt-4 bg-purple-50 rounded-lg border-2 border-primary-color/50 text-gray-800 font-medium flex items-start">
+                <i class="fas fa-rocket feature-icon mt-1"></i>
+                <div>
+                    <p id="apiGatewayDefinition" class="font-bold text-lg mb-1"></p>
+                    <p id="apiGatewayFeatures" class="text-sm"></p>
+                </div>
+            </div>
+
+            <p id="section1Benefits" class="text-gray-700 leading-relaxed pt-2"></p>
+        </section>
+
+        <!-- Section 2: Core Features & Scalability -->
+        <section class="card space-y-4">
+            <h3 id="featuresTitle" class="text-2xl font-extrabold text-gray-800 mb-4 flex items-center"><i class="fas fa-cogs feature-icon"></i> </h3>
+            
+            <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
+                <li id="feature1" class="flex items-start"><i class="fas fa-fingerprint mr-3 mt-1 text-green-500"></i> </li>
+                <li id="feature2" class="flex items-start"><i class="fas fa-code-branch mr-3 mt-1 text-green-500"></i> </li>
+                <li id="feature3" class="flex items-start"><i class="fas fa-clipboard-list mr-3 mt-1 text-green-500"></i> </li>
+                <li id="feature4" class="flex items-start"><i class="fas fa-stopwatch mr-3 mt-1 text-green-500"></i> </li>
+                <li id="feature5" class="flex items-start"><i class="fas fa-exchange-alt mr-3 mt-1 text-green-500"></i> </li>
+                <li id="feature6" class="flex items-start"><i class="fas fa-database mr-3 mt-1 text-green-500"></i> </li>
+            </ul>
+        </section>
+
+        <!-- Section 3: Integrations -->
+        <section class="card space-y-4">
+            <h3 id="integrationTitle" class="text-2xl font-extrabold text-gray-800 mb-6 flex items-center"><i class="fas fa-link feature-icon"></i> </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="integrations">
+                <div class="integration-box bg-purple-100/50">
+                    <i class="fas fa-brain text-purple-600 mr-3"></i> <span id="intLambda"></span>
+                </div>
+                <div class="integration-box bg-red-100/50">
+                    <i class="fas fa-server text-red-600 mr-3"></i> <span id="intHTTP"></span>
+                </div>
+                <div class="integration-box bg-green-100/50">
+                    <i class="fas fa-cloud text-green-600 mr-3"></i> <span id="intAWSServices"></span>
+                </div>
+            </div>
+
+            <div class="pt-4 mt-4 border-t border-gray-100">
+                <p id="kinesisExampleIntro" class="font-bold text-gray-700 mb-2"></p>
+                <p id="kinesisExampleDetail" class="text-sm text-gray-600"></p>
+            </div>
+        </section>
+
+        <!-- Section 4: Endpoint Types -->
+        <section class="card space-y-4">
+            <h3 id="endpointTitle" class="text-2xl font-extrabold text-gray-800 mb-4 flex items-center"><i class="fas fa-globe-americas feature-icon"></i> </h3>
+            
+            <div class="space-y-3">
+                <div class="p-3 bg-blue-50 rounded-lg">
+                    <p class="font-bold flex items-center text-blue-800 mb-1"><span id="endpoint1Name" class="endpoint-badge bg-blue-200"></span></p>
+                    <p id="endpoint1Desc" class="text-sm text-gray-700"></p>
+                </div>
+                <div class="p-3 bg-yellow-50 rounded-lg">
+                    <p class="font-bold flex items-center text-yellow-800 mb-1"><span id="endpoint2Name" class="endpoint-badge bg-yellow-200"></span></p>
+                    <p id="endpoint2Desc" class="text-sm text-gray-700"></p>
+                </div>
+                <div class="p-3 bg-red-50 rounded-lg">
+                    <p class="font-bold flex items-center text-red-800 mb-1"><span id="endpoint3Name" class="endpoint-badge bg-red-200"></span></p>
+                    <p id="endpoint3Desc" class="text-sm text-gray-700"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Security on API Gateway -->
+        <section class="card space-y-4">
+            <h3 id="securityTitle" class="text-2xl font-extrabold text-gray-800 mb-4 flex items-center"><i class="fas fa-lock feature-icon"></i> </h3>
+            
+            <p id="securityIntro" class="text-gray-700 leading-relaxed"></p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm font-semibold">
+                <span class="p-3 bg-gray-100 rounded-lg flex items-center"><i class="fas fa-users-cog mr-2 text-gray-600"></i> <span id="auth1"></span></span>
+                <span class="p-3 bg-gray-100 rounded-lg flex items-center"><i class="fas fa-id-card-alt mr-2 text-gray-600"></i> <span id="auth2"></span></span>
+                <span class="p-3 bg-gray-100 rounded-lg flex items-center"><i class="fas fa-code mr-2 text-gray-600"></i> <span id="auth3"></span></span>
+            </div>
+            
+            <p id="securityHTTPS" class="text-gray-600 pt-2 text-sm"></p>
+        </section>
+
+        <!-- Section 6: Key Takeaways -->
+        <section class="p-8 bg-gray-800 rounded-2xl shadow-2xl text-white">
+            <h2 id="takeawaysTitle" class="text-3xl font-extrabold mb-6 text-center text-primary-color"><i class="fas fa-key mr-2"></i> </h2>
+            <ul id="takeawaysList" class="space-y-4">
+                <!-- Takeaways populated by JS -->
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        const content = {
+            'vi': {
+                pageTitle: 'Tổng quan về API Gateway',
+                section1Title: 'Tổng quan về API Gateway',
+                section1Intro: 'Trong hành trình serverless, chúng ta đã thấy cách tạo Lambda functions và sử dụng DynamoDB. Tuy nhiên, chúng ta cần một cách để client có thể gọi các chức năng Lambda này. Có nhiều cách, như client gọi trực tiếp (cần quyền IAM) hoặc sử dụng Application Load Balancer (ALB).',
+                apiGatewayDefinition: 'Có một lựa chọn cuối cùng được gọi là <b>API Gateway</b>. Đây là một dịch vụ phi máy chủ (serverless) của AWS cho phép chúng ta tạo các <b>REST API</b> công khai và có thể truy cập được cho client.',
+                apiGatewayFeatures: 'Client giao tiếp với API Gateway, sau đó Gateway sẽ proxy yêu cầu đến các Lambda functions của chúng ta.',
+                section1Benefits: 'Chúng ta sử dụng API Gateway vì nó cung cấp nhiều hơn một endpoint HTTP đơn thuần. Nó cung cấp nhiều tính năng như xác thực, kế hoạch sử dụng (usage plans), các giai đoạn phát triển (development stages), và tích hợp nó với Lambda mang lại cho chúng ta một ứng dụng serverless hoàn chỉnh mà không cần quản lý hạ tầng.',
+
+                featuresTitle: 'Tính năng cốt lõi và khả năng mở rộng',
+                feature1: 'Hỗ trợ giao thức <b>WebSocket</b> cho streaming real-time.',
+                feature2: 'Xử lý <b>Versioning</b> (từ v1 sang v2) mà không làm hỏng client.',
+                feature3: 'Hỗ trợ nhiều môi trường (Development, Testing, Production).',
+                feature4: 'Thực hiện <b>Throttling</b> (giới hạn tốc độ) và Caching phản hồi API.',
+                feature5: 'Cho phép <b>biến đổi (transform)</b> và <b>xác thực (validate)</b> yêu cầu/phản hồi.',
+                feature6: 'Hỗ trợ các tiêu chuẩn như <b>Swagger</b> hoặc <b>OpenAPI 3.0</b> để import/export định nghĩa API.',
+                
+                integrationTitle: 'Các loại tích hợp của API Gateway',
+                intLambda: '<b>Lambda functions:</b> Cách dễ nhất và phổ biến nhất để xây dựng ứng dụng serverless hoàn chỉnh.',
+                intHTTP: '<b>HTTP endpoints:</b> Lộ ra bất kỳ backend HTTP nào (on-premises HTTP APIs hoặc ALB), thêm các tính năng như rate limiting và caching.',
+                intAWSServices: '<b>Các dịch vụ AWS:</b> API Gateway có thể trực tiếp lộ ra các dịch vụ AWS, ví dụ: bắt đầu workflow của Step Function hoặc post tin nhắn tới SQS.',
+                kinesisExampleIntro: 'Ví dụ: Tích hợp với Kinesis Data Streams',
+                kinesisExampleDetail: 'API Gateway hoạt động như một trung gian giữa client và Kinesis Data Streams, cho phép client gửi dữ liệu một cách an toàn mà không cần cung cấp thông tin đăng nhập AWS, và sau đó dữ liệu có thể được lưu trữ trong S3.',
+
+                endpointTitle: 'Các loại Endpoint của API Gateway',
+                endpoint1Name: 'Edge-Optimized (mặc định)',
+                endpoint1Desc: 'Được thiết kế cho các client toàn cầu. Các yêu cầu được định tuyến thông qua các vị trí CloudFront Edge để cải thiện độ trễ.',
+                endpoint2Name: 'Regional',
+                endpoint2Desc: 'Sử dụng khi tất cả người dùng nằm trong cùng một vùng (region) với API Gateway. Không sử dụng vị trí CloudFront Edge (bạn có thể tạo phân phối CloudFront riêng).',
+                endpoint3Name: 'Private',
+                endpoint3Desc: 'Không công khai. Chỉ có thể truy cập bên trong VPC của bạn bằng cách sử dụng interface VPC endpoints.',
+
+                securityTitle: 'Bảo mật trên API Gateway',
+                securityIntro: 'Bảo mật là một khía cạnh quan trọng của API Gateway. Có nhiều cách để bật bảo mật cho cả <b>xác thực (authentication)</b> và <b>ủy quyền (authorization)</b>.',
+                auth1: '<b>IAM roles:</b> Phù hợp cho các ứng dụng nội bộ (ví dụ: chạy trên EC2).',
+                auth2: '<b>Amazon Cognito:</b> Phù hợp cho người dùng bên ngoài (ứng dụng di động/web).',
+                auth3: '<b>Custom authorizers:</b> Các Lambda functions triển khai logic xác thực tùy chỉnh.',
+                securityHTTPS: 'Bảo mật HTTPS được bật bằng cách sử dụng custom domain names tích hợp với AWS Certificate Manager (ACM).',
+                
+                takeawaysTitle: 'Điểm Chính Cần Nắm Vững',
+                takeaways: [
+                    '<b>API Gateway</b> cung cấp một cách serverless để tạo <b>REST APIs</b> công khai, proxy yêu cầu đến <b>Lambda functions</b>.',
+                    'Nó cung cấp các tính năng nâng cao như <b>xác thực</b>, kế hoạch sử dụng, <b>versioning API</b>, throttling và caching.',
+                    'API Gateway có thể tích hợp với <b>Lambda</b>, <b>HTTP endpoints</b>, và <b>các dịch vụ AWS</b>.',
+                    'Có ba loại endpoint: <b>Edge-Optimized</b> (toàn cầu), <b>Regional</b> (cùng vùng), và <b>Private</b> (chỉ trong VPC).',
+                    'Các tùy chọn bảo mật bao gồm <b>IAM roles</b>, <b>Amazon Cognito</b>, custom Lambda authorizers, và <b>HTTPS</b>.'
+                ]
+            },
+            'en': {
+                pageTitle: 'API Gateway Overview',
+                section1Title: 'API Gateway Overview',
+                section1Intro: 'So far in our serverless journey, we have seen how to create Lambda functions and how to use DynamoDB. However, we need a way for our clients to invoke these Lambda functions. Multiple options exist, such as direct client invocation (requires IAM permissions) or using an Application Load Balancer (ALB).',
+                apiGatewayDefinition: 'There is one last option called the <b>API Gateway</b>. This is a serverless offering from AWS that allows us to create <b>REST APIs</b> which are public and accessible to our clients.',
+                apiGatewayFeatures: 'The client communicates with the API Gateway, which then proxies the request to our Lambda functions.',
+                section1Benefits: 'We use API Gateway because it provides more than just an HTTP endpoint. It offers many features such as authentication, usage plans, development stages, and integrating it with Lambda gives us a full serverless application with no infrastructure to manage.',
+                
+                featuresTitle: 'Core Features & Scalability',
+                feature1: 'Supports the <b>WebSocket</b> protocol for real-time streaming.',
+                feature2: 'Handles API <b>Versioning</b> (from v1 to v2) without breaking clients.',
+                feature3: 'Supports multiple environments (Development, Testing, Production).',
+                feature4: 'Performs <b>Throttling</b> (rate limiting) and API response Caching.',
+                feature5: 'Allows <b>transformation</b> and <b>validation</b> of requests and responses.',
+                feature6: 'Supports standards such as <b>Swagger</b> or <b>OpenAPI 3.0</b> for API definition import/export.',
+
+                integrationTitle: 'API Gateway Integrations',
+                intLambda: '<b>Lambda functions:</b> The most common and easiest way to build full serverless applications.',
+                intHTTP: '<b>HTTP endpoints:</b> Expose any HTTP backend (on-premises HTTP APIs or ALB), adding features like rate limiting and caching.',
+                intAWSServices: '<b>AWS services:</b> API Gateway can expose AWS services directly, e.g., starting Step Function workflows or posting messages to SQS.',
+                kinesisExampleIntro: 'Example: Integration with Kinesis Data Streams',
+                kinesisExampleDetail: 'API Gateway acts as an intermediary between clients and Kinesis Data Streams, allowing clients to send data securely without giving them AWS credentials, and records can then be stored in S3.',
+
+                endpointTitle: 'API Gateway Endpoint Types',
+                endpoint1Name: 'Edge-Optimized (default)',
+                endpoint1Desc: 'Designed for global clients. Requests are routed through CloudFront Edge locations to improve latency.',
+                endpoint2Name: 'Regional',
+                endpoint2Desc: 'Used when all users are within the same region as the API Gateway. Does not use CloudFront Edge locations (you can create your own CloudFront distribution).',
+                endpoint3Name: 'Private',
+                endpoint3Desc: 'Not public. Accessible only within your VPC using interface VPC endpoints.',
+
+                securityTitle: 'Security on API Gateway',
+                securityIntro: 'Security is a major aspect of API Gateway. There are many ways to enable security for both <b>authentication</b> and <b>authorization</b>.',
+                auth1: '<b>IAM roles:</b> Useful for internal applications (e.g., running on EC2 instances).',
+                auth2: '<b>Amazon Cognito:</b> Suitable for external users (mobile or web applications).',
+                auth3: '<b>Custom authorizers:</b> Lambda functions that implement custom authentication logic.',
+                securityHTTPS: 'HTTPS security can be enabled using custom domain names integrated with AWS Certificate Manager (ACM).',
+
+                takeawaysTitle: 'Key Takeaways',
+                takeaways: [
+                    '<b>API Gateway</b> provides a serverless way to create public <b>REST APIs</b> that proxy requests to <b>Lambda functions</b>.',
+                    'It offers advanced features like <b>authentication</b>, usage plans, <b>API versioning</b>, throttling, and caching.',
+                    'API Gateway can integrate with <b>Lambda</b>, <b>HTTP endpoints</b>, and <b>AWS services</b> to build full serverless applications.',
+                    'There are three endpoint types: <b>Edge-Optimized</b> (global), <b>Regional</b> (same-region), and <b>Private</b> (VPC-only access).',
+                    'Security options include <b>IAM roles</b>, <b>Amazon Cognito</b>, custom Lambda authorizers, and <b>HTTPS</b>.'
+                ]
+            }
+        };
+
+        let currentLang = 'vi';
+
+        function renderContent() {
+            const data = content[currentLang];
+            document.title = data.pageTitle;
+            document.documentElement.lang = currentLang;
+
+            // Header & Language Toggle
+            document.getElementById('introTitle').innerHTML = `<i class="fas fa-route mr-3 text-yellow-300"></i> API Gateway`;
+            document.getElementById('langToggleVi').textContent = 'VI';
+            document.getElementById('langToggleEn').textContent = 'EN';
+            
+            // Section 1: Intro & Purpose
+            document.getElementById('section1Title').textContent = data.section1Title;
+            document.getElementById('section1Intro').innerHTML = data.section1Intro;
+            document.getElementById('apiGatewayDefinition').innerHTML = data.apiGatewayDefinition;
+            document.getElementById('apiGatewayFeatures').innerHTML = data.apiGatewayFeatures;
+            document.getElementById('section1Benefits').innerHTML = data.section1Benefits;
+
+            // Section 2: Features
+            document.getElementById('featuresTitle').innerHTML = `<i class="fas fa-cogs feature-icon"></i> ${data.featuresTitle}`;
+            document.getElementById('feature1').innerHTML = `<i class="fas fa-fingerprint mr-3 mt-1 text-primary-color"></i> ${data.feature1}`;
+            document.getElementById('feature2').innerHTML = `<i class="fas fa-code-branch mr-3 mt-1 text-primary-color"></i> ${data.feature2}`;
+            document.getElementById('feature3').innerHTML = `<i class="fas fa-clipboard-list mr-3 mt-1 text-primary-color"></i> ${data.feature3}`;
+            document.getElementById('feature4').innerHTML = `<i class="fas fa-stopwatch mr-3 mt-1 text-primary-color"></i> ${data.feature4}`;
+            document.getElementById('feature5').innerHTML = `<i class="fas fa-exchange-alt mr-3 mt-1 text-primary-color"></i> ${data.feature5}`;
+            document.getElementById('feature6').innerHTML = `<i class="fas fa-database mr-3 mt-1 text-primary-color"></i> ${data.feature6}`;
+
+            // Section 3: Integrations
+            document.getElementById('integrationTitle').innerHTML = `<i class="fas fa-link feature-icon"></i> ${data.integrationTitle}`;
+            document.getElementById('intLambda').innerHTML = data.intLambda;
+            document.getElementById('intHTTP').innerHTML = data.intHTTP;
+            document.getElementById('intAWSServices').innerHTML = data.intAWSServices;
+            document.getElementById('kinesisExampleIntro').textContent = data.kinesisExampleIntro;
+            document.getElementById('kinesisExampleDetail').textContent = data.kinesisExampleDetail;
+
+            // Section 4: Endpoints
+            document.getElementById('endpointTitle').innerHTML = `<i class="fas fa-globe-americas feature-icon"></i> ${data.endpointTitle}`;
+            document.getElementById('endpoint1Name').textContent = data.endpoint1Name;
+            document.getElementById('endpoint1Desc').textContent = data.endpoint1Desc;
+            document.getElementById('endpoint2Name').textContent = data.endpoint2Name;
+            document.getElementById('endpoint2Desc').textContent = data.endpoint2Desc;
+            document.getElementById('endpoint3Name').textContent = data.endpoint3Name;
+            document.getElementById('endpoint3Desc').textContent = data.endpoint3Desc;
+
+            // Section 5: Security
+            document.getElementById('securityTitle').innerHTML = `<i class="fas fa-lock feature-icon"></i> ${data.securityTitle}`;
+            document.getElementById('securityIntro').innerHTML = data.securityIntro;
+            document.getElementById('auth1').innerHTML = data.auth1;
+            document.getElementById('auth2').innerHTML = data.auth2;
+            document.getElementById('auth3').innerHTML = data.auth3;
+            document.getElementById('securityHTTPS').innerHTML = data.securityHTTPS;
+            
+            // Section 6: Key Takeaways
+            document.getElementById('takeawaysTitle').innerHTML = `<i class="fas fa-key mr-2"></i> ${data.takeawaysTitle}`;
+            const takeawaysList = document.getElementById('takeawaysList');
+            takeawaysList.innerHTML = data.takeaways.map(tk => `
+                <li class="flex items-start">
+                    <i class="fas fa-check-circle text-primary-color mt-1 mr-3 flex-shrink-0"></i>
+                    <span>${tk}</span>
+                </li>
+            `).join('');
+            
+            // Update buttons
+            const btnVi = document.getElementById('langToggleVi');
+            const btnEn = document.getElementById('langToggleEn');
+            const activeClass = 'bg-white text-secondary-color';
+            const inactiveClass = 'text-white hover:bg-white/30';
+            
+            btnVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLang === 'vi' ? activeClass : inactiveClass}`;
+            btnEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLang === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.getElementById('langToggleVi').addEventListener('click', () => {
+            currentLang = 'vi';
+            renderContent();
+        });
+        document.getElementById('langToggleEn').addEventListener('click', () => {
+            currentLang = 'en';
+            renderContent();
+        });
+
+        // Init
+        document.addEventListener('DOMContentLoaded', renderContent);
+    </script>
+</body>
+</html>

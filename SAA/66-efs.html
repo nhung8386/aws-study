@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Amazon EFS Overview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #10b981; /* Emerald 500 - File System */
+            --secondary-color: #047857; /* Emerald 700 - Core Strength */
+            --background-color: #ecfdf5; /* Emerald 50 */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: #1f2937;
+        }
+        .header-bg {
+            background-color: var(--secondary-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid var(--primary-color);
+        }
+        .feature-icon {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+        /* Mandatory Bolding Replacement: Using <b> tag and secondary color */
+        b {
+            font-weight: 700 !important;
+            color: var(--secondary-color);
+        }
+        .az-box {
+            background-color: #d1fae5; /* Green 100 */
+            color: #065f46; /* Green 800 */
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-align: center;
+        }
+        .throughput-mode {
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid #d1fae5;
+        }
+        .cost-tip {
+            background-color: #fef3c7; /* Amber 100 */
+            color: #b45309; /* Amber 700 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-folder-open mr-3 text-yellow-300"></i> Amazon EFS
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Introduction & Architecture -->
+        <section class="card space-y-4">
+            <h2 id="section1Title" class="text-3xl font-extrabold text-gray-800 border-b pb-2 mb-4"></h2>
+            
+            <p id="section1Intro" class="text-lg text-gray-700 leading-relaxed"></p>
+
+            <div class="p-4 bg-green-50 rounded-lg border-2 border-primary-color/50 text-gray-800 font-medium flex items-start">
+                <i class="fas fa-share-alt feature-icon mt-1"></i>
+                <div>
+                    <p id="coreStrength" class="font-bold text-lg mb-1"></p>
+                    <p id="costNote" class="text-sm text-gray-600"></p>
+                </div>
+            </div>
+
+            <h3 id="architectureTitle" class="text-xl font-bold pt-4 text-gray-800"></h3>
+            <p id="architectureDesc" class="text-gray-700 leading-relaxed"></p>
+            
+            <div class="grid grid-cols-3 gap-2 mt-4 items-center">
+                <div class="az-box">AZ A: EC2 Instance 1</div>
+                <i class="fas fa-network-wired text-primary-color text-2xl mx-auto"></i>
+                <div class="az-box">AZ B: EC2 Instance 2</div>
+                <div class="col-span-3 text-center text-primary-color font-bold text-lg border-t pt-2">EFS File System</div>
+            </div>
+
+            <p id="compatibilityNote" class="text-sm text-red-600 mt-4 font-semibold flex items-center"><i class="fas fa-exclamation-triangle mr-2"></i> </p>
+        </section>
+
+        <!-- Section 2: Scalability and Performance Modes -->
+        <section class="card space-y-6">
+            <h3 id="scalabilityTitle" class="text-2xl font-extrabold text-gray-800 mb-4 flex items-center"><i class="fas fa-chart-line feature-icon"></i> </h3>
+            
+            <p id="scalabilityIntro" class="text-gray-700 leading-relaxed"></p>
+
+            <div class="space-y-4">
+                <p class="font-bold text-lg text-gray-800" id="performanceTitle"></p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="throughput-mode bg-yellow-50 border-yellow-300">
+                        <p id="perfGeneral" class="font-bold text-yellow-800"></p>
+                        <p id="perfGeneralDesc" class="text-sm text-gray-600"></p>
+                    </div>
+                    <div class="throughput-mode bg-red-50 border-red-300">
+                        <p id="perfMaxIO" class="font-bold text-red-800"></p>
+                        <p id="perfMaxIODesc" class="text-sm text-gray-600"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-4 pt-4 border-t">
+                <p class="font-bold text-lg text-gray-800" id="throughputTitle"></p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="throughput-mode bg-blue-50">
+                        <p id="thptBursting" class="font-bold text-blue-800"></p>
+                        <p id="thptBurstingDesc" class="text-sm text-gray-600"></p>
+                    </div>
+                    <div class="throughput-mode bg-purple-50">
+                        <p id="thptProvisioned" class="font-bold text-purple-800"></p>
+                        <p id="thptProvisionedDesc" class="text-sm text-gray-600"></p>
+                    </div>
+                    <div class="throughput-mode bg-primary-color/10">
+                        <p id="thptElastic" class="font-bold text-secondary-color"></p>
+                        <p id="thptElasticDesc" class="text-sm text-gray-600"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Storage Classes and Cost Optimization -->
+        <section class="card space-y-6">
+            <h3 id="storageTitle" class="text-2xl font-extrabold text-gray-800 mb-4 flex items-center"><i class="fas fa-hdd feature-icon"></i> </h3>
+            
+            <p id="storageIntro" class="text-gray-700 leading-relaxed"></p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="p-3 bg-gray-100 rounded-lg">
+                    <p class="font-bold text-gray-700" id="tier1"></p>
+                    <p class="text-sm text-gray-500" id="tier1Desc"></p>
+                </div>
+                <div class="p-3 bg-blue-100 rounded-lg">
+                    <p class="font-bold text-blue-700" id="tier2"></p>
+                    <p class="text-sm text-gray-600" id="tier2Desc"></p>
+                </div>
+                <div class="p-3 bg-purple-100 rounded-lg">
+                    <p class="font-bold text-purple-700" id="tier3"></p>
+                    <p class="text-sm text-gray-600" id="tier3Desc"></p>
+                </div>
+            </div>
+
+            <p id="lifecyclePolicy" class="text-gray-700 leading-relaxed"></p>
+
+            <div class="space-y-3 pt-4 border-t">
+                <p class="font-bold text-lg text-gray-800" id="availabilityTitle"></p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-3 bg-green-100 rounded-lg">
+                        <p class="font-bold text-green-800" id="availStandard"></p>
+                        <p class="text-sm text-gray-700" id="availStandardDesc"></p>
+                    </div>
+                    <div class="p-3 bg-orange-100 rounded-lg">
+                        <p class="font-bold text-orange-800" id="availOneZone"></p>
+                        <p class="text-sm text-gray-700" id="availOneZoneDesc"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cost-tip">
+                <i class="fas fa-lightbulb mr-2"></i> <span id="costSavingTip"></span>
+            </div>
+        </section>
+
+        <!-- Section 4: Key Takeaways -->
+        <section class="p-8 bg-gray-800 rounded-2xl shadow-2xl text-white">
+            <h2 id="takeawaysTitle" class="text-3xl font-extrabold mb-6 text-center text-primary-color"><i class="fas fa-key mr-2"></i> </h2>
+            <ul id="takeawaysList" class="space-y-4">
+                <!-- Takeaways populated by JS -->
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        const content = {
+            'vi': {
+                pageTitle: 'Tổng quan về Amazon EFS',
+                section1Title: 'Giới thiệu về Amazon Elastic File System (EFS)',
+                section1Intro: '<b>Amazon Elastic File System (EFS)</b> là một <b>Hệ thống Tệp Tin Mạng (NFS)</b> được quản lý. Là hệ thống tệp tin mạng, nó có thể được gắn (mounted) trên nhiều EC2 instances. Sức mạnh cốt lõi của EFS là các EC2 instance này có thể nằm ở các **vùng khả dụng (Availability Zones)** khác nhau.',
+                coreStrength: 'EFS có tính sẵn sàng cao (High Availability) và khả năng mở rộng rất lớn (Scalable).',
+                costNote: 'Lưu ý: EFS đắt hơn (khoảng ba lần so với EBS GP2) nhưng sử dụng mô hình thanh toán theo mức sử dụng (pay-per-use), không cần cấp phát trước dung lượng.',
+                
+                architectureTitle: 'Kiến trúc và Khả năng Tương thích',
+                architectureDesc: 'Nhiều EC2 instance, ví dụ ở các AZ US East-1A, 1B, 1C, có thể kết nối đồng thời với cùng một hệ thống tệp tin mạng EFS thông qua một **Security Group**.',
+                compatibilityNote: 'Quan trọng: EFS chỉ tương thích với **Linux-based AMIs**, không tương thích với Windows. Mã hóa khi nghỉ (at rest) có thể được bật bằng KMS. EFS sử dụng tiêu chuẩn hệ thống tệp tin POSIX.',
+
+                scalabilityTitle: 'Khả năng Mở rộng và Chế độ Hiệu suất',
+                scalabilityIntro: 'EFS không cần cấp phát dung lượng trước mà tự động mở rộng (auto-scales) và hỗ trợ hàng nghìn client NFS đồng thời với thông lượng vượt quá 10 gigabyte mỗi giây.',
+                
+                performanceTitle: 'Chế độ Hiệu suất (Performance Modes)',
+                perfGeneral: 'General Purpose (Mặc định):',
+                perfGeneralDesc: 'Phù hợp cho các trường hợp sử dụng nhạy cảm về độ trễ (latency-sensitive) như web server và content management.',
+                perfMaxIO: 'Max I/O:',
+                perfMaxIODesc: 'Cung cấp thông lượng cao hơn (higher throughput) với độ trễ cao hơn, lý tưởng cho các ứng dụng big data và xử lý media nhờ khả năng song song cao.',
+
+                throughputTitle: 'Chế độ Thông lượng (Throughput Modes)',
+                thptBursting: 'Bursting (Đột biến):',
+                thptBurstingDesc: 'Thông lượng cơ bản cộng với khả năng đột biến. Ví dụ: 1TB lưu trữ cung cấp 50 MB/s cộng với các đợt đột biến lên đến 100 MB/s.',
+                thptProvisioned: 'Provisioned (Cấp phát trước):',
+                thptProvisionedDesc: 'Cho phép bạn đặt thông lượng độc lập với kích thước lưu trữ (ví dụ: 1 GB/s cho 1TB lưu trữ).',
+                thptElastic: 'Elastic (Đàn hồi):',
+                thptElasticDesc: 'Tự động mở rộng thông lượng dựa trên khối lượng công việc, lý tưởng cho các workload không thể đoán trước. Hỗ trợ tới 3 GB/s cho đọc và 1 GB/s cho ghi.',
+
+                storageTitle: 'Các tầng Lưu trữ và Quản lý Vòng đời',
+                storageIntro: 'EFS cung cấp các tầng lưu trữ với tính năng quản lý vòng đời (Lifecycle Management) để di chuyển tệp tin dựa trên mẫu truy cập:',
+                tier1: 'Standard Tier (Tiêu chuẩn):',
+                tier1Desc: 'Dành cho các tệp tin được truy cập thường xuyên.',
+                tier2: 'EFS-Infrequent Access (EFS-IA):',
+                tier2Desc: 'Dành cho các tệp tin ít được truy cập, chi phí lưu trữ thấp hơn nhưng có chi phí truy xuất.',
+                tier3: 'Archive Storage Tier (Lưu trữ Kho lưu trữ):',
+                tier3Desc: 'Dành cho dữ liệu hiếm khi được truy cập (ví dụ: vài lần một năm), tiết kiệm chi phí lưu trữ đáng kể.',
+                lifecyclePolicy: 'Các chính sách Vòng đời có thể được cấu hình để tự động di chuyển tệp tin sang tầng phù hợp sau một số ngày nhất định (ví dụ: 60 ngày không truy cập).',
+
+                availabilityTitle: 'Tính sẵn sàng và Độ bền',
+                availStandard: 'Standard Storage Class (Đa Vùng AZ):',
+                availStandardDesc: 'Phù hợp cho các thiết lập đa vùng AZ, cung cấp khả năng phục hồi thảm họa cho các workload production.',
+                availOneZone: 'One Zone Storage Class (Một Vùng AZ):',
+                availOneZoneDesc: 'Cung cấp lưu trữ trong một AZ duy nhất, phù hợp cho phát triển hoặc các kịch bản nhạy cảm về chi phí. Hỗ trợ tầng IA.',
+                costSavingTip: 'Sử dụng các tầng lưu trữ và chính sách vòng đời phù hợp có thể giúp tiết kiệm chi phí lên tới 90%.',
+                
+                takeawaysTitle: 'Điểm Chính Cần Nắm Vững',
+                takeaways: [
+                    '<b>Amazon EFS</b> là hệ thống tệp tin mạng <b>NFS</b> được quản lý, có thể gắn trên <b>nhiều EC2 instances</b> qua các **Availability Zones** khác nhau.',
+                    'EFS có tính **sẵn sàng cao**, khả năng **mở rộng** lớn, và mô hình thanh toán **pay-per-use** (không cần cấp phát trước).',
+                    'Chỉ hỗ trợ <b>Linux-based AMIs</b>, cung cấp mã hóa tại chỗ (at rest) qua KMS và sử dụng **POSIX** file APIs.',
+                    'Các chế độ hiệu suất (General Purpose, Max I/O) và thông lượng (Bursting, Provisioned, Elastic) cho phép tùy chỉnh cho các khối lượng công việc khác nhau.',
+                    'Các tầng lưu trữ (**Standard**, **EFS-IA**, **Archive**) cùng chính sách vòng đời giúp **tối ưu hóa chi phí**.'
+                ]
+            },
+            'en': {
+                pageTitle: 'Amazon Elastic File System (EFS) Overview',
+                section1Title: 'Introduction to Amazon EFS',
+                section1Intro: '<b>Amazon Elastic File System (EFS)</b> is a managed <b>Network File System (NFS)</b>. Because it is a network file system, it can be mounted on many EC2 instances. The core strength of EFS is that these EC2 instances can be located in **different availability zones**.',
+                coreStrength: 'EFS is highly available and very scalable.',
+                costNote: 'Note: EFS is more expensive (about three times as much as EBS GP2) but uses a pay-per-use pricing model, so you do not have to provision capacity in advance.',
+
+                architectureTitle: 'Architecture and Compatibility',
+                architectureDesc: 'Multiple EC2 instances, for example in US East-1A, US East-1B, or US East-1C availability zones, can connect simultaneously to the same EFS network file system through a **Security Group**.',
+                compatibilityNote: 'Important: EFS is compatible only with **Linux-based AMIs**, not with Windows. Encryption at rest can be enabled using KMS. EFS uses the POSIX file system standard.',
+
+                scalabilityTitle: 'Scalability and Performance Modes',
+                scalabilityIntro: 'EFS does not require planning capacity in advance; it scales automatically and supports thousands of concurrent NFS clients with throughput exceeding 10 gigabytes per second.',
+
+                performanceTitle: 'Performance Modes',
+                perfGeneral: 'General Purpose (Default):',
+                perfGeneralDesc: 'Suitable for latency-sensitive use cases such as web servers and content management systems.',
+                perfMaxIO: 'Max I/O:',
+                perfMaxIODesc: 'Provides higher throughput with higher latency, ideal for big data applications and media processing due to its high parallelism.',
+
+                throughputTitle: 'Throughput Modes',
+                thptBursting: 'Bursting:',
+                thptBurstingDesc: 'Baseline throughput plus bursting capability. Example: 1TB of storage gets 50 MB/s plus bursts up to 100 MB/s.',
+                thptProvisioned: 'Provisioned:',
+                thptProvisionedDesc: 'Allows setting throughput independently of storage size (e.g., 1 GB/s for 1TB of storage).',
+                thptElastic: 'Elastic:',
+                thptElasticDesc: 'Automatically scales throughput up and down based on workload, ideal for unpredictable workloads. Supports up to 3 GB/s for reads and 1 GB/s for writes.',
+
+                storageTitle: 'Storage Classes and Lifecycle Management',
+                storageIntro: 'EFS provides storage tiers with **Lifecycle Management** features to move files between tiers based on access patterns:',
+                tier1: 'Standard Tier:',
+                tier1Desc: 'For frequently accessed files.',
+                tier2: 'EFS-Infrequent Access (EFS-IA):',
+                tier2Desc: 'For infrequently accessed files, offering lower storage costs but with retrieval costs.',
+                tier3: 'Archive Storage Tier:',
+                tier3Desc: 'For rarely accessed data (e.g., a few times a year), providing significant storage cost savings.',
+                lifecyclePolicy: 'Lifecycle policies can be configured to automatically move files to appropriate tiers after a specified number of days (e.g., files not accessed for 60 days to EFS-IA).',
+
+                availabilityTitle: 'Availability and Durability',
+                availStandard: 'Standard Storage Class (Multi-AZ):',
+                availStandardDesc: 'Suitable for multi-AZ setups, providing disaster resilience for production workloads.',
+                availOneZone: 'One Zone Storage Class (Single-AZ):',
+                availOneZoneDesc: 'Offers storage within a single AZ, suitable for development or cost-sensitive scenarios. Supports the IA storage tier.',
+                costSavingTip: 'Using the appropriate EFS storage classes and lifecycle policies can yield up to 90% cost savings.',
+
+                takeawaysTitle: 'Key Takeaways',
+                takeaways: [
+                    '<b>Amazon EFS</b> is a managed <b>NFS</b> network file system that can be mounted on <b>multiple EC2 instances</b> across **different availability zones**.',
+                    'EFS offers **high availability**, massive **scalability**, and **pay-per-use** pricing (no pre-provisioning).',
+                    'It supports **Linux-based AMIs only**, provides encryption at rest via KMS, and uses **POSIX** standard file APIs.',
+                    'Various performance modes (General Purpose, Max I/O) and throughput modes (Bursting, Provisioned, Elastic) allow customization for different workloads.',
+                    'Storage tiers (**Standard**, **EFS-IA**, **Archive**) and lifecycle policies help in **cost optimization**.'
+                ]
+            }
+        };
+
+        let currentLang = 'vi';
+
+        function renderContent() {
+            const data = content[currentLang];
+            document.title = data.pageTitle;
+            document.documentElement.lang = currentLang;
+
+            // Header & Language Toggle
+            document.getElementById('introTitle').innerHTML = `<i class="fas fa-folder-open mr-3 text-yellow-300"></i> Amazon EFS`;
+            document.getElementById('langToggleVi').textContent = 'VI';
+            document.getElementById('langToggleEn').textContent = 'EN';
+            
+            // Section 1
+            document.getElementById('section1Title').textContent = data.section1Title;
+            document.getElementById('section1Intro').innerHTML = data.section1Intro;
+            document.getElementById('coreStrength').innerHTML = data.coreStrength;
+            document.getElementById('costNote').innerHTML = data.costNote;
+            document.getElementById('architectureTitle').textContent = data.architectureTitle;
+            document.getElementById('architectureDesc').textContent = data.architectureDesc;
+            document.getElementById('compatibilityNote').innerHTML = data.compatibilityNote;
+
+            // Section 2
+            document.getElementById('scalabilityTitle').innerHTML = `<i class="fas fa-chart-line feature-icon"></i> ${data.scalabilityTitle}`;
+            document.getElementById('scalabilityIntro').textContent = data.scalabilityIntro;
+            document.getElementById('performanceTitle').textContent = data.performanceTitle;
+            document.getElementById('perfGeneral').textContent = data.perfGeneral;
+            document.getElementById('perfGeneralDesc').textContent = data.perfGeneralDesc;
+            document.getElementById('perfMaxIO').textContent = data.perfMaxIO;
+            document.getElementById('perfMaxIODesc').textContent = data.perfMaxIODesc;
+            document.getElementById('throughputTitle').textContent = data.throughputTitle;
+            document.getElementById('thptBursting').textContent = data.thptBursting;
+            document.getElementById('thptBurstingDesc').textContent = data.thptBurstingDesc;
+            document.getElementById('thptProvisioned').textContent = data.thptProvisioned;
+            document.getElementById('thptProvisionedDesc').textContent = data.thptProvisionedDesc;
+            document.getElementById('thptElastic').textContent = data.thptElastic;
+            document.getElementById('thptElasticDesc').textContent = data.thptElasticDesc;
+
+            // Section 3
+            document.getElementById('storageTitle').innerHTML = `<i class="fas fa-hdd feature-icon"></i> ${data.storageTitle}`;
+            document.getElementById('storageIntro').textContent = data.storageIntro;
+            document.getElementById('tier1').textContent = data.tier1;
+            document.getElementById('tier1Desc').textContent = data.tier1Desc;
+            document.getElementById('tier2').textContent = data.tier2;
+            document.getElementById('tier2Desc').textContent = data.tier2Desc;
+            document.getElementById('tier3').textContent = data.tier3;
+            document.getElementById('tier3Desc').textContent = data.tier3Desc;
+            document.getElementById('lifecyclePolicy').textContent = data.lifecyclePolicy;
+            document.getElementById('availabilityTitle').textContent = data.availabilityTitle;
+            document.getElementById('availStandard').textContent = data.availStandard;
+            document.getElementById('availStandardDesc').textContent = data.availStandardDesc;
+            document.getElementById('availOneZone').textContent = data.availOneZone;
+            document.getElementById('availOneZoneDesc').textContent = data.availOneZoneDesc;
+            document.getElementById('costSavingTip').textContent = data.costSavingTip;
+            
+            // Section 4: Key Takeaways
+            document.getElementById('takeawaysTitle').innerHTML = `<i class="fas fa-key mr-2"></i> ${data.takeawaysTitle}`;
+            const takeawaysList = document.getElementById('takeawaysList');
+            takeawaysList.innerHTML = data.takeaways.map(tk => `
+                <li class="flex items-start">
+                    <i class="fas fa-check-circle text-primary-color mt-1 mr-3 flex-shrink-0"></i>
+                    <span>${tk}</span>
+                </li>
+            `).join('');
+            
+            // Update buttons
+            const btnVi = document.getElementById('langToggleVi');
+            const btnEn = document.getElementById('langToggleEn');
+            const activeClass = 'bg-white text-secondary-color';
+            const inactiveClass = 'text-white hover:bg-white/30';
+            
+            btnVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLang === 'vi' ? activeClass : inactiveClass}`;
+            btnEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLang === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.getElementById('langToggleVi').addEventListener('click', () => {
+            currentLang = 'vi';
+            renderContent();
+        });
+        document.getElementById('langToggleEn').addEventListener('click', () => {
+            currentLang = 'en';
+            renderContent();
+        });
+
+        // Init
+        document.addEventListener('DOMContentLoaded', renderContent);
+    </script>
+</body>
+</html>

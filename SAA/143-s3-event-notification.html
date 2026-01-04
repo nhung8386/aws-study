@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Amazon S3 Event Notifications</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #1d4ed8; /* Blue 700 - Connectivity/Flow */
+            --secondary-color: #3b82f6; /* Blue 500 */
+            --background-color: #eff6ff; /* Blue 50 */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: #1f2937;
+        }
+        .header-bg {
+            background-color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid var(--primary-color);
+            transition: border-color 0.3s;
+        }
+        .card:hover {
+            border-left-color: var(--secondary-color);
+        }
+        .feature-icon {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-right: 1rem;
+        }
+        /* Mandatory Bolding Replacement: Using <b> tag */
+        b {
+            font-weight: 700 !important;
+            color: var(--primary-color);
+        }
+        .target-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            margin: 0.5rem;
+            background-color: #dbeafe; /* Blue 100 */
+            color: #1e40af; /* Blue 800 */
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-satellite-dish mr-3"></i> S3 Event Notifications
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Introduction & Use Case -->
+        <section class="card space-y-4">
+            <h2 id="section1Title" class="text-3xl font-extrabold text-gray-800 border-b pb-2 mb-4"></h2>
+            
+            <p id="section1Intro" class="text-lg text-gray-700 leading-relaxed"></p>
+            
+            <div class="p-4 mt-4 bg-yellow-50 rounded-lg border-2 border-yellow-300 text-yellow-900 font-medium flex items-center">
+                <i class="fas fa-filter feature-icon text-yellow-600"></i>
+                <span id="filterExample"></span>
+            </div>
+
+            <p id="section1UseCase" class="text-gray-700 leading-relaxed pt-2"></p>
+        </section>
+
+        <!-- Section 2: Event Notification Destinations -->
+        <section class="card space-y-4">
+            <h3 id="destTitle" class="text-2xl font-extrabold text-gray-800 mb-4 flex items-center"><i class="fas fa-share-alt feature-icon"></i> </h3>
+            
+            <p id="destIntro" class="text-gray-700 leading-relaxed"></p>
+
+            <div class="flex flex-wrap justify-center mt-6" id="destinations">
+                <span class="target-badge"><i class="fas fa-comment-dots mr-2"></i> SNS Topic</span>
+                <span class="target-badge"><i class="fas fa-list-ul mr-2"></i> SQS Queue</span>
+                <span class="target-badge"><i class="fas fa-brain mr-2"></i> Lambda Function</span>
+            </div>
+            
+            <p id="deliveryInfo" class="text-sm text-gray-500 text-center pt-2"></p>
+        </section>
+
+        
+
+        <!-- Section 3: Required Permissions (Resource Access Policies) -->
+        <section class="card space-y-4">
+            <h3 id="permissionTitle" class="text-2xl font-extrabold text-gray-800 mb-4 flex items-center"><i class="fas fa-lock feature-icon"></i> </h3>
+            
+            <p id="permissionIntro" class="text-gray-700 leading-relaxed"></p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                <!-- SNS Permission -->
+                <div class="p-4 bg-red-50 rounded-lg border border-red-200">
+                    <p class="font-bold text-red-700">SNS Topic</p>
+                    <p id="snsPolicyText" class="text-gray-700"></p>
+                </div>
+                <!-- SQS Permission -->
+                <div class="p-4 bg-green-50 rounded-lg border border-green-200">
+                    <p class="font-bold text-green-700">SQS Queue</p>
+                    <p id="sqsPolicyText" class="text-gray-700"></p>
+                </div>
+                <!-- Lambda Permission -->
+                <div class="p-4 bg-purple-50 rounded-lg border border-purple-200">
+                    <p class="font-bold text-purple-700">Lambda Function</p>
+                    <p id="lambdaPolicyText" class="text-gray-700"></p>
+                </div>
+            </div>
+            
+            <p id="permissionNote" class="text-gray-600 pt-2"></p>
+        </section>
+
+        <!-- Section 4: Integration with Amazon EventBridge -->
+        <section class="card space-y-4">
+            <h3 id="eventBridgeTitle" class="text-2xl font-extrabold text-gray-800 mb-4 flex items-center"><i class="fas fa-exchange-alt feature-icon"></i> </h3>
+            
+            <p id="eventBridgeIntro" class="text-lg text-gray-700 leading-relaxed"></p>
+            
+            <div id="eventBridgeAdvantages" class="p-4 bg-primary-color/10 rounded-lg border-2 border-primary-color/30 space-y-3">
+                <p id="advFilter" class="font-medium flex items-center"><i class="fas fa-sliders-h mr-3 text-secondary-color"></i> </p>
+                <p id="advDestinations" class="font-medium flex items-center"><i class="fas fa-sitemap mr-3 text-secondary-color"></i> </p>
+                <p id="advDelivery" class="font-medium flex items-center"><i class="fas fa-history mr-3 text-secondary-color"></i> </p>
+            </div>
+        </section>
+
+        <!-- Section 5: Key Takeaways -->
+        <section class="p-8 bg-gray-800 rounded-2xl shadow-2xl text-white">
+            <h2 id="takeawaysTitle" class="text-3xl font-extrabold mb-6 text-center text-secondary-color"><i class="fas fa-key mr-2"></i> </h2>
+            <ul id="takeawaysList" class="space-y-4">
+                <!-- Takeaways populated by JS -->
+            </ul>
+            <p id="conclusionText" class="text-center mt-6 text-gray-300"></p>
+        </section>
+
+    </main>
+
+    <script>
+        const content = {
+            'vi': {
+                pageTitle: 'Amazon S3 Event Notifications',
+                section1Title: 'Giới Thiệu Về S3 Event Notifications',
+                section1Intro: '<b>Amazon S3 Event Notifications</b> cho phép bạn tự động phản hồi các sự kiện cụ thể xảy ra trong các bucket S3 của mình. Các sự kiện này bao gồm các hành động như tạo, xóa, khôi phục hoặc nhân bản đối tượng.',
+                filterExample: 'Bạn có thể lọc các sự kiện này, ví dụ, chỉ để xem xét các đối tượng kết thúc bằng <b>.JPEG</b>.',
+                section1UseCase: 'Trường hợp sử dụng chính cho Event Notifications là để kích hoạt các quy trình làm việc tự động. Ví dụ: bạn có thể muốn tạo hình thu nhỏ (thumbnails) cho tất cả hình ảnh được tải lên Amazon S3. Để làm được điều này, bạn tạo một Event Notification và cấu hình nó để gửi sự kiện đến một hoặc nhiều đích đến.',
+                
+                destTitle: 'Đích Đến Của Event Notification',
+                destIntro: 'Bạn có thể gửi S3 Event Notifications đến một số loại đích đến:',
+                deliveryInfo: 'Bạn có thể tạo bao nhiêu Event Notification tùy ý. Thông thường, các sự kiện được gửi đi trong vòng vài giây.',
+
+                permissionTitle: 'Quyền Hạn Cần Thiết Cho Event Notifications',
+                permissionIntro: 'Để Event Notifications hoạt động chính xác, cần phải cấu hình quyền IAM phù hợp. Các chính sách này được đính kèm trực tiếp vào tài nguyên đích (không phải IAM Role).',
+                snsPolicyText: 'Chính sách truy cập tài nguyên SNS phải được đính kèm vào topic, ủy quyền cho S3 bucket gửi tin nhắn trực tiếp.',
+                sqsPolicyText: 'Chính sách truy cập tài nguyên SQS phải được tạo để ủy quyền cho dịch vụ S3 gửi dữ liệu đến queue.',
+                lambdaPolicyText: 'Chính sách tài nguyên Lambda phải được đính kèm vào function để cấp cho Amazon S3 quyền gọi (invoke) nó.',
+                permissionNote: 'Không giống như IAM roles, các chính sách truy cập tài nguyên này được đính kèm trực tiếp vào tài nguyên đích (SNS topic, SQS queue hoặc Lambda function), tương tự như S3 bucket policies.',
+
+                eventBridgeTitle: 'Tích Hợp Với Amazon EventBridge',
+                eventBridgeIntro: 'Tất cả các sự kiện xảy ra trong các S3 bucket của bạn đều được gửi đến <b>Amazon EventBridge</b>. Từ EventBridge, bạn có thể thiết lập các quy tắc để định tuyến các sự kiện này đến hơn 18 dịch vụ AWS khác nhau làm đích đến, nâng cao đáng kể khả năng của S3 Event Notifications.',
+                advFilter: '<b>Lọc Nâng Cao:</b> Lọc sự kiện theo siêu dữ liệu, kích thước đối tượng và tên, vượt xa các tùy chọn có sẵn trực tiếp trong S3.',
+                advDestinations: '<b>Nhiều Đích Đến:</b> Gửi sự kiện đồng thời đến nhiều đích, chẳng hạn như Step Functions, Kinesis Data Streams hoặc Firehose.',
+                advDelivery: '<b>Đáng Tin Cậy & Lưu Trữ:</b> Cung cấp các tính năng như lưu trữ sự kiện (archiving), phát lại (replay) và phân phối đáng tin cậy hơn.',
+
+                conclusionText: 'Tóm lại, Amazon S3 Event Notifications cho phép bạn phản ứng với các sự kiện xảy ra trong các S3 bucket của mình bằng cách gửi thông báo đến SNS, SQS, Lambda hoặc Amazon EventBridge. Điều này cho phép các kiến trúc hướng sự kiện tự động và có thể mở rộng trong AWS.',
+                takeawaysTitle: 'Điểm Chính Cần Nắm Vững',
+                takeaways: [
+                    '<b>Amazon S3 Event Notifications</b> cho phép phản ứng tự động với các sự kiện như tạo, xóa, khôi phục hoặc nhân bản đối tượng.',
+                    'Các thông báo sự kiện có thể được gửi đến <b>SNS topics</b>, <b>SQS queues</b>, <b>Lambda functions</b>, hoặc <b>Amazon EventBridge</b>.',
+                    'Cần đính kèm <b>chính sách truy cập tài nguyên</b> thích hợp vào SNS, SQS và Lambda để ủy quyền cho S3 gửi sự kiện.',
+                    '<b>Amazon EventBridge</b> nâng cao S3 Event Notifications với <b>lọc nâng cao</b>, nhiều đích đến, lưu trữ sự kiện, phát lại và phân phối đáng tin cậy hơn.'
+                ]
+            },
+            'en': {
+                pageTitle: 'Amazon S3 Event Notifications',
+                section1Title: 'Introduction to S3 Event Notifications',
+                section1Intro: '<b>Amazon S3 Event Notifications</b> enable you to respond automatically to specific events occurring within your S3 buckets. These events include actions such as object creation, removal, restoration, or replication.',
+                filterExample: 'You can filter these events, for example, to only consider objects that end with <b>.JPEG</b>.',
+                section1UseCase: 'The primary use case for Event Notifications is to trigger automated workflows. For instance, you might want to generate thumbnails for all images uploaded to Amazon S3. To achieve this, you create an Event Notification and configure it to send events to one or more destinations.',
+
+                destTitle: 'Event Notification Destinations',
+                destIntro: 'You can send S3 Event Notifications to several types of destinations:',
+                deliveryInfo: 'You can create as many S3 Event Notifications as needed. Typically, events are delivered within seconds.',
+
+                permissionTitle: 'Required Permissions for Event Notifications',
+                permissionIntro: 'For Event Notifications to function correctly, appropriate IAM permissions must be configured. These policies are attached directly to the destination resource (not IAM Roles).',
+                snsPolicyText: 'An SNS resource access policy must be attached to the topic, authorizing the S3 bucket to send messages directly.',
+                sqsPolicyText: 'An SQS resource access policy must be created that authorizes the S3 service to send data to the queue.',
+                lambdaPolicyText: 'A Lambda resource policy must be attached to the function to grant Amazon S3 permission to invoke it.',
+                permissionNote: 'Unlike IAM roles, these resource access policies are attached directly to the destination resource (SNS topic, SQS queue, or Lambda function), functioning similarly to S3 bucket policies.',
+
+                eventBridgeTitle: 'Integration with Amazon EventBridge',
+                eventBridgeIntro: 'All events occurring in your Amazon S3 buckets are sent to <b>Amazon EventBridge</b>. From EventBridge, you can set up rules to route these events to over 18 different AWS services as destinations, greatly enhancing the capabilities of S3 Event Notifications.',
+                advFilter: '<b>Advanced Filtering:</b> Filter events by metadata, object size, and name, beyond those available directly in S3.',
+                advDestinations: '<b>Multiple Destinations:</b> Send events to multiple destinations simultaneously, such as Step Functions, Kinesis Data Streams, or Firehose.',
+                advDelivery: '<b>Reliable Delivery & Archiving:</b> Offers features like event archiving, replay, and more reliable delivery.',
+
+                conclusionText: 'In summary, Amazon S3 Event Notifications allow you to react to events occurring in your S3 buckets by sending notifications to SNS, SQS, Lambda, or Amazon EventBridge. This enables automated and scalable event-driven architectures within AWS.',
+                takeawaysTitle: 'Key Takeaways',
+                takeaways: [
+                    '<b>Amazon S3 Event Notifications</b> allow automatic reactions to events such as object creation, removal, restoration, or replication.',
+                    'Event Notifications can be sent to <b>SNS topics</b>, <b>SQS queues</b>, <b>Lambda functions</b>, or <b>Amazon EventBridge</b>.',
+                    'Proper <b>resource access policies</b> must be attached to SNS, SQS, and Lambda to authorize S3 to send events.',
+                    '<b>Amazon EventBridge</b> enhances S3 Event Notifications with <b>advanced filtering</b>, multiple destinations, event archiving, replay, and reliable delivery.'
+                ]
+            }
+        };
+
+        let currentLang = 'vi';
+
+        function renderContent() {
+            const data = content[currentLang];
+            document.title = data.pageTitle;
+            document.documentElement.lang = currentLang;
+
+            // Header & Language Toggle
+            document.getElementById('introTitle').innerHTML = `<i class="fas fa-satellite-dish mr-3"></i> S3 Event Notifications`;
+            document.getElementById('langToggleVi').textContent = 'VI';
+            document.getElementById('langToggleEn').textContent = 'EN';
+            
+            // Section 1: Intro & Use Case
+            document.getElementById('section1Title').textContent = data.section1Title;
+            document.getElementById('section1Intro').innerHTML = data.section1Intro;
+            document.getElementById('filterExample').innerHTML = data.filterExample;
+            document.getElementById('section1UseCase').innerHTML = data.section1UseCase;
+
+            // Section 2: Destinations
+            document.getElementById('destTitle').innerHTML = `<i class="fas fa-share-alt feature-icon"></i> ${data.destTitle}`;
+            document.getElementById('destIntro').innerHTML = data.destIntro;
+            document.getElementById('deliveryInfo').textContent = data.deliveryInfo;
+
+            // Section 3: Permissions
+            document.getElementById('permissionTitle').innerHTML = `<i class="fas fa-lock feature-icon"></i> ${data.permissionTitle}`;
+            document.getElementById('permissionIntro').innerHTML = data.permissionIntro;
+            document.getElementById('snsPolicyText').textContent = data.snsPolicyText;
+            document.getElementById('sqsPolicyText').textContent = data.sqsPolicyText;
+            document.getElementById('lambdaPolicyText').textContent = data.lambdaPolicyText;
+            document.getElementById('permissionNote').innerHTML = data.permissionNote;
+
+            // Section 4: EventBridge
+            document.getElementById('eventBridgeTitle').innerHTML = `<i class="fas fa-exchange-alt feature-icon"></i> ${data.eventBridgeTitle}`;
+            document.getElementById('eventBridgeIntro').innerHTML = data.eventBridgeIntro;
+            document.getElementById('advFilter').innerHTML = `<i class="fas fa-sliders-h mr-3 text-secondary-color"></i> ${data.advFilter}`;
+            document.getElementById('advDestinations').innerHTML = `<i class="fas fa-sitemap mr-3 text-secondary-color"></i> ${data.advDestinations}`;
+            document.getElementById('advDelivery').innerHTML = `<i class="fas fa-history mr-3 text-secondary-color"></i> ${data.advDelivery}`;
+
+
+            // Section 5: Key Takeaways
+            document.getElementById('takeawaysTitle').innerHTML = `<i class="fas fa-key mr-2"></i> ${data.takeawaysTitle}`;
+            const takeawaysList = document.getElementById('takeawaysList');
+            takeawaysList.innerHTML = data.takeaways.map(tk => `
+                <li class="flex items-start">
+                    <i class="fas fa-arrow-alt-circle-right text-secondary-color mt-1 mr-3 flex-shrink-0"></i>
+                    <span>${tk}</span>
+                </li>
+            `).join('');
+            document.getElementById('conclusionText').textContent = data.conclusionText;
+            
+            // Update buttons
+            const btnVi = document.getElementById('langToggleVi');
+            const btnEn = document.getElementById('langToggleEn');
+            const activeClass = 'bg-white text-primary-color';
+            const inactiveClass = 'text-white hover:bg-white/30';
+            
+            btnVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLang === 'vi' ? activeClass : inactiveClass}`;
+            btnEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLang === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.getElementById('langToggleVi').addEventListener('click', () => {
+            currentLang = 'vi';
+            renderContent();
+        });
+        document.getElementById('langToggleEn').addEventListener('click', () => {
+            currentLang = 'en';
+            renderContent();
+        });
+
+        // Init
+        document.addEventListener('DOMContentLoaded', renderContent);
+    </script>
+</body>
+</html>

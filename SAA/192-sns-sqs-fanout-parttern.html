@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">SNS and SQS - Fan Out Pattern</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #f97316; /* Orange 600 - Messaging */
+            --secondary-color: #1d4ed8; /* Blue 700 - AWS Core */
+            --background-color: #fff7ed; /* Orange 50 */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: #1f2937;
+        }
+        .header-bg {
+            background-color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid var(--primary-color);
+            transition: border-color 0.3s;
+        }
+        .card:hover {
+            border-left-color: var(--secondary-color);
+        }
+        .feature-icon {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-right: 1rem;
+        }
+        /* Mandatory Bolding Replacement: Using <b> tag */
+        b {
+            font-weight: 700 !important;
+            color: var(--secondary-color);
+        }
+        .flow-diagram {
+            border: 2px dashed #fcd34d; /* Amber 300 */
+            background-color: #fffbeb; /* Amber 50 */
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            text-align: center;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .flow-arrow {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin: 0 10px;
+        }
+        .architecture-note {
+            background-color: #eff6ff; /* Blue 50 */
+            color: #1e40af; /* Blue 800 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Language Toggle -->
+    <header class="header-bg py-4 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 id="introTitle" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center">
+                <i class="fas fa-bullhorn mr-3"></i> SNS + SQS Fan-Out
+            </h1>
+            <div class="flex space-x-2 bg-white/20 rounded-full p-1">
+                <button id="langToggleVi" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+                <button id="langToggleEn" class="px-3 py-1 rounded-full font-semibold text-sm transition text-white hover:bg-white/30"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+
+        <!-- Section 1: Core Fan-Out Pattern -->
+        <section class="card space-y-4">
+            <h2 id="section1Title" class="text-3xl font-extrabold text-gray-800 border-b pb-2 mb-4"></h2>
+            
+            <p id="section1Intro" class="text-lg text-gray-700 leading-relaxed"></p>
+
+            <div class="flow-diagram">
+                <p class="text-lg font-bold text-gray-800 mb-2" id="fanOutExample"></p>
+                <div class="flex items-center justify-center text-sm font-semibold">
+                    <span class="text-primary-color">Producer (Buying Service)</span>
+                    <i class="fas fa-long-arrow-alt-right flow-arrow"></i>
+                    <span class="bg-primary-color text-white px-3 py-1 rounded-full shadow-lg">SNS Topic</span>
+                    <i class="fas fa-angle-double-down flow-arrow"></i>
+                    <div class="flex flex-col space-y-1">
+                        <span class="text-green-600 border border-green-300 px-2 py-1 rounded-md">SQS Queue 1 (Fraud Service)</span>
+                        <span class="text-green-600 border border-green-300 px-2 py-1 rounded-md">SQS Queue 2 (Shipping Service)</span>
+                    </div>
+                </div>
+            </div>
+
+            <p id="section1Benefits" class="text-gray-700 leading-relaxed pt-2"></p>
+            
+
+        </section>
+
+        <!-- Section 2: Permissions, Cross-Region, and S3 Events -->
+        <section class="card space-y-6">
+            <h3 id="permissionsTitle" class="text-2xl font-extrabold text-gray-800 mb-4 flex items-center"><i class="fas fa-shield-alt feature-icon"></i> </h3>
+            
+            <p id="permissionsContent" class="text-gray-700 leading-relaxed"></p>
+
+            <div id="s3EventsTitle" class="text-xl font-bold border-t pt-4 text-gray-800"></div>
+            <p id="s3EventsIntro" class="text-gray-700 leading-relaxed"></p>
+
+            <div class="architecture-note">
+                <i class="fas fa-layer-group mr-2"></i> <span id="s3EventLimitation"></span>
+            </div>
+            
+            
+            <p id="kdfIntegration" class="text-gray-700 leading-relaxed pt-2"></p>
+        </section>
+
+        <!-- Section 3: FIFO Topics and Message Filtering -->
+        <section class="card space-y-6">
+            <h3 id="fifoTitle" class="text-2xl font-extrabold text-gray-800 mb-4 flex items-center"><i class="fas fa-sort-numeric-up-alt feature-icon"></i> </h3>
+            
+            <p id="fifoIntro" class="text-gray-700 leading-relaxed"></p>
+            <p id="fifoNote" class="p-3 bg-red-50 rounded-lg border border-red-200 text-red-800 font-medium"></p>
+            
+            <h4 id="filteringTitle" class="text-xl font-bold border-t pt-4 text-gray-800"></h4>
+            <p id="filteringIntro" class="text-gray-700 leading-relaxed"></p>
+
+            <div class="p-4 bg-green-50 rounded-lg border border-green-200">
+                <p class="font-bold text-lg text-green-700 flex items-center mb-2"><i class="fas fa-code-branch mr-2"></i> <span id="filterExampleTitle"></span></p>
+                <p id="filterExampleContent" class="text-sm text-gray-700"></p>
+            </div>
+            
+            <p id="filteringConclusion" class="text-gray-700 leading-relaxed"></p>
+        </section>
+
+        <!-- Section 4: Key Takeaways -->
+        <section class="p-8 bg-gray-800 rounded-2xl shadow-2xl text-white">
+            <h2 id="takeawaysTitle" class="text-3xl font-extrabold mb-6 text-center text-primary-color"><i class="fas fa-key mr-2"></i> </h2>
+            <ul id="takeawaysList" class="space-y-4">
+                <!-- Takeaways populated by JS -->
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        const content = {
+            'vi': {
+                pageTitle: 'SNS và SQS - Mô Hình Fan-Out',
+                section1Title: 'Mô Hình Fan-Out Của SNS và SQS',
+                section1Intro: 'Ý tưởng cốt lõi của mô hình <b>Fan-Out</b> là gửi một tin nhắn duy nhất đến nhiều hàng đợi <b>SQS</b> một cách hiệu quả. Gửi tin nhắn riêng lẻ đến từng hàng đợi có thể dẫn đến sự cố và phức tạp khi thêm hàng đợi mới.',
+                fanOutExample: 'Mô hình Fan-Out: Publisher (dịch vụ gửi) đẩy một tin nhắn đến <b>SNS Topic</b>, và nhiều <b>SQS queues</b> đăng ký (subscribe) Topic này, tất cả đều nhận tin nhắn độc lập.',
+                section1Benefits: 'Cách tiếp cận này cung cấp một mô hình hoàn toàn **tách rời (decoupled)** mà **không mất dữ liệu**. <b>SQS</b> cung cấp khả năng lưu trữ dữ liệu, xử lý trì hoãn và thử lại. Nhiều hàng đợi SQS có thể được thêm vào Topic theo thời gian.',
+                
+                permissionsTitle: 'Quyền Hạn và Phân Phối Đa Vùng',
+                permissionsContent: 'Để kích hoạt mô hình này, **chính sách truy cập hàng đợi SQS (SQS queue access policy)** phải cho phép **SNS Topic** ghi vào hàng đợi SQS. Ngoài ra, phân phối **qua các vùng (cross-region delivery)** là khả thi nếu chính sách bảo mật cho phép, trong đó SNS Topic ở Vùng A có thể gửi tin nhắn đến SQS queues ở Vùng B.',
+                
+                s3EventsTitle: 'Sử Dụng Mô Hình Fan-Out Cho S3 Events',
+                s3EventsIntro: 'Các quy tắc sự kiện S3 có giới hạn (ví dụ: chỉ một quy tắc sự kiện S3 cho một tổ hợp loại sự kiện và prefix). Để gửi cùng một thông báo sự kiện S3 đến nhiều SQS queues, cần sử dụng mô hình Fan-Out.',
+                s3EventLimitation: 'Khi đối tượng S3 được tạo, sự kiện được gửi đến <b>SNS Topic</b>. Nhiều SQS queues, <b>Lambda functions</b>, hoặc <b>Email</b> có thể đăng ký, cho phép tin nhắn từ S3 đến nhiều đích.',
+                kdfIntegration: 'Một kiến trúc khác là gửi dữ liệu trực tiếp từ **SNS** đến **Amazon S3** thông qua **Kinesis Data Firehose (KDF)**. SNS tích hợp trực tiếp với KDF, cung cấp khả năng mở rộng để duy trì tin nhắn từ SNS topics.',
+
+                fifoTitle: 'Mô Hình Fan-Out Với FIFO Topics',
+                fifoIntro: 'SNS hỗ trợ **FIFO (First-In-First-Out) Topics**, duy trì **thứ tự tin nhắn**. Các Producer gửi tin nhắn theo thứ tự, và các Subscriber, vốn phải là **SQS FIFO queues**, nhận tin nhắn theo cùng thứ tự đó. SNS FIFO cung cấp tính năng **ordering** theo Message Group ID và **deduplication** (khử trùng lặp).',
+                fifoNote: 'Cả SQS Standard và FIFO queues đều có thể đăng ký, nhưng thông lượng (throughput) bị giới hạn bởi SQS FIFO queue. Mô hình này hữu ích khi cần Fan-Out với yêu cầu về thứ tự và khử trùng lặp.',
+
+                filteringTitle: 'Lọc Tin Nhắn Trong SNS',
+                filteringIntro: 'SNS hỗ trợ **lọc tin nhắn** (message filtering), sử dụng các chính sách **JSON** để lọc tin nhắn gửi đến các đăng ký (subscriptions) của Topic. Nếu một subscription không có chính sách lọc, nó sẽ nhận mọi tin nhắn.',
+                filterExampleTitle: 'Ví dụ Lọc Tin Nhắn: Trạng Thái Đơn Hàng',
+                filterExampleContent: 'Một dịch vụ gửi giao dịch (Transaction) đến SNS Topic (bao gồm các trường như `product`, `state`). Để tạo một SQS queue chỉ nhận các đơn hàng đã đặt (state="Placed"), hàng đợi đó đăng ký SNS Topic với chính sách lọc quy định `state` bằng "Placed". Chỉ các tin nhắn khớp với chính sách mới được gửi.',
+                filteringConclusion: 'Các chính sách lọc có thể áp dụng cho các loại đăng ký khác (như email cho các đơn hàng đã hủy). Hàng đợi SQS không có chính sách lọc sẽ nhận tất cả tin nhắn.',
+                
+                takeawaysTitle: 'Điểm Chính Cần Nắm Vững',
+                takeaways: [
+                    'Mô hình <b>SNS + SQS Fan-Out</b> cho phép gửi một tin nhắn duy nhất đến <b>nhiều SQS queues</b> bằng cách đăng ký chúng vào SNS Topic.',
+                    'Mô hình này đảm bảo mô hình **tách rời** hoàn toàn, **không mất dữ liệu**, và hỗ trợ khả năng **lưu trữ dữ liệu**, xử lý trì hoãn và thử lại (retries).',
+                    'SNS topics có thể tích hợp với nhiều subscriber bao gồm SQS, Lambda, Email, và <b>Kinesis Data Firehose (KDF)</b>.',
+                    'Tính năng **Lọc tin nhắn (Message filtering)** trong SNS cho phép phân phối có chọn lọc đến các subscriber dựa trên các **chính sách lọc JSON**.'
+                ]
+            },
+            'en': {
+                pageTitle: 'SNS and SQS - Fan Out Pattern',
+                section1Title: 'The SNS and SQS Fan-Out Pattern',
+                section1Intro: 'The core idea of the <b>Fan-Out pattern</b> is to send a single message to multiple <b>SQS queues</b> efficiently. Sending messages individually to every queue can lead to application crashes and complications when adding more queues later.',
+                fanOutExample: 'The Fan-Out Model: The Producer (buying service) pushes a single message to an <b>SNS Topic</b>, and multiple <b>SQS queues</b> subscribe to this Topic, all receiving the messages independently.',
+                section1Benefits: 'This approach provides a fully <b>decoupled</b> model with <b>no data loss</b>. <b>SQS</b> offers data persistence, delayed processing, and retries. More SQS queues can be added as subscribers to the Topic over time.',
+
+                permissionsTitle: 'Permissions and Cross-Region Delivery',
+                permissionsContent: 'To enable this, the **SQS queue access policy** must allow the **SNS topic** to write to the SQS queue. This is another use case for queue access policies. Moreover, **cross-region delivery** is possible, where an SNS topic in one region can send messages to SQS queues in other regions if security policies permit.',
+
+                s3EventsTitle: 'Using Fan-Out Pattern for S3 Events',
+                s3EventsIntro: 'S3 event rules have limitations (e.g., only one S3 event rule can exist for an event type/prefix combination). To send the same S3 event notification to multiple SQS queues, the Fan-Out pattern is used.',
+                s3EventLimitation: 'When an S3 object is created, the event is sent to an <b>SNS Topic</b>. Multiple SQS queues, <b>Lambda functions</b>, or <b>Email</b> can subscribe, allowing the S3 event message to reach many destinations.',
+                kdfIntegration: 'Another architecture involves sending data directly from **SNS** to **Amazon S3** via **Kinesis Data Firehose (KDF)**. SNS integrates directly with KDF, providing extensibility for persisting messages from SNS topics.',
+
+                fifoTitle: 'Fan-Out Pattern with FIFO Topics',
+                fifoIntro: 'SNS supports **FIFO (First-In-First-Out) Topics**, which maintain **message ordering**. Producers send messages in order, and subscribers, which must be **SQS FIFO queues**, receive messages in the same order. SNS FIFO provides features such as **ordering** by Message Group ID and **deduplication** using a deduplication ID or content-based deduplication.',
+                fifoNote: 'Both SQS standard and FIFO queues can subscribe, but throughput is limited to that of the SQS FIFO queue. This is useful when fan-out with ordering and deduplication is required.',
+
+                filteringTitle: 'Message Filtering in SNS',
+                filteringIntro: 'SNS supports **message filtering**, which uses **JSON** policies to filter messages sent to topic subscriptions. If a subscription has no filter policy, it receives every message by default.',
+                filterExampleTitle: 'Message Filtering Example: Order State',
+                filterExampleContent: 'A service sends transactions to an SNS Topic (including fields like `product`, `state`). To create an SQS queue that receives only placed orders (state="Placed"), the queue subscribes to the SNS Topic with a filter policy specifying that the `state` equals "Placed". Only messages matching the filter policy are delivered to that SQS queue.',
+                filteringConclusion: 'Filter policies can also be applied to other subscription types (such as email for canceled orders). An SQS queue without a filter policy will receive all messages from the SNS topic.',
+
+                takeawaysTitle: 'Key Takeaways',
+                takeaways: [
+                    'The <b>SNS plus SQS fan-out pattern</b> allows sending a single message to <b>multiple SQS queues</b> by subscribing them to an SNS topic.',
+                    'This pattern ensures a fully <b>decoupled</b> model with <b>no data loss</b>, supporting **data persistence**, delayed processing, and retries.',
+                    'SNS topics can integrate with various subscribers including SQS queues, Lambda functions, email, and <b>Kinesis Data Firehose (KDF)</b>.',
+                    '<b>Message filtering</b> in SNS enables selective delivery to subscribers based on **JSON filter policies**, enhancing message routing efficiency.'
+                ]
+            }
+        };
+
+        let currentLang = 'vi';
+
+        function renderContent() {
+            const data = content[currentLang];
+            document.title = data.pageTitle;
+            document.documentElement.lang = currentLang;
+
+            // Header & Language Toggle
+            document.getElementById('introTitle').innerHTML = `<i class="fas fa-bullhorn mr-3"></i> ${data.section1Title.replace('Mô Hình ', '').replace('The ', '').replace(' Của SNS và SQS', '')}`;
+            document.getElementById('langToggleVi').textContent = 'VI';
+            document.getElementById('langToggleEn').textContent = 'EN';
+            
+            // Section 1: Core Fan-Out
+            document.getElementById('section1Title').textContent = data.section1Title;
+            document.getElementById('section1Intro').innerHTML = data.section1Intro;
+            document.getElementById('fanOutExample').innerHTML = data.fanOutExample;
+            document.getElementById('section1Benefits').innerHTML = data.section1Benefits;
+
+            // Section 2: Permissions, Cross-Region, S3
+            document.getElementById('permissionsTitle').innerHTML = `<i class="fas fa-shield-alt feature-icon"></i> ${data.permissionsTitle}`;
+            document.getElementById('permissionsContent').innerHTML = data.permissionsContent;
+            document.getElementById('s3EventsTitle').innerHTML = data.s3EventsTitle;
+            document.getElementById('s3EventsIntro').innerHTML = data.s3EventsIntro;
+            document.getElementById('s3EventLimitation').innerHTML = data.s3EventLimitation;
+            document.getElementById('kdfIntegration').innerHTML = data.kdfIntegration;
+            
+            // Section 3: FIFO & Filtering
+            document.getElementById('fifoTitle').innerHTML = `<i class="fas fa-sort-numeric-up-alt feature-icon"></i> ${data.fifoTitle}`;
+            document.getElementById('fifoIntro').innerHTML = data.fifoIntro;
+            document.getElementById('fifoNote').innerHTML = `<i class="fas fa-exclamation-circle mr-2"></i> ${data.fifoNote}`;
+            document.getElementById('filteringTitle').innerHTML = data.filteringTitle;
+            document.getElementById('filteringIntro').innerHTML = data.filteringIntro;
+            document.getElementById('filterExampleTitle').innerHTML = data.filterExampleTitle;
+            document.getElementById('filterExampleContent').innerHTML = data.filterExampleContent;
+            document.getElementById('filteringConclusion').innerHTML = data.filteringConclusion;
+
+            // Section 4: Key Takeaways
+            document.getElementById('takeawaysTitle').innerHTML = `<i class="fas fa-key mr-2"></i> ${data.takeawaysTitle}`;
+            const takeawaysList = document.getElementById('takeawaysList');
+            takeawaysList.innerHTML = data.takeaways.map(tk => `
+                <li class="flex items-start">
+                    <i class="fas fa-check-circle text-primary-color mt-1 mr-3 flex-shrink-0"></i>
+                    <span>${tk}</span>
+                </li>
+            `).join('');
+            
+            // Update buttons
+            const btnVi = document.getElementById('langToggleVi');
+            const btnEn = document.getElementById('langToggleEn');
+            const activeClass = 'bg-white text-primary-color';
+            const inactiveClass = 'text-white hover:bg-white/30';
+            
+            btnVi.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLang === 'vi' ? activeClass : inactiveClass}`;
+            btnEn.className = `px-3 py-1 rounded-full font-semibold text-sm transition ${currentLang === 'en' ? activeClass : inactiveClass}`;
+        }
+
+        document.getElementById('langToggleVi').addEventListener('click', () => {
+            currentLang = 'vi';
+            renderContent();
+        });
+        document.getElementById('langToggleEn').addEventListener('click', () => {
+            currentLang = 'en';
+            renderContent();
+        });
+
+        // Init
+        document.addEventListener('DOMContentLoaded', renderContent);
+    </script>
+</body>
+</html>
