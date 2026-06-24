@@ -282,7 +282,14 @@
                     { t: "Memcached", d: "Simple key-value cache đa luồng." },
                     { t: "Sub-ms latency", d: "Cache layer cho ứng dụng read-heavy." },
                     { t: "Cluster mode", d: "Sharding + replication → scale ngang và HA." },
-                    { t: "Valkey", d: "Fork open-source của Redis (AWS chuyển sang từ 2024)." }
+                    { t: "Valkey", d: "Fork open-source của Redis (AWS chuyển sang từ 2024)." },
+                    { t: "Multi-AZ", d: "Tự động failover giữa AZ → high availability 99.99%." },
+                    { t: "Serverless", d: "Không cần quản lý node, scale tự động, khởi tạo nhanh." },
+                    { t: "Data Persistence", d: "RDB/AOF snapshots + point-in-time recovery." },
+                    { t: "Encryption", d: "In-transit & at-rest (KMS), RBAC, IAM integration." },
+                    { t: "Pub/Sub Sharded", d: "Pub/Sub hoạt động trong cluster mode (từ version 7+)." },
+                    { t: "Global Datastore", d: "Cross-region replication cho read low-latency toàn cầu." },
+                    { t: "Auto Scaling", d: "Dynamic scale dựa trên metric (memory, CPU...)." }
                 ],
                 color: "blue"
             },
@@ -300,17 +307,19 @@
                 color: "blue"
             },
             {
-                id: "neptune",
-                name: "Amazon Neptune",
-                category: "Database",
-                description: "Managed graph database hỗ trợ Property Graph và RDF.",
-                keywords: [
-                    { t: "Graph DB", d: "Lưu trữ mối quan hệ → query nhanh cho network data." },
-                    { t: "Gremlin & SPARQL", d: "Hai query language chuẩn cho graph." },
-                    { t: "Use cases", d: "Recommendation engine, fraud detection, social network, knowledge graph." },
-                    { t: "Neptune Analytics", d: "Graph algorithms + vector search nhanh." }
+                "id": "neptune",
+                "name": "Amazon Neptune",
+                "category": "Database",
+                "description": "Dịch vụ graph database managed đầy đủ, hiệu suất cao, hỗ trợ lưu trữ và truy vấn dữ liệu kết nối mạnh mẽ (highly connected datasets) với latency milliseconds.",
+                "keywords": [
+                    { "t": "Graph Models", "d": "Property Graph (Gremlin, openCypher) và RDF (SPARQL), hỗ trợ cả 3 ngôn ngữ query trên cùng instance." },
+                    { "t": "Query Languages", "d": "Apache TinkerPop Gremlin, openCypher, W3C SPARQL – open standards." },
+                    { "t": "Performance & Scale", "d": "Xử lý billions relationships, milliseconds latency, auto-scale storage đến 128 TiB, up to 15 read replicas." },
+                    { "t": "High Availability", "d": "Multi-AZ, >99.99% availability, PITR, continuous backup to S3, cross-Region replication." },
+                    { "t": "Security", "d": "Encryption at rest (KMS) & in transit, VPC isolation, IAM granular permissions, ACID transactions." },
+                    { "t": "Use Cases", "d": "Recommendation engines, fraud detection, knowledge graphs, network/IT ops, GenAI GraphRAG." }
                 ],
-                color: "blue"
+                "color": "blue"
             },
             {
                 id: "timestream",
@@ -523,6 +532,36 @@
                 color: "red"
             },
             {
+                "id": "iam-identity-center",
+                "name": "AWS IAM Identity Center",
+                "category": "Security",
+                "description": "Dịch vụ quản lý identity trung tâm cho workforce, cung cấp single sign-on (SSO) đến nhiều AWS accounts và applications, kết nối với external IdP.",
+                "keywords": [
+                    { "t": "Single Sign-On", "d": "SSO seamless đến AWS accounts, apps như Amazon Q, QuickSight, SageMaker." },
+                    { "t": "Identity Sources", "d": "Kết nối External IdP: Entra ID, Okta, Google Workspace, AD, hoặc built-in directory." },
+                    { "t": "Multi-Account Access", "d": "Quản lý permissions tập trung cho nhiều accounts trong AWS Organizations." },
+                    { "t": "Trusted Identity Propagation", "d": "Chuyển identity an toàn giữa apps, hỗ trợ auditing chi tiết." },
+                    { "t": "Permissions Management", "d": "Permission sets dựa job function, custom, ABAC với user attributes." },
+                    { "t": "User Portal", "d": "AWS access portal cho users truy cập tất cả assigned resources." }
+                ],
+                "color": "red"
+            },
+            {
+                "id": "managed-microsoft-ad-enterprise",
+                "name": "AWS Managed Microsoft AD (Enterprise Edition)",
+                "category": "Security",
+                "description": "Phiên bản Enterprise của AWS Managed Microsoft AD, dành cho doanh nghiệp lớn, hỗ trợ lên đến 500.000 directory objects và multi-region replication.",
+                "keywords": [
+                    { "t": "Scale lớn", "d": "Hỗ trợ lên đến 500.000 objects (users, groups, computers), storage lớn hơn Standard." },
+                    { "t": "Multi-Region", "d": "Replication tự động qua nhiều Region, domain controllers ở nhiều khu vực địa lý." },
+                    { "t": "High Availability", "d": "Multi-AZ mặc định, thêm domain controllers dễ dàng, lớn hơn và mạnh hơn Standard." },
+                    { "t": "Directory Sharing", "d": "Chia sẻ với lên đến 500 accounts (soft limit), nhiều hơn Standard." },
+                    { "t": "AD Features", "d": "Group Policy, domain trusts, schema extension, SSO, tương thích apps enterprise." },
+                    { "t": "Upgrade Path", "d": "Có thể nâng cấp từ Standard lên Enterprise (không downgrade được)." }
+                ],
+                "color": "red"
+            },
+            {
                 id: "cognito",
                 name: "Amazon Cognito",
                 category: "Security",
@@ -571,6 +610,51 @@
                 ],
                 color: "red"
             },
+            {
+                "id": "macie",
+                "name": "Amazon Macie",
+                "category": "Security",
+                "description": "Dịch vụ bảo mật dữ liệu sử dụng ML để phát hiện và bảo vệ dữ liệu nhạy cảm trong Amazon S3.",
+                "keywords": [
+                    { "t": "Discovery Methods", "d": "Machine learning và pattern matching để phát hiện dữ liệu nhạy cảm." },
+                    { "t": "Sensitive Data Types", "d": "PII, PHI, thông tin tài chính, credentials như credit card, AWS keys." },
+                    { "t": "S3 Posture", "d": "Đánh giá liên tục bucket: unencrypted, public access, shared externally." },
+                    { "t": "Findings & Alerts", "d": "Policy findings và sensitive data findings, gửi đến EventBridge/Security Hub." },
+                    { "t": "Automation", "d": "Automated discovery, remediation tự động qua integration." },
+                    { "t": "Custom & Managed", "d": "Managed data identifiers + custom identifiers cho dữ liệu riêng." }
+                ],
+                "color": "purple"
+            },
+            {
+                "id": "managed-microsoft-ad",
+                "name": "AWS Managed Microsoft AD",
+                "category": "Security",
+                "description": "Dịch vụ Active Directory managed đầy đủ dựa trên Windows Server, hỗ trợ tính năng AD nâng cao cho workloads trên AWS.",
+                "keywords": [
+                    { "t": "Fully Managed", "d": "AWS tự động xử lý monitoring, recovery, snapshots, patching và updates." },
+                    { "t": "High Availability", "d": "Triển khai multi-AZ, thêm domain controllers dễ dàng." },
+                    { "t": "AD Features", "d": "Group Policy, domain trusts, schema extension, single sign-on (SSO)." },
+                    { "t": "Hybrid Integration", "d": "Forest trust với on-premises AD, resource forest isolation." },
+                    { "t": "Application Support", "d": "Tương thích SharePoint, SQL Always On, .NET apps, RDS SQL Server." },
+                    { "t": "Management Tools", "d": "Sử dụng standard AD tools, hỗ trợ CRUD users/groups qua Console/API." }
+                ],
+                "color": "purple"
+            },
+            {
+                "id": "firewall-manager",
+                "name": "AWS Firewall Manager",
+                "category": "Security",
+                "description": "Dịch vụ quản lý tập trung firewall rules cho nhiều tài khoản và tài nguyên AWS, giúp áp dụng và duy trì chính sách bảo mật nhất quán trên quy mô lớn.",
+                "keywords": [
+                    { "t": "Centralized Management", "d": "Quản lý firewall policies từ một nơi cho toàn bộ AWS Organizations." },
+                    { "t": "Supported Protections", "d": "AWS WAF, Shield Advanced, VPC Security Groups, Network Firewall, Route 53 Resolver DNS Firewall." },
+                    { "t": "Policy Types", "d": "Security policy (WAF/Security Groups), Shield policy, Network Firewall policy, DNS Firewall policy." },
+                    { "t": "Compliance Enforcement", "d": "Áp dụng mandatory rules, audit compliance, remediation tự động khi drift xảy ra." },
+                    { "t": "Scope & Tags", "d": "Áp dụng theo tag, OU, account, resource type; exclude/include linh hoạt." },
+                    { "t": "Integration & Monitoring", "d": "Tích hợp Security Hub, CloudTrail, CloudWatch; báo cáo findings và remediation." }
+                ],
+                "color": "red"
+                },
 
             /* ===================== MANAGEMENT & GOVERNANCE ===================== */
             {
@@ -634,6 +718,21 @@
                 ],
                 color: "blue"
             },
+            {
+                "id": "control-tower",
+                "name": "AWS Control Tower",
+                "category": "Management & Governance",
+                "description": "Dịch vụ giúp thiết lập và quản trị môi trường multi-account AWS an toàn, tuân thủ tốt nhất practices, dựa trên AWS Organizations và các guardrails.",
+                "keywords": [
+                    { "t": "Landing Zone", "d": "Tự động thiết lập multi-account structure: OU, baseline accounts (Log, Audit), AWS Config, IAM." },
+                    { "t": "Guardrails", "d": "Preventive (SCP) và Detective (Config rules), mandatory/custom, applied theo OU hoặc account." },
+                    { "t": "Account Factory", "d": "Tạo account mới nhanh chóng qua console hoặc API, áp dụng baseline tự động." },
+                    { "t": "Dashboard & Governance", "d": "Tổng quan compliance, drift detection, remediation, tích hợp Security Hub." },
+                    { "t": "Best Practices", "d": "Dựa AWS Well-Architected Framework, multi-account strategy, centralized logging & monitoring." },
+                    { "t": "Customization", "d": "Tùy chỉnh guardrails, thêm OU, tích hợp với Organizations, Service Catalog." }
+                ],
+                "color": "blue"
+            },
 
             /* ===================== APPLICATION INTEGRATION ===================== */
             {
@@ -669,13 +768,14 @@
                 id: "eventbridge",
                 name: "Amazon EventBridge",
                 category: "Application Integration",
-                description: "Event bus trung tâm cho event-driven architecture.",
+                description: "Dịch vụ serverless event bus giúp kết nối ứng dụng theo mô hình event-driven, xử lý sự kiện từ nhiều nguồn đến nhiều đích một cách dễ dàng.",
                 keywords: [
-                    { t: "Event bus", d: "Nhận và route event." },
-                    { t: "Rules & Targets", d: "Route event theo pattern đến Lambda, SQS..." },
-                    { t: "Schema Registry", d: "Quản lý schema event." },
-                    { t: "SaaS integration", d: "Partner event sources (Stripe, Zendesk...)." },
-                    { t: "API Destinations", d: "Gửi event ra external HTTP." }
+                    { "t": "Event Bus", "d": "Default bus + custom bus, hỗ trợ cross-account & cross-region." },
+                    { "t": "Event Sources", "d": "AWS services, SaaS partners(Zendesk, Salesforce, Auth0, …), custom apps, schema registry." },
+                    { "t": "Targets", "d": "Lambda, SNS, SQS, Step Functions, Kinesis, API Gateway, ECS..." },
+                    { "t": "Rules & Filtering", "d": "Content-based filtering, pattern matching, input transformation." },
+                    { "t": "Schema Registry", "d": "Tự động discover & quản lý schema, code binding hỗ trợ." },
+                    { "t": "Reliability", "d": "At-least-once delivery, retry policy, dead-letter queue, archive & replay." }
                 ],
                 color: "purple"
             },
@@ -752,8 +852,21 @@
                 ],
                 color: "green"
             },
-
-            /* ===================== MACHINE LEARNING & AI ===================== */
+            {
+                "id": "quicksight",
+                "name": "Amazon QuickSight",
+                "category": "Analytics",
+                "description": "Dịch vụ business intelligence serverless, AI-powered để tạo dashboard tương tác, phân tích dữ liệu và chia sẻ insights nhanh chóng.",
+                "keywords": [
+                    { "t": "AI & ML Insights", "d": "Anomaly detection, forecasting, natural language query (Amazon Q), auto-narratives." },
+                    { "t": "Performance", "d": "SPICE in-memory engine hỗ trợ billion rows, query nhanh tại scale." },
+                    { "t": "Data Sources", "d": "Kết nối AWS services, on-premises DB, SaaS apps, files (Excel, CSV)." },
+                    { "t": "Embedding", "d": "Nhúng dashboard tương tác vào applications, portals với secure embedding." },
+                    { "t": "Sharing & Access", "d": "Pay-per-session pricing, scale đến hàng nghìn users, mobile access." },
+                    { "t": "Security", "d": "Row-level security, RBAC, AD integration, private VPC access, compliance." }
+                ],
+                "color": "green"
+            },
             /* ===================== MACHINE LEARNING & AI ===================== */
             {
                 id: "sagemaker",
@@ -1037,6 +1150,50 @@
                     { t: "POSIX compliant", d: "Tương thích chuẩn Unix, dễ integrate với cluster compute." }
                 ],
                 color: "green"
+            }, {
+                "id": "fsx-ontap",
+                "name": "FSx for NetApp ONTAP",
+                "category": "Storage",
+                "description": "File storage đa protocol dựa trên NetApp ONTAP, hỗ trợ NFS, SMB, iSCSI.",
+                "keywords": [
+                    { "t": "Multi-protocol", "d": "NFSv3-4.1, SMB 2-3, iSCSI; unified storage." },
+                    { "t": "Advanced features", "d": "Snapshots, cloning, replication (SnapMirror)." },
+                    { "t": "Scalability", "d": "Scale lên hàng trăm PB, Multi-AZ/Single-AZ." },
+                    { "t": "Efficiency", "d": "Deduplication, compression, thin provisioning." },
+                    { "t": "S3 access", "d": "Truy cập dữ liệu qua S3 API." },
+                    { "t": "Migration", "d": "Dễ migrate từ on-prem NetApp." }
+                ],
+                "color": "orange"
+            },
+            {
+                "id": "fsx-openzfs",
+                "name": "FSx for OpenZFS",
+                "category": "Storage",
+                "description": "File storage dựa trên OpenZFS, hỗ trợ NFS cho Linux/Unix workloads.",
+                "keywords": [
+                    { "t": "ZFS features", "d": "Snapshots, clones, compression, data integrity checks." },
+                    { "t": "Protocols", "d": "NFSv3-4.1, phù hợp Linux applications." },
+                    { "t": "Deployment", "d": "Single-AZ hoặc Multi-AZ với HA." },
+                    { "t": "Performance", "d": "Sub-ms latency, cao throughput SSD." },
+                    { "t": "Efficiency", "d": "Intelligent-Tiering, deduplication." },
+                    { "t": "Migration", "d": "Dễ chuyển từ on-prem ZFS/FreeBSD." }
+                ],
+                "color": "orange"
+            },
+            {
+                "id": "s3-storage-lens",
+                "name": "Amazon S3 Storage Lens",
+                "category": "Storage",
+                "description": "Dịch vụ phân tích và trực quan hóa dữ liệu lưu trữ S3 ở quy mô tổ chức, cung cấp insights chi tiết về usage, activity, cost và best practices.",
+                "keywords": [
+                    { "t": "Organization-wide Visibility", "d": "Tổng hợp metrics từ tất cả buckets cross-account, cross-region trong AWS Organizations." },
+                    { "t": "Metrics & Dashboard", "d": "Hàng trăm metrics: storage usage, object count, request rates, retrievals, costs, encryption status." },
+                    { "t": "Advanced Metrics", "d": "Activity metrics (GET/PUT requests), cost allocation tags, bucket-level breakdown." },
+                    { "t": "Recommendations", "d": "Gợi ý tối ưu: chuyển sang Intelligent-Tiering, xóa incomplete multipart uploads, versioned objects." },
+                    { "t": "Dashboards & Export", "d": "Custom dashboards, export CSV/Parquet sang S3, tích hợp QuickSight." },
+                    { "t": "Aggregation & Filtering", "d": "Group by prefix, region, bucket type; filter theo account, tag, storage class." }
+                ],
+                "color": "orange"
             },
             {
                 id: "ebs",
@@ -1054,15 +1211,17 @@
                 color: "green"
             },
             {
-                id: "storage-gateway",
-                name: "AWS Storage Gateway",
-                category: "Storage",
-                description: "Hybrid storage kết nối on-prem với AWS cloud.",
-                keywords: [
-                    { t: "File Gateway", d: "NFS/SMB → lưu file vào S3." },
-                    { t: "Volume Gateway", d: "iSCSI block storage với cache local." },
-                    { t: "Tape Gateway", d: "VTL cho backup vào S3/Glacier." },
-                    { t: "Hybrid access", d: "Low-latency local + cloud backup." }
+                "id": "storage-gateway",
+                "name": "AWS Storage Gateway",
+                "category": "Storage",
+                "description": "Dịch vụ hybrid cloud storage kết nối hạ tầng on-premises với AWS, cung cấp lưu trữ gần như không giới hạn với độ trễ thấp nhờ cache cục bộ.",
+                "keywords": [
+                    { "t": "File Gateway", "d": "NFS/SMB → Amazon S3, lưu file dưới dạng object, phù hợp data lake, backup, archive." },
+                    { "t": "Volume Gateway", "d": "iSCSI block storage: Cached (dữ liệu chính ở S3) hoặc Stored (dữ liệu chính cục bộ + snapshot EBS)." },
+                    { "t": "Tape Gateway", "d": "Virtual Tape Library (VTL) thay thế băng từ, lưu virtual tapes vào S3 → Glacier/Deep Archive." },
+                    { "t": "Local Cache", "d": "Cache cục bộ SSD/HDD giảm độ trễ, dữ liệu thường dùng luôn sẵn sàng on-premises." },
+                    { "t": "Security", "d": "Mã hóa transit/at-rest (KMS), IAM, VPC endpoint, tích hợp AWS Backup." },
+                    { "t": "Deployment", "d": "VM trên VMware, Hyper-V, KVM hoặc EC2, hỗ trợ hybrid và migration dần lên cloud." }
                 ],
                 color: "green"
             },
@@ -1168,6 +1327,53 @@
                 ],
                 color: "purple"
             },
+            {
+                id: "s3transferacceleration",
+                name: "S3 Transfer Acceleration",
+                category: "Migration & Transfer",
+                description: "Tính năng tăng tốc chuyển dữ liệu nhanh, an toàn từ xa vào/ra Amazon S3 bucket qua mạng toàn cầu CloudFront Edge Locations.",
+                keywords: [
+                    { t: "Fast transfers", d: "Tăng tốc upload/download lên đến 50-500% cho khoảng cách xa, sử dụng CloudFront Edge Locations." },
+                    { t: "Global acceleration", d: "Route dữ liệu qua nearest Edge Location rồi qua AWS backbone network tối ưu." },
+                    { t: "Long-distance optimization", d: "Giảm latency, biến động Internet, phù hợp user toàn cầu hoặc on-premises xa bucket." },
+                    { t: "Easy enable", d: "Kích hoạt nhanh trên bucket qua console, CLI, SDK; sử dụng endpoint s3-accelerate." },
+                    { t: "Speed comparison tool", d: "Công cụ kiểm tra tốc độ trước khi dùng để đánh giá lợi ích." },
+                    { t: "Security", d: "Mã hóa TLS in-transit, tích hợp IAM, VPC endpoint nếu cần." },
+                    { t: "Pay only if faster", d: "Chỉ charge phí acceleration nếu thực sự nhanh hơn transfer thông thường." },
+                    { t: "Compatibility", d: "Hỗ trợ multipart upload, presigned URL, tích hợp tốt với S3 API." }
+                ],
+                color: "green"
+            },
+            {
+                "id": "cloudhsm",
+                "name": "AWS CloudHSM",
+                "category": "Security",
+                "description": "Dịch vụ Hardware Security Module (HSM) managed, cung cấp khóa mã hóa thực trên phần cứng chuyên dụng, đạt FIPS 140-2/140-3 Level 3, kiểm soát hoàn toàn.",
+                "keywords": [
+                    { "t": "Single Tenant HSM", "d": "Cluster HSM riêng biệt, không chia sẻ với khách hàng khác, kiểm soát root key." },
+                    { "t": "Crypto Standards", "d": "FIPS 140-2/140-3 Level 3, PKCS#11, OpenSSL, JCE/JCA, CNG." },
+                    { "t": "Key Management", "d": "Tạo, lưu trữ, backup, restore khóa mã hóa, hỗ trợ asymmetric/symmetric keys." },
+                    { "t": "High Availability", "d": "Cluster multi-AZ (2-28 HSM), auto failover, load balancing." },
+                    { "t": "Use Cases", "d": "PKI, SSL/TLS offload, code signing, database encryption (Oracle TDE), custom crypto." },
+                    { "t": "Integration", "d": "Tích hợp Key Management Service (KMS) custom key store, AWS services như RDS, Redshift." }
+                ],
+                "color": "purple"
+            },
+            {
+                "id": "access-analyzer",
+                "name": "IAM Access Analyzer",
+                "category": "Security",
+                "description": "Dịch vụ phân tích quyền truy cập IAM để phát hiện quyền thừa, quyền truy cập ngoài dự kiến và giúp thu hẹp quyền (least privilege).",
+                "keywords": [
+                    { "t": "Unused Access", "d": "Phát hiện IAM users/roles không sử dụng trong 90 ngày, gợi ý xóa hoặc thu hẹp quyền." },
+                    { "t": "External Access", "d": "Phát hiện quyền truy cập từ bên ngoài account (public, cross-account, federated)." },
+                    { "t": "Policy Generation", "d": "Tự động tạo policy dựa trên hoạt động thực tế (CloudTrail), hỗ trợ least privilege." },
+                    { "t": "Findings", "d": "Public access, cross-account, unused permissions, gửi đến Security Hub/EventBridge." },
+                    { "t": "Zone of Trust", "d": "Định nghĩa trusted organizations/accounts để lọc findings chính xác hơn." },
+                    { "t": "Integration", "d": "Tích hợp AWS Organizations, multi-account, IAM Access Analyzer cho S3 buckets." }
+                ],
+                "color": "purple"
+            }
         ];
 
         const searchInput = document.getElementById('searchInput');

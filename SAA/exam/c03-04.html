@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS SAA Interactive Cheat Sheet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .card { transition: transform 0.2s; }
+        .card:hover { transform: scale(1.02); }
+    </style>
+</head>
+<body class="bg-gray-100 p-4 md:p-8">
+    <div class="max-w-4xl mx-auto">
+        <header class="text-center mb-10">
+            <h1 class="text-3xl font-bold text-blue-800">Cẩm nang ôn thi AWS SAA</h1>
+            <p class="text-gray-600">Nhấn vào các thẻ để xem từ khóa & mẹo ghi nhớ</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Card 1 -->
+            <div class="card bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-500">
+                <h2 class="text-xl font-semibold mb-2">Amazon Aurora (Database)</h2>
+                <p class="text-sm text-gray-700 mb-4"><strong>Vấn đề:</strong> Không downtime khi ghi.</p>
+                <div class="bg-blue-50 p-3 rounded">
+                    <p class="text-blue-900 font-bold">Key: Multi-Master</p>
+                    <p class="text-xs">Mọi node đều ghi được. Hết thời gian chờ failover.</p>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="card bg-white p-6 rounded-lg shadow-md border-l-4 border-green-500">
+                <h2 class="text-xl font-semibold mb-2">VPC DNS (Route 53)</h2>
+                <p class="text-sm text-gray-700 mb-4"><strong>Vấn đề:</strong> Private Zone không phân giải.</p>
+                <div class="bg-green-50 p-3 rounded">
+                    <p class="text-green-900 font-bold">Key: Enable DNS Hostnames & Resolution</p>
+                    <p class="text-xs">Luôn bật 2 tùy chọn này trong setting VPC.</p>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="card bg-white p-6 rounded-lg shadow-md border-l-4 border-yellow-500">
+                <h2 class="text-xl font-semibold mb-2">Data Migration</h2>
+                <p class="text-sm text-gray-700 mb-4"><strong>Vấn đề:</strong> On-prem NFS -> AWS EFS hiệu quả nhất.</p>
+                <div class="bg-yellow-50 p-3 rounded">
+                    <p class="text-yellow-900 font-bold">Key: AWS DataSync</p>
+                    <p class="text-xs">Sử dụng Direct Connect + PrivateLink để bảo mật và tự động hóa.</p>
+                </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="card bg-white p-6 rounded-lg shadow-md border-l-4 border-red-500">
+                <h2 class="text-xl font-semibold mb-2">Auto Scaling Optimization</h2>
+                <p class="text-sm text-gray-700 mb-4"><strong>Vấn đề:</strong> Mix Spot & On-demand.</p>
+                <div class="bg-red-50 p-3 rounded">
+                    <p class="text-red-900 font-bold">Key: Mixed Instances Policy</p>
+                    <p class="text-xs">Dùng trong Launch Templates để tối ưu chi phí.</p>
+                </div>
+            </div>
+
+            <!-- Card 5 -->
+            <div class="card bg-white p-6 rounded-lg shadow-md border-l-4 border-purple-500">
+                <h2 class="text-xl font-semibold mb-2">Geo-blocking</h2>
+                <p class="text-sm text-gray-700 mb-4"><strong>Vấn đề:</strong> Chỉ cho phép truy cập từ 1 quốc gia.</p>
+                <div class="bg-purple-50 p-3 rounded">
+                    <p class="text-purple-900 font-bold">Key: CloudFront & WAF</p>
+                    <p class="text-xs">Chặn tại biên (Edge) bằng Geo-restriction hoặc Geo-match rule.</p>
+                </div>
+            </div>
+
+            <!-- Card 6 -->
+            <div class="card bg-white p-6 rounded-lg shadow-md border-l-4 border-indigo-500">
+                <h2 class="text-xl font-semibold mb-2">Streaming Data</h2>
+                <p class="text-sm text-gray-700 mb-4"><strong>Vấn đề:</strong> Lọc dữ liệu lớn, serverless.</p>
+                <div class="bg-indigo-50 p-3 rounded">
+                    <p class="text-indigo-900 font-bold">Key: Kinesis Firehose + Lambda</p>
+                    <p class="text-xs">Firehose để luồng, Lambda để lọc, S3 để lưu.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
